@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b0e13"><meta name="description" content="条件を変え、仕組みを理解する。情報科学・ネットワーク・セキュリティのインタラクティブ実験室。"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; font-src 'none'; base-uri 'none'; form-action 'none'"><title>Visual CS Lab</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23111a22'/%3E%3Cpath d='M12 6h8m-6 0v8l-7 11h18l-7-11V6M10 20h12' fill='none' stroke='%2391cdbf' stroke-width='1.7' stroke-linejoin='round'/%3E%3C/svg%3E"><style>/* Visual CS Lab — a quiet, readable dark laboratory. No remote fonts. */
+<html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b0e13"><meta name="description" content="小さな例を読み、図で確かめ、条件を変えて理解する。情報科学・ネットワーク・セキュリティのインタラクティブ解説。"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; font-src 'none'; base-uri 'none'; form-action 'none'"><title>Visual CS Lab</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23111a22'/%3E%3Cpath d='M12 6h8m-6 0v8l-7 11h18l-7-11V6M10 20h12' fill='none' stroke='%2391cdbf' stroke-width='1.7' stroke-linejoin='round'/%3E%3C/svg%3E"><style>/* Visual CS Lab — a quiet, readable dark laboratory. No remote fonts. */
 :root{color-scheme:dark;--bg:#0b0e13;--sidebar:#0e1218;--panel:#121820;--panel2:#171e28;--panel3:#1c2531;--line:#252e3c;--line2:#354254;--text:#e9edf3;--muted:#a0adbd;--dim:#738298;--accent:#91cdbf;--accent-rgb:145,205,191;--network:#9dbfe9;--security:#beb0dd;--gold:#d7bd90;--danger:#e5a3a3;--radius:13px;--sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans CJK JP","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;--mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.75;-webkit-font-smoothing:antialiased}button,input,select,textarea{font:inherit}button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}button,a{touch-action:manipulation}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.35}a{color:inherit;text-decoration:none}button{border:0}button,input,select,textarea{color:var(--text)}input,textarea,select{background:#0d1219;border:1px solid var(--line2);border-radius:7px}input:focus,textarea:focus,select:focus{outline:2px solid var(--accent);outline-offset:2px}button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:4px}input[type=checkbox]{accent-color:var(--accent)}::selection{background:#364f51}h1,h2,h3,h4,p{margin:0}h1,h2,h3{letter-spacing:-.035em;line-height:1.45;font-weight:600}h1{font-size:31px}h2{font-size:22px}h3{font-size:16px}svg{display:block}ul{padding-left:1.4em}small{font-size:11px}.mono{font-family:var(--mono);letter-spacing:0}.muted{color:var(--muted)}.dim{color:var(--dim)}.eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.13em;font-weight:500;color:var(--dim);text-transform:uppercase}.icon{width:20px;height:20px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}.icon.small{width:16px;height:16px}.icon.large{width:25px;height:25px}.accent{color:var(--accent)}.network{color:var(--network)}.security{color:var(--security)}.danger{color:var(--danger)}.gold{color:var(--gold)}
 .skip{opacity:0;pointer-events:none;position:fixed;top:-90px;left:20px;z-index:999;background:var(--accent);color:var(--bg);padding:10px 18px;border-radius:6px}.skip:focus{top:10px;opacity:1;pointer-events:auto}.app-shell{min-height:100vh}.sidebar{width:218px;position:fixed;left:0;top:0;bottom:0;background:var(--sidebar);border-right:1px solid var(--line);display:flex;flex-direction:column;z-index:40;padding:29px 17px 18px}.brand{display:flex;align-items:center;gap:11px;padding:0 8px 29px}.brand-symbol{width:31px;height:33px;color:var(--accent)}.brand-symbol .icon{width:31px;height:31px;stroke-width:1.3}.brand-name{font-size:13px;font-weight:650;letter-spacing:.055em;line-height:1.5}.brand-sub{font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--dim)}.side-heading{font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--dim);margin:23px 13px 9px}.nav-link{min-height:43px;display:flex;align-items:center;gap:11px;border-radius:7px;padding:9px 12px;margin-bottom:3px;color:var(--muted);font-size:12px;transition:background .15s,color .15s}.nav-link:hover{background:var(--panel2);color:var(--text)}.nav-link.active{background:#202d2e;color:var(--accent)}.nav-link.active .icon{stroke-width:1.8}.nav-number{font-family:var(--mono);font-size:10px;color:var(--dim);margin-left:auto}.nav-dot{width:7px;height:7px;border-radius:50%;background:currentColor;margin-left:5px;margin-right:8px}.side-footer{margin-top:auto;padding:24px 10px 0}.offline{display:flex;align-items:center;gap:7px;margin-top:18px;font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--dim)}.status-dot{width:5px;height:5px;background:var(--accent);border-radius:50%;box-shadow:0 0 7px #91cdbf33}.layout{margin-left:218px;min-height:100vh}.topbar{height:73px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 34px;gap:15px;background:#0b0e13ed}.breadcrumb{display:flex;align-items:center;gap:10px;font-size:11px;color:var(--muted);white-space:nowrap}.breadcrumb .slash{color:var(--line2);padding:0 2px}.top-actions{display:flex;align-items:center;gap:16px}.search-trigger{background:transparent;border:1px solid var(--line);color:var(--dim);display:flex;align-items:center;gap:12px;font-size:11px;padding:6px 11px;border-radius:7px;min-width:225px}.search-trigger kbd{margin-left:auto}.kbd{font-family:var(--mono);font-size:10px;border:1px solid var(--line2);border-radius:4px;padding:0 4px;color:var(--dim)}.top-separator{height:18px;width:1px;background:var(--line)}.course-badge{font-size:10px;color:var(--muted);display:flex;gap:6px;align-items:center}.avatar{width:29px;height:29px;border:1px solid var(--line2);border-radius:50%;display:grid;place-items:center;font-size:10px;font-family:var(--mono);color:var(--accent);background:var(--panel)}.mobile-menu{display:none}.main{padding:31px 34px 45px;max-width:1740px;margin:auto}.page-footer{padding:28px 0 2px;margin-top:30px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;font-size:10px;color:var(--dim)}.page-footer a:hover{color:var(--text)}
@@ -81,6 +81,263 @@ body.reduce-motion{scroll-behavior:auto}.reduce-motion *{scroll-behavior:auto!im
 /* A/B drawings are read-only observations; they never edit the active model. */
 .compare-diagrams{margin:20px 0;background:#111921}.compare-diagrams>summary{cursor:pointer;min-height:48px;padding:15px 20px;font-size:14px;color:var(--accent);list-style-position:inside}.compare-diagrams[open]>summary{border-bottom:1px solid var(--line)}.compare-diagrams-help{font-size:12px;color:var(--muted);line-height:1.9;padding:15px 20px}.compare-model-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;padding:0 16px 16px}.compare-model-panel{min-width:0;padding:16px;border:1px solid var(--line2);border-radius:8px;background:var(--bg)}.compare-model-panel>h4{font-size:14px;margin-bottom:12px}.compare-step-select{display:flex;flex-direction:column;gap:8px;font-size:12px;color:var(--muted)}.compare-step-select select{width:100%;min-width:0;font-size:12px;white-space:nowrap;text-overflow:ellipsis;min-height:42px}.compare-viewport{height:285px;overflow:auto;margin:15px 0;border:1px solid var(--line);padding:12px;scrollbar-color:#445563 #121820}.compare-drawing{min-width:520px;width:100%}.compare-drawing>svg{width:100%;height:auto;max-height:none}.compare-frame-description{font-size:13px;line-height:1.9}.compare-frame-description strong{color:var(--text);font-weight:500}.compare-frame-description p{font-size:12px;color:var(--muted);margin-top:7px}.compare-drawing .visual-html{width:100%}
 @media(max-width:900px){.compare-model-grid{grid-template-columns:1fr}.compare-model-panel{padding:14px}.compare-step-select select{font-size:14px}.compare-diagrams-help{font-size:13px}.compare-frame-description p{font-size:13px}}
+
+/* A quiet reading layout; not a dashboard. */
+:root{--muted:#b0bdcc;--dim:#91a1b5;--study-blue:#b0cdec}
+[hidden]{display:none!important}
+.reader,.reader-library,.reader-course-page{font-size:16px;max-width:1380px;margin:auto;overflow-wrap:anywhere}
+.reader h1,.reader-course-page h1{font-size:clamp(24px,2.7vw,36px);line-height:1.5}
+.reader p,.reader-library p,.reader-course-page p{line-height:1.9}
+.reader .btn,.reader-library .btn,.reader-course-page .btn{font-size:14px;min-height:44px;white-space:normal;line-height:1.5}
+.reader-overline,.study-overline{font-size:12px;font-weight:600;letter-spacing:.045em;color:var(--accent);margin:0 0 10px!important}
+.reader-title{padding:4px 0 25px;border-bottom:1px solid var(--line);margin-bottom:22px}
+.reader-title-top{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted);margin-bottom:13px;flex-wrap:wrap}
+.reader-title>p{margin:12px 0;color:var(--muted);max-width:850px}
+.reader-title-links{display:flex;justify-content:space-between;gap:16px;margin-top:18px;flex-wrap:wrap;font-size:13px}
+.reader-title-links a{padding:5px 0;color:var(--study-blue);text-decoration:underline;text-underline-offset:4px}
+.reader-phases{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;background:#0e141c;padding:6px;border:1px solid var(--line);border-radius:11px;margin:0 0 25px}
+.reader-phases button{display:flex;align-items:center;justify-content:center;gap:9px;padding:12px 8px;min-height:50px;background:transparent;color:var(--muted);font-size:14px;border-radius:7px;line-height:1.5}
+.reader-phases button span{font:12px var(--mono);width:24px;height:24px;display:grid;place-items:center;border:1px solid var(--line2);border-radius:50%;flex-shrink:0}
+.reader-phases button.active{background:#233534;color:#d1eee4;box-shadow:inset 0 0 0 1px #547a70}
+.reader-layout{display:grid;grid-template-columns:minmax(285px,.82fr) minmax(0,1.55fr);gap:27px;align-items:start}
+.reader-layout>*{min-width:0}
+.reader-guidance{padding:3px 0 22px}
+.reader-guidance h2{font-size:23px;line-height:1.65;margin-bottom:13px}
+.reader-guidance h3{font-size:16px;margin:0 0 8px;line-height:1.65}
+.reader-guidance>p{margin:12px 0 18px;color:var(--text)}
+.reader-guidance>.btn{margin-top:8px}
+.reader-idea{margin:22px 0;padding:15px 17px;border-left:3px solid var(--accent);background:#14201f;border-radius:0 8px 8px 0}
+.reader-idea p{font-size:15px;color:#d9e7e1}
+.reader-hint{font-size:13px;color:var(--muted)!important;line-height:1.8!important}
+.reader-variant-values{padding:16px 18px;border:1px solid var(--line2);border-radius:9px;background:#111b25;margin:18px 0}
+.reader-variant-values p{font-size:14px;margin-top:9px}
+.reader-controls{background:#10161e;padding:20px;border:1px solid var(--line);border-radius:11px;margin-top:4px}
+.reader-controls h3{font-size:17px;margin-bottom:8px}
+.reader-controls-caption{font-size:13px;color:var(--muted);margin-bottom:15px}
+.reader-field{margin:18px 0 20px}
+.reader-field label:not(.reader-toggle){display:block;font-size:14px;font-weight:550;margin-bottom:7px}
+.reader-field input[type=text],.reader-field textarea,.reader-field select{width:100%;min-height:44px;padding:9px 11px;font-size:15px;border-color:#415165;line-height:1.65}
+.reader-field textarea{font:13px/1.7 var(--mono);resize:vertical;min-height:150px;white-space:pre;overflow:auto}
+.reader-range-pair{display:grid;grid-template-columns:minmax(0,1fr) 84px;align-items:center;gap:14px}
+.reader-range-pair input[type=number]{min-width:0;width:100%;min-height:44px;font-size:15px;padding:7px}
+.reader input[type=range]{width:100%;min-height:44px;accent-color:var(--accent);cursor:pointer;touch-action:pan-y;background:transparent}
+.reader-toggle{display:flex;align-items:center;gap:11px;min-height:44px;cursor:pointer;padding:4px 0;font-size:14px;line-height:1.7}
+.reader-toggle input{width:21px;height:21px;flex-shrink:0}
+.reader-field-help{font-size:12px;line-height:1.75!important;color:var(--muted);margin-top:6px}
+.reader-live-status{font-size:13px;color:var(--study-blue);margin:12px 0 0;min-height:24px}
+.reader-more-controls,.reader-terms{border-top:1px solid var(--line2);padding-top:12px;margin:18px 0}
+.reader summary,.study-linear summary{min-height:44px;cursor:pointer;padding:9px 0;color:var(--study-blue);font-size:14px;font-weight:550;line-height:1.7}
+.reader-terms{padding:12px 4px;font-size:14px}
+.reader-terms dt{font-weight:650;color:var(--text);margin:10px 0 4px}
+.reader-terms dd{margin:0;color:var(--muted);line-height:1.85}
+.reader-figure{margin:0;border:1px solid #32414f;border-radius:12px;background:#111820;min-width:0;overflow:hidden}
+.reader-figure figcaption{padding:20px 23px;border-bottom:1px solid #2d3a47;display:flex;align-items:center;justify-content:space-between;gap:15px}
+.reader-figure figcaption h2{font-size:19px;line-height:1.5}
+.reader-live-dot{font-size:11px;color:var(--muted);white-space:nowrap}
+.reader-diagram{padding:22px 18px 16px;min-height:220px;overflow:auto;max-width:100%;overscroll-behavior-x:contain;scrollbar-color:#5b726e #111820;scrollbar-width:thin}
+.reader-diagram>svg{width:100%;height:auto;min-width:560px;max-height:none}
+.reader-result-placeholder{padding:30px 22px;min-height:230px;display:flex;justify-content:center;flex-direction:column;color:var(--muted)}
+.reader-result-placeholder h3{font-size:18px;margin-bottom:10px}
+.reader-error{color:#efb7b7;border-left:3px solid #c58282}
+.reader-player{padding:8px 20px 17px;border-bottom:1px solid var(--line);background:#131e26}
+.reader-play-buttons{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.reader-play-buttons .btn{font-size:13px;min-height:44px;padding:8px 11px}
+.reader-play-buttons [data-r-action=next]{flex:1;min-width:130px}
+.reader-seek-row{display:grid;grid-template-columns:minmax(0,1fr) 87px;gap:17px;align-items:end;margin-top:12px}
+.reader-speed-label{font-size:11px;color:var(--muted);display:grid;gap:3px}
+.reader-speed-label select{min-height:38px;padding:5px;font-size:13px;width:100%}
+.reader-position{font-size:13px;color:var(--muted);margin-top:7px;line-height:1.8!important}
+#reader-direct-message{font-size:14px;padding:12px 0;color:var(--accent)}
+.reader-event{padding:23px;background:#14211f;border-bottom:1px solid var(--line)}
+.reader-event:empty{display:none}
+.reader-event h3{font-size:20px;line-height:1.6;margin-bottom:12px;color:#e5f0ec}
+.reader-event>p:not(.reader-overline){font-size:16px;color:#d0e0da;line-height:1.95}
+.reader-metrics{display:flex;flex-wrap:wrap;gap:13px 25px;margin:16px 0 0}
+.reader-metrics div{max-width:100%;min-width:85px}
+.reader-metrics dt{font-size:12px;color:var(--muted)}
+.reader-metrics dd{margin:3px 0 0;font:15px/1.7 var(--mono);overflow-wrap:anywhere}
+.reader-frame-table,.reader-current-conditions{padding:4px 20px;font-size:13px}
+.reader-frame-table:empty{display:none}
+.reader-current-conditions{border-top:1px solid var(--line);padding-bottom:10px;color:var(--muted)}
+.reader-result-details{margin-top:18px;border:1px solid var(--line);padding:5px 18px;border-radius:10px;background:#111820;font-size:14px}
+.reader-result-details:empty,.reader-comparison:empty{display:none}
+.reader-result-details>details{padding:5px 0}
+.reader-result-details p{font-size:14px;margin:10px 0;color:var(--muted)}
+.reader-step-list{display:grid;max-height:300px;overflow:auto;gap:4px;padding:6px 0 12px}
+.reader-step-list button{display:flex;align-items:center;gap:12px;text-align:left;border:1px solid var(--line);border-radius:5px;background:#151f28;min-height:44px;padding:8px 10px;font-size:13px;line-height:1.7}
+.reader-step-list button span{font-family:var(--mono);color:var(--accent);min-width:22px}
+.reader-comparison{margin-top:20px;border-radius:10px;background:#151c25;font-size:14px}
+.reader-comparison>details{padding:12px 20px;border:1px solid var(--line2);border-radius:10px}
+.reader-comparison p{margin:12px 0}
+.reader-question{border-top:1px solid var(--line);margin-top:22px;padding-top:20px}
+.reader-question h3{font-size:17px;line-height:1.75}
+.reader-answers{display:grid;gap:8px;margin:15px 0}
+.reader-answer{background:#141e28;border:1px solid var(--line2);border-radius:8px;text-align:left;font-size:14px;line-height:1.8;padding:13px 15px;min-height:48px;color:var(--text)}
+.reader-answer.chosen{border-color:var(--accent);background:#203531}
+#reader-answer-feedback{font-size:14px;margin:15px 0;color:var(--accent)}
+#reader-answer-feedback p{color:var(--text);margin-top:9px}
+.reader-next-units{padding:28px 0;border-bottom:1px solid var(--line);margin-top:14px}
+.reader-next-units h2{font-size:20px;margin-bottom:8px}
+.reader-next-units>p{font-size:14px;color:var(--muted)}
+.reader-related-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.reader-related-links a{min-height:44px;padding:10px 14px;border:1px solid var(--line2);border-radius:7px;font-size:14px;color:var(--study-blue)}
+.reader-scope{margin:23px 0;font-size:14px;line-height:1.9}
+.reader-scope p,.reader-scope li{margin:12px 0}
+.reader-scope a{text-decoration:underline;color:var(--study-blue)}
+.reader-source-note{padding:13px 16px;background:#171d27;border-left:2px solid #7897b8;color:var(--muted)}
+.reader-privacy{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding:17px 0}
+.reader-advanced-banner{margin-bottom:20px;padding:16px;border:1px solid var(--line2);border-radius:8px;background:#192b29}
+.reader-advanced-banner p,.reader-node-feedback{font-size:13px;color:var(--muted);margin-top:8px}
+
+/* Corresponding pieces share a highlight, not merely a decorative color. */
+.study-caption,.study-instruction{font-size:13px;line-height:1.9;margin:12px 0;color:var(--muted)}
+.study-instruction{color:var(--study-blue)}
+.study-svg{width:100%;height:auto;min-width:550px;overflow:visible}
+.study-svg-text{font-family:var(--sans);fill:#dce8ed;font-size:17px}
+.study-wire{stroke:#829cab;stroke-width:2;fill:none}
+.study-noise{stroke:#c4abc9;stroke-dasharray:5 4}
+.study-box,.study-node{fill:#1b2935;stroke:#87a7b7;stroke-width:1.8}
+.study-accept{fill:#263d37;stroke:#a5d9cc}
+.study-highlight{fill:#416357;stroke:#d4f5e7;stroke-width:3}
+.study-equation{padding:16px 17px;margin:15px 0;border:1px solid #3d525b;border-radius:9px;background:#0c171c;font:16px/1.9 var(--mono);color:#e4f0ed;overflow:auto;overflow-wrap:anywhere}
+.study-equation math{font-size:19px;padding:3px 0;min-width:max-content}
+.math-linked{background:#385f52;color:#effff6}
+.study-terms{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:16px 0}
+.study-term,.study-terms>div{padding:14px;border:1px solid var(--line);border-radius:9px;background:#121d24;min-width:0;font-size:14px;line-height:1.8}
+.study-term strong{display:block;font-size:20px;margin:8px 0}
+.study-term p,.study-terms p{font-size:13px;line-height:1.8;margin-top:7px;color:var(--muted)}
+.study-chip{padding:7px 11px;background:#1b2c38;border:1px solid #526879;border-radius:6px;min-height:44px;color:#e1ebf1;font-size:13px;line-height:1.6;white-space:normal}
+.is-linked{background:#2b463e!important;color:#ecfff5!important;box-shadow:inset 0 0 0 1px #80bda7}
+.study-probabilities{display:grid;gap:8px;margin:16px 0}
+.study-probability{display:grid;grid-template-columns:48px minmax(0,1fr) 66px;gap:9px;align-items:center;padding:6px;border-radius:7px}
+.study-probability strong{text-align:right;font:14px var(--mono)}
+.study-prob-track{height:14px;border-radius:5px;background:#243441;overflow:hidden}
+.study-prob-track span{display:block;height:100%;background:#9acaaf}
+.study-table-scroll{overflow:auto;max-width:100%;margin:15px 0;border:1px solid var(--line2);border-radius:8px}
+.study-table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.8;min-width:380px}
+.study-table caption{text-align:left;padding:13px;font-weight:600;color:var(--study-blue);background:#14202a}
+.study-table th,.study-table td{text-align:left;padding:10px 12px;vertical-align:top;border-bottom:1px solid var(--line);white-space:normal;overflow-wrap:anywhere}
+.study-table th{font-weight:550;background:#19242d}
+.study-table tr.is-linked th,.study-table tr.is-linked td{background:transparent}
+.study-code-legend{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.study-bit-line{display:flex;gap:15px;align-items:center;margin:14px 0}
+.study-bit-line>strong{font-size:13px;min-width:62px}
+.study-bit-line>div{display:flex;gap:4px;flex-wrap:wrap}
+.study-bit{min-width:36px;min-height:44px;font:19px var(--mono);border:1px solid var(--line2);border-radius:5px;background:#16212b}
+.study-different{color:#eecdc8;border-color:#95776f;background:#342625}
+.study-seven{display:grid;grid-template-columns:repeat(7,minmax(44px,1fr));gap:5px;overflow:auto;padding:5px 2px}
+.study-symbol{display:flex;align-items:center;flex-direction:column;gap:4px;background:#1b2835;border:1px solid #426277;border-radius:8px;padding:9px 5px;min-height:74px;font-size:13px}
+.study-symbol strong{font:25px var(--mono)}
+.study-symbol small{font-size:10px;color:var(--muted)}
+.study-parity{background:#2b2537;border-color:#7a6b9a}
+.study-code-groups{display:grid;grid-template-columns:4fr 3fr;text-align:center;gap:5px;font-size:12px;margin:7px 0 19px;color:var(--muted)}
+.study-checks{display:grid;gap:8px}
+.study-check{display:grid;grid-template-columns:105px minmax(0,1fr) 40px;gap:10px;align-items:center;padding:8px;border:1px solid var(--line);border-radius:7px;font:14px/1.8 var(--mono)}
+.study-check strong{font-size:18px;text-align:center}
+.study-matrices{display:grid;gap:18px;overflow:auto}
+.study-matrix{min-width:330px;padding:12px;border:1px solid var(--line2);border-radius:8px;margin-top:14px}
+.study-matrix h4{font-size:14px;margin-bottom:10px}
+.study-matrix table{border-collapse:collapse;width:100%;font:17px var(--mono)}
+.study-matrix td{text-align:center;padding:7px;border:1px solid var(--line)}
+.study-division{overflow:auto;min-width:0}
+.study-division-row{display:flex;gap:14px;align-items:center;min-width:max-content;margin:12px 0;font:16px var(--mono)}
+.study-division-row>strong{font-family:var(--sans);font-size:13px;min-width:70px}
+.study-division-row>div{display:flex;gap:2px}
+.study-division-row span{display:grid;place-items:center;min-width:24px;min-height:36px;border:1px solid var(--line);border-radius:4px}
+.study-input-tape{display:flex;gap:4px;flex-wrap:wrap;margin:10px 0}
+.study-input-tape span{padding:8px 12px;border:1px solid var(--line2);font:18px var(--mono);border-radius:5px}
+.study-register{display:flex;gap:9px;align-items:center;min-width:480px;padding:12px 0}
+.study-register-inputs{display:grid;gap:9px;flex:1}
+.study-box-card{padding:13px;border:1px solid #527085;background:#172631;border-radius:9px;display:flex;flex-direction:column;gap:6px;text-align:center;flex:1;min-width:100px}
+.study-box-card span{font-size:12px;color:var(--muted);line-height:1.8}
+.study-box-card strong{font-size:21px;font-weight:600}
+.study-box-card small{font-size:12px;line-height:1.7;color:var(--muted)}
+.study-arrow{color:var(--accent);font-size:23px;flex:none}
+.study-addresses{display:grid;grid-template-columns:1.2fr 1fr;gap:20px;min-width:510px}
+.study-address-apps{display:grid;gap:16px}
+.study-address-app{padding:13px;border:1px solid var(--line2);border-radius:9px;background:#15232c}
+.study-address-app h4,.study-address-physical h4{font-size:17px;margin-bottom:9px}
+.study-address-app p{font-size:12px;color:var(--muted);margin-bottom:8px}
+.study-address-page{display:flex;justify-content:space-between;gap:10px;padding:13px 9px;margin-top:7px;border:1px solid var(--line2);border-radius:5px;font-size:12px;line-height:1.7}
+.study-address-page small{display:block;color:var(--muted)}
+.study-hop-path{display:flex;align-items:center;gap:9px;margin:8px 0 16px;min-width:450px}
+.study-hop>p{font-size:13px;color:var(--muted);margin:10px 0}
+.study-envelope{padding:15px;background:#202535;border:1px solid #776b94;border-radius:10px}
+.study-envelope-label,.study-ip-envelope>div:first-child{font-size:14px;font-weight:550;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.study-envelope-values{display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:12px;line-height:1.8;margin:14px 0}
+.study-envelope-values b{display:block;font:15px/1.8 var(--mono)}
+.study-ip-envelope{padding:15px;background:#162c37;border:1px solid #7094aa;border-radius:7px;font-size:14px}
+.study-ip-envelope p{margin:10px 0;word-break:break-word}
+.study-payload{padding:11px 14px;border:1px solid #608f80;background:#152e25;border-radius:6px}
+.study-payload small{font-size:12px;color:var(--muted)}
+.study-payload p{font-family:var(--mono);color:#d9efdf}
+.study-companion{padding:21px;margin:20px 0;background:#131d26;border:1px solid var(--line2);border-radius:10px;overflow:auto;font-size:14px}
+.study-companion h3{font-size:18px;margin-bottom:10px}
+.study-companion p{margin:10px 0;line-height:1.85}
+.study-companion .btn{margin-top:10px}
+.study-weight-bits{display:grid;grid-template-columns:repeat(8,minmax(46px,1fr));gap:5px;margin:16px 0}
+.study-weight-bits .study-symbol span{font-size:10px}
+
+/* Search by subject; no activity or progress counters. */
+.reader-library-head{padding:12px 0 30px;border-bottom:1px solid var(--line);margin-bottom:27px}
+.reader-library-head h1{font-size:clamp(25px,3vw,40px);line-height:1.5;margin:10px 0}
+.reader-library-head>p{color:var(--muted);margin:10px 0}
+.reader-library .home-search{max-width:850px;margin:25px 0 13px}
+.reader-library .home-search input{font-size:16px;min-height:52px;width:100%;min-width:0}
+.reader-library .quick-terms button{font-size:13px;min-height:44px}
+.reader-course-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:19px;margin:25px 0}
+.reader-course-card{padding:25px;border:1px solid #3b505b;border-radius:12px;background:linear-gradient(145deg,#17262b,#111a23);display:flex;flex-direction:column;gap:11px}
+.reader-course-card h2{font-size:24px;color:#e2ede9}
+.reader-course-card p{color:var(--muted);font-size:14px}
+.reader-course-card>span:last-child{color:var(--accent);font-size:14px;margin-top:auto;padding-top:10px}
+.reader-course-card:hover{border-color:var(--accent)}
+.reader-specialist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin:28px 0}
+.reader-specialist>div{padding:20px 23px;border-left:2px solid #7090b0;background:#111a23;border-radius:0 8px 8px 0}
+.reader-specialist>div+div{border-left-color:#9c84b7}
+.reader-specialist h2{font-size:20px;margin-bottom:7px}
+.reader-specialist p{font-size:13px;color:var(--muted)}
+.reader-specialist>div>div{display:grid;gap:4px;margin:14px 0}
+.reader-specialist>div>div>a{font-size:14px;padding:9px 0;border-bottom:1px solid var(--line);min-height:44px;line-height:1.75}
+.reader-unit-card{min-height:215px;padding:22px}
+.reader-unit-card .lab-card-top{gap:8px;flex-wrap:wrap;margin-bottom:13px}
+.reader-unit-card .lab-card-top>span:last-child{font-size:10px;color:var(--muted)}
+.reader-unit-card h3{font-size:18px;line-height:1.65;letter-spacing:0;margin-bottom:11px}
+.reader-unit-card p{font-size:14px;line-height:1.8;max-width:100%;margin-bottom:13px}
+.reader-card-question{font-size:12px;color:var(--study-blue);line-height:1.85;border-top:1px solid var(--line);padding-top:11px;margin-bottom:15px}
+.reader-unit-card .lab-card-bottom{font-size:12px;color:var(--accent)}
+.reader-all-areas{margin:40px 0 10px}
+.reader-all-areas h2{font-size:23px;margin-bottom:10px}
+.reader-all-areas>p{font-size:14px;color:var(--muted)}
+.reader-area-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:20px 0}
+.reader-area-links a{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 15px;border:1px solid var(--line);border-radius:6px;font-size:13px;min-height:47px;background:#121a22}
+.reader-area-links span{font:12px var(--mono);color:var(--muted)}
+.reader-course-group{margin:34px 0}
+.reader-course-group>h2{display:flex;gap:14px;align-items:center;margin-bottom:18px;font-size:22px}
+.reader-course-group>h2 span{font:14px var(--mono);color:var(--accent)}
+
+/* Retain readable diagrams on narrow screens; scroll the figure, not the page. */
+@media(min-width:1450px){.reader-layout{grid-template-columns:minmax(310px,.8fr) minmax(0,1.5fr)}.reader-guidance{padding-right:8px}}
+@media(max-width:1150px){.reader-layout{grid-template-columns:minmax(250px,.8fr) minmax(0,1.1fr);gap:19px}.reader-figure figcaption{display:block}.reader-live-dot{display:block;margin-top:9px}.reader-play-buttons .btn{font-size:12px}.reader-area-links{grid-template-columns:repeat(2,minmax(0,1fr))}.reader-unit-card h3{font-size:17px}}
+@media(max-width:900px){.reader-layout{grid-template-columns:minmax(0,1fr)}.reader-explanation{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:20px}.reader-explanation>*{min-width:0}.reader-terms{grid-column:1/-1;margin:0;padding-top:0}.reader-guidance{padding-bottom:0}.reader-controls{margin:0}.reader-phases button{font-size:12px}.reader-course-card{padding:22px}.reader-unit-card{padding:19px}.reader .study-svg{min-width:520px}}
+@media(max-width:620px){
+.main{padding:23px 16px 36px}.reader,.reader-library,.reader-course-page{font-size:15px}
+.reader-title{padding-bottom:20px}.reader-title h1{font-size:25px}.reader-title>p{font-size:15px}.reader-title-links{font-size:12px;display:grid;gap:7px}
+.reader-phases{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;padding:5px;margin-bottom:21px}.reader-phases button{font-size:13px;justify-content:flex-start;padding:10px;min-height:48px}
+.reader-explanation{display:flex;flex-direction:column;gap:20px}.reader-guidance h2{font-size:22px}.reader-idea{margin:19px 0}.reader-controls{padding:18px}
+.reader-demonstration{min-width:0}.reader-figure figcaption{padding:18px}.reader-figure figcaption h2{font-size:18px}.reader-diagram{padding:17px 12px;min-height:180px}.reader-diagram>svg,.reader .study-svg{min-width:540px}
+.reader-player{padding:10px 13px 14px}.reader-play-buttons .btn{font-size:12px;padding:8px 10px;min-height:44px}.reader-play-buttons [data-r-action=first],.reader-play-buttons [data-r-action=last]{flex:0 1 49px}
+.reader-play-buttons [data-r-action=next]{min-width:110px}.reader-event{padding:19px}.reader-event h3{font-size:19px}.reader-event>p:not(.reader-overline){font-size:15px}
+.reader-frame-table,.reader-current-conditions{padding-left:15px;padding-right:15px}.reader-result-details,.reader-comparison>details{padding:7px 15px}
+.reader-next-units{padding:25px 0}.reader-related-links{display:grid;gap:8px}.reader-related-links a{font-size:13px}
+.study-terms{grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:9px}.study-equation{font-size:14px;padding:13px}.study-check{grid-template-columns:92px minmax(0,1fr) 23px;gap:6px;font-size:11px;padding:7px}.study-chip{font-size:12px;padding:7px;min-height:44px}
+.study-seven{gap:3px;min-width:330px}.study-symbol{padding:7px 2px;font-size:12px}.study-symbol strong{font-size:23px}.study-symbol small{font-size:9px}.study-code-groups{font-size:11px}
+.study-envelope{padding:10px}.study-ip-envelope{padding:11px}.study-envelope-values{font-size:11px;gap:7px}.study-envelope-values b{font-size:12px}.study-envelope-label,.study-ip-envelope>div:first-child{font-size:13px}
+.study-companion{padding:18px 14px}.study-weight-bits{grid-template-columns:repeat(4,minmax(45px,1fr))}.study-table{font-size:12px}.study-caption,.study-instruction{font-size:12px}
+.reader-library-head{padding:0 0 23px}.reader-library-head h1{font-size:28px}.reader-library .home-search{margin-top:19px}.reader-library .home-search input{font-size:14px;min-height:48px}
+.reader-course-grid,.reader-specialist{grid-template-columns:minmax(0,1fr);gap:15px}.reader-course-card{padding:21px}.reader-course-card h2{font-size:22px}.reader-course-card p{font-size:14px}.reader-specialist{margin:23px 0}
+.reader-area-links{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.reader-area-links a{font-size:12px;padding:11px 10px}.reader-unit-card h3{font-size:18px}.reader-unit-card p{font-size:14px}.reader-course-group>h2{font-size:20px}
+}
+@media(prefers-reduced-motion:reduce){.reader *,.reader-library *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 </style></head><body><div id="app"></div><noscript>この実験室にはJavaScriptが必要です。ブラウザのJavaScriptを有効にしてください。</noscript><script>/* Visual CS Lab — deterministic teaching models. No network requests. */
 (() => {
 'use strict';
@@ -2658,6 +2915,469 @@ for (const lab of CSL.labs) {
 })();
 
 ;
+/* Original interactive examples following the supplied lecture notes.
+ * PDF pages are references, not public copies of the user's documents.
+ * Every calculation is bounded, deterministic, and independent of playback.
+ */
+(() => {
+'use strict';
+const L=CSL, {frame:F,result:out,clone,register:R}=L;
+const {range:N,select:S,toggle:B,text:T}=L.ctrl;
+L.version='3.0.0';
+L.legacyLabIds=L.labs.map(l=>l.id);
+L.lessonDrafts={};
+L.defineLessons=rows=>{for(const [id,why,idea,example,pitfall,notes='',focus=''] of rows){if(L.lessonDrafts[id])throw Error('解説が重複しています: '+id);L.lessonDrafts[id]={why,idea,example,pitfall,notes,focus};}};
+L.sources.notesInfo={name:'提供された授業ノート「情報理論」',type:'提供資料',detail:'表紙を含むPDFのページ番号を各解説に記載。説明の順序、用語、図と式の結び付けを参考にしています。PDFそのものや講義スライドの複製は配布していません。入力例と可視化はこのサイト独自の教材です。'};
+L.sources.notesIntro={name:'提供された授業ノート「計算機科学入門」',type:'提供資料',detail:'表紙を含むPDFのページ番号を各解説に記載。元のノートの全記載を再現するものではありません。数値・実装・範囲は教材側で明示し、ノートと異なる表記は区別します。'};
+const number=n=>Number(n.toPrecision(7));
+const entropy=p=>p.reduce((s,x)=>s+(x>0?-x*Math.log2(x):0),0);
+function weights(s,count){const a=String(s).trim().split(/[\s,、]+/).filter(Boolean).map(Number);if(a.length!==count||a.some(x=>!Number.isFinite(x)||x<0)||a.reduce((s,x)=>s+x,0)<=0)throw Error(`0以上の重みを${count}個、カンマで入力してください。少なくとも1個は正にします。`);const sum=a.reduce((s,x)=>s+x,0);return a.map(x=>x/sum);}
+function binary(s,min=1,max=32){s=String(s).trim();if(!new RegExp(`^[01]{${min},${max}}$`).test(s))throw Error(`0と1を${min===max?min:`${min}〜${max}`}桁で入力してください。`);return [...s].map(Number);}
+const calc=(equation,terms=[],detail='')=>({type:'lesson-calculation',equation,terms,detail});
+const term=(id,label,value,meaning)=>({id,label,value,meaning});
+const unit=(id,area,title,question,summary,engine,controls,patch,notes,limits,opts={})=>{
+ const l=L.add({id,area,title,unit:title,question,summary,intro:question,engine,variant:'',controls,track:'core',course:notes.startsWith('情報理論')?'情報理論':'計算機科学入門',scope:'授業ノートを参考にした独自の計算教材',limits,sources:[notes.startsWith('情報理論')?'notesInfo':'notesIntro','models'],guide:[summary,'例の計算を1段ずつ確かめ、対応する図や式の部分を選びます。','条件を変え、同じ規則で結果を説明してみましょう。'],lesson:summary,observe:opts.observe||summary,exploration:{label:opts.variantLabel||'別の条件で確かめる',patch},presentation:opts.direct?'direct':'sequence',challenge:{question:question,options:[summary,'入力を変えても途中の計算は確かめなくてよい'],answer:0,explanation:summary},...opts});
+ l.notes=notes;return l;
+};
+L.teachingMath={entropy,weights,binary};
+R('self-information',p=>{
+ const probability=2**(-p.bits),information=-Math.log2(probability);
+ const terms=[term('p','出来事の確率',probability,'起きる前の確率です。'),term('i','自己情報量',information+' bit','その出来事が起きたと知ったときの情報量です。')];
+ return out([F('まず、出来事の起きにくさを見る',`起きる確率は1/${2**p.bits}です。「起きた」と聞いたときの驚きを、確率から数にします。`,calc(`p = 1 / ${2**p.bits}`,terms)),F('確率の逆数を取る','確率が半分になるごとに、逆数は2倍になります。',calc(`1 / p = ${2**p.bits}`,terms)),F('2を何回掛けた大きさかを読む','対数の底を2にすると単位はbitです。ここではI = log₂(1/p)を計算しています。',calc(`I = −log₂(${probability}) = ${information} bit`,terms))],{'確率':probability,'自己情報量 (bit)':information});
+});
+unit('c01-information','C01','自己情報量','めったにない出来事ほど、知ったときの情報量は大きい？','出来事の確率から、1回知ったときの情報量を求めます。','self-information',[N('bits','確率を1/2にする回数',3,0,10)],{bits:1},'情報理論 pp.3–4','底2・確率1/2ⁿに絞った導入例です。情報の有用性や個人的な価値を測るものではありません。',{variantLabel:'1/8と1/2を比べる'});
+R('source-entropy',p=>{
+ const probs=weights(p.weights,4),names=['A','B','C','D'];let sum=0;const frames=[];
+ const picture=selected=>({type:'lesson-entropy',probabilities:probs,names,selected});
+ frames.push(F('同じ4種類でも、出やすさが違う','重みを合計で割り、確率の合計を1にします。表の行を選ぶと、式の対応する項も強調されます。',picture(-1)));
+ probs.forEach((q,i)=>{const info=q>0?-Math.log2(q):null,contribution=q>0?q*info:0;sum+=contribution;frames.push(F(`${names[i]}の情報量を、出やすさで重み付けする`,q>0?`確率 ${number(q)} × 情報量 ${number(info)} = ${number(contribution)} bit/記号。4行を足すと平均になります。`:'確率0の出来事は発生しません。平均への寄与を極限に従って0とし、自己情報量が0だとは扱いません。',picture(i),{'ここまでの和':number(sum)}));});
+ frames.push(F('平均情報量 H を得る','自己情報量の単純平均ではありません。各出来事の確率を掛けてから足しています。',picture(-1),{'H (bit/記号)':number(sum)}));
+ return out(frames,{'エントロピー (bit/記号)':number(sum),'4種類での最大値':2,'確率の合計':number(probs.reduce((s,x)=>s+x,0))});
+});
+unit('c01-entropy','C01','平均情報量・エントロピー','同じ4種類なら、いつでも同じ情報量になる？','自己情報量に出現確率を掛け、すべての出来事について足します。','source-entropy',[T('weights','A,B,C,Dの出やすさ','4,2,1,1','確率ではなく比でも入力できます。合計で割って確率にします。')],{weights:'1,1,1,1'},'情報理論 pp.3–4','4記号の独立な情報源の1記号当たりの量です。0 log₂0は0として計算します。',{variantLabel:'4種類を同じ確率にする',prereq:['c01-information']});
+R('joint-information',p=>{
+ const joint=weights(p.weights,4),px=[joint[0]+joint[1],joint[2]+joint[3]],py=[joint[0]+joint[2],joint[1]+joint[3]],hx=entropy(px),hy=entropy(py),hxy=entropy(joint),conditional=hxy-hy,mutual=hx+hy-hxy;
+ const terms=[term('x','H(X)',number(hx),'Xだけを知る平均情報量'),term('y','H(Y)',number(hy),'Yだけを知る平均情報量'),term('xy','H(X,Y)',number(hxy),'2つを組として知る平均情報量'),term('cond','H(X|Y)',number(conditional),'Yを知っても残っているXの不確かさ'),term('mi','I(X;Y)',number(mutual),'Yを知ることで減るXの不確かさ')];
+ return out([F('4つの組の確率を読む','行はX、列はYです。行和・列和から、それぞれ単独の確率を得ます。',{type:'grid',matrix:[[joint[0],joint[1]],[joint[2],joint[3]]]}, {},{headers:['X','Y','同時確率'],rows:joint.map((q,i)=>[Math.floor(i/2),i%2,number(q)])}),F('同時に知る量を計算','4つの組をそれぞれ1つの出来事として、エントロピーを計算します。',calc(`H(X,Y) = ${number(hxy)} bit`,terms)),F('Yを知った分を引く','H(X|Y) = H(X,Y) − H(Y)。図の重なりだけで証明したことにはせず、この式と同時確率を対応させます。',calc(`${number(hxy)} − ${number(hy)} = ${number(conditional)}`,terms)),F('相互情報量を求める','I(X;Y) = H(X) − H(X|Y)。YがXについてどれだけ教えてくれたかを読みます。',calc(`${number(hx)} − ${number(conditional)} = ${number(mutual)}`,terms))],{'H(X)':number(hx),'H(Y)':number(hy),'H(X,Y)':number(hxy),'H(X|Y)':number(conditional),'I(X;Y)':number(mutual)});
+});
+unit('c01-joint','C01','結合・条件付きエントロピーと相互情報量','片方を知ると、もう片方について何が分かる？','2変数の同時確率から、全体・残り・共有する情報量を順に求めます。','joint-information',[T('weights','(X,Y)=(0,0),(0,1),(1,0),(1,1)の重み','3,1,1,3')],{weights:'1,1,1,1'},'情報理論 pp.5–6','離散2値変数のみ。ベン図は証明として用いません。数値誤差は表示時に丸めます。',{variantLabel:'XとYが独立な分布にする',prereq:['c01-entropy']});
+R('markov-source',p=>{
+ const a=p.a/100,b=p.b/100,pi=[b/(a+b),a/(a+b)],local=[entropy([1-a,a]),entropy([b,1-b])],rate=pi[0]*local[0]+pi[1]*local[1];let v=[1,0];const frames=[F('どの状態から、どこへ進むか','行は現在、列は次の状態です。状態0から1へ行く確率がa、1から0へ行く確率がbです。',{type:'grid',matrix:[[1-a,a],[b,1-b]]})];
+ for(let i=0;i<6;i++){v=[v[0]*(1-a)+v[1]*b,v[0]*a+v[1]*(1-b)];frames.push(F(`${i+1}回後の状態確率`,'状態の確率ベクトルに遷移確率行列を掛けます。これは1本のランダムな試行の軌跡ではなく、確率分布の更新です。',{type:'bars',values:v,labels:['状態0','状態1']}));}
+ frames.push(F('定常確率で、各状態の情報量を重み付けする','π₀a = π₁b と π₀+π₁=1から定常確率を求めます。6回で必ず定常に達したと判断するのではなく、式で求めた値を使います。',calc(`H = ${number(pi[0])} × ${number(local[0])} + ${number(pi[1])} × ${number(local[1])} = ${number(rate)}`, [term('p0','π₀',number(pi[0]),'状態0にいる定常確率'),term('p1','π₁',number(pi[1]),'状態1にいる定常確率'),term('h0','H(状態0)',number(local[0]),'状態0から次へ進むときの情報量'),term('h1','H(状態1)',number(local[1]),'状態1から次へ進むときの情報量')])));
+ return out(frames,{'定常確率0':number(pi[0]),'定常確率1':number(pi[1]),'エントロピー率':number(rate)});
+});
+unit('c01-markov','C01','マルコフ情報源・定常確率','前の状態を覚えている情報源では、何を平均する？','遷移の確率と、各状態にいる確率を区別してエントロピー率を求めます。','markov-source',[N('a','状態0→1の確率',30,5,95,5,'%'),N('b','状態1→0の確率',60,5,95,5,'%')],{a:50,b:50},'情報理論 pp.7–8','2状態・各遷移確率が0より大きい非周期的な例。一般のマルコフ連鎖や全てのエルゴード条件の判定ではありません。',{variantLabel:'次の状態が半々になる場合',prereq:['c01-entropy']});
+R('binary-channel',p=>{
+ const q=p.prior/100,e=p.error/100,y=q*(1-e)+(1-q)*e,hy=entropy([y,1-y]),noise=entropy([e,1-e]),mutual=hy-noise,capacity=1-noise;
+ const terms=[term('q','P(X=1)',q,'情報源の確率。通信路の誤り率ではありません。'),term('e','ε',e,'0→1と1→0に共通の反転確率'),term('y','P(Y=1)',number(y),'送る確率と反転確率の両方で決まります。')];
+ return out([F('入力の確率と、通信路を分ける','BSCでは0も1も同じ確率εで反転します。線に書かれた数は条件付き確率です。',{type:'lesson-channel',q,e}),F('受け取る1の確率を足し合わせる','1を送って反転しない場合と、0を送って反転する場合を足します。',calc(`P(Y=1) = ${q} × ${1-e} + ${1-q} × ${e} = ${number(y)}`,terms)),F('この情報源での伝送情報量を求める','I(X;Y) = H(Y) − h(ε)。この入力分布で伝わる量です。',calc(`I = ${number(hy)} − ${number(noise)} = ${number(mutual)} bit/記号`,terms)),F('入力分布を最適にした上限と区別する','通信路容量は入力の確率も選べるときの最大値です。このBSCでは入力が半々のときC=1−h(ε)です。',calc(`C = 1 − ${number(noise)} = ${number(capacity)} bit/記号`,terms))],{'伝送情報量 I':number(mutual),'通信路容量 C':number(capacity),'P(Y=1)':number(y)});
+});
+unit('c01-channel','C01','2元対称通信路・伝送情報量・通信路容量','通信路が同じでも、送る確率を変えると伝わる量は変わる？','情報源の分布と誤り率を分け、伝送情報量とその最大値を比較します。','binary-channel',[N('prior','1を送る確率',30,0,100,5,'%'),N('error','反転する確率 ε',10,0,50,5,'%')],{prior:50},'情報理論 pp.9–11','記憶のないBSC、1記号当たりの量。実回線のbpsや有限長符号の誤り率を保証しません。',{variantLabel:'0と1を半々に送る',prereq:['c01-joint']});
+function parseCodes(s){const codes=String(s).trim().split(/[\s,、]+/).filter(Boolean);if(codes.length<2||codes.length>6||codes.some(x=>!/^[01]{1,8}$/.test(x))||new Set(codes).size!==codes.length)throw Error('重複のない符号語を2〜6個、各1〜8ビットで入力してください。');return codes;}
+R('prefix-codes',p=>{
+ const codes=parseCodes(p.codes),pairs=[];codes.forEach((a,i)=>codes.forEach((b,j)=>{if(i!==j&&b.startsWith(a))pairs.push([String.fromCharCode(65+i),a,String.fromCharCode(65+j),b]);}));
+ const frames=[F('記号にビット列を割り当てる','符号語を途中で区切る目印は送らない条件を考えます。',{type:'cells',rows:codes.map((x,i)=>({label:String.fromCharCode(65+i),values:[x]}))}),F('他の符号語の先頭になっていないか調べる',pairs.length?'ある符号語が別の符号語の先頭です。この検査だけで「一意的復号不可能」とまでは言えません。':'どの符号語も別の符号語の先頭ではありません。記号を読み終えるたびに区切れる瞬時符号です。',{type:'lesson-code-tree',codes}, {},{headers:['記号','接頭辞','相手','符号語'],rows:pairs})];
+ // A bounded witness search proves ambiguity when it finds TWO messages with one bit string.
+ const seen=new Map();let witness=null;
+ const visit=(bits,message,depth)=>{if(witness||depth===0)return;codes.forEach((code,i)=>{if(witness)return;const next=bits+code,word=message+String.fromCharCode(65+i);if(seen.has(next)&&seen.get(next)!==word){witness=[next,seen.get(next),word];return;}seen.set(next,word);visit(next,word,depth-1);});};visit('','',4);
+ frames.push(F('一意的復号とは別に確認する',witness?`ビット列 ${witness[0]} は ${witness[1]} と ${witness[2]} の両方に復号できます。具体的な反例が見つかりました。`:pairs.length?'4記号までの探索では反例が見つかりません。この有限探索で、一意的復号可能だと証明したことにはしません。':'接頭辞条件を満たすので、一意的にも復号できます。',{type:'cells',rows:[{label:'瞬時復号',values:[pairs.length?'不可':'可能']},{label:'一意的復号',values:[witness?'反例あり':pairs.length?'この探索だけでは未判定':'可能']}]}));
+ return out(frames,{'瞬時復号':pairs.length?'不可':'可能','接頭辞の組数':pairs.length,'一意的復号':witness?'反例あり':pairs.length?'未判定':'可能'});
+});
+unit('c01-prefix','C01','一意的復号・瞬時復号・符号木','区切りのないビット列を、いつ記号へ戻せる？','接頭辞の重なりと復号の曖昧さを、符号木と具体的な反例で区別します。','prefix-codes',[T('codes','A,B,C…の符号語','0,10,110,111')],{codes:'0,01,10'},'情報理論 pp.12–13','一意性の反例探索は長さ4記号までです。反例なしを一意的復号可能の証明としません。',{variantLabel:'接頭辞が重なる符号に変える'});
+R('kraft',p=>{
+ const lengths=String(p.lengths).split(/[\s,、]+/).filter(Boolean).map(Number);if(lengths.length<1||lengths.length>8||lengths.some(x=>!Number.isInteger(x)||x<1||x>8))throw Error('符号長を1〜8の整数で、1〜8個入力してください。');let sum=0;const frames=[];
+ lengths.forEach((n,i)=>{sum+=2**(-n);frames.push(F(`長さ${n}の符号が使う枝の割合`,'二分木で深さnの葉は、全体の2⁻ⁿを使います。指定した長さが占める割合を足します。',calc(lengths.slice(0,i+1).map(x=>`2⁻${x}`).join(' + ')+` = ${number(sum)}`,lengths.map((n,j)=>term(String(j),`記号${j+1}の長さ`,n,`使う割合は1/${2**n}`)))));});
+ frames.push(F(sum<=1?'指定の長さで瞬時符号を構成できる':'指定の長さでは瞬時符号を構成できない','2元符号ではΣ2⁻ˡ ≤ 1が、指定の長さを持つ瞬時符号の存在条件です。すでに与えられた符号語そのものが瞬時符号かは、別に接頭辞を調べます。',calc(`Σ2⁻ˡ = ${number(sum)} ${sum<=1?'≤':'>'} 1`)));
+ return out(frames,{'Kraft和':number(sum),'瞬時符号の存在':sum<=1?'可能':'不可能'});
+});
+unit('c01-kraft','C01','クラフトの不等式','この符号長の組み合わせで、瞬時符号を作れる？','符号木が使う割合を足し、長さの組として実現可能かを調べます。','kraft',[T('lengths','各記号の符号長','1,2,3,3')],{lengths:'1,1,2'},'情報理論 p.14','2元の有限符号。符号語の選び方そのものを検査する機能とは区別します。',{variantLabel:'木に収まらない長さにする',prereq:['c01-prefix']});
+R('shannon-fano',p=>{
+ const probs=weights(p.weights,4),items=probs.map((q,i)=>({q,name:String.fromCharCode(65+i),code:''})).filter(x=>x.q>0).sort((a,b)=>b.q-a.q||a.name.localeCompare(b.name)),frames=[];
+ function split(xs,prefix){if(xs.length===1){xs[0].code=prefix||'0';return;}const total=xs.reduce((s,x)=>s+x.q,0);let best=1,diff=Infinity,left=0;for(let i=1;i<xs.length;i++){left+=xs[i-1].q;const d=Math.abs(total-2*left);if(d<diff){diff=d;best=i;}}const a=xs.slice(0,best),b=xs.slice(best);frames.push(F(`${xs.map(x=>x.name).join('・')}を2つに分ける`,'確率の大きい順に並べ、両側の確率の和ができるだけ近い位置で分けます。同率なら先の境界を選ぶ規則です。',{type:'cells',rows:[{label:prefix+'0',values:a.map(x=>`${x.name}: ${number(x.q)}`)},{label:prefix+'1',values:b.map(x=>`${x.name}: ${number(x.q)}`)}]}));split(a,prefix+'0');split(b,prefix+'1');}
+ split(items,'');const average=items.reduce((s,x)=>s+x.q*x.code.length,0);
+ frames.push(F('通った枝を順に読む','Huffmanの「小さい2つをまとめる」操作と混同せず、こちらは全体を分けていく手順です。',{type:'lesson-code-tree',codes:items.map(x=>x.code),names:items.map(x=>x.name)}, {},{headers:['記号','確率','符号','長さ'],rows:items.map(x=>[x.name,number(x.q),x.code,x.code.length])}));return out(frames,{'平均符号長':number(average),'エントロピー':number(entropy(probs))});
+});
+unit('c01-shannon-fano','C01','シャノン・ファノの符号化','出やすさの和を半分に分けると、どんな符号木になる？','確率を大きい順に並べ、2つに分ける手順を繰り返します。','shannon-fano',[T('weights','A,B,C,Dの重み','4,2,1,1')],{weights:'3,3,2,2'},'情報理論 p.15','4記号まで。0の重みの記号は符号化対象外です。1種類だけのときは空符号を使わず0を割り当てます。',{variantLabel:'出現頻度の偏りを変える',prereq:['c01-entropy','c01-prefix']});
+R('hamming-distance',p=>{
+ const a=binary(p.a),b=binary(p.b);if(a.length!==b.length)throw Error('2つのビット列の長さをそろえてください。');const diff=a.map((x,i)=>x^b[i]),distance=diff.reduce((s,x)=>s+x,0);
+ return out([F('同じ位置のビットを比べる','異なる位置だけに印を付けます。数値としての引き算ではありません。',{type:'lesson-distance',a,b,diff}),F('違っている位置の個数を数える','XORした結果の1を数えると、ハミング距離になります。',calc(`d(X,Y) = ${diff.join(' + ')} = ${distance}`))],{'ハミング距離':distance,'ビット数':a.length},'これは選んだ2語間の距離です。符号全体の最小距離や訂正可能数と同じだと考えないでください。');
+});
+unit('c01-distance','C01','ハミング距離','2つのビット列は、何か所違っている？','同じ位置どうしをXORし、1の個数を数えて距離を求めます。','hamming-distance',[T('a','ビット列X','1011010'),T('b','ビット列Y','1000010')],{b:'0011011'},'情報理論 pp.17–18','比較する2語の距離のみ。符号集合全体の最小距離の計算ではありません。',{variantLabel:'違う位置の数を変える'});
+const H=[[1,1,1,0,1,0,0],[0,1,1,1,0,1,0],[1,1,0,1,0,0,1]];
+const G=[[1,0,0,0,1,0,1],[0,1,0,0,1,1,1],[0,0,1,0,1,1,0],[0,0,0,1,0,1,1]];
+const syndrome=r=>H.map(row=>row.reduce((s,x,i)=>s^(x&r[i]),0));
+L.teachingMath.linearCode={G,H,syndrome};
+R('linear-code',p=>{
+ const info=binary(p.text,4,4),sent=G[0].map((_,j)=>info.reduce((s,x,i)=>s^(x&G[i][j]),0)),received=[...sent];if(p.flip)received[p.flip-1]^=1;
+ const syn=syndrome(received),bad=H[0].map((_,j)=>H.map(row=>row[j]).join('')).indexOf(syn.join('')),corrected=[...received];if(bad>=0)corrected[bad]^=1;
+ const picture=(phase,check=-1)=>({type:'lesson-linear',phase,info,sent,received,corrected,syndrome:syn,H,G,check});
+ const frames=[F('情報ビットの後ろに検査ビットを置く','この単元はノートの情報4ビット＋検査3ビットの順です。別単元の「検査ビットを位置1,2,4に置く方式」と、そのまま位置番号を混ぜないでください。',picture('encode')),F('受信列だけで検査する','受信側の判定は、受け取った7ビットとHから計算します。反転位置の入力値を訂正位置として流用しません。',picture('receive'))];
+ H.forEach((row,i)=>frames.push(F(`検査 s${i+1} を求める`,`${row.map((x,j)=>x?received[j]:null).filter(x=>x!==null).join(' ⊕ ')} = ${syn[i]}。行列の1のある列が検査対象です。`,picture('check',i))));
+ frames.push(F('シンドロームとHの列を照合する',bad>=0?`検査結果 ${syn.join('')} と一致するのは第${bad+1}列です。1ビット誤りの条件では、その位置を反転します。`:'検査結果は000です。1ビット以下の誤りという今回の条件では変更しません。',picture('correct')));
+ return out(frames,{'送信列':sent.join(''),'受信列':received.join(''),'シンドローム':syn.join(''),'訂正位置':bad<0?'なし':bad+1,'復元情報':corrected.slice(0,4).join('')});
+});
+unit('c01-linear-code','C01','生成行列・検査行列・シンドローム','検査の組み合わせから、なぜ誤りの位置が分かる？','情報ビット、検査式、行列の列、シンドロームを同じ図で対応させます。','linear-code',[T('text','情報4ビット','1011'),N('flip','反転する位置（0はなし）',2,0,7)],{flip:6},'情報理論 pp.20–23','ノートの情報ビット先頭の検査式を用いた(7,4)符号です。誤り0または1ビットのみ。2ビット以上の訂正を保証しません。',{variantLabel:'検査ビットの誤りに変える',prereq:['c01-distance','c01-hamming']});
+R('subset-automaton',p=>{
+ const input=String(p.input).trim();if(!/^[01]{0,20}$/.test(input))throw Error('0と1を20文字以内で入力してください。空文字も試せます。');
+ const next=(set,ch)=>[...new Set(set.flatMap(q=>q===0?(ch==='0'?[0,1]:[0]):q===1&&ch==='1'?[2]:[]))].sort();
+ let set=[0];const frames=[F('同時にあり得る状態を集合で持つ','この独自例は、末尾が01の文字列を受理します。q0からは0/1でq0へ戻り、0ではq1へも進めます。q1から1でq2です。',{type:'lesson-nfa',set,input,index:-1})];
+ [...input].forEach((ch,i)=>{const before=[...set];set=next(set,ch);frames.push(F(`「${ch}」を読む：{${before.map(x=>'q'+x).join(',')}} → {${set.map(x=>'q'+x).join(',')}}`,'それぞれの可能な状態から移れる先を全部集めます。どれか1本を乱数で選ぶ操作ではありません。',{type:'lesson-nfa',set,input,index:i}));});
+ frames.push(F('入力を最後まで読んでから受理を判定',set.includes(2)?'集合に受理状態q2が含まれます。受理する経路が少なくとも1つ存在します。':'集合にq2がありません。途中でq2に到達したことだけでは、残りの入力も含めて受理したことになりません。',{type:'lesson-nfa',set,input,index:input.length}));
+ return out(frames,{'入力':input||'ε','集合状態':set.map(x=>'q'+x).join(', '),'受理':set.includes(2)?'はい':'いいえ'});
+});
+unit('c02-nfa','C02','NFAからDFAへ・集合状態','複数の経路を、1つの状態としてどう表す？','同時にあり得る状態を集合にまとめ、入力ごとに更新します。','subset-automaton',[T('input','入力する文字列','0101')],{input:'0100'},'計算機科学入門 pp.18–20','ノートとは別の3状態の固定例です。任意のNFAを変換するエディターではありません。ε遷移は含みません。',{variantLabel:'最後の1文字だけ変える',prereq:['c02-dfa']});
+R('nand-construction',p=>{
+ const a=+p.a,b=+p.b,nand=(x,y)=>1-(x&y),na=nand(a,a),nb=nand(b,b),ab=nand(a,b),value=p.gate==='NOT'?na:p.gate==='AND'?nand(ab,ab):p.gate==='OR'?nand(na,nb):nand(nand(a,ab),nand(b,ab));
+ const equations={NOT:`A NAND A = ${na}`,AND:`(A NAND B) NAND (A NAND B) = ${value}`,OR:`(A NAND A) NAND (B NAND B) = ${value}`,XOR:`t = A NAND B = ${ab}; (A NAND t) NAND (B NAND t) = ${value}`};
+ return out([F('NANDはANDの結果を反転する','0と1の入力を、NANDだけで組み合わせます。同じ線を両方の入力へ入れるとNOTになります。',{type:'gate',gate:'NAND',a,b,output:ab}),F(`${p.gate}の式をNANDだけで作る`,'式の括弧の内側から計算します。入力を切り替えて、目的の真理値表と一致するか確かめてください。',calc(equations[p.gate],[term('a','A',a,'元の入力'),term('b','B',b,p.gate==='NOT'?'NOTでは使いません':'元の入力'),term('t','A NAND B',ab,'中間の値'),term('y','出力',value,`${p.gate}の結果`)]))],{'出力':value,'目的のゲート':p.gate});
+});
+unit('c08-nand','C08','NANDだけで論理ゲートを作る','同じ種類の部品だけで、NOT・AND・OR・XORを作れる？','二重否定と中間の値を使い、NANDの式を内側から計算します。','nand-construction',[S('gate','作りたいゲート','OR',['NOT','AND','OR','XOR']),B('a','入力A',true),B('b','入力B',false)],{gate:'XOR',b:true},'計算機科学入門 p.8','論理値の計算のみ。伝搬遅延や物理回路のハザードは再現しません。',{variantLabel:'XORで両方の入力を1にする',prereq:['c08-gate']});
+R('load-register',p=>{
+ const inputs=binary(p.inputs,1,16),loads=binary(p.loads,inputs.length,inputs.length);let q=+p.initial;const frames=[F('クロックが来る前の値','出力Qは前の値を保持しています。入力Dが変わった瞬間に、必ずQも変わるわけではありません。',{type:'lesson-register',q,d:inputs[0],load:loads[0],clock:0,rows:[]})],rows=[];
+ inputs.forEach((d,i)=>{const before=q,selected=loads[i]?d:q;frames.push(F(`クロック${i+1}の前：Muxで選ぶ`,loads[i]?'load=1なので、新しい入力を選びます。':'load=0なので、自分が保持しているQを選び直します。',{type:'lesson-register',q,d,load:loads[i],clock:0,selected,rows:clone(rows)}));q=selected;rows.push([i+1,d,loads[i],before,q]);frames.push(F(`立上り${i+1}：Qを更新する`,'DFFは選ばれた値を、このクロックの立上りで保持します。load=0でもクロック自体を消しているわけではありません。',{type:'lesson-register',q,d,load:loads[i],clock:1,selected,rows:clone(rows)}));});
+ return out(frames,{'最後のQ':q,'クロック回数':inputs.length});
+});
+unit('c08-register','C08','DFF・Mux・レジスタ','新しい値を覚える時と、前の値を保つ時をどう選ぶ？','Muxが選ぶ値と、DFFが値を取り込むタイミングを分けて操作します。','load-register',[T('inputs','各クロックの入力D','1011'),T('loads','各クロックのload','1101'),B('initial','最初のQを1にする',false)],{loads:'0000'},'計算機科学入門 pp.14–16','1ビット、立上りトリガーの理想DFF。セットアップ時間・保持時間・メタステーブルは対象外です。',{variantLabel:'loadをすべて0にする',prereq:['c08-gate']});
+R('process-addresses',p=>{
+ const page=Math.floor(p.address/16),offset=p.address%16,tables={A:[1,3],B:[2,0]},frame=tables[p.process][page],physical=frame*16+offset;
+ return out([F('アプリから見える住所を選ぶ','アプリAとBはどちらも0〜31の仮想アドレスを使えます。この例では別々のページ表を持ちます。',{type:'lesson-addresses',process:p.process,page,offset,physical,phase:0,tables}),F('ページ表で物理フレームを選ぶ',`${p.process}の仮想ページ${page}は物理フレーム${frame}へ対応します。同じ仮想ページ番号でも、別のアプリなら違う表を使います。`,{type:'lesson-addresses',process:p.process,page,offset,physical,phase:1,tables}),F('ページ内の位置はそのまま足す',`物理アドレス = ${frame} × 16 + ${offset} = ${physical}。この例では2つのアプリのフレームを共有していません。`,{type:'lesson-addresses',process:p.process,page,offset,physical,phase:2,tables})],{'プロセス':p.process,'仮想アドレス':p.address,'ページ内の位置':offset,'物理アドレス':physical});
+});
+unit('c10-address-spaces','C10','アプリごとの仮想アドレス空間','2つのアプリが同じ住所を使っても、なぜ混ざらない？','アプリごとのページ表から、実際に使う物理メモリの場所をたどります。','process-addresses',[S('process','操作するアプリ','A',['A','B']),N('address','アプリから見えるアドレス',5,0,31)],{process:'B'},'計算機科学入門 p.35','ノートを参考にした小さな独自配置。各アプリ2ページ・1ページ16B。共有メモリ・スワップ・権限・多段表はこの導入では省略します。',{variantLabel:'同じ住所をアプリBから見る',prereq:['c10-pointer']});
+})();
+
+;
+/* Deeper traces, while preserving the original engines' public metrics. */
+(() => {
+'use strict';
+const L=CSL,{frame:F,result:out,clone,register:R}=L;
+const signal=L.engines.signal;
+L.teachingMath.polynomialDivide=(text,divisor='1011')=>{
+ const a=L.teachingMath.binary(text,4,64),d=L.teachingMath.binary(divisor,2,16),steps=[];
+ if(d[0]!==1)throw Error('生成多項式の先頭を1にしてください。');
+ for(let i=0;i<=a.length-d.length;i++){
+  const before=a.join(''),apply=a[i]===1;
+  if(apply)for(let j=0;j<d.length;j++)a[i+j]^=d[j];
+  steps.push({before,after:a.join(''),position:i,apply,divisor:d.join('')});
+ }
+ return {remainder:a.slice(-(d.length-1)).join(''),steps};
+};
+R('signal',(p,lab)=>{
+ if(lab.variant!=='crc')return signal(p,lab);
+ const data=L.teachingMath.binary(p.data,1,24).join(''),divide=L.teachingMath.polynomialDivide,encoding=divide(data+'000'),sent=data+encoding.remainder,received=[...sent];
+ if(p.flip>sent.length)throw Error(`反転位置は0〜${sent.length}で指定してください。0は反転なしです。`);
+ if(p.flip>0)received[p.flip-1]=String(1-Number(received[p.flip-1]));
+ const decoding=divide(received.join(''));
+ const frames=[F('データを多項式の係数として読む','右端が定数項です。生成多項式1011はx³+x+1なので、検査ビット用に3個の0を右へ足します。',{type:'lesson-division',original:data+'000',before:data+'000',after:data+'000',position:-1,divisor:'1011',phase:'送信側',apply:false})];
+ encoding.steps.forEach(s=>frames.push(F(`送信側：左から${s.position+1}番目を確かめる`,s.apply?'先頭が1なので、1011をこの位置に合わせてXORします。繰下がりはありません。':'先頭は0なので、この位置ではXORせず次へ進みます。',{type:'lesson-division',...s,original:data+'000',phase:'送信側'})));
+ frames.push(F('検査ビットを付けて送る',`余り${encoding.remainder}を右へ付けます。受信側へは元のデータの正解や誤り位置を判定用に渡しません。`,{type:'bitrow',bits:sent,split:data.length,labels:['データ','CRC']}));
+ frames.push(F('通信路を通った列を受け取る',p.flip?'今回は1ビットを反転した条件です。検査は受信列から計算します。':'今回は反転なしです。',{type:'bitrow',bits:received.join(''),split:data.length,labels:['受信データ','受信CRC']}));
+ decoding.steps.forEach(s=>frames.push(F(`受信側：左から${s.position+1}番目を確かめる`,s.apply?'受信した列を1011で割ります。1の位置でXORを行います。':'この位置は0です。次の位置へ進みます。',{type:'lesson-division',...s,original:received.join(''),phase:'受信側'})));
+ frames.push(F('受信側の余りで判定する',decoding.remainder==='000'?'余りは000です。今回は誤りを検出しませんでした。一般に誤りなしと同値だとは限りません。':'余りが0でないため誤りを検出しました。CRCから自動で正しい本文を復元する処理ではありません。',{type:'flow',nodes:['受信列','1011で割る',`余り ${decoding.remainder}`],active:2,failed:decoding.remainder!=='000'},{'余り':decoding.remainder}));
+ return out(frames,{'データ長':data.length,'CRC長':3,'検出':decoding.remainder==='000'?'なし':'あり'});
+});
+// A separate example makes the distinction between IP and per-link MAC explicit.
+R('hop-envelopes',p=>{
+ const remote=p.remote,source='192.0.2.10',destination=remote?'198.51.100.20':'192.0.2.20';
+ const view=(phase,from,to)=>({type:'lesson-hop',remote,source,destination,message:p.message,phase,from,to});
+ const frames=[F('最終的に届けたい相手を選ぶ',`IPの宛先は${destination}です。送りたい中身と、今回の区間の相手を分けます。`,view(0,'—','—')),F(remote?'最初のLANではルーターへ渡す':'同じLANの相手へ直接渡す',remote?'宛先IPは遠くのBのままです。Ethernetの宛先だけを、同じLANの出口であるルーターのMACにします。':'宛先IPも、この区間のMACも、同じLANにいるBを指します。',view(1,'MAC-A',remote?'MAC-R左':'MAC-B'))];
+ if(remote)frames.push(F('ルーターが次の区間の包みを作る','前のEthernetフレームをそのまま別LANへ流し続けるのではありません。次の区間の送信元・宛先MACにして包み直します。',view(2,'MAC-R右','MAC-B')));
+ frames.push(F('Bで中身を受け取る','リンクの包みを外し、IP、さらに上の層へ渡します。この例はNATなしなので送信元・宛先IPは途中でも同じです。',view(3,remote?'MAC-R右':'MAC-A','MAC-B')));
+ return out(frames,{'最終送信元IP':source,'最終宛先IP':destination,'通るLANの数':remote?2:1},'MACは説明用の名前です。ARPは解決済み、経路設定済み、NATなし。Ethernet以外のリンクや全ヘッダーフィールドは省略します。');
+});
+const l=L.add({id:'n01-forwarding',area:'C13',track:'network',topic:'N01',title:'IPとMAC・1区間ずつの配送',unit:'IPとMAC・1区間ずつの配送',question:'最終的な相手と、今の区間で渡す相手は同じ？',summary:'LANを越えると変わるMACと、最終宛先を示すIPを、図の同じ相手へ対応させます。',intro:'同じデータを送るのに、なぜ2種類の宛先が必要なのでしょう。',engine:'hop-envelopes',variant:'',controls:[L.ctrl.toggle('remote','別のLANへ送る',true),L.ctrl.text('message','送りたい中身','Hello, B.')],prereq:['n01-packet','n04-subnet'],course:'計算機科学入門／コンピュータネットワーク',sources:['notesIntro','models'],scope:'NATなし・2つのLANの独自教材',limits:'MACは架空の名前。ARPと経路は設定済みとし、IPの全フィールド変化や実際の信号伝送は含みません。',presentation:'sequence',observe:'各段階でIPの宛先とMACの宛先が、図のどの相手を示すか比べます。',exploration:{label:'同じLANの相手へ送る',patch:{remote:false}},guide:['最終宛先を確認します。','1区間ずつ送り、MACの対象を選んでください。','同じLANの条件と比較します。'],lesson:'今の区間と最終宛先では、必要な宛先情報の役割が違います。',challenge:{question:'NATのないこの例で、ルーターを越えると何が変わる？',options:['各区間の送信元・宛先MAC','IPの宛先が必ずルーターに変わる','メッセージの文字列が変わる'],answer:0,explanation:'各リンクのMACを使い直します。最終宛先IPはBのままです。'}});
+l.notes='計算機科学入門 pp.53,56–59';
+L.defineLessons([['n01-forwarding','住所を指定した荷物も、最初は同じ町の配達拠点へ渡す場合があります。ネットワークでも最終宛先と今渡す相手を分けます。','IPはここでは最終的な端末を示し、EthernetのMACは今のLANで受け渡す相手を示します。ルーターを越えると次のLANのMACへ包み直します。','A→ルーター→Bの例で1区間だけ送ります。宛先IPがBのまま、MACの宛先がルーターになっていることを確認します。次の区間では送信元MACも変わります。','NATなしの簡単な例です。IPのすべてのフィールドが不変なのではなく、ここでは送信元・宛先アドレスを観察しています。','計算機科学入門 pp.53,56–59','remote']]);
+})();
+
+;
+/* Editorial content: a reason, an idea, a worked example, and a misconception
+ * for each individual unit. These are not generated from control labels. */
+(() => {
+'use strict';
+CSL.defineLessons([
+['c01-bits','コンピュータには「42」という文字ではなく、0と1の並びを記録します。では、その並びをどう数に戻すのでしょう。','右端から1、2、4、8…という重みを割り当て、1になっている場所の重みを足します。同じ並びでも、負数を表す規則を選ぶと読み方が変わります。','初期値42は00101010です。1が立つ32・8・2を足すと42になります。次に最上位ビットだけを変え、符号なしの重み128と、2の補数の重み−128を比べます。','ビットに「負」という文字が書かれるわけではありません。値の表現と読み方を分けてください。','計算機科学入門 pp.3–4,12–13','value'],
+['c01-float','0.1を入力して保存しただけなのに、取り出した値が少し違う場合があります。','限られたビットで小数を表すには、表現できる値のどれかに丸める必要があります。符号・指数・仮数は、その値を組み立てる役割を持ちます。','初期例では0.1をbinary32に保存します。「入力」と「保存後」を見比べた後、0.5に変えます。0.5は2進数で0.1と有限に書けるので、同じ問題が起きません。','この表示の誤差はbinary32への変換で測っています。すべての言語が小数を同じ形式で保存するという意味ではありません。','','value'],
+['c01-utf8','「A」「あ」「🔒」は見た目ではそれぞれ1文字ですが、ファイルでは同じ長さでしょうか。','文字に付いた番号であるコードポイントと、その番号を保存するバイト列は別です。UTF-8は番号に応じて1〜4バイトを使います。','Aの行を選ぶつもりで見て、コードポイントU+0041と1バイトの41を対応させます。次に「あ」の行で、1つのコードポイントが複数バイトになっていることを確かめます。','見た目の文字数、コードポイント数、UTF-16コード単位数、バイト数は、いつも一致するわけではありません。','計算機科学入門 pp.2–4','text'],
+['c01-huffman','長い文章で、よく出る文字にも珍しい文字にも同じビット数を使うのは得でしょうか。','出現頻度の小さい2つをまとめ、まとめたものを再び候補へ戻します。最後にできた木を根からたどって符号を読みます。','初期文字列ではAが8回、Bが4回、Cが2回、DとEが1回ずつです。まず頻度1と1をまとめるところを追い、最後にAの符号長とDの符号長を比べます。','短くなった符号部分だけで、実ファイルの圧縮率は決まりません。復号に必要な符号表を共有するコストは別です。','情報理論 pp.12–16','text'],
+['c01-hamming','送信した0と1が1か所変わってしまったとき、受信側はどこが変わったかを知らされません。','複数の検査の組み合わせが、1ビット誤りの位置を区別します。まず検査用のビットを加え、受信側で同じ検査を行います。','4ビットを7ビットへ変換し、位置3を反転した例を1段ずつ見ます。訂正が起こる前に、検査結果から位置3と判断できることに注目します。','この単元は検査ビットを位置1・2・4に置く表記です。ノートの情報ビット先頭の並びを追う場合は「生成行列・検査行列・シンドローム」を開いてください。','情報理論 pp.20–23','flip'],
+['c02-set','2つの名簿から「両方に載る人」と「どちらかに載る人」を取り出すと、同じ結果になるでしょうか。','集合は要素のまとまりです。共通部分は両方にある要素、和集合はいずれかにある要素、差集合は片側にだけある要素を選びます。','A={1,2,3,4}、B={3,4,5}の例では、3と4は両方にあります。演算だけを切り替え、同じ入力から選ばれる要素が変わるところを見ます。','集合では重複を数えません。1,1,2という入力を3要素の集合として扱わないことにも注意します。','','op'],
+['c02-dfa','長いビット列に1が偶数個あるかを知るために、読んだ文字を全部保存する必要はあるでしょうか。','今までの1の個数が偶数か奇数か、2つの状態だけを覚えます。0では変わらず、1で状態を切り替えます。','最初の状態は偶数です。101101を1文字ずつ読み、1のときだけ矢印をたどります。途中の状態と、入力を全部読み終えた時点の受理を分けて確認します。','受理状態を一度通っただけで、その後に残った入力まで受理したことにはなりません。','計算機科学入門 pp.17–20','input'],
+['c03-matrix','座標の数字をまとめて変えるだけで、正方形を傾けたり裏返したりできます。','2×2行列の第1列は横方向の基準、第2列は縦方向の基準がどこへ移るかを表します。各点は2つの基準の組み合わせで移ります。','初期行列では横の基準(1,0)はそのまま、縦の基準(0,1)は(0.6,1)へ移ります。頂点を先に確認してから、面積の倍率を読むと対応が分かります。','行列式の符号と面積の大きさを混同しないでください。負の符号は向きの反転も表します。','','b'],
+['c03-derivative','曲線の1点での傾きは、離れた2点の傾きとどう関係するのでしょう。','2点間の高さの差を横の差hで割ると割線の傾きになります。hを小さくした極限が微分の考え方です。','f(x)=x²、x=1、h=0.5なら、(2.25−1)/0.5=2.5です。hを小さくして2へ近づく様子を、厳密な値2xと比べます。','hを0にして割り算するのではありません。具体例のグラフが一般の関数の微分を証明するわけでもありません。','','h'],
+['c03-integral','曲線の下の面積を、計算しやすい小さな形に分けて求めます。','各区間の両端の高さを結び、台形の面積を足します。どの範囲まで足したかが部分和です。','初期例はx²の0〜2です。最初の台形を見てから、1つずつ追加していきます。分割数だけを増やしたとき、解析的な値8/3との差を比べます。','図を滑らかに描くことと、積分の区間を細かくすることは別です。再生速度を変えても数値積分は変わりません。','','n'],
+['c03-probability','成功確率50%の試行でも、毎回ちょうど半分が成功するとは限りません。','確率は試行前の仕組みを表し、相対頻度は実際に起きた回数から求めます。回数を増やしたときのばらつきを観察します。','成功確率を50%に固定して、試行回数とseedを別々に変えます。同じseedなら同じ擬似乱数列を再現できるので、比較の条件をそろえられます。','大数の法則は、短い区間で必ず割合が確率へ近づき続けるという主張ではありません。','情報理論 p.2','n'],
+['c03-bayes','よく検知できる装置の警告なら、その対象が本当に存在する確率も同じくらい高いのでしょうか。','対象が少ないと、多数の正常なものから出る少しの誤警告が結果を大きく変えます。警告全体を分母に取り直します。','架空の1万人で、対象1%は100人です。そのうち95%の95人を検知し、正常9900人の5%から495件の誤警告が出ます。警告内の対象は95/(95+495)です。','これは合成データで条件付き確率を学ぶ例です。医療検査など実際の判断を行うツールではありません。','情報理論 p.2','base'],
+['c04-trace','プログラムを読んだだけでは、繰り返しの中の条件が何回成立するか分かりにくいことがあります。','変数はその時点の値を持ちます。処理する行、条件の結果、更新前後の値を同時に追うと流れを確認できます。','1〜10のうち3で割り切れる数だけを足します。3、6、9でだけ合計が更新され、最後は18です。条件を満たさない回には何が変わらないかも見てください。','繰り返し回数と、条件の中の処理が実行される回数は同じとは限りません。','','divisor'],
+['c04-recursion','関数が自分を呼び出している間、途中までの計算はどこで待つのでしょう。','呼び出しごとに別の実行状態が積まれます。小さい問題の答えが戻ると、待っていた計算が再開します。','5!を計算するとき、5×4!の5は待っています。呼び出しが深くなる方向だけでなく、答えが戻って掛け算される方向も1段ずつ追います。','同じ関数名でも、すべての呼び出しが1個の変数を共有するわけではありません。','','n'],
+['c04-eventloop','0msのタイマーを登録しても、その場所ですぐ実行されるわけではありません。','実行中の処理、マイクロタスク、次のタスクを分けます。コールバックを登録することと、実行することの間に順序があります。','まず同期的な処理を追い、Promiseのコールバックが待つ場所を確認します。タイマーのコールバックと、どちらが先に取り出されるかを比べます。','この教材はブラウザの固定例です。0msは正確な実行時刻の保証ではなく、Node.jsの全フェーズを再現しているわけでもありません。','','microtasks'],
+['c05-stack','上に重ねた本を、上から取り出すことを考えます。','最後に追加した要素を最初に取り出す規則がLIFOです。要素の大きさではなく、追加した順番で決まります。','3、7、2、9の順に積み、2個取り出します。9の次は2です。残る3と7について、なぜ先に出てこなかったのか説明してみます。','最小値から取り出すヒープとは異なります。値が9だから先に出るのではありません。','','remove'],
+['c05-queue','受付に並んだ人を、先に来た人から案内します。','先に追加した要素を先に取り出す規則がFIFOです。追加する側と取り出す側を分けて見ます。','3、7、2、9の順に入れ、2個取り出すと3、7の順です。同じ入力のスタックと、取り出す側の違いを確かめます。','キューに優先度を付けた場合は別の規則です。ここでは単純な到着順だけを扱います。','','remove'],
+['c05-bst','同じ数字を保存しても、並べ方によって探しやすさは変わります。','二分探索木は、各節点より小さい値を左、大きい値を右へ進めます。挿入する順番が木の形に影響します。','8を根にして3と10を入れます。その後の6が8の左、3の右へ進むことを追ってください。昇順で追加した例と深さを比較できます。','このモデルは自動で平衡化しません。二分探索木なら常に浅い木になるとは限りません。','','values'],
+['c05-heap','たくさんの仕事から、いちばん小さな優先度だけをすぐ取り出したいとします。','最小ヒープでは親が子以下になる関係を保ちます。新しい値は、その関係が回復するまで上へ移ります。','8、3と追加すると3が上へ移ります。1を追加したときの交換を追い、根が最小になることを確認します。','親子の関係を守るだけなので、配列全体が昇順に並んだ状態とは異なります。','','values'],
+['c05-hash','データから保存先の番号を直接計算できると便利ですが、同じ番号になるデータもあります。','この例では値をバケット数で割った余りを保存先にします。同じ余りの要素は同じバケットの列に入れます。','バケット数5では10と15がどちらも0に入ります。17と22も同じ余りです。バケット数を変え、どの組み合わせの衝突が解けるか見ます。','衝突したから同じデータだとは限りません。暗号学的ハッシュの安全性を調べる実験ではありません。','','size'],
+['c06-sort','同じ数字を小さい順へ並べるにも、いくつもの手順があります。','並べ替えでは、比較・交換・分割などの操作を積み重ねます。入力をそろえて操作回数を比べることが大切です。','初期配列をバブルソートで1段ずつ追い、隣どうしを比較する範囲を見ます。配列を変えずに挿入ソートへ切り替え、同じ答えに至る違う過程を比べます。','画面の再生が短いことだけで、実装が高速だとは言えません。比較回数や教材の計数規則を見てください。','','algorithm'],
+['c06-search','目的の数がどこにあるか、全部を順番に見なくても探せるでしょうか。','昇順という前提があれば、中央と比べて候補の半分を除けます。線形探索は順に確認します。','1,3,…,23から17を探します。二分探索で候補の左右端がどこへ狭まるかを見た後、同じ配列を線形探索で調べます。','候補を半分にするには、整列などの前提が必要です。どんな配列でも同じように二分探索できるわけではありません。','','method'],
+['c06-graph','道が分かれたり合流したりするとき、どの順番で頂点を調べればよいでしょう。','BFSは近い層から、DFSは1本の道を深く進みます。次に調べる候補をどこへ入れ、どこから取るかが違います。','開始点の隣を候補に入れた時点で止めます。次に選ぶ頂点を予想してから、BFSとDFSを切り替えて確認します。','訪問順と最短経路は同じものではありません。重み付き最短経路の全問題をこの探索順だけで解くわけではありません。','','method'],
+['c06-dp','容量の限られたかばんへ、どの荷物を入れると価値が最大になるでしょう。','小さい容量と少ない荷物での答えを表にします。現在の荷物を入れない場合と、入れる場合を比べて更新します。','表の1セルを選ぶつもりで見て、上の行から引き継ぐ値と、荷物の重さを引いた容量の値を比較します。最後の値だけでなく参照するセルを追います。','この問題は各荷物を0回か1回だけ使います。好きなだけ同じ荷物を使える問題とは更新式が異なります。','','capacity'],
+['c07-compiler','2 + 3 × 4の文字列は、なぜ20ではなく14になるのでしょう。','文字の並びをトークンへ分け、演算子の結び付き方を構文木にします。木の内側の計算から評価します。','最初に3と4の掛け算がまとまっていることを見ます。(2 + 3) * 4へ入力を変え、同じ数字でも木の形と結果が変わるところを追います。','計算結果だけを見ると、構文解析が何をしたかは分かりません。これは小さな算術式だけの処理系です。','計算機科学入門 pp.5,21–23,38','code'],
+['c07-gc','互いに参照している2つのデータが、どの実行中の処理からも使われなくなったらどうするでしょう。','根から参照をたどり、到達するものに印を付けます。たどり終えてから、印のないものを回収します。','AからB、Cへたどる間、DとEの輪には届きません。CからDへの参照を1本足し、DとEが回収されなくなる理由を見ます。','参照があることと、根から到達できることは違います。この画面は実際のJavaScriptのGCを操作しません。','','bridge'],
+['c08-gate','2つのスイッチから「両方オン」「少なくとも一方オン」といった条件を作ります。','AND・OR・XORなどは、入力の0/1の組に出力を対応させる規則です。真理値表の1行が、今のスイッチの状態に当たります。','A=1、B=0でANDの出力を見ます。Bだけを1にして、表のどの行へ移ったか確認します。次にORへ変え、規則だけを変えた違いを見ます。','0と1はここでは偽と真です。普通の足し算と論理演算を同じものとして読まないでください。','計算機科学入門 pp.6–9','a,b,gate'],
+['c08-adder','1 + 1は2ですが、1桁には0か1しか置けません。あふれた分をどこへ渡すのでしょう。','和の下位1ビットがsum、上の桁へ渡すビットがcarryです。全加算器は下の桁から来たcarryも受け取ります。','A=1、B=1、Cin=0では合計2=10₂です。sum=0とcarry=1を並べて読みます。Cinも1にすると3=11₂になり、どちらの出力が変わるか確かめます。','sumだけを答えだと考えると、1+1=0に見えてしまいます。桁上がりと組にして読みます。','計算機科学入門 pp.10–11','a,b,carry'],
+['c09-cpu','足し算の命令を書いたとき、計算に使う値はどこから来て、どこへ入るのでしょう。','命令は操作の種類と対象を指定します。レジスタはCPU内の作業用の場所、メモリの番地は外側の保存場所として区別します。','MOVでR1に5、R2に8を入れ、ADDでR3に13を入れます。STORE R3,16では、16という値をR3へ入れるのではなく番地16へ書き込みます。','この教材ISAはノートに載った機械語と命令形式が異なります。実在CPUの命令コードをそのまま実行しているわけではありません。','計算機科学入門 pp.28–32','code'],
+['c09-pipeline','1つの命令を速くする以外に、全体として多くの命令を終える方法はあるでしょうか。','命令の作業を段階に分け、別の命令の異なる段階を同時に進めます。途中結果を待つ場合には空きが生じます。','6命令を順番に処理する例と、5段を重ねる例を比べます。I3に依存を入れたとき、どの段が止まり、何を待っているかを見てください。','命令1個の遅延と、一定時間で終える命令数は別の指標です。すべての命令を無条件で同時実行できるわけではありません。','計算機科学入門 p.28','pipeline'],
+['c09-cache','最近読んだ値を近くに置いておけば、次は速く読めるかもしれません。','アドレスからキャッシュの場所と識別用のタグを求めます。その場所が埋まっていても、タグが違えば欲しいデータではありません。','0,4,8を読んだ後に0を読む例を追います。次に16を入れたとき、同じキャッシュ位置を使う0が追い出されるか確かめます。','空いている場所が別にあっても、直接マップでは使える場所が固定です。全てのミスが容量不足とは限りません。','計算機科学入門 p.34','addresses'],
+['c09-branch','次に進む道が分かる前に作業を始めるには、どんな予想が役立つでしょう。','予測器は過去の結果を小さな状態にして覚えます。2ビットの状態は、一度外れただけで予想の向きを変えない場合があります。','TTTNTTTNという結果を繰り返します。Nの後のTで、直前の結果を使う方式と2ビット方式がどう違うかを確認します。','教材の固定ペナルティを実CPUの実測時間だと扱わないでください。結果列を予測器自身が先読みしているわけでもありません。','','method'],
+['c10-pointer','「値10」と「10が置いてある場所の番号」は違います。','ポインタが持つのは場所を参照する値です。その場所へ書き込む操作は、ポインタの値そのものを書き換える操作とは異なります。','xの初期値10と参照先へ書く値25を見ます。参照を通して書いた後、変わったのがxの内容なのか、参照先の番号なのかを確かめます。','アドレスらしい番号が残っていても、その領域を解放した後に安全に使えるとは限りません。','計算機科学入門 pp.30–31,35','write'],
+['c10-pages','必要なページがメモリに入りきらないとき、どれかを入れ替える必要があります。','物理フレームへ置けるページの数は限られています。FIFOは先に入れたもの、LRUは最も長く使っていないものを候補にします。','1,2,3を3フレームに置いた後、4を要求する場面で止めます。どれを取り出すかを予想してから、置換方針だけを変えて同じ参照列を追います。','この単元は置換の判断です。アプリごとの住所の意味は、先に「アプリごとの仮想アドレス空間」で確かめられます。','計算機科学入門 pp.34–35','policy'],
+['c10-allocation','空き容量の合計は足りるのに、大きな連続領域を取れないことがあります。','確保と解放で小さな穴ができます。連続した空きの大きさと、全体の空き容量を分けて見ます。','いくつか領域を確保した後、最初の領域だけを解放します。次の要求がその穴に入るか、ほかの場所を使うかをFirst fitとBest fitで比べます。','離れた空きを足せば、連続した1つの領域になるわけではありません。','','release'],
+['c10-translation','住所の変換が見つからないことと、データのページがメモリにないことは同じでしょうか。','TLBはページ表の情報を手早く使うための仕組みです。TLBになければページ表を見ます。ページ表でも不在なら別の処理が必要です。','仮想アドレス0と4は同じページにあります。2回目のTLBヒットを見た後、192の不在ページを確認します。書込みに変えると権限の判断も加わります。','TLBヒットでもアクセス権限の確認は必要です。TLBミスをすべてページフォルトと呼ばないでください。','計算機科学入門 p.35','tlb,write'],
+['c11-scheduler','1台のCPUで複数の仕事を動かすとき、どの仕事へどれだけ時間を渡すでしょう。','実行できる仕事の待ち列から次を選びます。RRは時間量子ごとに順番を回し、FCFSやSJFは別の方針で選びます。','5,3,8,2の仕事が同時に到着した例です。時間量子2でP1が2だけ進んだ後、残りを待ってP2へ渡る場面を追います。','この例は到着時刻が全て0でI/O待ちを含みません。実OSの全スケジューリングを再現したものではありません。','計算機科学入門 pp.39–43','policy,quantum'],
+['c11-files','ファイルに別の名前を付けると、その中身も2つに増えるのでしょうか。','ディレクトリの名前、inodeの情報、実際のデータブロックを分けます。複数の名前が同じinodeを指すことがあります。','7000バイトの内容を4096バイトのブロックで置く例を見ます。ハードリンク数だけを増やし、データブロックの数も同じだけ増えるかを確認します。','ハードリンクを作ることは、内容を独立した別ファイルへコピーすることとは異なります。','計算機科学入門 p.73','links'],
+['c12-race','1を足す処理を2回したのに、結果が1しか増えないことがあります。','読み出す、足す、書き戻すは別の操作です。2つの処理が同じ古い値を読めば、後の書込みが先の更新を上書きします。','2つの処理が両方0を読んでから、どちらも1を書きます。処理を交互に進めた例を見た後、排他制御を入れ、読んだ値が変わる場所を探します。','単にCPUが2台あることだけが条件ではありません。1台でも処理の途中で切り替わると同じ問題を考えられます。','計算機科学入門 pp.48–49','lock'],
+['c12-deadlock','互いに「相手が終わるまで待つ」と、どちらも終われなくなる場合があります。','資源を持ったまま別の資源を待つ関係が輪になります。この単一資源の例では、取得順序をそろえて輪を避けます。','AがX、BがYを持ってから相手の資源を要求する場面を見ます。両方がXから取るように変え、待つ場所がどこへ移るか確認します。','誰かが待っているだけでデッドロックとは限りません。待ちの輪と、誰が先へ進めるかを見てください。','計算機科学入門 p.49','order'],
+['c12-quorum','同じデータを複数台に置くとき、何台の確認を待てばよいでしょう。','この例は過半数の台数を確認します。全台である必要はありませんが、停止が増えると必要数へ届かなくなります。','5台なら過半数は3台です。停止台数2と3を比べ、残った台数と必要な確認数の大小を見ます。','この台数計算だけで、分散合意や障害時の安全性が全て保証されたことにはなりません。','計算機科学入門 pp.60–61','failed'],
+['c12-semaphore','空の箱から物を取り出したり、満杯の箱へ物を入れたりしないようにします。','空き数と要素数を別々に数えます。生産は空きを1つ減らして要素を増やし、消費は逆を行います。','容量3へPを4回続けると4回目は実行できません。その後Cで1つ消費すると、次のPが可能になります。空きと要素の和にも注目します。','このモデルの操作は1回だけ試すtry-waitです。失敗した処理が自動で待機し、後で再開するシミュレーションではありません。','','capacity'],
+['c14-index','探したい行の手掛かりを、別にまとめて持っておくと何が変わるでしょう。','索引は条件に合う行へ近づくための構造です。全行を調べる方法と、索引をたどる方法でアクセスする対象が変わります。','ageが21以上という条件を固定し、索引のオン・オフだけを変えます。返る行が同じでも、調べた範囲やアクセス数が違うことを見ます。','索引には保存や更新のコストもあります。この教材の検索回数だけで全ての性能を判断しないでください。','','index'],
+['c14-join','別々の表に入っている利用者と注文を、対応するキーで結び付けます。','結合は、条件に合う行の組を作る処理です。LEFT JOINは相手がなくても左の行を残します。','LEFTからINNERへ変え、相手がいない行がどこで結果から外れるか見ます。一致する行が複数なら、組も複数になることを確認します。','表を横に貼り合わせるだけではありません。キーの一致、重複、NULLになる欄を区別します。','','join'],
+['c14-bplus','キーが増えて1つの節点に収まらなくなると、索引の木はどう育つのでしょう。','キーを整列した葉へ挿入し、容量を超えたら分割します。上の節点は、どの葉へ進むかを案内します。','10,20,5…の挿入を順に見ます。分割が起きる直前と直後を比べ、葉のキーと親へ増える区切りを区別します。','このモデルは次数4の挿入だけです。削除、ディスクのページ配置、実DBの全実装を含めたものではありません。','','values'],
+['c14-transaction','残高への入金と出金を同時に処理しても、片方の変更を消さないようにしたいとします。','複数の読取り・計算・書込みをひとまとまりとして考えます。古い値を両方が読んだ場合と、直列化した場合を比べます。','入金と出金の読取り時点を先に確認します。その後ロックを有効にし、後から動く処理がどの残高を読むようになったかを追います。','トランザクションという名前だけで、このような全ての競合を同じ方法で防ぐわけではありません。分離の条件を確認します。','','serial'],
+['c16-git','編集したファイルを、何でもそのまま次のコミットに入れるとは限りません。','作業ファイル、次に記録する内容を用意するステージ、保存済みのコミットを分けます。addとcommitは別の移動です。','notes.txtを編集してからaddします。commitの前に止め、作業ファイルとステージがどう違うかを見ます。commit後は履歴の新しい点と対応させます。','このコマンドは教材内の仮想Gitだけを変更します。ユーザーの実リポジトリへの書込みは行いません。','','script'],
+['c16-reset','戻るコミットが同じでも、手元のファイルやステージまで戻したいとは限りません。','soft・mixed・hardは変更する状態の範囲が違います。履歴の線だけを見るのではなく3つの場所を並べます。','2つ目のコミットの後にsoft resetする例を見ます。最後のコマンドだけをmixed、hardへ変え、残った内容の場所を比べます。','履歴上の現在位置が戻ったことと、変更内容がどこにもなくなったことは同じではありません。','','script'],
+['c16-branches','同じ出発点から別々の変更を行い、後で1つに合わせます。','ブランチ名はコミットを指します。マージでは両方の履歴と共通の土台から、合わせる変更を判断します。','featureとmainで別のファイルを追加します。マージの前にそれぞれが指す点を確かめ、合流後の親とファイルを見ます。','ブランチを作った瞬間に全ファイルの別コピーを新規コミットとして保存するわけではありません。','','script'],
+['c16-rebase','自分の変更を、新しく進んだ土台の上から行ったように並べ直したい場合があります。','元のコミットをそのまま移動するのではなく、変更を新しい土台へ適用したコミットを作ります。','featureとmainが分かれた後、featureからrebase mainします。前後のファイルだけでなく、コミットの識別子と親が変わることを見ます。','見た目の内容が同じでも同じコミットとは限りません。このモデルは線形履歴とファイル単位の変更に範囲を絞っています。','','script'],
+['c16-remote','相手の更新を知ること、自分へ取り込むこと、自分の更新を送ることを分けます。','fetchは追跡している参照を更新します。pullは取り込みを進め、pushは相手側の参照を更新する要求です。','リモートに変更がある状態でfetchし、ローカルの作業ファイルまで変わったか見ます。その後pullしたときとの違いを確かめます。','図で相手の点が見えることと、その変更を自分のブランチへ取り込んだことは同じではありません。','','script'],
+['c16-undo','過去の変更を打ち消したいとき、履歴を戻す以外の方法もあります。','revertは逆向きの変更を新しいコミットにします。amendは直前のコミットを新しい内容のコミットで置き換えます。','追加ファイルをステージしてamendした後、revertを実行します。点が作り直される操作と、打ち消しの点が増える操作を区別します。','reset・amend・revertをすべて「元に戻す」という1つの図で扱うと、履歴とファイルの違いを見失います。','','script'],
+['c16-testing','普段の入力で動くプログラムでも、境目だけで間違えることがあります。','仕様から、境目の直前・境目・直後を選びます。実装を変えずにテストを広げると、見えていなかった問題が現れます。','0〜12歳の入力で6歳未満を無料とする仕様です。6未満と6以下を取り違えた実装に対し、5・6・7を試す意味を考えます。','すべてPASSという結果は、用意した入力に対する結果です。プログラムの全入力が正しいという証明ではありません。','','suite'],
+['c17-regression','散らばった点へ、できるだけ近い直線を引きたいとします。','直線の傾きと切片を、誤差が減る方向へ少しずつ更新します。どの程度ずつ動かすかが学習率です。','初期の直線を見てから1回だけ更新します。学習率を大きくしたとき、誤差が小さくなるのか飛び越えるのかを追います。','学習回数を増やすだけで必ず良くなるとは限りません。また、この合成データの結果だけで現実の予測性能は分かりません。','','rate'],
+['c17-kmeans','点の集まりを、近いもの同士のグループに分けます。','中心に近いグループへ割り当て、各グループの中心を平均で動かします。この2つを交互に繰り返します。','k=3で、点の所属が変わる段階と中心が移動する段階を区別して見ます。次にkだけを変え、同じ点から違う分け方になることを確かめます。','データが自動的に唯一の正しいグループ数を教えてくれるわけではありません。ここではkを先に指定します。','','k'],
+['c17-knn','未知の点の分類を、近くにある既知の点から予想します。','距離が近いk個を選び、その分類の多数決を取ります。1点だけを見る場合と、周囲を見る場合では判断が変わります。','未知点を固定し、k=1とk=3を比較します。選ばれた点と投票数を確認してから、最終ラベルを読みます。','1個の未知点で正解したことと、広いデータで良い分類器であることは違います。','','k'],
+['c18-sampling','連続した波を、一定間隔の点だけで記録します。','記録する時刻以外の形は、標本だけから直接は見えません。標本が粗いと、別の波と区別しにくくなります。','7Hzの波を1秒間に24点で記録した例を見ます。標本数を減らし、元の波と記録された点がどう対応するかを確かめます。','点を線で結んだ見た目を、そのまま完全に復元された原信号だと考えないでください。','','samples'],
+['c18-fourier','時間に沿った波の形を、どんな周波数がどれだけ含まれるかへ読み替えます。','DFTは標本列と各周波数の波との関係を計算します。入力した信号の周波数と、離散的な周波数の区切りを分けて見ます。','周波数5Hzで山の位置を確かめ、5.5Hzへ変えます。山が1本に集まる場合と周囲へ広がる場合の違いを観察します。','表示の棒を増やすだけで、元の観測時間や情報が増えるわけではありません。','','frequency'],
+['c18-filter','細かく揺れる値を、周りの値と混ぜてなめらかにします。','各点の近傍を平均する操作を、同じ規則で全体へ適用します。どれだけ広い範囲を見るかで残る変化が変わります。','半径1なら左右の近くも使います。半径0で元の信号を確かめた後、大きくし、細かな揺れと急な変化の両方を見ます。','ノイズだけを都合よく消せるとは限りません。必要な急変もなまることがあります。','','radius'],
+['c18-projection','立体の点を、平らな画面の点へ移す必要があります。','カメラからの距離で割る透視投影では、同じ大きさでも遠いものほど画面では小さくなります。','立方体の手前と奥の辺を見比べます。距離を変える操作と角度を変える操作を別々に試し、何が変わったか確認します。','回転と透視投影は別の段階です。画面が2Dだから計算も2Dだけで済んでいる、という意味ではありません。','','distance'],
+['c18-image','画素の値を周囲と組み合わせることで、ぼかしや輪郭を作ります。','近傍の画素に係数を掛け、足し合わせます。カーネルの各位置が、元画像のどの画素に当たるかを見ます。','選んだ画素の周り3×3を確認し、平均カーネルの9個の項を足します。その後、輪郭のカーネルへ変え、負の係数の役割を比べます。','計算値と画面の表示値は別です。0〜255の外の値を表示で丸めても、計算した事実を消さないようにしています。','','kernel'],
+['c19-pid','目標へ近づけようとして強く操作すると、逆に行き過ぎて揺れることがあります。','現在の誤差、過去の誤差の蓄積、変化の速さを組み合わせて操作量を決めます。P・I・Dは別の役割を持ちます。','Pゲインだけを増やし、目標へ近づく速さと行き過ぎを見ます。その後Dを変え、同じ目標で揺れ方を比較します。','この数値は架空の質点のためのものです。現実の機械へ設定する推奨値ではありません。','','kp'],
+['c20-contrast','暗い背景でも、本文やボタンが読み取りやすい必要があります。','文字と背景の明るさの差をコントラスト比として計算します。文字サイズによって確認する基準も変わります。','深いダーク背景に暗い文字を置き、読みにくさと比の値を確認します。背景を固定したまま文字色を明るくして比べます。','比を満たすことだけでUIの使いやすさが完成するわけではありません。余白、文章、操作の手掛かりも必要です。','計算機科学入門 pp.67–72','foreground'],
+['c20-privacy','便利な機能のためでも、何でも収集してよいとは限りません。','集める情報の細かさ、共有先、保存期間を別々に考えます。誰にどんな利益や不利益があるかを言葉で整理します。','精密な位置を集める場合と集めない場合で、できる機能と残るリスクを比べます。保存期間だけを短くした案とも区別します。','この教材の条件判定を倫理や法令の最終判断としません。現実の目的と関係者を含めた検討が必要です。','','days'],
+['c02-turing','足し算という特別な部品を使わず、記号を書き換えるだけで数を足します。','テープ上の記号、ヘッドの位置、内部状態に応じて、次の1つの操作を決めます。','111#11は3と2を表す独自例です。#を1へ変えた後、末尾の1を1つ消すことで5個の1が残ります。状態が変わる理由も追います。','有限回動かして止まった例から、あらゆるプログラムが止まるかを判定できるとは言えません。','計算機科学入門 pp.24–27','a'],
+['c01-information','「よくある話」と「めったにない話」では、知ったときの驚きが違います。','その出来事の確率の逆数に対数を取ります。確率が半分になると、底2の自己情報量は1bit増えます。','確率1/8は2を3回掛けた数の逆数です。log₂8=3なので自己情報量は3bitです。1/2の場合へ切り替えて比べます。','情報の有用性や価値の点数ではありません。また、自己情報量と多数の出来事の平均は区別します。','情報理論 p.3','bits'],
+['c01-entropy','毎回どの出来事が起こるか分からないとき、平均してどれだけの情報を得るのでしょう。','各出来事の情報量に、その出来事が出る確率を掛けて足します。重み付き平均を図と式で一緒に読みます。','重み4,2,1,1なら確率は1/2,1/4,1/8,1/8です。寄与は1/2,1/2,3/8,3/8となり、合計は1.75bit/記号です。','4種類の自己情報量を単に4で割るのではありません。出やすさを掛け忘れないようにします。','情報理論 pp.3–4','weights'],
+['c01-joint','Yを知った後でXも知るとき、初めてXだけを知る場合と同じ情報量でしょうか。','同時確率から全体の量を計算し、先に知った分を引いて残りを求めます。相互情報量は、知ることで減った不確かさです。','重み3,1,1,3を確率へ直し、4つの組を表に置きます。H(X,Y)からH(Y)を引く段階で、どの量が既知だったのか確認します。','図の重なりを眺めるだけで証明にはしません。H(X,Y)の「同時」と集合の「または」も混同しないようにします。','情報理論 pp.5–6','weights'],
+['c01-markov','次に出る記号が、直前の状態によって出やすさを変える情報源を考えます。','状態から出る遷移の確率と、長い時間にその状態にいる確率を分けます。各状態の情報量は後者で重み付けします。','状態0→1が0.3、1→0が0.6なら、行き来が釣り合う比はπ₀:π₁=2:1です。この重みで各行のエントロピーを足します。','遷移行列のある行だけを平均しても、情報源全体のエントロピー率にはなりません。','情報理論 pp.7–8','a,b'],
+['c01-channel','受け取った記号が、送られた記号についてどれだけ教えてくれるかを測ります。','入力が偏っている場合の伝送情報量と、入力分布も選べる場合の最大値である通信路容量を分けます。','1を送る確率0.3、反転率0.1なら、受け取る1の確率は0.3×0.9+0.7×0.1=0.34です。そこからH(Y)を計算します。','伝送情報量と通信路容量を同じ値として固定しません。ここでの単位はbit/記号であり、回線のMbpsではありません。','情報理論 pp.9–11','prior,error'],
+['c01-prefix','区切り記号を付けずに送ったビット列を、文字へ戻したいとします。','別の符号語の途中で1つの符号語が終わらなければ、その場で区切れます。一意に復号できることとは区別して調べます。','0,10,110,111の木をたどります。別条件0,01,10では、同じ010がACとBAの両方になります。具体的な2通りを確認します。','接頭辞があるだけでは、一意的復号不可能と断定できません。反例探索の範囲も表示します。','情報理論 pp.12–13','codes'],
+['c01-kraft','符号語を作る前に、指定された長さで二分木に収まるか知りたいとします。','長さ1の符号は木の半分、長さ2は4分の1を使います。その合計が1以下になるか調べます。','長さ1,2,3,3なら1/2+1/4+1/8+1/8=1です。1,1,2へ変えると1.25になり、同時に収められません。','不等式は、その長さの瞬時符号が存在する条件です。適当に選んだ符号語の先頭が重ならないことを自動で保証しません。','情報理論 p.14','lengths'],
+['c01-shannon-fano','出やすい記号に短い符号を割り当てるため、全体を順に分割します。','大きい確率から並べ、両側の確率の和が近くなる位置で分けます。0と1を付けて同じ作業を繰り返します。','重み4,2,1,1を4と(2,1,1)に分け、右側をさらに2と(1,1)へ分けます。通った0/1を根から読むと符号になります。','小さい2つを下から結合するHuffmanとは、木を作る方向も判断も異なります。','情報理論 p.15','weights'],
+['c01-distance','誤りの位置を考える前に、2つの符号がどれくらい違うかを数えます。','同じ位置の0/1が違うときだけ1を付け、その個数を数えます。XORと位置の対応を確認します。','1011010と1000010では、左から3番目と4番目が違います。XORの結果0011000の1が2個なので距離は2です。','この2語の距離と、符号集合のあらゆる異なる2語の距離の最小値は同じとは限りません。','情報理論 pp.17–18','a,b'],
+['c01-linear-code','受信側には「何番を反転した」という入力を渡さず、検査結果だけで調べます。','Hの各行は1回の検査、各列はそのビットがどの検査へ参加するかを表します。1ビット誤りならシンドロームがその列と一致します。','情報1011を、ノートと同じ情報4＋検査3の順で符号化します。2番目を反転し、s₁,s₂,s₃を別々に計算すると111になり、Hの第2列に対応します。','検査結果000でも、任意の多重誤りがないと保証したわけではありません。今回は0または1ビットの誤りに限ります。','情報理論 pp.20–23','text,flip'],
+['c02-nfa','次に進める先が複数あるとき、どれか1つを選ぶ必要があるでしょうか。','全ての可能な状態を集合として持ち、入力ごとに次の集合へ更新します。その集合自体を1つのDFAの状態と見なせます。','独自例では末尾01を受理します。0101を読み、0の直後に{q0,q1}、1の直後に{q0,q2}となるところを確認します。','集合状態は、複数の可能性を表しています。確率でいずれか1つの道を選ぶ仕組みではありません。','計算機科学入門 pp.18–20','input'],
+['c08-nand','部品をNANDだけに絞ったとき、別の論理演算をどう組み立てますか。','同じ入力を2本へ入れると否定が作れます。二重否定やド・モルガンの対応を使い、複数のNANDへ分解します。','ORではAをNANDで否定し、Bも否定してから、その2つをNANDへ入れます。A=1,B=0の各中間値を順に計算します。','最終出力がたまたま1例で一致するだけでなく、入力の全組み合わせで確かめることが大切です。','計算機科学入門 p.8','gate,a,b'],
+['c08-register','入力が変わるたびに上書きせず、必要なタイミングだけ覚える回路を作ります。','Muxは新しいDか、保持中のQかを選びます。DFFは選ばれた値をクロックで取り込みます。選択と取込みは別の役目です。','入力1011、load1101で3回目に注目します。D=1でもload=0なので、前のQを選んでそのまま保持します。','load=0はクロックが存在しないことではありません。前の値を入力へ戻して、結果として保持します。','計算機科学入門 pp.14–16','loads'],
+['c10-address-spaces','2つのアプリが、どちらも「5番地」を使う場面を考えます。','アプリに見える仮想アドレスを、それぞれのページ表で物理アドレスへ対応させます。アプリ名とページ表も対応させて読みます。','アプリAの5は物理フレーム1内の5、つまり21へ対応します。同じ5をBから見ると物理フレーム2内の5、つまり37へ対応します。','この例は共有しない配置です。全てのアプリのページが必ず別の物理領域を指す、という一般規則ではありません。','計算機科学入門 p.35','process,address']
+]);
+})();
+
+;
+/* Network lessons: distinguish the message, its envelope, the next hop,
+ * the application's view and the evidence available at each stage. */
+(() => {
+'use strict';
+CSL.defineLessons([
+['n01-packet','送りたい言葉だけを線へ流しても、誰のどのアプリへ渡すか分かりません。','各階層が、自分の仕事に必要な情報を外側へ付け加えます。受信側では逆の順番で、その情報を読んで中身を渡します。','Hello, network.という中身を見失わずに、TCPまたはUDP、IP、リンク層の情報が付く順を追います。最後まで同じ中身と、各段階で増える包みを区別します。','この最初の実験は固定ヘッダーの概念です。全プロトコルの実バイト列や実通信を再現していません。','計算機科学入門 pp.51–56','message,protocol'],
+['n02-signal','太い回線に変えれば、遠くの相手への待ち時間もなくなるのでしょうか。','データを回線へ送り出す時間と、信号が距離を進む時間は別です。前者はデータ量と帯域、後者は距離と仮定した伝搬速度で決まります。','1500バイトを10Mbpsで送り出す時間は1500×8÷10,000,000秒です。帯域だけを増やし、この時間と距離による時間のどちらが変わるか確認します。','ここで足す時間は単純化した1区間の値です。DNS、再送、サーバー処理、待ち行列は別に必要です。','計算機科学入門 pp.50–51','bandwidth,distance'],
+['n02-crc','データに付けた短い検査値で、受信したビット列の変化を見つけます。','2進多項式の割り算では、引き算をXORとして扱います。送信側が余りを付け、受信側が生成多項式で割り直します。','10110101に検査用の0を付けた段階から、1011による割り算を追います。反転なしと1ビット反転を比べ、受信側の余りが変わるか見ます。','CRCの検出と、ハミング符号の訂正は別です。余り0は、考えられる全ての誤りがなかった証拠ではありません。','情報理論 pp.24–25','data,flip'],
+['n03-switch','スイッチは、初めて見た宛先がどの線の向こうにあるかをどう扱うのでしょう。','入ってきたフレームの送信元MACと入力ポートを対応付けて学習します。宛先が未学習なら、必要な範囲へ複製して探します。','AからBへ送る初回と、A/Bの所在を学習済みの状態を比較します。図のコピー先だけでなく、学習した情報が送信元についてのものだったことを確認します。','受信した宛先アドレスから、その相手が入力ポートにいると学習するわけではありません。','計算機科学入門 pp.51,56','learned'],
+['n04-subnet','住所の一部を共通にして、同じネットワークにいる相手か判断します。','IPv4の32ビットを、先頭の共通部分と端末部分に分けます。プレフィックス長が区切りの位置です。','アドレスの10進表示とビット列を対応させ、プレフィックスを変えて同じネットワークの範囲がどこまで広がるか見ます。マスクを掛ける前後の値も確認します。','/24は端末番号24という意味ではありません。先頭24ビットをネットワーク側として使うという意味です。','計算機科学入門 pp.57–59','prefix'],
+['n04-vlsm','50台の部屋と5台の部屋へ、同じ大きさのアドレス範囲を渡す必要があるでしょうか。','必要な台数に合う2のべき乗のブロックを選び、その大きさに合った境界へ置きます。大きいブロックから置くと穴を避けやすくなります。','必要台数50,10,25,5の例で、50台にはホスト用62個の/26を使います。次のブロックの開始位置が、サイズの倍数にそろうことを確かめます。','教材は従来型LANのネットワーク・ブロードキャストを除く計算です。/31や/32へそのまま「2を引く」を広げないでください。','計算機科学入門 pp.57–58','hosts,sorted'],
+['n05-arp','IPで最終的な相手を指定しても、今のLANで誰へフレームを渡すかを調べる必要があります。','ARPは同じリンク上でIPv4に対応するMACを尋ねます。別ネットワークの相手へ送るなら、まずゲートウェイのMACを調べます。','同じネットワークの宛先と、別ネットワークの宛先を切り替えます。「最終宛先IP」と「今回調べるMACの持ち主」が同じか、別かを確かめます。','ARPで遠くの相手のMACをネットワーク全体へ問い合わせるわけではありません。','計算機科学入門 pp.53,56–59','remote,cached'],
+['n05-dhcp','新しい端末が参加するたび、手作業でアドレスを設定しなくても使えるようにします。','端末が設定を求め、サーバーが候補を示し、要求と確認を経て貸し出します。割り当てられる数には上限があります。','接続6台に対し、プール4個という例を追います。問い合わせのやり取りができても、残りの端末へ貸すアドレスがない段階を確認します。','割り当て失敗を、必ず物理的な断線やDNSの問題だと決め付けないでください。','','clients,pool'],
+['n06-ipv6','長いIPv6アドレスを省略して書いても、中の128ビットが減るわけではありません。','16進数の各組を補い、::の省略を0の組へ戻します。ネットワークの区切りはプレフィックス長で考えます。','2001:db8:1234::10を8組へ展開します。::に何組の0が入ったかを先に予想し、プレフィックス64の範囲と対応させます。','::は見た目を短くする表記です。可変長のアドレスを使っているという意味ではありません。','','ip,prefix'],
+['n06-slaac','IPv6では、ルーターからの広告と、自分のアドレスの重複確認を分けます。','リンク内で使う候補を作り、重複を調べます。その後、ルーターが知らせるプレフィックスと経路の情報を別々に扱います。','ルーター広告をオフにしても、リンクローカル候補の確認は残ります。次にrouter lifetimeだけを0相当にして、アドレスとデフォルト経路を比べます。','アドレスが作れたことと、外へ出る経路があることは同じではありません。DADを全ての遠隔機器へ送るわけでもありません。','','router,lifetime'],
+['n07-vlan','1台のスイッチを共有していても、来訪者と業務の通信を同じ範囲にしたくない場合があります。','VLANはリンク層のまとまりを論理的に分けます。別VLANへ渡すには、別途ネットワーク層の経路が必要になります。','端末AをVLAN10、Bを20へ置きます。同じ物理スイッチに見えても届かない状態から、VLAN間ルーティングを入れた違いを見ます。','VLAN名を変えただけで、全てのアクセス制御が完成したわけではありません。許可する通信の設計は別です。','','route,a,b'],
+['n07-stp','故障に備えて線を増やすと、今度はフレームがぐるぐる回る構成になる場合があります。','冗長な物理接続を残しながら、通常の転送にはループのない木を使います。使う線と予備の線を分けます。','三角形につないだスイッチで、STPが使わない線を見ます。S1–S2を切ったとき、物理接続と論理的に使う経路がどう変わるか追います。','予備の線を通常時に使わないことは、ケーブルを物理的に抜くことと同じではありません。','','enabled,cut'],
+['n08-routing','目的地まで複数の道があるとき、どれを選ぶか計算します。','リンクのコストを足し、各地点へ届く最小の値を更新していきます。選ばれた道だけでなく、候補の値の変化を見ます。','R1–R3のコストを低くした例を追い、そのリンクだけを高くします。何段目の更新から別ルートが有利になるか確認します。','Dijkstraで計算できることと、全ルーターが最新の情報を既に知っていることは別です。情報伝播は別単元で扱います。','計算機科学入門 p.51','cost,cut'],
+['n08-prefix','経路表に/8と/24の両方が当てはまったとき、どちらの案内を使うでしょう。','宛先と共通する先頭ビットが最も長い経路を選びます。単に上から最初に一致した項目を使う規則とは異なります。','10.1.2.34に一致する候補を全て見ます。広い範囲の/8から、より細かな/24へ絞れる理由をビットの区切りで確認します。','プレフィックスが長いほど、含むアドレス範囲は小さくなります。「長い道」を意味する長さではありません。','計算機科学入門 pp.57–59','destination'],
+['n08-bgp','インターネットの経路は、地理的な最短距離だけで決まるわけではありません。','この抜粋モデルでは、まずLOCAL_PREFという方針の値を比べ、その次にAS_PATHの長さを比べます。優先順位のある判断です。','ISP-AのLOCAL_PREFを変え、AS_PATH長が変わっていなくても選択先が変わるか見ます。どの条件が最初に差を付けたかを確認します。','BGPの全ての経路選択規則、運用方針、経路更新を実装しているわけではありません。','','preference'],
+['n08-linkstate','ケーブルが切れた事実を、離れたルーターが同時に知るとは限りません。','変更を知った機器が隣へ知らせ、各機器が自分の持つ情報から経路を計算します。物理状態と知識の状態を分けます。','B–Dを切断した直後に止め、「新」「旧」と書かれた機器を見比べます。情報が1ホップずつ届くにつれ、その機器の経路が変わるところを追います。','表示のラウンドは教材の伝播段階です。実際のOSPF収束時間や全てのメッセージを表していません。','','cut'],
+['n09-dns','移転先のIPへ変更したのに、しばらく前のIPが返ることがあります。','リゾルバーは、一度調べた答えを有効期限内だけ再利用できます。権威側の情報と、手元のキャッシュは別の状態です。','TTL60秒、経過30秒なら以前の答えがまだ有効です。経過を60秒以上へ進め、権威側へ問い合わせ直す段階で答えが変わることを確かめます。','変更が「全世界へ一斉に反映」される1個の時計があるわけではありません。今回は1つのリゾルバーだけを扱います。','計算機科学入門 pp.62–64','elapsed,ttl'],
+['n10-transport','1台の端末でWebや別のアプリを同時に動かすと、受け取ったデータを区別する必要があります。','IPアドレスは端末間の配送、ポートはその端末内の通信の受け口を区別する情報です。TCPとUDPでは提供する仕組みも違います。','サーバー側ポート443を変えて、宛先の端末とアプリの識別を分けて見ます。TCPとUDPを切り替え、接続準備とデータ単位の違いを確認します。','ポート番号だけで実際のサービスや安全性が保証されるわけではありません。番号はそのアプリへの入口として使います。','計算機科学入門 pp.52–56','protocol,port'],
+['n11-tcp','送ったデータの一部が届かず、その後のデータだけが先に届くことがあります。','受信したものと、順序どおりアプリへ渡せるものを分けます。確認応答と再送によって、空いた部分を埋めます。','DATA3を一度落とします。DATA4が届いた時点で止め、受信側が次に期待する位置を見ます。再送後に連続して渡せる範囲が広がることを追います。','DATAの教材番号と、TCPのバイト単位の順序番号を混同しないでください。固定タイムアウトモデルで、高速再送などは別です。','計算機科学入門 pp.53–54','loss,window'],
+['n11-congestion','送る量が回線の処理能力を超えると、待ちや損失が増えます。','混雑に応じて送信量を増減する判断と、欠けたデータを送り直す判断を分けます。ここではReno系の考え方を抜粋しています。','送信窓が増える様子を見て、指定ラウンドで損失を検出させます。窓がどれだけ戻り、その後どのように増えるかを比較します。','この窓は輻輳への対応です。受信側のバッファ残量だけを表す受信窓と同じものではありません。','','lossAt,mode'],
+['n12-nat','複数の端末が1つの公開IPを使っても、戻ってきた応答を元の端末へ渡したいとします。','アドレスとポートを変換し、内側の通信と外側の通信の対応を表に残します。戻りはその対応を使います。','内部端末を4台にして、同じ宛先443へ送ります。外側のポートの違いと、変換表で元の端末へ戻せることを確認します。','NATは暗号化ではありません。変換することだけで通信内容が読めなくなるわけではありません。','計算機科学入門 p.59','clients'],
+['n13-http','1つのデータが途中で失われると、別の画像の受取りも止まるのでしょうか。','HTTPの多重化と、それを運ぶトランスポートの順序保証を分けます。HTTP/3はQUICを使うため、HTTP/2と同じ接続モデルではありません。','同じオブジェクト数・RTT・損失条件で方式だけを変えます。object2の損失の後、他のオブジェクトが待つ範囲を比べます。','これは接続済みの固定RTTモデルです。実サイトでの速度の優劣を無条件で決めるベンチマークではありません。','計算機科学入門 pp.54–55,59','protocol,loss'],
+['n13-cache','以前の応答を使えば、同じ内容をもう一度全て送ってもらわずに済むかもしれません。','まだ新鮮なキャッシュを使う場合と、期限後に変更の有無を再確認する場合を分けます。304なら手元の本文を使います。','max-age60秒、経過80秒で期限が切れた例を見ます。サーバーの内容が変わっていない場合と変わった場合で、本文が再送されるか確認します。','304は新しい本文が送られてきたという意味ではありません。使う本文はキャッシュ側にあります。','計算機科学入門 pp.55,62','changed,age'],
+['n14-lb','同じサービスを複数台で提供するとき、要求をどの台へ送るか決めます。','順番に振り分ける方針と、接続数の少ない台を選ぶ方針を比べます。停止中の台を候補から外す判断も別に必要です。','まず3台へ要求を割り当てます。Bだけを停止した場合に、残る2台へどう振り分けるか見ます。既存の接続数の違いにも注目します。','台数を増やすだけで、障害検知やデータの整合性まで自動で解決するわけではありません。','','down,algorithm'],
+['n15-mail','メールを送信サーバーが受け取ったことと、相手が読んだことは別です。','配送の各段階で、どのサーバーが何を受理したかを確認します。一時エラーと最終的な失敗も区別して考えます。','正常なSMTP配送を追った後、受信サーバーの一時エラーを入れます。どの応答まで済んでいて、どの処理がまだ終わっていないかを確認します。','この固定フローで受理と読了は結び付けません。受信者の実際の閲覧状況は示していません。','計算機科学入門 p.55','fail'],
+['n15-ssh','秘密の認証情報を送る前に、接続しているサーバーが期待した相手か確認します。','サーバーのホスト鍵についての記録と、今回提示された鍵を比べます。利用者の本人確認とは別の方向の確認です。','ホスト鍵が以前の記録と一致する場合を追い、異なる設定へ切り替えます。ユーザー認証の前に止まる理由を考えます。','鍵が変わった理由を、この教材だけで攻撃と断定しません。安全な経路での確認が必要な状態として扱います。','','fail'],
+['n15-websocket','サーバーから新しい情報が来るたび、毎回新しい要求を送る必要があるでしょうか。','ここではHTTP/1.1のUpgradeの後、接続を保って両方向にメッセージを送る流れを見ます。','接続準備と、その後の通知を分けて追います。通知後に接続を閉じる条件へ変え、次の通知にも同じ接続を使えるか考えます。','接続を保つことは、永久に切れないことではありません。切断や再接続への対応は別に必要です。','','fail'],
+['n15-ntp','相手の時計が進んでいるのか、通信に時間がかかったのかを分けたいとします。','送信と受信の4つの時刻から、往復遅延と時刻差を推定します。今回は往路と復路が対称な条件です。','サーバーの時計のずれを120ms、片道遅延を30msとする例で、各時刻を順に置きます。遅延だけを変えても推定するずれが同じか確認します。','実際には非対称な遅延や時計の変動があり、この1回の計算だけで正確な時刻が保証されるわけではありません。','','offset,delay'],
+['n16-queue','届く仕事の方が処理する仕事より多いと、待ち行列は増えます。','到着、容量による受入れ・破棄、処理の順序を分けます。バッファは待てる数を増やしますが、処理能力を増やしません。','毎単位8個到着し5個処理する例を追います。容量24へ達した後、どれが破棄されるか見ます。容量を増やした場合は待ちも確認します。','破棄を減らしただけで性能問題がなくなったとは限りません。長い待ち時間という別の問題が残る場合があります。','','arrival,service'],
+['n16-qos','同じ回線を音声とファイル転送が使うとき、待ち方を変えたい場合があります。','優先キューは取り出す順番を変えます。総処理能力やバッファ容量を増やすものではありません。','到着順から音声優先へ切り替え、音声の平均待ち時間を比べます。そのときファイル転送側に何が起きるかも同時に見ます。','送信できたものの平均だけで、破棄されたものや待ち続けるものを隠さないようにします。','','policy'],
+['n17-wifi','同じ無線の場所で、多くの端末が同時に送りたいとします。','送信機会を共有すると、同時送信の競合と、送信を控える待ちの両方が生じます。今回は確率で表した小さな共有媒体モデルです。','seedを固定したまま端末数を増やし、成功・競合・空きの割合を比べます。次に送信を控える大きさだけを変えてみます。','802.11の全CSMA/CAや電波伝搬、隠れ端末を再現したものではありません。実際のWi-Fi設定値への推奨ではありません。','','stations,backoff'],
+['n18-diagnose','「つながらない」という同じ症状にも、違う原因があります。','観測した事実から、まだ考えられる原因と除ける原因を分けます。最初に決め付けず、証拠の段階を追います。','シナリオ番号を固定して、名前解決・経路・証明書・アクセス規則・処理能力の候補を比べます。理由を予想してから候補を選び、整合する証拠を確認します。','用意された5種類の架空障害です。現実のネットワークがこの5種類だけで診断できるわけではありません。','','guess'],
+['n19-mqtt','データを確実に届けようとして再送すると、同じ要求が2回届く場合があります。','送信者とBroker間の確認のやり取りを、QoSごとに比べます。配送の保証と、アプリ側の処理を1回にすることは分けます。','QoS1でACKが失われた例を追います。送信側からは未確認でもBrokerには届いている場合があることを見ます。QoS0・2とも比べてください。','QoSのラベルだけで、複数区間の全処理が1回だけになると考えないでください。教材の対象は送信者→Brokerです。','','qos,loss'],
+['n20-tunnel','すでにあるパケットを別のパケットへ包むと、全体のサイズが増えます。','内側のサイズに外側の追加情報を足し、経路が運べる最大サイズMTUと比べます。外側IPの条件も確認します。','内側1450Bに80Bを足すと1530Bです。MTU1500Bに収まらないので、内側を小さくした場合や外側IPの条件を切り替えて確かめます。','IPv4とIPv6の断片化を同じ規則で扱いません。トンネルで包むこと自体が暗号化を意味するわけでもありません。','','inner,mtu']
+]);
+})();
+
+;
+/* Security lessons use only fictitious assets and local teaching models. */
+(() => {
+'use strict';
+CSL.defineLessons([
+['s01-threat','内容を暗号化しても、サービスが止まれば必要な時に使えません。何を守りたいのでしょう。','見られないこと、勝手に変えられないこと、必要な時に使えることを分けます。対策と守る性質を対応させます。','暗号化をオンにしたまま機器を止めます。内容を読めるかという結果と、利用できるかという結果が同じでないことを確認します。','1つの対策で全ての脅威を防いだと考えません。この表の条件以外の脅威もあり得ます。','計算機科学入門 p.66','encryption,integrity'],
+['s02-mod','時計のように、一定の数で一周する計算を考えます。','法mで割った余りが同じなら同じ位置です。掛けて余り1にできる相手が乗法の逆元です。','法17で7を考えると、7×5=35は17で割って余り1になります。値や法を変え、逆元が見つからない組も試します。','剰余の世界では、0以外なら必ず割り算できるとは限りません。法との関係を確かめます。','','a,modulus'],
+['s02-euclid','大きな2つの数の共通の約数を、余りを使って小さい問題へ変えます。','aをbで割った余りrについて、gcd(a,b)=gcd(b,r)です。余りが0になるまで繰り返します。','240=46×5+10、46=10×4+6…と、割る数と余りが次の組になるところを追います。最後の0でない余りが答えです。','商が最大公約数ではありません。各行で、次に使う数を取り違えないようにします。','','a,b'],
+['s03-aes','暗号文を読めなくするだけでなく、途中で変えられていないかも確かめます。','認証付き暗号は暗号化と検証を組み合わせます。正しい鍵でも、暗号文やタグが変われば検証に失敗します。','最初は改ざんなしで復号します。平文と鍵を固定したまま暗号文の1ビットを変え、読める別の文が出るのではなく、検証が拒否することを見ます。','固定鍵とnonceは比較専用です。実用途で同じ鍵とnonceを再利用しないでください。秘密情報を入力する場所ではありません。','計算機科学入門 p.66','tamper,message'],
+['s04-hash','文書が少し変わったかを、固定長の値で比較します。','入力からSHA-256の値を計算します。同じ入力は同じ値になりますが、値から本文を復号する方式ではありません。','文字列の最初の1ビットだけを変えます。入力の変化量と出力の変化を並べて見て、元の文をそのまま短縮表示したのではないことを確認します。','この1例だけで暗号学的な安全性や衝突の不存在を証明したことにはなりません。','','flip'],
+['s04-hmac','公開のハッシュを計算し直せる相手に対し、共有鍵を知る側の検証を加えます。','HMACはメッセージと秘密鍵から認証用の値を計算します。受信側も同じ鍵を使い、受信内容との一致を調べます。','balance=100と架空の鍵でHMACを作ります。受信内容だけを1ビット変え、検証値が一致しなくなることを見ます。','共有鍵を持つ双方が作成できるので、公開鍵署名と同じ第三者への証明になるわけではありません。','','flip,key'],
+['s04-signature','検証する人へ秘密鍵を渡さず、文書と署名の関係を確かめたいとします。','秘密鍵で署名し、対応する公開鍵で検証します。署名対象の文書が変わると、同じ署名では検証できません。','架空の文書へ署名して検証した後、末尾に!だけを追加します。文書が変わった段階と、公開鍵で拒否される段階を追います。','署名値が毎回同じになるとは限りません。公開鍵が本当に誰のものかという信頼の問題は、別に扱います。','計算機科学入門 p.66','tamper'],
+['s05-dh','秘密の数を直接送らずに、両端で共通の値を作ります。','各自の秘密から公開する値を作り、相手の公開値と自分の秘密を使って計算します。両側が同じ剰余べき乗へ至ります。','Aliceの秘密とBobの秘密を別々に確認し、線の上を渡る値だけを追います。最後に両側の計算値が一致することを見ます。','小さい法23は計算の説明用で秘密性はありません。DHだけで相手の本人確認も済んだわけではありません。','','a,b'],
+['s05-rsa','公開してよい鍵と、戻すために必要な鍵を別に持ちます。','教材では整数を剰余べき乗して暗号文相当の整数へ変え、別の指数で戻します。文字そのものを直接計算していません。','65という整数を公開鍵側で変換し、秘密鍵側の指数で戻します。入力を1つ変え、同じ規則で復元できるか確かめます。','n=3233、パディングなしの教科書的計算です。安全な暗号システムの実装として使ってはいけません。','','message'],
+['s06-tls','鍵を共有できた相手が、アクセスしたかったサイトだとはまだ限りません。','証明書の名前、有効期間、信頼のつながり、秘密鍵の所持を別々に確かめます。失敗した段階より先へは進みません。','正常なフローを確認してから「名前が一致」だけをオフにします。鍵の話とは別に、接続したい名前を検証する必要があることを見ます。','この画面はTLS1.3の基本フローを抜粋した判定モデルです。実際の証明書を検証したり実サーバーへ接続したりしません。','計算機科学入門 pp.53–55,66','hostname,trusted'],
+['s07-password','保存先のデータが見られたとき、パスワードがそのまま読める状態を避けます。','saltと反復処理を使って保存用の値を作ります。saltが違うと、同じ架空パスワードでも保存値が変わります。','AとBに同じパスワードを設定し、saltを共通にする場合と別にする場合を比べます。何を秘密にするのか、何を値と一緒に保持するのかも確認します。','教材の反復回数と固定saltは実サービスの推奨ではありません。実際のパスワードを入力しないでください。','','sameSalt'],
+['s07-mfa','パスワードだけが知られても、別の確認を求めることで防げる場合があります。','認証に使う要素と、どの相手に対して確認したかを分けます。追加要素があることだけで全て同じ耐性にはなりません。','追加要素の検証に成功した条件を固定し、別サイト経由の中継を想定します。OTPとパスキーの概念モデルが、どの条件を見るかを比べます。','この固定条件から、現実の全ての実装が安全または危険だと判断しないでください。登録、回復、運用も別に必要です。','','kind,phishing'],
+['s07-ratelimit','試行を厳しく制限すると、不正な試行だけでなく正しい利用者も待つことがあります。','連続失敗のしきい値と、一定時間のロックを別に考えます。正しい認証情報を受け入れられる時刻も見ます。','3回失敗で10秒ロックする例で、正規利用者が5秒後に試します。制限なしの場合と、誤試行・正規利用者の両方の結果を比べます。','一時ロックは万能な解決ではありません。正しい利用者の利用を妨げる側面もあります。ここでは架空の1アカウントだけを扱います。','','enabled,userTime'],
+['s08-access','ログインした人でも、他人のデータを消してよいとは限りません。','認証は誰かを確かめること、認可はその人にその対象への操作を許すか決めることです。役割・所有者・拒否規則を分けます。','memberが他人のデータへwriteする例で、どの条件が不足するか見ます。自分のデータへ変えた場合や明示的拒否がある場合と比べます。','画面のボタンを隠すだけで、サーバー側の権限検証が不要になるわけではありません。','','owner,role'],
+['s09-session','ログアウト後も、期限の残ったトークンが正しい署名を持っている場合があります。','署名の検証、有効期限、サーバーが持つ失効情報を別々に見ます。自己完結の検証だけでは失効を知らない場合があります。','期限60、現在30、ログアウト済みの例で、JWT方式の失効照会をオン・オフします。サーバーセッション方式とも比較します。','署名が正しいことと、今も利用を許可していることは同じではありません。','','strategy,revocationCheck'],
+['s09-oauth','別のサービスへ権限を渡すとき、途中のコードを取り違えたり横取りされたりしないようにします。','認可コードの発行とアクセストークンの取得は別段階です。redirect URI、state、PKCEは異なる対応関係を検証します。','正常なコード交換を追った後、PKCEだけを失敗させます。コードを持っているだけで交換できないことを確認します。','OAuthの認可と、OIDCの本人確認を同じ言葉としてまとめないでください。この固定モデルは全仕様の実装ではありません。','','pkce,state'],
+['s10-cors','ブラウザで「応答を読めない」とき、要求自体も送られていないのでしょうか。','要求を送れたか、サーバーが処理を許したか、JavaScriptへ応答を公開するかを分けます。preflightがある場合は送信前の段階も加わります。','別オリジンの単純GETで許可ヘッダーがない例を見ます。次にJSON POSTへ変え、送信前の確認が失敗した場合との違いを確かめます。','CORSはサーバーの認可の代わりではありません。応答が読めなくても副作用のある要求まで必ず防げるとは限りません。','','request,allowOrigin'],
+['s11-sql','文字として扱うはずの入力が、SQLの構造の一部になると問題が起きます。','コードとデータの境界を保つ必要があります。この教材は入力を結合する場合と、パラメーターとして渡す場合を条件で比べます。','構文を含む入力を想定したまま、パラメーター化だけを切り替えます。入力の文字そのものではなく、渡し方で何が変わるか見ます。','実DBへ攻撃を送る画面ではありません。パラメーター化でも、別途の認可や業務ルールは必要です。','','parameterized'],
+['s11-xss','利用者の文章を表示したいだけなのに、ブラウザが命令として解釈すると問題になります。','HTMLのどの文脈へ入れるかに応じて、データをコードとして解釈させない扱いをします。CSPは別の制限として重ねます。','実行可能なHTMLを含むという架空条件を固定し、テキスト文脈でのエスケープを切り替えます。CSPの拒否と、入力の扱いの修正を分けて見ます。','このエスケープ方法を、JavaScriptやURLなど別の文脈にも無条件で使えるとは限りません。','','escape,csp'],
+['s11-csrf','ログイン中のブラウザが、利用者の意図しないサイトから要求を送る場合を考えます。','Cookieが自動で付くことと、利用者が操作を意図したことは別です。追加の検証やCookieの送信条件を確認します。','外部サイトからPOSTする固定例で、トークン照合がない場合を見ます。トークンやSameSiteの条件を変え、どの段階で拒否するか比べます。','CORSで応答を読めないことだけでは、この問題を防いだことになりません。','','token,sameSite'],
+['s11-ssrf','サーバーにURLを取得させる機能が、利用者から直接行けない場所への経路になる場合があります。','URLを入力できる相手と、そのURLへ実際にアクセスする主体は別です。サーバーの到達範囲と許可先を確認します。','内部アドレスを指定する固定例で、完全一致の許可先制限を切り替えます。利用者の端末ではなく、サーバーから送る矢印を見てください。','この例は許可先の概念を表す条件モデルです。実際の名前解決、リダイレクト、URL解析の全てを検証するものではありません。','','allowlist'],
+['s11-path','ファイル名に見える入力でも、解釈すると許可したフォルダの外を指す場合があります。','パスを正規化してから、本当に許可した範囲内か確認します。見た目の文字列と、指している対象を分けます。','範囲外を指す入力を想定し、正規化後の許可ルート照合をオンにします。入力を受け付けることと、対象へアクセスを許すことを比べます。','実環境ではシンボリックリンクや競合なども検討が必要です。この固定判定だけでファイル処理全体の安全を保証しません。','','normalize'],
+['s12-firewall','同じ通信へ複数のルールが一致した場合、どれが採用されるでしょうか。','このモデルは上から見て最初に一致したルールを使います。ルールの内容だけでなく並ぶ順番を確認します。','externalから443への通信を見た後、先頭にHTTPS拒否を追加します。後ろに許可があっても結論が変わる理由を追います。','first-matchという今回の規則を、すべての機器やポリシーエンジンへ一般化しないでください。','','blockHttps,zone'],
+['s13-permission','640や755の数字は、誰がどの操作をできるかをまとめたものです。','所有者、グループ、その他の3組に分け、それぞれで読み・書き・実行のビットを見ます。','640を選び、ownerの6を4+2として読み書きへ分けます。otherへ立場を変えると、同じファイルでも選ぶビットの組が変わります。','ここでは通常ファイルの基本rwxだけです。ディレクトリの意味、ACL、特権などの全条件は扱いません。','計算機科学入門 pp.35–37','who,operation'],
+['s14-buffer','書き込む長さが範囲内でも、既に解放した場所なら安全ではありません。','領域の境界と生存期間を別々に検査します。どのセルまで使ってよいか、そもそも使える領域かを確認します。','8セルへ12セルを書こうとする例を見ます。長さを8へ減らした後で解放済みをオンにし、別の理由で拒否が必要なことを確認します。','仮想セルの判定実験です。実行中のブラウザのメモリを破壊するコードを実行するものではありません。','','length,freed'],
+['s15-pipeline','テストが通っていても、権限の設計や秘密情報の混入を見落とす場合があります。','検査には得意な対象と範囲があります。静的解析、依存照合、回帰テスト、レビューを問題に対応させます。','混入する問題をpermissionにしたままレビューを切り替えます。同じ検査セットで別の問題へ変えると、検出する段階も違うことを見ます。','固定の検出表を使う教材です。実際のソース解析を実行して、脆弱性を網羅的に検出しているわけではありません。','','issue,review'],
+['s16-cloud','公開設定と利用者の権限が重なると、意図せず読める範囲が広がる場合があります。','主体の権限、保存領域の公開、明示的拒否を別々に評価します。暗号化の有無とは違うアクセス境界です。','権限noneでも保存領域が公開の例を見ます。公開を止めた場合と明示的拒否を加えた場合で、どの条件が結論を変えるか確かめます。','架空のIAM規則です。特定クラウドの全権限モデルをそのまま再現したものではありません。','','public,deny'],
+['s17-detection','警告を多く出せば見逃しは減るかもしれませんが、正常なものにも警告が出ます。','実際のラベルと予測を組み合わせて4つに分けます。警告のうち当たった割合と、異常のうち見つけた割合は分母が違います。','同じ100件の合成データで、しきい値だけを下げます。新しく警告へ移ったものが正常か異常かを確認してから、適合率と再現率を比べます。','しきい値が低いほど常に優れた検知器というわけではありません。見逃しと誤警告のコストも考えます。','','threshold'],
+['s18-incident','別の機器のログを時刻順に並べるだけで、出来事の順序を正しく読めるでしょうか。','記録された時刻と実際の時刻はずれる場合があります。発生源と既知の補正を明示して、時系列を組み直します。','APIの時計を8秒ずらした例で、AuthとAuditの記録との順序を見ます。補正をオンにして、順序が変わる理由を確認します。','時間が近いだけで因果関係が証明されたわけではありません。この教材は既知のずれを使い、未知のずれを魔法のように推定しません。','','correct,skew'],
+['s19-backup','バックアップがあっても、最後の保存以降のデータや復旧までの時間が問題になります。','戻せる時点と、再び使えるまでの時間を分けます。復元の時間だけでなく検証も含めて考えます。','15分ごとに保存し52分で障害なら、直前は45分です。失われる範囲7分と、復元10分＋検証5分の所要時間を区別します。','同じ破損でバックアップも失う場合があります。存在していることだけでなく、隔離や正常性を確かめます。','','interval,isolated'],
+['s20-update','正しい相手が作った更新でも、古い脆弱な版へ戻してよいとは限りません。','対象機器の一致、署名の検証、バージョンの条件を別々に確認します。1つ成功しても残りを省略しません。','署名は正しいまま、古い版へ戻す条件をオンにします。署名の失敗とは違う理由で受入れを止めることを見ます。','署名検証の真偽はこのモデルへの入力です。実際のファームウェアを解析・更新する機能ではありません。','計算機科学入門 pp.65–66','rollback,signature'],
+['s21-anonymity','名前を消しても、年齢と地域の組み合わせが1人だけなら誰か分かるかもしれません。','直接識別する情報と、組み合わせで絞り込む情報を分けます。値を粗くすると、同じ組に入る人数が変わります。','12人の架空データで実年齢を10歳刻みに変えます。1人だけの組が残るか確認し、次に地域を伏せた場合と比べます。','同じ組の人数が増えただけで、あらゆる再識別や情報推測を防いだとは言えません。','','generalize,hideZip'],
+['s22-human','見慣れた形式のメールでも、急いで秘密や送金を求められたら確認が必要です。','予期した連絡か、機密を求めるか、急がせるかを分けます。メッセージ内ではない独立した連絡先での確認を考えます。','予期しない・機密要求・急ぎという条件を見て、独立した確認の有無を切り替えます。どの情報で判断を変えたかを説明します。','これらの特徴があるだけで、特定の現実のメールを攻撃と断定するものではありません。','','confirmed'],
+['s23-sharing','1人に全部を預けず、複数の共有片が集まった時に復元する計算を考えます。','この例では有限体上の直線を2点から決め、切片を秘密として読みます。復元に使った点と計算を対応させます。','法17の教材で2つの共有片を集め、切片9を復元します。1つしか集めない場合との違いを確認します。','係数7を公開固定したため、これは秘密性を持つ実用実装ではありません。復元計算の説明だけを目的にしています。','','count'],
+['s23-zk','秘密の通路を知ることを、通路の秘密を直接見せずに確かめる類推です。','知らない人が偶然要求に応じられる確率と、繰り返したときの確率を分けます。独立した確認を重ねる前提があります。','秘密を知らない条件で5回確認します。実際の合成試行の成功回数と、全部を偶然通る理論確率1/2⁵を区別して見ます。','洞窟の類推であり、実用的なゼロ知識プロトコルの完全性・健全性・ゼロ知識性を証明する実装ではありません。','','rounds'],
+['s23-migration','暗号方式を移行するとき、安全性だけでなく交換するデータ量や環境も検討します。','公開鍵、暗号文、署名のサイズを別々に足し、回線速度で割って単純な転送時間を求めます。','仮定したサイズ1200+1100+2500=4800Bを、10Mbpsで運ぶ時間を計算します。署名サイズだけを増やして影響を比べます。','ここに入力する数は特定方式の公称値ではありません。耐量子暗号の演算や安全性を検証しているわけでもありません。','','signature,bandwidth'],
+['s24-ai','AIが読む外部文書に、権限を使う指示が混ざっていたらどうすべきでしょう。','未信頼の文章、機密を読む権限、外部へ送る権限、外側の許可判断を分けます。読める内容を命令として実行する必要はありません。','外部送信の指示を含む架空文書で、送信ツールの権限だけを外します。モデルの判断への期待と、外部ポリシーで拒否する方法を比べます。','実際のLLMを呼ぶ実験ではありません。この固定条件だけで全てのプロンプトインジェクションを防げるとは言いません。','','send,guard']
+]);
+})();
+
+;
+(() => {
+'use strict';
+CSL.defineLessons([
+['x01-build','小さな構成から、自分で通信する道を作って確かめます。','機器があること、線でつながること、目的地まで道があることを分けます。変更は1か所ずつ行い、到達性への影響を調べます。','まずPCからWEBへの道を追います。自由実験画面で途中の線を切り、届かなくなる理由を見ます。別の線をつないだ後、同じ送信元と宛先で確かめます。','ここは経路・到達性のモデルです。スイッチとルーターを置いただけで実際の全設定が完了したことにはなりません。','','source,target'],
+['x02-publish','Webページが表示できるだけで、サービスを安全に公開できたとは限りません。','名前解決、通信経路、証明書、管理用入口、データへの認可をそれぞれ確認します。成功条件の違う項目を分けます。','DNSと443の経路が通る例で、証明書を検証できない状態を見ます。表示までの問題を直してから、管理入口と認可の条件も確認します。','固定された設計チェックです。実際のサービスへの設定、脆弱性診断、公開作業を行う画面ではありません。','','cert,auth'],
+['x03-diagnose','原因名を先に見るのではなく、見えた情報から候補を減らします。','証拠が示すこと、まだ示していないことを区別します。観測結果と整合する仮説を選びます。','同じシナリオ番号のまま手順を追い、名前解決まで済んだか、接続が成立したかを確認します。候補を変える時には、その理由となる証拠を1つ挙げてください。','1つの成功した観測から、全ての層が正常だとは判断できません。架空の5種類に絞った演習です。','','guess'],
+['x04-organization','来訪者の通信を分けながら、必要な業務通信は止めたくありません。','必要な到達先と禁止したい到達先を別に書き、分割と通信の許可を組み合わせます。','ゲストの分割をオンにするだけで終わらず、ゲスト→DBの許可も確認します。WebやDNSを止めた案と比べ、必要な機能を維持できたか考えます。','全部を禁止することを常に正解としません。業務要件と残るリスクを対応させる教材です。','','segment,guestDb'],
+['x05-patch','問題を1か所直すだけでなく、同じ問題が戻らないことも確認します。','入力の境界、対象データの権限、回帰テスト、変更の記録を別々の作業として考えます。','SQLのパラメーター化が済んだ例で、所有者の検証がまだないことを確かめます。修正の成立と、テストや記録が残ることを分けて見ます。','チェックをオンにする設計演習です。ここで実際のコードの安全性を検証済みにするわけではありません。','','owner,tests'],
+['x06-response','すぐに復旧を急ぐと、原因や影響を調べるための証拠を失う場合があります。','証拠保全、認証情報の失効、隔離、復元元の検証、原因修正を分けます。それぞれが何を守るかを確認します。','隔離と失効だけが済んだ条件を見ます。復元元を検証しないまま復旧する案、原因を直さない案と、残る問題を比べます。','これは架空の条件演習です。現実のインシデントでは影響と緊急度に応じた専門的な対応が必要です。','','evidence,verified'],
+['x07-iot','多数の機器では、通信の重複や更新の失敗が起きても安全に戻れる必要があります。','機器の識別、通信、同じ要求の扱い、更新の検証、回復方法を組み合わせます。','接続できるだけの例から、通知が重複した場合の処理と更新失敗時の回復を加えます。正常時だけの成功では見えない条件を確認します。','この画面で実機を更新したりネットワークへ要求を送ったりしません。運用の設計を考える固定モデルです。','','idempotent,recovery'],
+['x08-research','結果が違っても、何を変えたためなのか分からなければ比較できません。','変える条件とそろえる条件を分け、繰り返し、測るもの、モデルの限界を明示します。','seedが42と43で、同時に3条件を変えた例を見ます。seedをそろえて変更を1条件へ減らし、比較の説明がどう変わるか考えます。','この設計チェックに通ったことは統計的な結論の証明ではありません。入力や回答は、この画面を離れると消えます。','','changed,repeats']
+]);
+})();
+
+;
+/* Enforce coverage; never silently substitute a generic lesson for a missing one. */
+(() => {
+'use strict';
+const L=CSL;
+const verbs={binary:'次の読み方を確かめる',encoding:'次の検査へ進む',huffman:'次の結合を見る',automaton:'次の文字を読む','subset-automaton':'次の集合状態を見る',cpu:'次の命令の動きを見る',scheduler:'次の割り当てを見る',tcp:'次の送受信を見る',signal:'次の計算へ進む','linear-code':'次の検査を実行する','load-register':'次の選択・クロックを見る','hop-envelopes':'次の区間・受渡しを見る','source-entropy':'次の項を足す'};
+for(const lab of L.labs){
+ const d=L.lessonDrafts[lab.id];if(!d)throw Error('固有の解説がありません: '+lab.id);
+ const keys=(d.focus||'').split(',').filter(k=>lab.controls.some(c=>c.key===k));
+ lab.reading={...d,focus:keys.length?keys:lab.controls.slice(0,2).map(c=>c.key),nextLabel:verbs[lab.engine]||'次の判断・計算を見る',notes:d.notes||lab.notes||'',terms:(L.glossary||[]).filter(g=>g.lab===lab.id).slice(0,5)};
+ lab.guide=[d.example,lab.exploration.label+'：'+lab.observe,d.pitfall];
+ lab.lesson=d.idea;
+ lab.keywords=[...(lab.keywords||[]),...(lab.reading.notes?[lab.reading.notes.split(' ')[0]]:[]),d.idea];
+}
+const additions=[
+ ['自己情報量','ある出来事が起きたと知ったときの情報量。底2なら−log₂pでbitを単位にします。','c01-information'],
+ ['平均情報量','各出来事の自己情報量を、その確率で重み付けした平均です。','c01-entropy'],
+ ['結合エントロピー','2つの変数を組として知るときの平均情報量です。','c01-joint'],
+ ['条件付きエントロピー','片方を知った条件で、もう片方に残る平均的な不確かさです。','c01-joint'],
+ ['相互情報量','片方を知ることによって減る、もう片方の不確かさです。','c01-joint'],
+ ['マルコフ情報源','次の記号の確率が、過去の状態に依存する情報源のモデルです。','c01-markov'],
+ ['定常確率','遷移を1回行っても変わらない、状態の確率分布です。','c01-markov'],
+ ['通信路容量','入力分布を選んだときの、伝送情報量の最大値です。','c01-channel'],
+ ['BSC','0→1と1→0の反転確率が等しい2元対称通信路です。','c01-channel'],
+ ['瞬時符号','どの符号語も別の符号語の先頭でなく、遅れずに区切れる符号です。','c01-prefix'],
+ ['クラフトの不等式','指定された長さで瞬時符号を構成できるかを表す条件です。','c01-kraft'],
+ ['シャノン・ファノ','確率の大きい順に並べ、確率の和が近い2群へ分割する符号化法です。','c01-shannon-fano'],
+ ['ハミング距離','同じ長さのビット列の間で、異なる位置の個数です。','c01-distance'],
+ ['シンドローム','受信したビット列に検査行列を作用させて得る検査結果です。','c01-linear-code'],
+ ['生成行列','情報ビットから符号語を作るための行列です。','c01-linear-code'],
+ ['検査行列','受信した符号語に対する各パリティ検査を行としてまとめた行列です。','c01-linear-code'],
+ ['NFA','入力と状態に対して複数の遷移先を持てる、非決定性有限オートマトンです。','c02-nfa'],
+ ['集合状態','NFAで同時にあり得る複数の状態を、集合として1つにまとめた表現です。','c02-nfa'],
+ ['DFF','この教材ではクロックの立上りで入力を取り込む、1ビットの記憶回路です。','c08-register'],
+ ['Mux','選択信号に応じて複数の入力の1つを出力へ渡す回路です。','c08-register']
+];
+for(const [term,definition,lab] of additions){if(!(L.glossary||[]).some(g=>g.term===term))L.glossary.push({term,definition,lab});}
+const ent=L.glossary.find(g=>g.term==='エントロピー');if(ent)ent.lab='c01-entropy';
+for(const lab of L.labs)lab.reading.terms=L.glossary.filter(g=>g.lab===lab.id).slice(0,5);
+L.readingCourses=[
+ {id:'information',name:'情報理論',description:'確率 → 情報量 → 通信路 → 符号化 → 誤りの検出・訂正。提供ノートの流れに沿う入口です。',groups:[
+  ['確率から情報量へ',['c03-probability','c03-bayes','c01-information','c01-entropy','c01-joint']],
+  ['情報源と通信路',['c01-markov','c01-channel']],
+  ['符号を作る',['c01-prefix','c01-kraft','c01-shannon-fano','c01-huffman']],
+  ['誤りを調べる',['c01-distance','c01-hamming','c01-linear-code','n02-crc']]
+ ]},
+ {id:'introduction',name:'計算機科学入門',description:'0と1 → 回路 → 計算のモデル → CPU・OS → ネットワーク。必要な単元から直接開けます。',groups:[
+  ['表現と回路',['c01-bits','c01-utf8','c08-gate','c08-nand','c08-adder','c08-register']],
+  ['状態と計算',['c02-dfa','c02-nfa','c02-turing','c07-compiler']],
+  ['CPUとメモリ',['c09-cpu','c09-cache','c10-pointer','c10-address-spaces','c10-translation','c10-pages']],
+  ['OSと並行処理',['c11-scheduler','c12-race','c12-deadlock','c11-files']],
+  ['ネットワークと安全性',['n01-packet','n01-forwarding','n04-subnet','n04-vlsm','n05-arp','n10-transport','n11-tcp','n09-dns','s01-threat','s06-tls']],
+  ['人と操作',['c20-contrast','c20-privacy']]
+ ]}
+];
+L.readingRelations={
+ 'c01-hamming':['c01-distance','c01-linear-code','n02-crc'],
+ 'c01-huffman':['c01-entropy','c01-prefix','c01-shannon-fano'],
+ 'c01-linear-code':['c01-hamming','c01-distance','n02-crc'],
+ 'n01-packet':['n01-forwarding','n10-transport'],
+ 'n01-forwarding':['n05-arp','n04-subnet','n12-nat'],
+ 'n11-tcp':['n10-transport','n11-congestion','n13-http'],
+ 'c10-pages':['c10-address-spaces','c10-translation'],
+ 'c10-translation':['c10-address-spaces','c10-pages'],
+ 'c08-gate':['c08-nand','c08-adder','c08-register'],
+ 's06-tls':['s05-dh','s04-signature','s08-access'],
+ 's10-cors':['s08-access','s11-csrf','n13-http']
+};
+})();
+
+;
+/* Concrete questions for the new explanations, not one repeated generic quiz. */
+(() => {
+'use strict';const L=CSL;
+const questions={
+'c01-information':['確率を1/8から1/2に変えると、自己情報量は？','3bitから1bitへ減る','1bitから3bitへ増える','出来事の名前が同じなので変わらない','−log₂(1/8)=3、−log₂(1/2)=1です。起きやすい出来事ほど、知ったときの情報量は小さくなります。'],
+'c01-entropy':['平均情報量を求めるには？','各情報量に、その確率を掛けて足す','自己情報量を単に4で割る','最も珍しい出来事の値だけを使う','出やすさの異なる出来事を、確率で重み付けします。1/2×1+1/4×2+1/8×3+1/8×3=1.75です。'],
+'c01-joint':['Yを知った後に残るXの不確かさは？','H(X,Y)−H(Y)','H(X)+H(Y)をそのまま足した値','常に0','全体の情報量から、すでに知ったYの量を引きます。独立ならYを知ってもXの不確かさは減りません。'],
+'c01-markov':['各状態のエントロピーを重み付けするのは？','各状態にいる定常確率','状態番号そのもの','必ず同じ重み1/2','遷移の行を作る確率と、その状態に滞在する確率は別です。π₀H₀+π₁H₁を計算します。'],
+'c01-channel':['同じBSCで入力の確率を変えると？','伝送情報量は変わり得るが、通信路容量は同じ','通信路容量も入力の確率と必ず同じ値になる','反転する確率εが自動で変わる','容量は入力分布について最大化した量です。通信路を固定して入力だけ変えたときのIと区別します。'],
+'c01-prefix':['接頭辞の重なりがあると分かったら？','瞬時符号ではないが、一意性は別に調べる','必ず一意的復号も不可能と断定できる','受信列を何でも復号できる','一意的復号と瞬時復号を区別します。2通りの元の記号列が同じビット列になる反例が見つかれば、一意性の不成立を示せます。'],
+'c01-kraft':['クラフトの不等式が示すのは？','指定した長さで瞬時符号を作れるか','適当に選んだ符号語がすべて正しいこと','どの圧縮でも必ず同じ符号になること','長さの組としての存在条件です。実際に割り当てた符号語の接頭辞条件は別に確認します。'],
+'c01-shannon-fano':['この符号木の作り方は？','確率の和が近い2群へ分けていく','最も小さい2つを常に下から結合する','記号をランダムに分割する','小さい2つをまとめるのはHuffmanの手順です。Shannon–Fanoでは上から分割を繰り返します。'],
+'c01-distance':['ハミング距離を求めるには？','XORの結果に含まれる1を数える','ビット列を整数に直して引く','1の総数だけをそれぞれ比べる','同じ位置の違いを数えます。違う位置を選んでも距離が同じになることがあります。'],
+'c01-linear-code':['1ビット誤りでシンドロームがHの第2列と同じなら？','受信列の第2ビットを反転して確かめる','第2情報ビットを必ず削除する','正解の入力を参照して復元する','誤り位置を判定する情報は受信列からの検査結果です。1ビット以下という対象範囲を外すと、この保証は使えません。'],
+'c02-nfa':['集合状態{q0,q2}とは？','q0にいる経路とq2にいる経路の両方が可能','半分の確率でどちらかを選んだ状態','q0を消してq2だけに決めた状態','可能な経路を全部表します。入力を読み終えた時点で受理状態を含めば、受理する経路が存在します。'],
+'c08-nand':['A NAND Aは何になる？','NOT A','常にAと同じ','常に1','A AND AはAなので、NANDではその否定です。A=0とA=1の両方で確かめられます。'],
+'c08-register':['load=0でクロックが来ると？','前のQを選んで取り込み、値を保持する','新しいDを必ず取り込む','回路からクロック自体が消える','Muxが保持中のQを選び、その値をDFFが取り込みます。選択とタイミングを区別します。'],
+'c10-address-spaces':['アプリAとBで同じ仮想番地を使うと？','別のページ表なら別の物理番地へ対応できる','必ず同じ物理番地を上書きする','数値が同じなので片方は実行できない','仮想番地だけでなく、どのプロセスの変換表を使うかを確認します。この例は別々のフレームへ対応させています。']
+};
+for(const [id,q]of Object.entries(questions)){const l=L.labs.find(x=>x.id===id);if(!l)throw Error('確認問題の単元が見つかりません: '+id);const rotation=id.length%3,options=q.slice(1,4),ordered=options.slice(rotation).concat(options.slice(0,rotation));l.challenge={question:q[0],options:ordered,answer:ordered.indexOf(q[1]),explanation:q[4]};}
+for(const c of L.readingCourses){const entry=L.courses.find(x=>x.name===c.name);if(entry)entry.labs=[...new Set(c.groups.flatMap(x=>x[1]))];}
+// Use local, non-private reference links in the legacy source directory too.
+L.sources.notesInfo.url='#/course/information';L.sources.notesIntro.url='#/course/introduction';
+})();
+
+;
 /* A disposable, deterministic step player. No DOM, storage or model-time mutation. */
 (() => {
   'use strict';
@@ -2841,6 +3561,91 @@ function visualize(v,ctx={}){
 }
 function visualTable(v){if(v.type==='network')return {headers:['機器','名前','接続先'],rows:v.nodes.map(nd=>[nd.id,nd.label,v.edges.filter(e=>!e.off&&(e.a===nd.id||e.b===nd.id)).map(e=>e.a===nd.id?e.b:e.a).join(', ')])};if(v.type==='sequence')return{headers:['順番','送信側','受信側','内容'],rows:v.messages.map((m,i)=>[i+1,v.actors[m.from],v.actors[m.to],m.label])};if(v.type==='bars')return{headers:['位置 / 項目','値'],rows:v.values.map((x,i)=>[v.labels?.[i]??i,x])};if(v.type==='packets')return{headers:['番号','受信済み','転送中','損失'],rows:Array.from({length:v.count},(_,i)=>[i+1,v.received.includes(i+1)?'はい':'いいえ',v.inflight.includes(i+1)?'はい':'いいえ',v.lost===i+1?'はい':'いいえ'])};if(v.type==='plot')return{headers:['系列','x','y'],rows:v.series.flatMap(s=>s.points.map(p=>[s.name,fmt(p.x),fmt(p.y)]))};return {headers:['表示項目','値'],rows:Object.entries(v).filter(([k])=>k!=='type').map(([k,val])=>[k,typeof val==='object'?JSON.stringify(val):val])};}
 Object.assign(L,{h,fmt,icon,svg,visualize,visualTable,table,colors});
+})();
+
+;
+/* Data-linked, accessible diagrams. All text is escaped; no external assets. */
+(() => {
+'use strict';
+const L=CSL,{h}=L;
+const f=x=>typeof x==='number'?Number(x.toPrecision(6)).toLocaleString('en-US'):String(x??'—');
+const attr=x=>h(String(x));
+const selected=(focus,id)=>focus===String(id)?' is-linked':'';
+const button=(id,label,focus,extra='')=>`<button type="button" class="study-chip${selected(focus,id)}" data-r-focus="${attr(id)}" aria-pressed="${String(focus===String(id))}">${h(label)}${extra}</button>`;
+const equation=x=>`<div class="study-equation" role="math" aria-label="${attr(x)}">${h(x)}</div>`;
+const table=(headers,rows,caption='')=>`<div class="study-table-scroll" tabindex="0" role="region" aria-label="${attr(caption||'計算の表')}"><table class="study-table">${caption?`<caption>${h(caption)}</caption>`:''}<thead><tr>${headers.map(x=>`<th scope="col">${h(x)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${row.map((x,i)=>`<${i?'td':'th scope="row"'}>${h(x)}</${i?'td':'th'}>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+const svg=(content,label,w=800,height=300)=>`<svg class="study-svg" viewBox="0 0 ${w} ${height}" role="img" aria-label="${attr(label)}"><title>${h(label)}</title>${content}</svg>`;
+const line=(x1,y1,x2,y2,cls='')=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="study-wire ${cls}"/>`;
+const text=(x,y,value,cls='')=>`<text x="${x}" y="${y}" class="study-svg-text ${cls}" text-anchor="middle">${h(value)}</text>`;
+const views={};
+views['lesson-calculation']=(v,focus)=>`<div class="study-calculation">${equation(v.equation)}${v.terms?.length?`<div class="study-terms">${v.terms.map(t=>`<div class="study-term${selected(focus,t.id)}">${button(t.id,t.label,focus)}<strong>${h(f(t.value))}</strong><p>${h(t.meaning)}</p></div>`).join('')}</div>`:''}${v.detail?`<p class="study-caption">${h(v.detail)}</p>`:''}</div>`;
+views['lesson-entropy']=(v,focus)=>{
+ const probs=v.probabilities,names=v.names,active=focus?.startsWith('entropy-')?names.indexOf(focus.slice(8)):v.selected;
+ const terms=probs.map((p,i)=>({p,i,info:p>0?-Math.log2(p):null,part:p>0?-p*Math.log2(p):0}));
+ return `<div class="study-entropy"><p class="study-instruction">出来事を選ぶと、確率・情報量・式の同じ項を強調します。</p><div class="study-probabilities">${terms.map(t=>`<div class="study-probability${active===t.i?' is-linked':''}">${button('entropy-'+names[t.i],names[t.i],focus)}<div class="study-prob-track"><span style="width:${t.p*100}%"></span></div><strong>${h(f(t.p))}</strong></div>`).join('')}</div><div class="study-table-scroll" tabindex="0" role="region" aria-label="確率と情報量を対応させる表"><table class="study-table"><thead><tr><th>出来事</th><th>確率 p</th><th>情報量 −log₂p</th><th>平均への寄与 p×I</th></tr></thead><tbody>${terms.map(t=>`<tr class="${active===t.i?'is-linked':''}"><th scope="row">${button('entropy-'+names[t.i],names[t.i],focus)}</th><td>${h(f(t.p))}</td><td>${t.info===null?'発生しない（形式的に∞）':h(f(t.info))+' bit'}</td><td>${h(f(t.part))}</td></tr>`).join('')}</tbody></table></div><div class="study-equation"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="Hは各出来事の確率と自己情報量の積の和"><mi>H</mi><mo>=</mo>${terms.map((t,i)=>`${i?'<mo>+</mo>':''}<mrow class="${active===i?'math-linked':''}"><mn>${f(t.p)}</mn><mo>×</mo><mn>${t.info===null?'0':f(t.info)}</mn></mrow>`).join('')}<mo>=</mo><mn>${f(terms.reduce((s,t)=>s+t.part,0))}</mn></math></div><p class="study-caption">単位：bit/記号。確率0の行の寄与は極限として0です。上の式ではその項を0として表示しています。</p></div>`;
+};
+views['lesson-channel']=(v,focus)=>{
+ const nodes=[{x:120,y:80,t:'送信 X=0'},{x:120,y:235,t:'送信 X=1'},{x:650,y:80,t:'受信 Y=0'},{x:650,y:235,t:'受信 Y=1'}];
+ return `<div class="study-channel">${svg(line(205,80,555,80)+line(205,235,555,235)+line(205,100,555,215,'study-noise')+line(205,215,555,100,'study-noise')+text(390,61,`1−ε = ${f(1-v.e)}`)+text(390,268,`1−ε = ${f(1-v.e)}`)+text(385,145,`ε = ${f(v.e)}`)+nodes.map(n=>`<rect x="${n.x-90}" y="${n.y-25}" width="180" height="50" rx="8" class="study-box"/>${text(n.x,n.y+6,n.t)}`).join(''),'BSC：同じ記号の受信確率は1−ε、反転はε')}<div class="study-terms"><div>${button('q','情報源の確率',focus)}<p>P(X=0) = ${f(1-v.q)}<br>P(X=1) = ${f(v.q)}</p></div><div>${button('e','通信路の反転率',focus)}<p>0→1も1→0も ε = ${f(v.e)}</p></div></div><p class="study-caption">この線は条件付き確率です。入力Xの出やすさは、別に左側の確率で指定します。</p></div>`;
+};
+views['lesson-code-tree']=(v,focus)=>{
+ const root={path:'',children:{},name:null},nodes=[root];
+ v.codes.forEach((code,i)=>{let n=root;for(const bit of code){if(!n.children[bit]){n.children[bit]={path:n.path+bit,children:{},name:null};nodes.push(n.children[bit]);}n=n.children[bit];}n.name=(n.name?n.name+' / ':'')+(v.names?.[i]||String.fromCharCode(65+i));});
+ let leaves=0;function layout(n){const children=Object.values(n.children);if(!children.length)n.x=leaves++;else{children.forEach(layout);n.x=children.reduce((s,c)=>s+c.x,0)/children.length;}}layout(root);
+ const maxDepth=Math.max(...nodes.map(n=>n.path.length)),width=Math.max(600,leaves*115),height=Math.max(220,maxDepth*64+110),pos=n=>({x:50+n.x*(width-100)/Math.max(1,leaves-1),y:35+n.path.length*64});
+ let drawing='';for(const n of nodes){const a=pos(n);for(const [bit,c]of Object.entries(n.children)){const b=pos(c);drawing+=line(a.x,a.y,b.x,b.y)+text((a.x+b.x)/2+12,(a.y+b.y)/2,bit);}}
+ for(const n of nodes){const p=pos(n),active=focus==='code-'+n.path;drawing+=`<circle cx="${p.x}" cy="${p.y}" r="${n.name?17:7}" class="study-node ${n.name?'study-accept':''} ${active?'study-highlight':''}"/>`+(n.name?text(p.x,p.y+5,n.name):'');}
+ return `<div class="study-tree">${svg(drawing,'符号木。枝の0と1を根から順に読むと符号語になります。',width,height)}<div class="study-code-legend">${v.codes.map((code,i)=>button('code-'+code,`${v.names?.[i]||String.fromCharCode(65+i)} = ${code}`,focus)).join('')}</div><p class="study-caption">記号が置かれた位置より先に、別の記号が続いていないかも確かめます。</p></div>`;
+};
+views['lesson-distance']=(v,focus)=>`<div class="study-bit-matrix"><p>同じ列を縦に比べます。違う列のXORだけが1です。</p>${['a','b','diff'].map((key,j)=>`<div class="study-bit-line"><strong>${['X','Y','X XOR Y'][j]}</strong><div>${v[key].map((b,i)=>`<button type="button" data-r-focus="distance-${i}" aria-label="左から${i+1}番目、${['X','Y','XOR'][j]}は${b}" class="study-bit ${v.diff[i]?'study-different':''}${selected(focus,'distance-'+i)}">${b}</button>`).join('')}</div></div>`).join('')}</div>`;
+function matrixTable(m,label,selectedColumn=-1){return `<div class="study-matrix"><h4>${h(label)}</h4><table aria-label="${attr(label)}"><tbody>${m.map(row=>`<tr>${row.map((x,i)=>`<td class="${i===selectedColumn?'is-linked':''}">${h(x)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;}
+views['lesson-linear']=(v,focus)=>{
+ const check=focus?.startsWith('check-')?Number(focus.slice(6)):v.check,index=focus?.startsWith('bit-')?Number(focus.slice(4)):-1;
+ const values=v.phase==='encode'?v.sent:v.phase==='correct'?v.corrected:v.received,labels=['x₁','x₂','x₃','x₄','c₁','c₂','c₃'];
+ return `<div class="study-linear"><p class="study-instruction">ビットまたは検査名を選ぶと、検査に参加する列を対応させます。入力条件は左の設定で変更します。</p><div class="study-seven">${values.map((b,i)=>`<button type="button" data-r-focus="bit-${i}" class="study-symbol ${i>=4?'study-parity':''} ${i===index||(check>=0&&v.H[check]?.[i])?'is-linked':''}" aria-label="${labels[i]}、値${b}、位置${i+1}"><span>${labels[i]}</span><strong>${b}</strong><small>位置 ${i+1}</small></button>`).join('')}</div><div class="study-code-groups"><span>情報ビット4個</span><span>検査ビット3個</span></div><div class="study-checks">${v.H.map((row,i)=>{const known=v.phase==='correct'||(v.phase==='check'&&i<=v.check);const active=i===check||index>=0&&row[index];return `<div class="study-check${active?' is-linked':''}">${button('check-'+i,'検査 s'+(i+1),focus)}<span>${row.map((x,j)=>x?labels[j]:null).filter(Boolean).join(' ⊕ ')}</span><strong>${known?'= '+v.syndrome[i]:'= ?'}</strong></div>`;}).join('')}</div><p class="study-caption">${v.phase==='correct'?`シンドローム ${v.syndrome.join('')} をHの列と照合しました。`:'検査結果は、各検査の段階まで進むと表示されます。図を選ぶだけでは検査を実行したことにはしません。'}</p><details><summary>同じ検査を、生成行列Gと検査行列Hで見る</summary><p>Gは情報から符号を作ります。Hの行は検査式、列はその位置のビットが参加する検査です。演算はmod 2です。</p><div class="study-matrices">${matrixTable(v.G,'G = [I₄ | P]',index)}${matrixTable(v.H,'H = [Pᵀ | I₃]',index)}</div></details></div>`;
+};
+views['lesson-division']=(v,focus)=>{
+ const length=v.before.length,row=(name,values,aligned=false)=>`<div class="study-division-row"><strong>${name}</strong><div>${Array.from({length},(_,i)=>{const bit=aligned?(i>=v.position&&i<v.position+v.divisor.length?v.divisor[i-v.position]:'·'):values[i];return `<span class="${v.position>=0&&i>=v.position&&i<v.position+v.divisor.length?'is-linked':''}">${h(bit)}</span>`;}).join('')}</div></div>`;
+ return `<div class="study-division"><p class="study-overline">${h(v.phase)} / GF(2) の割り算</p>${row('処理前',v.before)}${v.position>=0?row(v.apply?'XORする':'今回は省略',v.divisor,true):''}${row('処理後',v.after)}<p class="study-caption">${v.position<0?'生成多項式1011 = x³+x+1。右端に3個の検査用ビットの場所を空けます。':`左から${v.position+1}番目から4桁を対応させます。${v.apply?'同じビットのXORは0、違うビットは1です。':'現在の先頭が0なので、この位置の計算を飛ばします。'}`}</p></div>`;
+};
+views['lesson-nfa']=(v,focus)=>{
+ let drawing=line(100,150,340,150)+line(400,150,650,150)+text(240,130,'0')+text(520,130,'1')+`<path class="study-wire" d="M70 125 C0 20 170 20 115 125"/>`+text(85,62,'0,1');
+ [100,370,680].forEach((x,i)=>{drawing+=`<circle cx="${x}" cy="150" r="36" class="study-node ${v.set.includes(i)?'study-highlight':''}"/>`+(i===2?`<circle cx="${x}" cy="150" r="29" class="study-wire"/>`:'')+text(x,155,'q'+i);});
+ return `<div>${svg(drawing,'末尾01を受理するNFA。光った節点は同時にあり得る状態です。',800,220)}<div class="study-input-tape">${[...v.input].map((ch,i)=>`<span class="${v.index===i?'is-linked':''}">${ch}</span>`).join('')||'<span>ε（空文字）</span>'}</div>${equation(`集合状態 = {${v.set.map(x=>'q'+x).join(', ')}}`)}<p class="study-caption">受理状態は二重丸のq2です。入力が残っている間と、全て読み終わった後を区別します。</p></div>`;
+};
+views['lesson-register']=(v,focus)=>{
+ const chosen=v.selected??(v.load?v.d:v.q);
+ return `<div class="study-register"><div class="study-register-inputs"><div class="study-box-card ${v.load?'is-linked':''}"><span>新しい入力 D</span><strong>${v.d}</strong></div><div class="study-box-card ${!v.load?'is-linked':''}"><span>今の出力 Q を戻す</span><strong>${v.q}</strong></div></div><span class="study-arrow" aria-hidden="true">→</span><div class="study-box-card"><span>Mux / load = ${v.load}</span><strong>${chosen}</strong><small>${v.load?'新しいDを選択':'前のQを選択'}</small></div><span class="study-arrow" aria-hidden="true">→</span><div class="study-box-card ${v.clock?'is-linked':''}"><span>DFF</span><strong>Q = ${v.q}</strong><small>${v.clock?'立上りで取り込んだ':'まだ立上り前'}</small></div></div>${v.rows?.length?table(['クロック','入力D','load','前のQ','後のQ'],v.rows,'これまでの取込み'):''}`;
+};
+views['lesson-addresses']=(v,focus)=>{
+ const chosen=v.process,frame=v.tables[chosen][v.page];
+ return `<div class="study-addresses"><div class="study-address-apps">${['A','B'].map(a=>`<div class="study-address-app${a===chosen?' is-linked':''}"><h4>アプリ ${a}</h4><p>同じ仮想住所でも、使う表が違う</p>${v.tables[a].map((p,i)=>`<div class="study-address-page ${a===chosen&&i===v.page?'is-linked':''}"><span>仮想ページ ${i}<small>番地 ${i*16}〜${i*16+15}</small></span><span>→ フレーム ${p}</span></div>`).join('')}</div>`).join('')}</div><div class="study-address-physical"><h4>実際の物理メモリ</h4>${[0,1,2,3].map(i=>`<div class="study-address-page ${i===frame&&v.phase>0?'is-linked':''}"><span>フレーム ${i}</span><span>番地 ${i*16}〜${i*16+15}</span></div>`).join('')}</div></div>${equation(v.phase<2?`仮想ページ ${v.page} ＋ ページ内 ${v.offset}`:`物理番地 = ${frame} × 16 + ${v.offset} = ${v.physical}`)}<p class="study-caption">同じ仮想番地をBから見るには、「操作するアプリ」を変更してください。色だけでなく、表の番号をたどれます。</p>`;
+};
+views['lesson-hop']=(v,focus)=>{
+ const targets=[['A',v.source],...(v.remote?[['ルーター','左LAN / 右LAN']]:[]),['B',v.destination]];
+ const key=focus||'destination';
+ return `<div class="study-hop"><div class="study-hop-path">${targets.map(([name,addr],i)=>`${i?'<span class="study-arrow" aria-hidden="true">→</span>':''}<div class="study-box-card ${(key==='destination'&&name==='B')||(key==='link'&&name===(v.phase===1&&v.remote?'ルーター':'B'))?'is-linked':''}"><strong>${h(name)}</strong><span>${h(addr)}</span></div>`).join('')}</div><p>${v.remote?'LAN①：A〜ルーター左側 ／ LAN②：ルーター右側〜B':'AとBは同じLANにいます。'}</p><div class="study-envelope"><div class="study-envelope-label">この区間のEthernetの情報 ${button('link','図の受渡し先を見る',key)}</div><div class="study-envelope-values"><span>送信元MAC <b>${h(v.from)}</b></span><span>宛先MAC <b>${h(v.to)}</b></span></div><div class="study-ip-envelope"><div>最終的な端末を示すIPの情報 ${button('destination','図の最終宛先を見る',key)}</div><p>送信元 ${h(v.source)} → 宛先 <strong>${h(v.destination)}</strong></p><div class="study-payload"><small>送りたい中身</small><p>${h(v.message)}</p></div></div></div><p class="study-caption">${v.phase===0?'まだリンクの包みは作っていません。次の段階でMACの受渡し先を選びます。':'NATなしのこの例では、IPの最終宛先Bは変わらず、区間ごとのMACが変わります。'}</p></div>`;
+};
+const base=L.visualize;
+L.visualize=(v,options={})=>views[v?.type]?views[v.type](v,options.focus??L.app?.current?.noteFocus??null):base(v,options);
+L.lessonCompanion=c=>{
+ if(!c.result||c.pending||c.dirty||c.error)return '';
+ const p=c.params,id=c.lab.id;
+ if(id==='c08-adder'){
+  const a=+p.a,b=+p.b,ci=+p.carry,s1=a^b,c1=a&b,sum=s1^ci,c2=s1&ci,co=c1|c2;
+  return `<section class="study-companion"><h3>2つの半加算器として読む</h3><p>同じ入力を、部品の組み合わせと式で確かめます。</p><div class="study-terms"><div><h4>① AとBを足す</h4>${equation(`${a} ⊕ ${b} = ${s1}`)}<p>仮の和 ${s1}<br>この段のcarry ${c1}</p></div><div><h4>② Cinも足す</h4>${equation(`${s1} ⊕ ${ci} = ${sum}`)}<p>sum = ${sum}<br>この段のcarry ${c2}</p></div><div><h4>③ carryを合わせる</h4>${equation(`${c1} OR ${c2} = ${co}`)}<p>全体の結果：${co}${sum}₂ = ${a+b+ci}</p></div></div></section>`;
+ }
+ if(id==='c01-bits'){
+  const width=p.width,mod=2**width,value=((Math.floor(p.value)%mod)+mod)%mod,bs=value.toString(2).padStart(width,'0'),signed=value>=mod/2?value-mod:value;
+  const terms=[...bs].map((b,i)=>({b:Number(b),weight:2**(width-1-i)}));
+  return `<section class="study-companion"><h3>1のある位置の重みを足す</h3><div class="study-weight-bits">${terms.map((t,i)=>`<button type="button" class="study-symbol ${t.b?'is-linked':''}" data-r-bit="${i}" aria-label="左から${i+1}番目を切り替える、現在${t.b}"><span>重み ${t.weight}</span><strong>${t.b}</strong></button>`).join('')}</div>${equation(terms.filter(t=>t.b).map(t=>t.weight).join(' + ')+' = '+value)}<p>符号なし：${value} ／ 2の補数：${signed}<br>2の補数では最上位の重みだけを −${mod/2} として読みます。</p></section>`;
+ }
+ if(id==='c01-hamming')return `<aside class="study-companion"><h3>ノートの並びで行列を追うには</h3><p>この単元では位置1・2・4を検査ビットにしています。ノートの「情報4ビット＋検査3ビット」の並びは、別の解説に分けました。</p><a class="btn" href="#/lab/c01-linear-code">生成行列・検査行列へ進む →</a></aside>`;
+ if(id==='n01-packet')return `<aside class="study-companion"><h3>この包みは、図の誰を指している？</h3><p>ヘッダーを重ねる理由を確認したら、IPの最終宛先と、MACの区間ごとの相手を1区間ずつたどれます。</p><a class="btn" href="#/lab/n01-forwarding">IPとMACを対応させる →</a></aside>`;
+ if(id==='c10-pages')return `<aside class="study-companion"><h3>ページの置換より前に、住所の意味から</h3><p>「なぜ変換するか」を確かめるには、2つのアプリが同じ番地を使う例を開けます。</p><a class="btn" href="#/lab/c10-address-spaces">アプリごとの仮想アドレスへ →</a></aside>`;
+ return '';
+};
+L.studyTable=table;
 })();
 
 ;
@@ -3258,6 +4063,241 @@ A.nodeClick=id=>{const c=A.current;if(!c)return;if(c.lab.engine==='builder'){
 A.addNode=kind=>{const c=A.current;if(!c||c.lab.engine!=='builder')return;let v=L.parseTopology(c.params.topology);if(v.nodes.length>=12)return A.toast('機器は12台までです。',true);let i=1;while(v.nodes.some(n=>n.id==='N'+i))i++;let id='N'+i;v.nodes.push({id,label:({pc:'端末',switch:'スイッチ',router:'ルーター',server:'サーバー'}[kind]||'機器')+' '+i,kind,x:130+(i%4)*145,y:100+Math.floor((i%8)/4)*180});c.selected=id;A.setTopology(v);};
 A.removeNode=()=>{const c=A.current;if(!c||c.lab.engine!=='builder')return;let v=L.parseTopology(c.params.topology);if(!c.selected)return A.toast('削除する機器を選択してください。');if(v.nodes.length<=2)return A.toast('最低2台の機器を残してください。',true);if([c.params.source,c.params.target].includes(c.selected))return A.toast('送信元または宛先です。先に入力欄で別のIDを指定してください。',true);v.nodes=v.nodes.filter(n=>n.id!==c.selected);v.edges=v.edges.filter(e=>e.a!==c.selected&&e.b!==c.selected);c.selected=null;A.setTopology(v);};
 
+})();
+
+;
+/* Lesson-first UI. All state belongs to the open unit; nothing is persisted. */
+(() => {
+'use strict';
+const L=CSL,A=L.app,{h,icon,clone}=L;
+const $=id=>document.getElementById(id);
+const legacy={lab:A.views.lab,play:A.play,seek:A.seek,step:A.step,stop:A.stop,run:A.runCurrent};
+const isCurrent=c=>A.current===c&&c.reader;
+const ready=c=>isCurrent(c)&&c.result&&!c.pending&&!c.dirty&&!c.error;
+const phases=['背景と意味','例を一緒に追う','条件を変える','理解を確かめる'];
+const rbutton=(action,label,cls='',attrs='')=>`<button type="button" class="btn ${cls}" data-r-action="${action}" ${attrs}>${label}</button>`;
+const valueText=(control,value)=>control.type==='toggle'?(value?'オン':'オフ'):control.type==='select'?(control.options.find(o=>String(o.value)===String(value))?.label??value):value;
+function conditionSummary(lab,params){return lab.controls.map(ctrl=>`${ctrl.label}：${valueText(ctrl,params[ctrl.key])}${ctrl.unit||''}`).join(' ／ ');}
+
+// Redrawing a linked diagram must not close the matrix the learner is reading.
+// Disclosure state is discarded together with this unit, never stored on disk.
+function replaceDiagram(c,element,markup){
+ if(!element)return;
+ const prefix=element.id;
+ for(const details of element.querySelectorAll('details')){
+  const label=details.querySelector('summary')?.textContent?.trim();
+  if(label)c.disclosures.set(prefix+'|'+label,details.open);
+ }
+ element.innerHTML=markup;
+ for(const details of element.querySelectorAll('details')){
+  const key=prefix+'|'+details.querySelector('summary')?.textContent?.trim();
+  if(c.disclosures.has(key))details.open=c.disclosures.get(key);
+ }
+}
+function controlHTML(ctrl,p){
+ const id='reader-input-'+ctrl.key,value=p[ctrl.key],help='reader-help-'+ctrl.key;
+ let input='';
+ if(ctrl.type==='toggle')input=`<label class="reader-toggle" for="${id}"><input id="${id}" type="checkbox" data-r-param="${h(ctrl.key)}"${value?' checked':''} aria-describedby="${help}"><span>${h(ctrl.label)}</span></label>`;
+ else{
+  const label=`<label for="${id}">${h(ctrl.label)}${ctrl.unit?` <small>${h(ctrl.unit)}</small>`:''}</label>`;
+  if(ctrl.type==='range')input=label+`<div class="reader-range-pair"><input id="${id}" type="range" min="${ctrl.min}" max="${ctrl.max}" step="${ctrl.step}" value="${h(value)}" data-r-param="${h(ctrl.key)}" aria-describedby="${help}"><input type="number" id="${id}-number" min="${ctrl.min}" max="${ctrl.max}" step="${ctrl.step}" value="${h(value)}" data-r-number="${h(ctrl.key)}" aria-label="${h(ctrl.label)}を数値で入力" aria-describedby="${help}"></div>`;
+  else if(ctrl.type==='select')input=label+`<select id="${id}" data-r-param="${h(ctrl.key)}" aria-describedby="${help}">${ctrl.options.map(o=>`<option value="${h(o.value)}"${String(o.value)===String(value)?' selected':''}>${h(o.label)}</option>`).join('')}</select>`;
+  else if(ctrl.type==='code')input=label+`<textarea id="${id}" data-r-param="${h(ctrl.key)}" rows="8" spellcheck="false" aria-describedby="${help}">${h(value)}</textarea>`;
+  else input=label+`<input id="${id}" type="text" value="${h(value)}" data-r-param="${h(ctrl.key)}" autocomplete="off" spellcheck="false" aria-describedby="${help}">`;
+ }
+ const hint=ctrl.help||(ctrl.type==='range'?`${ctrl.min}〜${ctrl.max}、${ctrl.step}ずつ変更できます。`:ctrl.type==='code'?'編集後、「入力を反映」を押すと、最初の状態から計算します。':ctrl.type==='toggle'?'この条件だけを切り替えて確かめられます。':'変更すると、この単元の条件として計算し直します。');
+ return `<div class="reader-field" data-r-field="${h(ctrl.key)}">${input}<p class="reader-field-help" id="${help}">${h(hint)}</p></div>`;
+}
+function renderControls(c){
+ const primary=c.lab.controls.filter(x=>c.lab.reading.focus.includes(x.key)),other=c.lab.controls.filter(x=>!c.lab.reading.focus.includes(x.key));
+ $('reader-controls').innerHTML=`<h3>この例の条件</h3><p class="reader-controls-caption">まず1つだけ変更して、図の変化を見てみましょう。</p>${primary.map(ctrl=>controlHTML(ctrl,c.params)).join('')}${other.length?`<details class="reader-more-controls"${c.phase===2?' open':''}><summary>ほかの条件も変える（${other.length}項目）</summary>${other.map(ctrl=>controlHTML(ctrl,c.params)).join('')}</details>`:''}<div class="button-row">${rbutton('apply','入力を反映','primary')}${rbutton('reset','初期例に戻す','ghost')}</div><p class="reader-live-status" id="reader-input-status" role="status" aria-live="polite"></p>${rbutton('diagram','図と今の段階を見る ↓','ghost')}`;
+}
+function renderGuidance(c){
+ const d=c.lab.reading;
+ document.querySelectorAll('[data-r-phase]').forEach(b=>{const active=Number(b.dataset.rPhase)===c.phase;b.classList.toggle('active',active);if(active)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current');});
+ let body='';
+ if(c.phase===0)body=`<p class="reader-overline">まず、この話が必要になる場面</p><h2>${h(c.lab.question)}</h2><p>${h(d.why)}</p><div class="reader-idea"><h3>つまり、こういう仕組みです</h3><p>${h(d.idea)}</p></div>${rbutton('advance','小さな例を一緒に見る →','primary')}`;
+ if(c.phase===1){
+  const direct=c.lab.presentation==='direct';
+  body=`<p class="reader-overline">${direct?'入力と出力を対応させる':'途中を飛ばさずに追う'}</p><h2>初期例の、ここに注目</h2><p>${h(d.example)}</p><p class="reader-hint">この説明は初期例についてです。条件を変えたときは、図の数値と「今の段階」を読んで違いを確かめます。</p><div class="button-row">${rbutton('reset','この初期例を表示する')}${direct?rbutton('controls','入力を変えて確かめる','primary'):rbutton('next',h(d.nextLabel),'primary')}</div><div class="reader-idea"><h3>${direct?'入力を変えると、その場で結果が変わります':'図のそばで理由を読む'}</h3><p>${direct?'再生は必要ありません。条件のスイッチや数値を変え、どの出力が変わったかを図と説明で確認してください。':'図の下の「今の段階」に、変化と理由を表示します。1つ戻すと、図と説明も同じ段階へ戻ります。'}</p></div><div class="button-row">${rbutton('diagram','図へ移動する ↓','ghost')}${rbutton('advance','分かったことを使って条件を変える →','ghost')}</div>`;
+ }
+ if(c.phase===2)body=`<p class="reader-overline">1つの違いから確かめる</p><h2>${h(c.lab.exploration.label)}</h2><p>${h(c.lab.observe)}</p><div class="reader-variant-values"><h3>この比較で変更する条件</h3>${Object.entries(c.lab.exploration.patch).map(([k,v])=>{const ctrl=c.lab.controls.find(x=>x.key===k);return ctrl?`<p><strong>${h(ctrl.label)}</strong><br>${h(valueText(ctrl,c.lab.defaults[k]))} → ${h(valueText(ctrl,v))}</p>`:'';}).join('')}</div>${rbutton('variant','初期例と、この条件を比べる','primary')}<p class="reader-hint">初期例から条件を切り替えます。自動再生は始まりません。図の下で変更点と結果も比較できます。</p><div class="button-row">${rbutton('baseline','今の条件を比較元にする','ghost')}${rbutton('advance','確かめた理由を整理する →','ghost')}</div>`;
+ if(c.phase===3){const q=c.lab.challenge;body=`<p class="reader-overline">結果だけでなく、理由を言えるか</p><h2>ここを混同しない</h2><p>${h(d.pitfall)}</p><section class="reader-question"><h3>${h(q.question)}</h3><div class="reader-answers">${q.options.map((x,i)=>`<button type="button" class="reader-answer${c.answer===i?' chosen':''}" data-r-answer="${i}" aria-pressed="${c.answer===i}">${h(x)}</button>`).join('')}</div><div id="reader-answer-feedback" role="status">${c.answer!==null?`<strong>${c.answer===q.answer?'この考え方で合っています。':'図の判断に戻って確かめましょう。'}</strong><p>${h(q.explanation)}</p>`:''}</div><p class="reader-hint">回答は記録しません。自由に選び直せます。</p></section>`;}
+ $('reader-guidance').innerHTML=body;
+ $('reader-phase-name').textContent=phases[c.phase];
+}
+function setPhase(c,n,focus=false){
+ c.player.pause();c.phase=Math.max(0,Math.min(3,n));renderGuidance(c);
+ if(c.phase===2){const more=document.querySelector('.reader-more-controls');if(more)more.open=true;}
+ // Phase changes create new buttons; bring their enabled state into sync too.
+ paint(c);
+ if(focus){const heading=$('reader-guidance').querySelector('h2');heading.tabIndex=-1;heading.focus({preventScroll:true});}
+}
+function metricsHTML(metrics){return `<dl class="reader-metrics">${Object.entries(metrics||{}).map(([k,v])=>`<div><dt>${h(k)}</dt><dd>${h(L.fmt(v))}</dd></div>`).join('')}</dl>`;}
+function resultParts(c){
+ if(!ready(c))return;
+ $('reader-result-details').innerHTML=`<details><summary>最後まで計算した結果を見る</summary><p>この欄は最後の結果です。現在の再生位置の状態は、図の下の説明を見てください。</p>${metricsHTML(c.result.metrics)}<p>${h(c.result.conclusion)}</p></details><details><summary>各段階へ直接移動する</summary><div class="reader-step-list">${c.result.frames.map((fr,i)=>`<button type="button" data-r-frame="${i}"><span>${i+1}</span>${h(fr.title)}</button>`).join('')}</div></details>`;
+}
+function renderComparison(c){
+ const el=$('reader-comparison');if(!el)return;
+ if(!c.baseline){el.innerHTML='';return;}
+ if(!ready(c)){el.innerHTML='<p class="reader-hint">比較元はこの単元内だけで保持しています。現在の入力の計算が終わると比較できます。</p>';return;}
+ const b=c.baseline;
+ const rows=c.lab.controls.filter(ctrl=>JSON.stringify(b.params[ctrl.key])!==JSON.stringify(c.params[ctrl.key])).map(ctrl=>[ctrl.label,valueText(ctrl,b.params[ctrl.key]),valueText(ctrl,c.params[ctrl.key])]);
+ const keys=[...new Set([...Object.keys(b.result.metrics),...Object.keys(c.result.metrics)])];
+ el.innerHTML=`<details ${c.compareOpen?'open':''} id="reader-compare-details"><summary>条件と最終結果を比較する</summary><p>再生の速さや位置ではなく、計算した条件と最後の結果を比べます。別の単元へ移ると比較は消えます。</p>${rows.length?L.studyTable(['変えた条件','比較元','現在'],rows,'変更点'):'<p>比較元と現在の入力は同じです。</p>'}${L.studyTable(['結果','比較元','現在'],keys.map(k=>[k,L.fmt(b.result.metrics[k]),L.fmt(c.result.metrics[k])]),'最後まで計算した結果')}<div class="button-row">${rbutton('restore','比較元の条件へ戻す')}${rbutton('clear-compare','比較を閉じる','ghost')}</div></details>`;
+}
+function paint(c){
+ if(!isCurrent(c)||!$('reader-diagram'))return;
+ const valid=ready(c),count=valid?c.result.frames.length:0,frame=valid?c.result.frames[c.index]:null;
+ const status=c.error?`入力を確認してください：${c.error}`:c.pending?'計算しています。古い結果は表示しません。':c.dirty?'入力が未反映です。「入力を反映」で計算します。':'条件を反映しました。図と理由を一緒に確認できます。';
+ if($('reader-input-status'))$('reader-input-status').textContent=status;
+ for(const ctrl of c.lab.controls){
+  const bad=Boolean(c.invalidInputs[ctrl.key]);
+  for(const suffix of ['', '-number'])$('reader-input-'+ctrl.key+suffix)?.setAttribute('aria-invalid',String(bad));
+ }
+ $('reader-diagram').setAttribute('aria-busy',String(c.pending));
+ const canPlay=valid&&count>1;
+ $('reader-play').disabled=!canPlay;
+ $('reader-play').innerHTML=icon(c.playing?'pause':'play',17)+(c.playing?'一時停止':c.index===count-1&&count>1?'最初から再生':'再生');
+ $('reader-scrubber').disabled=!canPlay;
+ $('reader-scrubber').max=String(Math.max(0,count-1));$('reader-scrubber').value=String(valid?c.index:0);
+ $('reader-scrubber').setAttribute('aria-valuetext',frame?`${c.index+1}/${count}：${frame.title}`:'計算結果なし');
+ $('reader-position').textContent=frame?`${c.index+1} / ${count}　${frame.title}`:'入力を確認しています';
+ document.querySelectorAll('[data-r-action="first"],[data-r-action="back"]').forEach(el=>el.disabled=!valid||c.index===0);
+ document.querySelectorAll('[data-r-action="next"],[data-r-action="last"]').forEach(el=>el.disabled=!valid||c.index>=count-1);
+ document.querySelectorAll('[data-r-action="baseline"]').forEach(el=>el.disabled=!valid);
+ $('reader-sequence-tools').hidden=!canPlay;
+ $('reader-direct-message').hidden=!valid||count>1;
+ $('reader-next-label').textContent=c.lab.reading.nextLabel;
+ const caption=$('reader-condition-summary');if(caption)caption.textContent=valid?conditionSummary(c.lab,c.params):'入力の計算が完了していません。';
+ if(!valid){
+  replaceDiagram(c,$('reader-diagram'),`<div class="reader-result-placeholder ${c.error?'reader-error':''}"><h3>${c.error?'入力の意味を確認しましょう':c.pending?'条件から計算しています':'入力を反映すると図が変わります'}</h3><p>${h(c.error||'計算途中に前の条件の図を残さないようにしています。')}</p></div>`);
+  $('reader-event').innerHTML='';$('reader-table').innerHTML='';replaceDiagram(c,$('reader-companion'),'');$('reader-result-details').innerHTML='';renderComparison(c);return;
+ }
+ let diagram=L.visualize(frame.visual,{focus:c.noteFocus});
+ diagram=diagram.replace(/data-node=/g,'data-r-node=').replace(/data-bit=/g,'data-r-bit=').replace(/data-edge=/g,'data-r-edge=');
+ replaceDiagram(c,$('reader-diagram'),diagram);
+ $('reader-event').innerHTML=`<p class="reader-overline">今の段階 / ${c.index+1}</p><h3>${h(frame.title)}</h3><p>${h(frame.explain)}</p>${Object.keys(frame.stats||{}).length?metricsHTML(frame.stats):''}`;
+ $('reader-table').innerHTML=frame.table?`<details ${c.tableOpen?'open':''} id="reader-frame-table"><summary>この段階の数値を表で確かめる</summary>${L.table(frame.table)}</details>`:'';
+ replaceDiagram(c,$('reader-companion'),L.lessonCompanion(c));
+ if(c.renderedResult!==c.result){resultParts(c);c.renderedResult=c.result;renderComparison(c);}
+}
+function invalidate(c){
+ clearTimeout(A.parameterTimer);c.token++;c.player.pause();c.pending=false;c.dirty=true;c.error='';c.result=null;c.renderedResult=null;
+}
+async function compute(c){
+ if(!isCurrent(c))return;
+ clearTimeout(A.parameterTimer);
+ if(Object.keys(c.invalidInputs).length){c.error=Object.values(c.invalidInputs).join(' ');paint(c);return;}
+ const own=++c.token;c.player.pause();c.pending=true;c.dirty=false;c.error=null;c.result=null;c.renderedResult=null;paint(c);
+ try{
+  const validated=L.validateParams(c.lab,c.params),result=await L.run(c.lab,validated);
+  if(!isCurrent(c)||own!==c.token)return;
+  c.params=validated;c.result=result;c.pending=false;c.dirty=false;c.codeDirty=false;c.index=0;c.player.configure(result.frames.length,0);paint(c);renderComparison(c);
+ }catch(error){if(!isCurrent(c)||own!==c.token)return;c.pending=false;c.error=error.message||String(error);c.result=null;c.player.configure(0);paint(c);}
+}
+function change(c,key,raw,{isCode=false}={}){
+ const ctrl=c.lab.controls.find(x=>x.key===key);if(!ctrl)return;
+ invalidate(c);
+ if(ctrl.type==='range'){
+  const number=Number(raw),ratio=(number-ctrl.min)/ctrl.step;
+  if(raw===''||!Number.isFinite(number)||number<ctrl.min||number>ctrl.max||Math.abs(ratio-Math.round(ratio))>1e-6){
+   c.invalidInputs[key]=`「${ctrl.label}」は${ctrl.min}〜${ctrl.max}を${ctrl.step}ずつ指定してください。`;
+  }else{
+   delete c.invalidInputs[key];c.params[key]=number;
+   for(const suffix of ['', '-number']){const el=$('reader-input-'+key+suffix);if(el)el.value=String(number);}
+  }
+ }else if(ctrl.type==='toggle')c.params[key]=Boolean(raw);
+ else if(ctrl.type==='select')c.params[key]=ctrl.options.find(o=>String(o.value)===String(raw))?.value??ctrl.value;
+ else c.params[key]=String(raw);
+ c.noteFocus=null;c.error=Object.values(c.invalidInputs).join(' ');
+ if(isCode)c.codeDirty=true;
+ paint(c);
+ // Changing another field must not dismiss an error or implicitly submit code.
+ if(c.error||c.codeDirty)return;
+ A.parameterTimer=setTimeout(()=>compute(c),ctrl.type==='text'?320:50);
+}
+async function variant(c){
+ if(!isCurrent(c))return;clearTimeout(A.parameterTimer);const own=++c.token;c.player.pause();c.pending=true;c.error=null;c.dirty=false;c.result=null;c.renderedResult=null;paint(c);
+ try{
+  const before=await L.run(c.lab,c.lab.defaults);
+  if(!isCurrent(c)||own!==c.token)return;
+  const params=L.validateParams(c.lab,{...c.lab.defaults,...c.lab.exploration.patch}),after=await L.run(c.lab,params);
+  if(!isCurrent(c)||own!==c.token)return;
+  c.baseline={params:clone(c.lab.defaults),result:before};c.params=params;c.result=after;c.pending=false;c.invalidInputs={};c.codeDirty=false;c.noteFocus=null;c.compareOpen=true;c.index=0;renderControls(c);c.player.configure(after.frames.length,0);paint(c);renderComparison(c);
+ }catch(error){if(!isCurrent(c)||own!==c.token)return;c.pending=false;c.result=null;c.error=error.message||String(error);c.player.configure(0);paint(c);}
+}
+function reset(c){c.params=clone(c.lab.defaults);c.noteFocus=null;c.invalidInputs={};c.codeDirty=false;c.answer=null;renderControls(c);renderGuidance(c);compute(c);}
+function sourceHTML(lab){return (lab.sources||[]).map(id=>{const s=L.sources[id];if(!s)return '';return `<li>${s.url&&/^https:\/\//.test(s.url)?`<a href="${h(s.url)}" target="_blank" rel="noopener noreferrer">${h(s.name)} ↗</a>`:`<strong>${h(s.name)}</strong>`}${s.detail?`<p>${h(s.detail)}</p>`:''}</li>`;}).join('');}
+function focusRegion(id){const el=$(id);if(!el)return;el.tabIndex=-1;el.focus({preventScroll:true});el.scrollIntoView({block:'start',behavior:'instant'});}
+A.views.lab=(parts,params)=>{
+ if(params?.get('view')==='experiment'){legacy.lab(parts,params);const head=document.querySelector('.lab-heading');if(head)head.insertAdjacentHTML('beforebegin',`<div class="reader-advanced-banner"><a class="btn" href="#/lab/${h(parts[0])}">← 図と説明を一緒に読む画面へ</a><p>自由実験の詳細画面です。画面を切り替えると一時的な入力と比較は初期化されます。</p></div>`);return;}
+ const lab=A.lab(parts[0]);if(!lab)return A.views.notfound();
+ const n=Number(params?.get('section')||0),phase=Number.isInteger(n)&&n>=0&&n<=3?n:0;
+ const c=A.current={reader:true,lab,params:clone(lab.defaults),phase,result:null,index:0,playing:false,speed:1,pending:false,dirty:false,error:null,token:0,noteFocus:null,baseline:null,compareOpen:false,tableOpen:false,answer:null,invalidInputs:{},codeDirty:false,disclosures:new Map(),renderedResult:null};
+ c.player=L.createPlayer({onChange:s=>{if(!isCurrent(c))return;if(c.index!==s.index)c.noteFocus=null;c.index=s.index;c.playing=s.playing;c.speed=s.speed;paint(c);}});
+ A.setTitle(lab.unit);A.setNav(lab.track==='core'?'catalog':lab.track,lab.unit);
+ const related=[...new Set([...(L.readingRelations[lab.id]||[]),...(lab.prereq||[])])].filter(id=>id!==lab.id&&A.lab(id));
+ $('main').innerHTML=`<article class="reader" id="lesson-reader"><header class="reader-title"><div class="reader-title-top">${A.pill(lab.track)}<span>${h(lab.course)}</span></div><h1>${h(lab.unit)}</h1><p>${h(lab.summary)}</p><div class="reader-title-links"><a href="#/catalog">← 別の単元を探す</a><a href="#/lab/${h(lab.id)}?view=experiment">自由実験・詳細画面を開く ↗</a></div></header><nav class="reader-phases" aria-label="説明の区切り。どこからでも選べます">${phases.map((name,i)=>`<button type="button" data-r-phase="${i}" class="${phase===i?'active':''}"><span>${i+1}</span>${name}</button>`).join('')}</nav><div class="reader-layout"><div class="reader-explanation"><section id="reader-guidance" class="reader-guidance" aria-label="この単元の説明"></section><section id="reader-controls" class="reader-controls" aria-label="実験の入力"></section><details class="reader-terms"><summary>この単元で使う言葉</summary>${lab.reading.terms.length?`<dl>${lab.reading.terms.map(t=>`<dt>${h(t.term)}</dt><dd>${h(t.definition)}</dd>`).join('')}</dl>`:`<p>${h(lab.reading.idea)}</p><p>入力欄の下にも、条件の意味を表示しています。</p>`}</details></div><div class="reader-demonstration"><figure class="reader-figure" id="reader-figure"><figcaption><div><span class="reader-overline" id="reader-phase-name"></span><h2>説明を、図で確かめる</h2></div><span class="reader-live-dot">この単元だけの実験</span></figcaption><div id="reader-diagram" class="reader-diagram" aria-label="現在の条件に対応する図"></div><div id="reader-player" class="reader-player"><p id="reader-direct-message" hidden>この実験は入力するとその場で変わります。再生は不要です。</p><div id="reader-sequence-tools"><div class="reader-play-buttons">${rbutton('first','最初','ghost')}${rbutton('back','1つ戻る','ghost')}<button type="button" class="btn primary" data-r-action="play" id="reader-play">${icon('play',17)}再生</button><button type="button" class="btn" data-r-action="next"><span id="reader-next-label"></span> →</button>${rbutton('last','最後','ghost')}</div><div class="reader-seek-row"><label for="reader-scrubber" class="sr-only">図の段階を選ぶ</label><input id="reader-scrubber" type="range" min="0" max="0" value="0" step="1" disabled><label class="reader-speed-label" for="reader-speed">再生速度<select id="reader-speed"><option value="0.5">0.5倍</option><option value="1" selected>1倍</option><option value="2">2倍</option><option value="4">4倍</option></select></label></div></div><p id="reader-position" class="reader-position"></p></div><section id="reader-event" class="reader-event" aria-live="off" aria-label="現在の段階とその理由"></section><div id="reader-table" class="reader-frame-table"></div><div class="reader-current-conditions"><details><summary>この図に使った入力を確認する</summary><p id="reader-condition-summary"></p></details><div class="button-row">${rbutton('controls','入力条件へ戻る ↑','ghost')}${rbutton('guidance','説明へ戻る ↑','ghost')}</div></div></figure><div id="reader-companion"></div><div id="reader-result-details" class="reader-result-details"></div><section id="reader-comparison" class="reader-comparison" aria-label="一時的な比較"></section></div></div><section class="reader-next-units"><h2>つながる単元</h2><p>前提を確かめたいときも、続きを知りたいときも。順番による制限はありません。</p><div class="reader-related-links">${related.map(id=>`<a href="#/lab/${id}">${h(A.lab(id).unit)} →</a>`).join('')||'<a href="#/catalog">全ての単元を探す →</a>'}</div></section><details class="reader-scope"><summary>この教材の前提・省略・参考資料</summary><h3>${h(lab.scope)}</h3><p>${h(lab.limits)}</p>${lab.reading.notes?`<p class="reader-source-note">説明の組み立ての参考：${h(lab.reading.notes)}（表紙を含むPDFのページ番号）。数値例・プログラム・画面はサイト独自の教材です。提供ノートそのものは公開していません。</p>`:''}<ul>${sourceHTML(lab)}</ul></details><p class="reader-privacy">入力・再生位置・比較・回答は、この単元を開いている間だけのものです。別の単元への移動や再読み込みで初期化し、学習履歴やノートとして保存しません。</p></article>${A.footer()}`;
+ renderGuidance(c);renderControls(c);compute(c);
+};
+A.play=(...args)=>{const c=A.current;if(!c?.reader)return legacy.play(...args);if(ready(c))c.player.play();};
+A.seek=(n,...args)=>{const c=A.current;if(!c?.reader)return legacy.seek(n,...args);if(ready(c))c.player.seek(n);};
+A.step=(n,...args)=>{const c=A.current;if(!c?.reader)return legacy.step(n,...args);if(ready(c))c.player.step(n);};
+A.stop=(...args)=>{const c=A.current;if(!c?.reader)return legacy.stop(...args);c.player.pause();};
+A.runCurrent=(...args)=>{const c=A.current;if(!c?.reader)return legacy.run(...args);return compute(c);};
+document.addEventListener('click',e=>{
+ const c=A.current;if(!c?.reader||!e.target?.closest)return;
+ const phase=e.target.closest('[data-r-phase]');if(phase){e.preventDefault();e.stopImmediatePropagation();setPhase(c,Number(phase.dataset.rPhase));return;}
+ const answer=e.target.closest('[data-r-answer]');if(answer){e.preventDefault();e.stopImmediatePropagation();c.answer=Number(answer.dataset.rAnswer);renderGuidance(c);document.querySelector(`[data-r-answer="${c.answer}"]`)?.focus({preventScroll:true});return;}
+ const jump=e.target.closest('[data-r-frame]');if(jump){e.preventDefault();e.stopImmediatePropagation();A.seek(Number(jump.dataset.rFrame));return;}
+ const focus=e.target.closest('[data-r-focus]');if(focus){e.preventDefault();e.stopImmediatePropagation();c.noteFocus=focus.dataset.rFocus;paint(c);document.querySelector(`[data-r-focus="${CSS.escape(c.noteFocus)}"]`)?.focus({preventScroll:true});return;}
+ const bit=e.target.closest('[data-r-bit]');if(bit){e.preventDefault();e.stopImmediatePropagation();if(c.lab.id==='c01-bits'&&ready(c)){const i=Number(bit.dataset.rBit);if(Number.isInteger(i)&&i>=0&&i<c.params.width){const val=(((Math.floor(c.params.value)%2**c.params.width)+2**c.params.width)%2**c.params.width)^(2**(c.params.width-1-i));c.params.value=val;renderControls(c);compute(c);}}return;}
+ const node=e.target.closest('[data-r-node],[data-r-edge]');if(node){e.preventDefault();e.stopImmediatePropagation();const n=node.dataset.rNode||node.dataset.rEdge;const note=document.createElement('p');note.className='reader-node-feedback';note.textContent=`選んだ対象：${n}。構成の追加・接続・移動は、上の「自由実験・詳細画面」で行えます。`;$('reader-diagram').querySelector('.reader-node-feedback')?.remove();$('reader-diagram').append(note);return;}
+ const b=e.target.closest('[data-r-action]');if(!b)return;e.preventDefault();e.stopImmediatePropagation();
+ switch(b.dataset.rAction){
+  case 'advance':setPhase(c,c.phase+1,true);break;
+  case 'diagram':focusRegion('reader-figure');break;
+  case 'controls':focusRegion('reader-controls');break;
+  case 'guidance':focusRegion('reader-guidance');break;
+  case 'play':A.play();break;
+  case 'first':A.seek(0);break;
+  case 'back':A.step(-1);break;
+  case 'next':A.step(1);break;
+  case 'last':if(ready(c))A.seek(c.result.frames.length-1);break;
+  case 'apply':compute(c);break;
+  case 'reset':reset(c);break;
+  case 'variant':variant(c);break;
+  case 'baseline':if(ready(c)){c.baseline={params:clone(c.params),result:c.result};c.compareOpen=true;renderComparison(c);}break;
+  case 'restore':if(c.baseline){c.params=clone(c.baseline.params);c.invalidInputs={};c.codeDirty=false;c.noteFocus=null;renderControls(c);compute(c);}break;
+  case 'clear-compare':c.baseline=null;renderComparison(c);break;
+ }
+},true);
+function fieldEvent(e){
+ const c=A.current;if(!c?.reader)return;const el=e.target;
+ if(el.id==='reader-scrubber'){if(e.type==='input')A.seek(Number(el.value));return;}
+ if(el.id==='reader-speed'){if(e.type==='change')c.player.setSpeed(Number(el.value));return;}
+ if(el.dataset.rNumber!==undefined){if(e.type==='input')change(c,el.dataset.rNumber,el.value);return;}
+ const key=el.dataset.rParam;if(key===undefined)return;const ctrl=c.lab.controls.find(x=>x.key===key);if(!ctrl)return;
+ if((ctrl.type==='toggle'||ctrl.type==='select')&&e.type!=='change')return;
+ if(ctrl.type!=='toggle'&&ctrl.type!=='select'&&e.type!=='input')return;
+ change(c,key,ctrl.type==='toggle'?el.checked:el.value,{isCode:ctrl.type==='code'});
+}
+document.addEventListener('input',fieldEvent,true);document.addEventListener('change',fieldEvent,true);
+document.addEventListener('pointerdown',e=>{if(e.target.id==='reader-scrubber'&&A.current?.reader)A.current.player.pause();},true);
+document.addEventListener('toggle',e=>{const c=A.current;if(!c?.reader)return;if(e.target.id==='reader-compare-details')c.compareOpen=e.target.open;if(e.target.id==='reader-frame-table')c.tableOpen=e.target.open;},true);
+document.addEventListener('keydown',e=>{if(A.current?.reader&&e.key==='Enter'&&e.target.matches('[data-r-number],[data-r-param]:not(textarea)')){e.preventDefault();A.runCurrent();}},true);
+A.labCard=lab=>`<a class="lab-card reader-unit-card" href="#/lab/${lab.id}"><div class="lab-card-top">${A.pill(lab.track)}<span>${h(lab.course.split('／')[0])}</span></div><h3>${h(lab.unit)}</h3><p>${h(lab.summary)}</p><div class="reader-card-question">${h(lab.question)}</div><div class="lab-card-bottom"><span>解説と図を開く</span>${icon('arrow',17)}</div></a>`;
+const courseCard=course=>`<a class="reader-course-card" href="#/course/${course.id}"><span class="reader-overline">授業の並びから探す</span><h2>${h(course.name)}</h2><p>${h(course.description)}</p><span>単元を選ぶ →</span></a>`;
+A.views.home=()=>{
+ A.setTitle('学びたい単元を探す');A.setNav('home','学びたい単元を探す');
+ $('main').innerHTML=`<section class="reader-library"><header class="reader-library-head"><p class="reader-overline">VISUAL CS LAB / INTERACTIVE EXPLANATIONS</p><h1>学びたい単元を、すぐに。</h1><p>小さな例を読み、図で確かめ、条件を変えて理解する。</p><form id="home-search-form" class="home-search" role="search"><label class="sr-only" for="home-query">単元名・用語・科目名</label>${icon('search',21)}<input id="home-query" name="q" type="search" placeholder="エントロピー、シンドローム、仮想メモリ、TCP…" autocomplete="off"><button class="btn primary" type="submit">探す</button></form><div class="quick-terms">${['自己情報量','論理回路','仮想メモリ','IP','TCP','認証'].map(q=>`<button type="button" data-action="home-query" data-query="${q}">${q}</button>`).join('')}</div></header><section id="home-results" aria-label="単元の検索結果" hidden></section><div id="home-browse"><div class="reader-course-grid">${L.readingCourses.map(courseCard).join('')}</div><section class="reader-specialist"><div><h2>ネットワーク</h2><p>宛先の意味から、通信・性能・障害診断まで。</p><div>${['n01-forwarding','n04-subnet','n09-dns','n11-tcp'].map(id=>`<a href="#/lab/${id}">${h(A.lab(id).unit)} →</a>`).join('')}</div><a class="btn" href="#/catalog?track=network">ネットワークをすべて見る</a></div><div><h2>セキュリティ</h2><p>暗号・認証・権限を分け、防御と調査へつなぐ。</p><div>${['s01-threat','s06-tls','s08-access','s10-cors'].map(id=>`<a href="#/lab/${id}">${h(A.lab(id).unit)} →</a>`).join('')}</div><a class="btn" href="#/catalog?track=security">セキュリティをすべて見る</a></div></section><section><div class="section-title"><div><h2>小さな例から始める</h2><p>単元名だけでなく、答えたい疑問から選べます。</p></div></div><div class="lab-grid">${['c01-entropy','c08-adder','c10-address-spaces','c09-cpu','c11-scheduler','c16-git'].map(id=>A.labCard(A.lab(id))).join('')}</div></section><section class="reader-all-areas"><h2>情報科学の20分野</h2><p>もとの144単元は残しています。授業ノートに沿う基礎も加え、どの単元にも直接進めます。</p><div class="reader-area-links">${L.areas.map(area=>`<a href="#/catalog?area=${area.id}">${h(area.name)}<span>${L.labs.filter(l=>l.area===area.id).length}</span></a>`).join('')}</div><div class="button-row"><a class="btn primary" href="#/catalog">全${L.labs.length}単元から探す</a><a class="btn" href="#/curriculum">科目名で探す</a><a class="btn" href="#/routes">おすすめの順番</a></div></section></div></section>${A.footer()}`;
+};
+A.views.course=parts=>{
+ const course=L.readingCourses.find(x=>x.id===parts[0]);if(!course)return A.views.notfound();A.setTitle(course.name);A.setNav('curriculum',course.name);
+ $('main').innerHTML=`<section class="reader-course-page"><header class="reader-title"><p class="reader-overline">授業の流れから探す</p><h1>${h(course.name)}</h1><p>${h(course.description)}</p><p class="reader-hint">ノートの説明の順序を参考にした案内です。全ページの完全な再現や、授業の履修条件を置き換えるものではありません。</p><a class="btn" href="#/">← 単元を探す</a></header>${course.groups.map(([title,ids],i)=>`<section class="reader-course-group"><h2><span>${String(i+1).padStart(2,'0')}</span>${h(title)}</h2><div class="lab-grid">${ids.map(id=>A.labCard(A.lab(id))).join('')}</div></section>`).join('')}</section>${A.footer()}`;
+};
 })();
 
 ;

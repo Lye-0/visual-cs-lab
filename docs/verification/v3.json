@@ -1,0 +1,53 @@
+{
+  "version": "3.0.0",
+  "sourceCommit": "2e911ec4707c180e45d8d0241a97c5d4ee8ade7c",
+  "runURL": "https://github.com/Lye-0/visual-cs-lab/actions/runs/34364076639",
+  "generatedAt": "2026-09-09T14:32:55.953Z",
+  "units": 159,
+  "originalUnits": 144,
+  "areas": 20,
+  "counts": {
+    "core": 79,
+    "network": 35,
+    "security": 37,
+    "missions": 8
+  },
+  "node": {
+    "tests": 1215,
+    "passed": 1215,
+    "failed": 0,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "browser": [
+    {
+      "file": "reader-browser.json",
+      "browser": "153.0.8010.12",
+      "transport": "HTTP on 127.0.0.1",
+      "passed": 347,
+      "failed": 0,
+      "started": "2026-09-09T14:31:09.447Z",
+      "finished": "2026-09-09T14:32:40.647Z"
+    },
+    {
+      "file": "reader-regressions.json",
+      "browser": "153.0.8010.12",
+      "transport": "HTTP on 127.0.0.1",
+      "passed": 27,
+      "failed": 0,
+      "started": "2026-09-09T14:32:41.101Z",
+      "finished": "2026-09-09T14:32:55.873Z"
+    }
+  ],
+  "generatedFiles": {
+    "index.html": "0c9e29bc928975a96b0d18144335968660332084bed5f5f8384262c7216b75b9",
+    "docs/EXPERIMENTS.md": "7d0539466937d9a83f4c379e66d4676477a7f0f125d0def7dad6343007823c34",
+    "docs/experiments.json": "6306b4a0703c05edcf1d709598226ef33588f49bcf2790631feb5bfebbf4a2e5"
+  },
+  "limitations": [
+    "Chromiumのみ。モバイルは画面幅とタッチのエミュレーションで、実機ではありません。",
+    "自動テストは動作と特定の数値例の検証です。初心者による理解度や全教材の正しさを保証しません。",
+    "撮影した画面はレビュー資料です。スクリーンショットの目視確認を自動テストの合格に含めません。",
+    "提供PDFの全行の再照合、全規格の再現、Safari・Firefoxでの検証はこの試験に含みません。"
+  ]
+}
