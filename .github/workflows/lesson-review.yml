@@ -40,6 +40,8 @@ jobs:
         run: node tests/reader-browser.mjs
       - name: Test input recovery and playback regressions
         run: node tests/reader-regressions.mjs
+      - name: Test SVG colors in the lesson reader
+        run: node tests/reader-svg-theme.mjs
       - name: Record verified results and assemble artifacts
         run: |
           node scripts/review-summary.mjs
