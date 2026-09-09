@@ -49,12 +49,17 @@ jobs:
           from pathlib import Path
           from zipfile import ZipFile, ZIP_DEFLATED
           names = subprocess.check_output(['git', 'ls-files', '-z']).decode().split('\0')
+          reports = {
+              'docs/verification/v3.json': 'review-output/verification-v3.json',
+              'docs/verification/TEST_REPORT-v3.md': 'review-output/TEST_REPORT-v3.md',
+          }
           with ZipFile('review-output/visual-cs-lab-source.zip', 'w', ZIP_DEFLATED) as archive:
               for name in names:
-                  if name and Path(name).is_file():
+                  if name and name not in reports and Path(name).is_file():
                       archive.write(name, 'visual-cs-lab/' + name)
-              archive.write('review-output/verification-v3.json', 'visual-cs-lab/docs/verification/v3.json')
-              archive.write('review-output/TEST_REPORT-v3.md', 'visual-cs-lab/docs/verification/TEST_REPORT-v3.md')
+              for name, source in reports.items():
+                  archive.write(source, 'visual-cs-lab/' + name)
+              assert len(archive.namelist()) == len(set(archive.namelist())), 'Duplicate archive paths'
           PY
       - uses: actions/upload-artifact@v5
         if: always()
