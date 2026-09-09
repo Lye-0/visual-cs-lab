@@ -82,6 +82,31 @@ body.reduce-motion{scroll-behavior:auto}.reduce-motion *{scroll-behavior:auto!im
 .compare-diagrams{margin:20px 0;background:#111921}.compare-diagrams>summary{cursor:pointer;min-height:48px;padding:15px 20px;font-size:14px;color:var(--accent);list-style-position:inside}.compare-diagrams[open]>summary{border-bottom:1px solid var(--line)}.compare-diagrams-help{font-size:12px;color:var(--muted);line-height:1.9;padding:15px 20px}.compare-model-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;padding:0 16px 16px}.compare-model-panel{min-width:0;padding:16px;border:1px solid var(--line2);border-radius:8px;background:var(--bg)}.compare-model-panel>h4{font-size:14px;margin-bottom:12px}.compare-step-select{display:flex;flex-direction:column;gap:8px;font-size:12px;color:var(--muted)}.compare-step-select select{width:100%;min-width:0;font-size:12px;white-space:nowrap;text-overflow:ellipsis;min-height:42px}.compare-viewport{height:285px;overflow:auto;margin:15px 0;border:1px solid var(--line);padding:12px;scrollbar-color:#445563 #121820}.compare-drawing{min-width:520px;width:100%}.compare-drawing>svg{width:100%;height:auto;max-height:none}.compare-frame-description{font-size:13px;line-height:1.9}.compare-frame-description strong{color:var(--text);font-weight:500}.compare-frame-description p{font-size:12px;color:var(--muted);margin-top:7px}.compare-drawing .visual-html{width:100%}
 @media(max-width:900px){.compare-model-grid{grid-template-columns:1fr}.compare-model-panel{padding:14px}.compare-step-select select{font-size:14px}.compare-diagrams-help{font-size:13px}.compare-frame-description p{font-size:13px}}
 
+/* Shared SVG theme for visuals rendered inside the lesson reader.
+ * The original renderer theme in style.css is scoped to the legacy workbench.
+ * Without these rules, SVG shapes/text fall back to the browser's black defaults.
+ */
+.reader-diagram svg text{font-family:var(--mono);font-size:11px;fill:var(--muted)}
+.reader-diagram svg .svg-label{font-family:var(--sans);font-size:12px;fill:var(--text);font-weight:500}
+.reader-diagram svg .svg-small{font-size:9px;fill:var(--dim)}
+.reader-diagram svg .svg-accent{fill:var(--accent)}
+.reader-diagram svg .svg-warning{fill:var(--gold)}
+.reader-diagram svg .svg-danger{fill:var(--danger)}
+.reader-diagram svg .gridline{stroke:#35425466;stroke-width:.65}
+.reader-diagram svg .axis{stroke:var(--line2);stroke-width:1}
+.reader-diagram svg .network-edge{stroke:#425569;stroke-width:1.6;fill:none}
+.reader-diagram svg .network-edge.active{stroke:var(--accent);stroke-width:2}
+.reader-diagram svg .network-edge.off{stroke:#644249;stroke-dasharray:4 5;opacity:.7}
+.reader-diagram svg .edge-hit{stroke:transparent;stroke-width:18;cursor:pointer}
+.reader-diagram svg .network-node>rect{fill:#151f2a;stroke:#415166;stroke-width:1}
+.reader-diagram svg .network-node.active>rect{stroke:var(--accent);fill:#1a302e;stroke-width:1.5}
+.reader-diagram svg .network-node.visited>rect{stroke:#69988e}
+.reader-diagram svg .network-node.selected>rect{stroke:var(--gold);stroke-dasharray:4 3}
+.reader-diagram svg .network-node{cursor:pointer}
+.reader-diagram svg .network-node:hover>rect{stroke:var(--accent)}
+.reader-diagram svg .node-symbol,.reader-diagram svg .node-symbol *{stroke:var(--network);fill:none;stroke-width:1.5}
+.reader-diagram svg text{pointer-events:none}
+
 /* A quiet reading layout; not a dashboard. */
 :root{--muted:#b0bdcc;--dim:#91a1b5;--study-blue:#b0cdec}
 [hidden]{display:none!important}
