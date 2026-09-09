@@ -2,7 +2,7 @@ name: Lesson review
 on:
   push:
     branches: [feat/notebook-led-learning]
-    paths-ignore: ['index.html', 'docs/verification/**']
+    paths-ignore: ['index.html', 'docs/verification/**', 'docs/screenshots/**']
   pull_request:
 permissions:
   contents: read
@@ -12,44 +12,39 @@ concurrency:
 jobs:
   review:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: '22'
       - name: Build and test teaching models
         run: |
           mkdir -p review-output
           npm run build
-          set -o pipefail
-          npm test 2>&1 | tee review-output/node-tests.txt
+          npm test > review-output/node-tests.txt 2>&1 || { tail -n 100 review-output/node-tests.txt; exit 1; }
+          tail -n 12 review-output/node-tests.txt
           npm run inventory
       - name: Install browser test tools
-        if: hashFiles('tests/reader-browser.mjs') != ''
         run: |
-          npm install --no-save --package-lock=false playwright@1.51.1
-          npx playwright install --with-deps chromium
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0
+          npx playwright install --with-deps chromium > review-output/browser-install.txt 2>&1 || { tail -n 40 review-output/browser-install.txt; exit 1; }
       - name: Test actual HTTP document on desktop and mobile
-        if: hashFiles('tests/reader-browser.mjs') != ''
         run: node tests/reader-browser.mjs
       - name: Assemble offline site and source archive
-        if: success()
         run: |
           cp index.html review-output/Visual-CS-Lab.html
-          git archive --format=zip --prefix=visual-cs-lab/ -o review-output/visual-cs-lab-source.zip HEAD
           python3 - <<'PY'
-          from zipfile import ZipFile, ZIP_DEFLATED
+          import subprocess
           from pathlib import Path
-          p = Path('review-output/visual-cs-lab-source.zip')
-          with ZipFile(p) as old:
-              files = {x.filename: old.read(x) for x in old.infolist() if not x.is_dir()}
-          files['visual-cs-lab/index.html'] = Path('index.html').read_bytes()
-          with ZipFile(p, 'w', ZIP_DEFLATED) as new:
-              for name, data in files.items():
-                  new.writestr(name, data)
+          from zipfile import ZipFile, ZIP_DEFLATED
+          names = subprocess.check_output(['git', 'ls-files', '-z']).decode().split('\0')
+          with ZipFile('review-output/visual-cs-lab-source.zip', 'w', ZIP_DEFLATED) as archive:
+              for name in names:
+                  if name and Path(name).is_file():
+                      archive.write(name, 'visual-cs-lab/' + name)
           PY
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         if: always()
         with:
           name: visual-cs-lab-review
