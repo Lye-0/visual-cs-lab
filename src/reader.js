@@ -1,6 +1,4 @@
-/* Lesson-first UI. The old workbench remains an explicit advanced view.
- * No storage. One disposable player and one async generation per open unit.
- */
+/* Lesson-first UI. All state belongs to the open unit; nothing is persisted. */
 (() => {
 'use strict';
 const L=CSL,A=L.app,{h,icon,clone}=L;
@@ -12,6 +10,22 @@ const phases=['背景と意味','例を一緒に追う','条件を変える','�
 const rbutton=(action,label,cls='',attrs='')=>`<button type="button" class="btn ${cls}" data-r-action="${action}" ${attrs}>${label}</button>`;
 const valueText=(control,value)=>control.type==='toggle'?(value?'オン':'オフ'):control.type==='select'?(control.options.find(o=>String(o.value)===String(value))?.label??value):value;
 function conditionSummary(lab,params){return lab.controls.map(ctrl=>`${ctrl.label}：${valueText(ctrl,params[ctrl.key])}${ctrl.unit||''}`).join(' ／ ');}
+
+// Redrawing a linked diagram must not close the matrix the learner is reading.
+// Disclosure state is discarded together with this unit, never stored on disk.
+function replaceDiagram(c,element,markup){
+ if(!element)return;
+ const prefix=element.id;
+ for(const details of element.querySelectorAll('details')){
+  const label=details.querySelector('summary')?.textContent?.trim();
+  if(label)c.disclosures.set(prefix+'|'+label,details.open);
+ }
+ element.innerHTML=markup;
+ for(const details of element.querySelectorAll('details')){
+  const key=prefix+'|'+details.querySelector('summary')?.textContent?.trim();
+  if(c.disclosures.has(key))details.open=c.disclosures.get(key);
+ }
+}
 function controlHTML(ctrl,p){
  const id='reader-input-'+ctrl.key,value=p[ctrl.key],help='reader-help-'+ctrl.key;
  let input='';
@@ -28,49 +42,58 @@ function controlHTML(ctrl,p){
 }
 function renderControls(c){
  const primary=c.lab.controls.filter(x=>c.lab.reading.focus.includes(x.key)),other=c.lab.controls.filter(x=>!c.lab.reading.focus.includes(x.key));
- $('reader-controls').innerHTML=`<h3>この例の条件</h3><p class="reader-controls-caption">初めはここだけ。ほかの条件は下から開けます。</p>${primary.map(ctrl=>controlHTML(ctrl,c.params)).join('')}${other.length?`<details class="reader-more-controls"${c.phase===2?' open':''}><summary>ほかの条件も変える（${other.length}項目）</summary>${other.map(ctrl=>controlHTML(ctrl,c.params)).join('')}</details>`:''}<div class="button-row">${rbutton('apply','入力を反映','primary')}${rbutton('reset','初期例に戻す','ghost')}</div><p class="reader-live-status" id="reader-input-status" role="status" aria-live="polite"></p>`;
+ $('reader-controls').innerHTML=`<h3>この例の条件</h3><p class="reader-controls-caption">まず1つだけ変更して、図の変化を見てみましょう。</p>${primary.map(ctrl=>controlHTML(ctrl,c.params)).join('')}${other.length?`<details class="reader-more-controls"${c.phase===2?' open':''}><summary>ほかの条件も変える（${other.length}項目）</summary>${other.map(ctrl=>controlHTML(ctrl,c.params)).join('')}</details>`:''}<div class="button-row">${rbutton('apply','入力を反映','primary')}${rbutton('reset','初期例に戻す','ghost')}</div><p class="reader-live-status" id="reader-input-status" role="status" aria-live="polite"></p>${rbutton('diagram','図と今の段階を見る ↓','ghost')}`;
 }
 function renderGuidance(c){
  const d=c.lab.reading;
  document.querySelectorAll('[data-r-phase]').forEach(b=>{const active=Number(b.dataset.rPhase)===c.phase;b.classList.toggle('active',active);if(active)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current');});
  let body='';
  if(c.phase===0)body=`<p class="reader-overline">まず、この話が必要になる場面</p><h2>${h(c.lab.question)}</h2><p>${h(d.why)}</p><div class="reader-idea"><h3>つまり、こういう仕組みです</h3><p>${h(d.idea)}</p></div>${rbutton('advance','小さな例を一緒に見る →','primary')}`;
- if(c.phase===1)body=`<p class="reader-overline">途中を飛ばさずに追う</p><h2>初期例の、ここに注目</h2><p>${h(d.example)}</p><p class="reader-hint">説明は初期例についてです。下の条件を変更した後は、現在の条件と図の数値を優先して見てください。</p><div class="button-row">${rbutton('reset','この初期例を表示する')}${rbutton('next',h(d.nextLabel),'primary')}</div><div class="reader-idea"><h3>図のそばで理由を読む</h3><p>図の下にある「今の段階」には、その段階で起きた変化と理由を表示します。途中へ戻っても、図と説明は同じ段階にそろいます。</p></div>${rbutton('advance','分かったことを使って条件を変える →','ghost')}`;
- if(c.phase===2)body=`<p class="reader-overline">1つの違いから確かめる</p><h2>${h(c.lab.exploration.label)}</h2><p>${h(c.lab.observe)}</p><div class="reader-variant-values"><h3>この比較で変更する条件</h3>${Object.entries(c.lab.exploration.patch).map(([k,v])=>{const ctrl=c.lab.controls.find(x=>x.key===k);return ctrl?`<p><strong>${h(ctrl.label)}</strong><br>${h(valueText(ctrl,c.lab.defaults[k]))} → ${h(valueText(ctrl,v))}</p>`:'';}).join('')}</div>${rbutton('variant','初期例と、この条件を比べる','primary')}<p class="reader-hint">初期例を比較元にし、指定した条件へ切り替えます。勝手に再生は始まりません。</p><div class="button-row">${rbutton('baseline','今の条件を比較元にする','ghost')}${rbutton('advance','確かめた理由を整理する →','ghost')}</div>`;
+ if(c.phase===1){
+  const direct=c.lab.presentation==='direct';
+  body=`<p class="reader-overline">${direct?'入力と出力を対応させる':'途中を飛ばさずに追う'}</p><h2>初期例の、ここに注目</h2><p>${h(d.example)}</p><p class="reader-hint">この説明は初期例についてです。条件を変えたときは、図の数値と「今の段階」を読んで違いを確かめます。</p><div class="button-row">${rbutton('reset','この初期例を表示する')}${direct?rbutton('controls','入力を変えて確かめる','primary'):rbutton('next',h(d.nextLabel),'primary')}</div><div class="reader-idea"><h3>${direct?'入力を変えると、その場で結果が変わります':'図のそばで理由を読む'}</h3><p>${direct?'再生は必要ありません。条件のスイッチや数値を変え、どの出力が変わったかを図と説明で確認してください。':'図の下の「今の段階」に、変化と理由を表示します。1つ戻すと、図と説明も同じ段階へ戻ります。'}</p></div><div class="button-row">${rbutton('diagram','図へ移動する ↓','ghost')}${rbutton('advance','分かったことを使って条件を変える →','ghost')}</div>`;
+ }
+ if(c.phase===2)body=`<p class="reader-overline">1つの違いから確かめる</p><h2>${h(c.lab.exploration.label)}</h2><p>${h(c.lab.observe)}</p><div class="reader-variant-values"><h3>この比較で変更する条件</h3>${Object.entries(c.lab.exploration.patch).map(([k,v])=>{const ctrl=c.lab.controls.find(x=>x.key===k);return ctrl?`<p><strong>${h(ctrl.label)}</strong><br>${h(valueText(ctrl,c.lab.defaults[k]))} → ${h(valueText(ctrl,v))}</p>`:'';}).join('')}</div>${rbutton('variant','初期例と、この条件を比べる','primary')}<p class="reader-hint">初期例から条件を切り替えます。自動再生は始まりません。図の下で変更点と結果も比較できます。</p><div class="button-row">${rbutton('baseline','今の条件を比較元にする','ghost')}${rbutton('advance','確かめた理由を整理する →','ghost')}</div>`;
  if(c.phase===3){const q=c.lab.challenge;body=`<p class="reader-overline">結果だけでなく、理由を言えるか</p><h2>ここを混同しない</h2><p>${h(d.pitfall)}</p><section class="reader-question"><h3>${h(q.question)}</h3><div class="reader-answers">${q.options.map((x,i)=>`<button type="button" class="reader-answer${c.answer===i?' chosen':''}" data-r-answer="${i}" aria-pressed="${c.answer===i}">${h(x)}</button>`).join('')}</div><div id="reader-answer-feedback" role="status">${c.answer!==null?`<strong>${c.answer===q.answer?'この考え方で合っています。':'図の判断に戻って確かめましょう。'}</strong><p>${h(q.explanation)}</p>`:''}</div><p class="reader-hint">回答は記録しません。自由に選び直せます。</p></section>`;}
  $('reader-guidance').innerHTML=body;
  $('reader-phase-name').textContent=phases[c.phase];
 }
-function setPhase(c,n){
+function setPhase(c,n,focus=false){
  c.player.pause();c.phase=Math.max(0,Math.min(3,n));renderGuidance(c);
  if(c.phase===2){const more=document.querySelector('.reader-more-controls');if(more)more.open=true;}
+ // Phase changes create new buttons; bring their enabled state into sync too.
+ paint(c);
+ if(focus){const heading=$('reader-guidance').querySelector('h2');heading.tabIndex=-1;heading.focus({preventScroll:true});}
 }
 function metricsHTML(metrics){return `<dl class="reader-metrics">${Object.entries(metrics||{}).map(([k,v])=>`<div><dt>${h(k)}</dt><dd>${h(L.fmt(v))}</dd></div>`).join('')}</dl>`;}
 function resultParts(c){
  if(!ready(c))return;
- const holder=$('reader-result-details');
- holder.innerHTML=`<details><summary>最後まで計算した結果を見る</summary><p>この欄は最後の結果です。現在の再生位置の状態は、図の下の説明を見てください。</p>${metricsHTML(c.result.metrics)}<p>${h(c.result.conclusion)}</p></details><details><summary>各段階へ直接移動する</summary><div class="reader-step-list">${c.result.frames.map((fr,i)=>`<button type="button" data-r-frame="${i}"><span>${i+1}</span>${h(fr.title)}</button>`).join('')}</div></details>`;
+ $('reader-result-details').innerHTML=`<details><summary>最後まで計算した結果を見る</summary><p>この欄は最後の結果です。現在の再生位置の状態は、図の下の説明を見てください。</p>${metricsHTML(c.result.metrics)}<p>${h(c.result.conclusion)}</p></details><details><summary>各段階へ直接移動する</summary><div class="reader-step-list">${c.result.frames.map((fr,i)=>`<button type="button" data-r-frame="${i}"><span>${i+1}</span>${h(fr.title)}</button>`).join('')}</div></details>`;
 }
 function renderComparison(c){
  const el=$('reader-comparison');if(!el)return;
  if(!c.baseline){el.innerHTML='';return;}
- const b=c.baseline;
  if(!ready(c)){el.innerHTML='<p class="reader-hint">比較元はこの単元内だけで保持しています。現在の入力の計算が終わると比較できます。</p>';return;}
+ const b=c.baseline;
  const rows=c.lab.controls.filter(ctrl=>JSON.stringify(b.params[ctrl.key])!==JSON.stringify(c.params[ctrl.key])).map(ctrl=>[ctrl.label,valueText(ctrl,b.params[ctrl.key]),valueText(ctrl,c.params[ctrl.key])]);
  const keys=[...new Set([...Object.keys(b.result.metrics),...Object.keys(c.result.metrics)])];
- el.innerHTML=`<details ${c.compareOpen?'open':''} id="reader-compare-details"><summary>条件と最終結果を比較する</summary><p>再生の速さや位置ではなく、計算した条件と最後の結果を比べます。別の単元へ移ると比較は消えます。</p>${rows.length?L.studyTable(['変えた条件','比較元','現在'],rows,'変更点'): '<p>比較元と現在の入力は同じです。</p>'}${L.studyTable(['結果','比較元','現在'],keys.map(k=>[k,L.fmt(b.result.metrics[k]),L.fmt(c.result.metrics[k])]),'最後まで計算した結果')}<div class="button-row">${rbutton('restore','比較元の条件へ戻す')}${rbutton('clear-compare','比較を閉じる','ghost')}</div></details>`;
+ el.innerHTML=`<details ${c.compareOpen?'open':''} id="reader-compare-details"><summary>条件と最終結果を比較する</summary><p>再生の速さや位置ではなく、計算した条件と最後の結果を比べます。別の単元へ移ると比較は消えます。</p>${rows.length?L.studyTable(['変えた条件','比較元','現在'],rows,'変更点'):'<p>比較元と現在の入力は同じです。</p>'}${L.studyTable(['結果','比較元','現在'],keys.map(k=>[k,L.fmt(b.result.metrics[k]),L.fmt(c.result.metrics[k])]),'最後まで計算した結果')}<div class="button-row">${rbutton('restore','比較元の条件へ戻す')}${rbutton('clear-compare','比較を閉じる','ghost')}</div></details>`;
 }
 function paint(c){
  if(!isCurrent(c)||!$('reader-diagram'))return;
  const valid=ready(c),count=valid?c.result.frames.length:0,frame=valid?c.result.frames[c.index]:null;
  const status=c.error?`入力を確認してください：${c.error}`:c.pending?'計算しています。古い結果は表示しません。':c.dirty?'入力が未反映です。「入力を反映」で計算します。':'条件を反映しました。図と理由を一緒に確認できます。';
- const statusNode=$('reader-input-status');if(statusNode)statusNode.textContent=status;
+ if($('reader-input-status'))$('reader-input-status').textContent=status;
+ for(const ctrl of c.lab.controls){
+  const bad=Boolean(c.invalidInputs[ctrl.key]);
+  for(const suffix of ['', '-number'])$('reader-input-'+ctrl.key+suffix)?.setAttribute('aria-invalid',String(bad));
+ }
  $('reader-diagram').setAttribute('aria-busy',String(c.pending));
  const canPlay=valid&&count>1;
  $('reader-play').disabled=!canPlay;
  $('reader-play').innerHTML=icon(c.playing?'pause':'play',17)+(c.playing?'一時停止':c.index===count-1&&count>1?'最初から再生':'再生');
  $('reader-scrubber').disabled=!canPlay;
- $('reader-scrubber').max=String(Math.max(0,count-1));$('reader-scrubber').value=String(c.index);
+ $('reader-scrubber').max=String(Math.max(0,count-1));$('reader-scrubber').value=String(valid?c.index:0);
  $('reader-scrubber').setAttribute('aria-valuetext',frame?`${c.index+1}/${count}：${frame.title}`:'計算結果なし');
  $('reader-position').textContent=frame?`${c.index+1} / ${count}　${frame.title}`:'入力を確認しています';
  document.querySelectorAll('[data-r-action="first"],[data-r-action="back"]').forEach(el=>el.disabled=!valid||c.index===0);
@@ -79,99 +102,107 @@ function paint(c){
  $('reader-sequence-tools').hidden=!canPlay;
  $('reader-direct-message').hidden=!valid||count>1;
  $('reader-next-label').textContent=c.lab.reading.nextLabel;
+ const caption=$('reader-condition-summary');if(caption)caption.textContent=valid?conditionSummary(c.lab,c.params):'入力の計算が完了していません。';
  if(!valid){
-  $('reader-diagram').innerHTML=`<div class="reader-result-placeholder ${c.error?'reader-error':''}"><h3>${c.error?'入力の意味を確認しましょう':c.pending?'条件から計算しています':'入力を反映すると図が変わります'}</h3><p>${h(c.error||'計算途中に前の条件の図を残さないようにしています。')}</p></div>`;
-  $('reader-event').innerHTML='';$('reader-table').innerHTML='';$('reader-companion').innerHTML='';$('reader-result-details').innerHTML='';renderComparison(c);return;
+  replaceDiagram(c,$('reader-diagram'),`<div class="reader-result-placeholder ${c.error?'reader-error':''}"><h3>${c.error?'入力の意味を確認しましょう':c.pending?'条件から計算しています':'入力を反映すると図が変わります'}</h3><p>${h(c.error||'計算途中に前の条件の図を残さないようにしています。')}</p></div>`);
+  $('reader-event').innerHTML='';$('reader-table').innerHTML='';replaceDiagram(c,$('reader-companion'),'');$('reader-result-details').innerHTML='';renderComparison(c);return;
  }
- // Old workbench event attributes are namespaced so its delegated handlers cannot
- // accidentally interpret a click in the reading view using a different state.
  let diagram=L.visualize(frame.visual,{focus:c.noteFocus});
  diagram=diagram.replace(/data-node=/g,'data-r-node=').replace(/data-bit=/g,'data-r-bit=').replace(/data-edge=/g,'data-r-edge=');
- $('reader-diagram').innerHTML=diagram;
+ replaceDiagram(c,$('reader-diagram'),diagram);
  $('reader-event').innerHTML=`<p class="reader-overline">今の段階 / ${c.index+1}</p><h3>${h(frame.title)}</h3><p>${h(frame.explain)}</p>${Object.keys(frame.stats||{}).length?metricsHTML(frame.stats):''}`;
  $('reader-table').innerHTML=frame.table?`<details ${c.tableOpen?'open':''} id="reader-frame-table"><summary>この段階の数値を表で確かめる</summary>${L.table(frame.table)}</details>`:'';
- $('reader-companion').innerHTML=L.lessonCompanion(c);
+ replaceDiagram(c,$('reader-companion'),L.lessonCompanion(c));
  if(c.renderedResult!==c.result){resultParts(c);c.renderedResult=c.result;renderComparison(c);}
- const caption=$('reader-condition-summary');if(caption)caption.textContent=conditionSummary(c.lab,c.params);
 }
-function invalidate(c,message=''){
- clearTimeout(A.paramTimer);c.token++;c.player.pause();c.pending=false;c.dirty=true;c.error=message;c.result=null;c.renderedResult=null;paint(c);
+function invalidate(c){
+ clearTimeout(A.parameterTimer);c.token++;c.player.pause();c.pending=false;c.dirty=true;c.error='';c.result=null;c.renderedResult=null;
 }
-async function compute(c,params=c.params){
+async function compute(c){
  if(!isCurrent(c))return;
- clearTimeout(A.paramTimer);const own=++c.token;c.player.pause();c.pending=true;c.dirty=false;c.error=null;c.result=null;c.renderedResult=null;paint(c);
+ clearTimeout(A.parameterTimer);
+ if(Object.keys(c.invalidInputs).length){c.error=Object.values(c.invalidInputs).join(' ');paint(c);return;}
+ const own=++c.token;c.player.pause();c.pending=true;c.dirty=false;c.error=null;c.result=null;c.renderedResult=null;paint(c);
  try{
-  const validated=L.validateParams(c.lab,params),result=await L.run(c.lab,validated);
+  const validated=L.validateParams(c.lab,c.params),result=await L.run(c.lab,validated);
   if(!isCurrent(c)||own!==c.token)return;
-  c.params=validated;c.result=result;c.pending=false;c.dirty=false;c.index=0;c.player.configure(result.frames.length,0);paint(c);renderComparison(c);
+  c.params=validated;c.result=result;c.pending=false;c.dirty=false;c.codeDirty=false;c.index=0;c.player.configure(result.frames.length,0);paint(c);renderComparison(c);
  }catch(error){if(!isCurrent(c)||own!==c.token)return;c.pending=false;c.error=error.message||String(error);c.result=null;c.player.configure(0);paint(c);}
 }
-function change(c,key,raw,{fromNumber=false,isCode=false}={}){
+function change(c,key,raw,{isCode=false}={}){
  const ctrl=c.lab.controls.find(x=>x.key===key);if(!ctrl)return;
  invalidate(c);
  if(ctrl.type==='range'){
   const number=Number(raw),ratio=(number-ctrl.min)/ctrl.step;
-  if(raw===''||!Number.isFinite(number)||number<ctrl.min||number>ctrl.max||Math.abs(ratio-Math.round(ratio))>1e-6){c.error=`「${ctrl.label}」は${ctrl.min}〜${ctrl.max}を${ctrl.step}ずつ指定してください。`;c.invalidKey=key;paint(c);return;}
-  c.params[key]=number;
-  const range=$('reader-input-'+key),numeric=$('reader-input-'+key+'-number');if(range)range.value=String(number);if(numeric)numeric.value=String(number);
+  if(raw===''||!Number.isFinite(number)||number<ctrl.min||number>ctrl.max||Math.abs(ratio-Math.round(ratio))>1e-6){
+   c.invalidInputs[key]=`「${ctrl.label}」は${ctrl.min}〜${ctrl.max}を${ctrl.step}ずつ指定してください。`;
+  }else{
+   delete c.invalidInputs[key];c.params[key]=number;
+   for(const suffix of ['', '-number']){const el=$('reader-input-'+key+suffix);if(el)el.value=String(number);}
+  }
  }else if(ctrl.type==='toggle')c.params[key]=Boolean(raw);
  else if(ctrl.type==='select')c.params[key]=ctrl.options.find(o=>String(o.value)===String(raw))?.value??ctrl.value;
- else c.params[key]=String(raw).slice(0,ctrl.type==='code'?8000:1200);
- c.invalidKey=null;c.noteFocus=null;c.error=null;
- if(isCode){paint(c);return;}
- A.paramTimer=setTimeout(()=>compute(c),ctrl.type==='text'?320:50);
+ else c.params[key]=String(raw);
+ c.noteFocus=null;c.error=Object.values(c.invalidInputs).join(' ');
+ if(isCode)c.codeDirty=true;
+ paint(c);
+ // Changing another field must not dismiss an error or implicitly submit code.
+ if(c.error||c.codeDirty)return;
+ A.parameterTimer=setTimeout(()=>compute(c),ctrl.type==='text'?320:50);
 }
 async function variant(c){
- if(!isCurrent(c))return;clearTimeout(A.paramTimer);const own=++c.token;c.player.pause();c.pending=true;c.error=null;c.dirty=false;c.result=null;c.renderedResult=null;paint(c);
+ if(!isCurrent(c))return;clearTimeout(A.parameterTimer);const own=++c.token;c.player.pause();c.pending=true;c.error=null;c.dirty=false;c.result=null;c.renderedResult=null;paint(c);
  try{
   const before=await L.run(c.lab,c.lab.defaults);
   if(!isCurrent(c)||own!==c.token)return;
   const params=L.validateParams(c.lab,{...c.lab.defaults,...c.lab.exploration.patch}),after=await L.run(c.lab,params);
   if(!isCurrent(c)||own!==c.token)return;
-  c.baseline={params:clone(c.lab.defaults),result:before};c.params=params;c.result=after;c.pending=false;c.invalidKey=null;c.noteFocus=null;c.compareOpen=true;c.index=0;renderControls(c);c.player.configure(after.frames.length,0);paint(c);renderComparison(c);
+  c.baseline={params:clone(c.lab.defaults),result:before};c.params=params;c.result=after;c.pending=false;c.invalidInputs={};c.codeDirty=false;c.noteFocus=null;c.compareOpen=true;c.index=0;renderControls(c);c.player.configure(after.frames.length,0);paint(c);renderComparison(c);
  }catch(error){if(!isCurrent(c)||own!==c.token)return;c.pending=false;c.result=null;c.error=error.message||String(error);c.player.configure(0);paint(c);}
 }
-function reset(c){c.params=clone(c.lab.defaults);c.noteFocus=null;c.invalidKey=null;c.answer=null;renderControls(c);compute(c);}
+function reset(c){c.params=clone(c.lab.defaults);c.noteFocus=null;c.invalidInputs={};c.codeDirty=false;c.answer=null;renderControls(c);renderGuidance(c);compute(c);}
 function sourceHTML(lab){return (lab.sources||[]).map(id=>{const s=L.sources[id];if(!s)return '';return `<li>${s.url&&/^https:\/\//.test(s.url)?`<a href="${h(s.url)}" target="_blank" rel="noopener noreferrer">${h(s.name)} ↗</a>`:`<strong>${h(s.name)}</strong>`}${s.detail?`<p>${h(s.detail)}</p>`:''}</li>`;}).join('');}
+function focusRegion(id){const el=$(id);if(!el)return;el.tabIndex=-1;el.focus({preventScroll:true});el.scrollIntoView({block:'start',behavior:'instant'});}
 A.views.lab=(parts,params)=>{
  if(params?.get('view')==='experiment'){legacy.lab(parts,params);const head=document.querySelector('.lab-heading');if(head)head.insertAdjacentHTML('beforebegin',`<div class="reader-advanced-banner"><a class="btn" href="#/lab/${h(parts[0])}">← 図と説明を一緒に読む画面へ</a><p>自由実験の詳細画面です。画面を切り替えると一時的な入力と比較は初期化されます。</p></div>`);return;}
  const lab=A.lab(parts[0]);if(!lab)return A.views.notfound();
  const n=Number(params?.get('section')||0),phase=Number.isInteger(n)&&n>=0&&n<=3?n:0;
- const c=A.current={reader:true,lab,params:clone(lab.defaults),phase,result:null,index:0,playing:false,speed:1,pending:false,dirty:false,error:null,token:0,noteFocus:null,baseline:null,compareOpen:false,tableOpen:false,answer:null,invalidKey:null,renderedResult:null};
- c.player=L.createPlayer({onChange:s=>{if(!isCurrent(c))return;c.index=s.index;c.playing=s.playing;c.speed=s.speed;paint(c);}});
+ const c=A.current={reader:true,lab,params:clone(lab.defaults),phase,result:null,index:0,playing:false,speed:1,pending:false,dirty:false,error:null,token:0,noteFocus:null,baseline:null,compareOpen:false,tableOpen:false,answer:null,invalidInputs:{},codeDirty:false,disclosures:new Map(),renderedResult:null};
+ c.player=L.createPlayer({onChange:s=>{if(!isCurrent(c))return;if(c.index!==s.index)c.noteFocus=null;c.index=s.index;c.playing=s.playing;c.speed=s.speed;paint(c);}});
  A.setTitle(lab.unit);A.setNav(lab.track==='core'?'catalog':lab.track,lab.unit);
  const related=[...new Set([...(L.readingRelations[lab.id]||[]),...(lab.prereq||[])])].filter(id=>id!==lab.id&&A.lab(id));
- $('main').innerHTML=`<article class="reader" id="lesson-reader"><header class="reader-title"><div class="reader-title-top">${A.pill(lab.track)}<span>${h(lab.course)}</span></div><h1>${h(lab.unit)}</h1><p>${h(lab.summary)}</p><div class="reader-title-links"><a href="#/catalog">← 別の単元を探す</a><a href="#/lab/${h(lab.id)}?view=experiment">自由実験・詳細画面を開く ↗</a></div></header><nav class="reader-phases" aria-label="説明の区切り。どこからでも選べます">${phases.map((name,i)=>`<button type="button" data-r-phase="${i}" class="${phase===i?'active':''}"><span>${i+1}</span>${name}</button>`).join('')}</nav><div class="reader-layout"><div class="reader-explanation"><section id="reader-guidance" class="reader-guidance" aria-label="この単元の説明"></section><section id="reader-controls" class="reader-controls" aria-label="実験の入力"></section><details class="reader-terms"><summary>この単元で使う言葉</summary>${lab.reading.terms.length?`<dl>${lab.reading.terms.map(t=>`<dt>${h(t.term)}</dt><dd>${h(t.definition)}</dd>`).join('')}</dl>`:`<p>${h(lab.reading.idea)}</p><p>入力欄の下にも、条件の意味を表示しています。</p>`}</details></div><div class="reader-demonstration"><figure class="reader-figure"><figcaption><div><span class="reader-overline" id="reader-phase-name"></span><h2>説明を、図で確かめる</h2></div><span class="reader-live-dot">この単元だけの実験</span></figcaption><div id="reader-diagram" class="reader-diagram" aria-label="現在の条件に対応する図"></div><div id="reader-player" class="reader-player"><p id="reader-direct-message" hidden>この実験は入力するとその場で変わります。再生は不要です。</p><div id="reader-sequence-tools"><div class="reader-play-buttons">${rbutton('first','最初','ghost')}${rbutton('back','1つ戻る','ghost')}<button type="button" class="btn primary" data-r-action="play" id="reader-play">${icon('play',17)}再生</button><button type="button" class="btn" data-r-action="next"><span id="reader-next-label"></span> →</button>${rbutton('last','最後','ghost')}</div><div class="reader-seek-row"><label for="reader-scrubber" class="sr-only">図の段階を選ぶ</label><input id="reader-scrubber" type="range" min="0" max="0" value="0" step="1" disabled><label class="reader-speed-label" for="reader-speed">再生速度<select id="reader-speed"><option value="0.5">0.5倍</option><option value="1" selected>1倍</option><option value="2">2倍</option><option value="4">4倍</option></select></label></div></div><p id="reader-position" class="reader-position"></p></div><section id="reader-event" class="reader-event" aria-live="off" aria-label="現在の段階とその理由"></section><div id="reader-table" class="reader-frame-table"></div><div class="reader-current-conditions"><details><summary>この図に使った入力を確認する</summary><p id="reader-condition-summary"></p></details></div></figure><div id="reader-companion"></div><div id="reader-result-details" class="reader-result-details"></div><section id="reader-comparison" class="reader-comparison" aria-label="一時的な比較"></section></div></div><section class="reader-next-units"><h2>つながる単元</h2><p>前提を確かめたいときも、続きを知りたいときも。順番による制限はありません。</p><div class="reader-related-links">${related.map(id=>`<a href="#/lab/${id}">${h(A.lab(id).unit)} →</a>`).join('')||'<a href="#/catalog">全ての単元を探す →</a>'}</div></section><details class="reader-scope"><summary>この教材の前提・省略・参考資料</summary><h3>${h(lab.scope)}</h3><p>${h(lab.limits)}</p>${lab.reading.notes?`<p class="reader-source-note">説明の組み立ての参考：${h(lab.reading.notes)}（表紙を含むPDFのページ番号）。数値例・プログラム・画面はサイト独自の教材です。提供ノートそのものは公開していません。</p>`:''}<ul>${sourceHTML(lab)}</ul></details><p class="reader-privacy">入力・再生位置・比較・回答は、この単元を開いている間だけのものです。別の単元への移動や再読み込みで初期化し、学習履歴やノートとして保存しません。</p></article>${A.footer()}`;
+ $('main').innerHTML=`<article class="reader" id="lesson-reader"><header class="reader-title"><div class="reader-title-top">${A.pill(lab.track)}<span>${h(lab.course)}</span></div><h1>${h(lab.unit)}</h1><p>${h(lab.summary)}</p><div class="reader-title-links"><a href="#/catalog">← 別の単元を探す</a><a href="#/lab/${h(lab.id)}?view=experiment">自由実験・詳細画面を開く ↗</a></div></header><nav class="reader-phases" aria-label="説明の区切り。どこからでも選べます">${phases.map((name,i)=>`<button type="button" data-r-phase="${i}" class="${phase===i?'active':''}"><span>${i+1}</span>${name}</button>`).join('')}</nav><div class="reader-layout"><div class="reader-explanation"><section id="reader-guidance" class="reader-guidance" aria-label="この単元の説明"></section><section id="reader-controls" class="reader-controls" aria-label="実験の入力"></section><details class="reader-terms"><summary>この単元で使う言葉</summary>${lab.reading.terms.length?`<dl>${lab.reading.terms.map(t=>`<dt>${h(t.term)}</dt><dd>${h(t.definition)}</dd>`).join('')}</dl>`:`<p>${h(lab.reading.idea)}</p><p>入力欄の下にも、条件の意味を表示しています。</p>`}</details></div><div class="reader-demonstration"><figure class="reader-figure" id="reader-figure"><figcaption><div><span class="reader-overline" id="reader-phase-name"></span><h2>説明を、図で確かめる</h2></div><span class="reader-live-dot">この単元だけの実験</span></figcaption><div id="reader-diagram" class="reader-diagram" aria-label="現在の条件に対応する図"></div><div id="reader-player" class="reader-player"><p id="reader-direct-message" hidden>この実験は入力するとその場で変わります。再生は不要です。</p><div id="reader-sequence-tools"><div class="reader-play-buttons">${rbutton('first','最初','ghost')}${rbutton('back','1つ戻る','ghost')}<button type="button" class="btn primary" data-r-action="play" id="reader-play">${icon('play',17)}再生</button><button type="button" class="btn" data-r-action="next"><span id="reader-next-label"></span> →</button>${rbutton('last','最後','ghost')}</div><div class="reader-seek-row"><label for="reader-scrubber" class="sr-only">図の段階を選ぶ</label><input id="reader-scrubber" type="range" min="0" max="0" value="0" step="1" disabled><label class="reader-speed-label" for="reader-speed">再生速度<select id="reader-speed"><option value="0.5">0.5倍</option><option value="1" selected>1倍</option><option value="2">2倍</option><option value="4">4倍</option></select></label></div></div><p id="reader-position" class="reader-position"></p></div><section id="reader-event" class="reader-event" aria-live="off" aria-label="現在の段階とその理由"></section><div id="reader-table" class="reader-frame-table"></div><div class="reader-current-conditions"><details><summary>この図に使った入力を確認する</summary><p id="reader-condition-summary"></p></details><div class="button-row">${rbutton('controls','入力条件へ戻る ↑','ghost')}${rbutton('guidance','説明へ戻る ↑','ghost')}</div></div></figure><div id="reader-companion"></div><div id="reader-result-details" class="reader-result-details"></div><section id="reader-comparison" class="reader-comparison" aria-label="一時的な比較"></section></div></div><section class="reader-next-units"><h2>つながる単元</h2><p>前提を確かめたいときも、続きを知りたいときも。順番による制限はありません。</p><div class="reader-related-links">${related.map(id=>`<a href="#/lab/${id}">${h(A.lab(id).unit)} →</a>`).join('')||'<a href="#/catalog">全ての単元を探す →</a>'}</div></section><details class="reader-scope"><summary>この教材の前提・省略・参考資料</summary><h3>${h(lab.scope)}</h3><p>${h(lab.limits)}</p>${lab.reading.notes?`<p class="reader-source-note">説明の組み立ての参考：${h(lab.reading.notes)}（表紙を含むPDFのページ番号）。数値例・プログラム・画面はサイト独自の教材です。提供ノートそのものは公開していません。</p>`:''}<ul>${sourceHTML(lab)}</ul></details><p class="reader-privacy">入力・再生位置・比較・回答は、この単元を開いている間だけのものです。別の単元への移動や再読み込みで初期化し、学習履歴やノートとして保存しません。</p></article>${A.footer()}`;
  renderGuidance(c);renderControls(c);compute(c);
 };
 A.play=(...args)=>{const c=A.current;if(!c?.reader)return legacy.play(...args);if(ready(c))c.player.play();};
 A.seek=(n,...args)=>{const c=A.current;if(!c?.reader)return legacy.seek(n,...args);if(ready(c))c.player.seek(n);};
 A.step=(n,...args)=>{const c=A.current;if(!c?.reader)return legacy.step(n,...args);if(ready(c))c.player.step(n);};
 A.stop=(...args)=>{const c=A.current;if(!c?.reader)return legacy.stop(...args);c.player.pause();};
-A.runCurrent=(...args)=>{const c=A.current;if(!c?.reader)return legacy.run(...args);if(!c.invalidKey)return compute(c);};
-// A single handler serves mouse, touch and keyboard-activated native buttons.
+A.runCurrent=(...args)=>{const c=A.current;if(!c?.reader)return legacy.run(...args);return compute(c);};
 document.addEventListener('click',e=>{
- const c=A.current;if(!c?.reader)return;
- const phase=e.target.closest('[data-r-phase]');
- if(phase){e.preventDefault();e.stopImmediatePropagation();setPhase(c,Number(phase.dataset.rPhase));return;}
- const answer=e.target.closest('[data-r-answer]');if(answer){e.preventDefault();e.stopImmediatePropagation();c.answer=Number(answer.dataset.rAnswer);renderGuidance(c);const next=document.querySelector(`[data-r-answer="${c.answer}"]`);next?.focus({preventScroll:true});return;}
+ const c=A.current;if(!c?.reader||!e.target?.closest)return;
+ const phase=e.target.closest('[data-r-phase]');if(phase){e.preventDefault();e.stopImmediatePropagation();setPhase(c,Number(phase.dataset.rPhase));return;}
+ const answer=e.target.closest('[data-r-answer]');if(answer){e.preventDefault();e.stopImmediatePropagation();c.answer=Number(answer.dataset.rAnswer);renderGuidance(c);document.querySelector(`[data-r-answer="${c.answer}"]`)?.focus({preventScroll:true});return;}
  const jump=e.target.closest('[data-r-frame]');if(jump){e.preventDefault();e.stopImmediatePropagation();A.seek(Number(jump.dataset.rFrame));return;}
  const focus=e.target.closest('[data-r-focus]');if(focus){e.preventDefault();e.stopImmediatePropagation();c.noteFocus=focus.dataset.rFocus;paint(c);document.querySelector(`[data-r-focus="${CSS.escape(c.noteFocus)}"]`)?.focus({preventScroll:true});return;}
  const bit=e.target.closest('[data-r-bit]');if(bit){e.preventDefault();e.stopImmediatePropagation();if(c.lab.id==='c01-bits'&&ready(c)){const i=Number(bit.dataset.rBit);if(Number.isInteger(i)&&i>=0&&i<c.params.width){const val=(((Math.floor(c.params.value)%2**c.params.width)+2**c.params.width)%2**c.params.width)^(2**(c.params.width-1-i));c.params.value=val;renderControls(c);compute(c);}}return;}
- const node=e.target.closest('[data-r-node],[data-r-edge]');if(node){e.preventDefault();e.stopImmediatePropagation();const n=node.dataset.rNode||node.dataset.rEdge;const note=document.createElement('p');note.className='reader-node-feedback';note.textContent=`選んだ対象：${n}。構成そのものの追加・接続・移動は、上の「自由実験・詳細画面」で行えます。`;$('reader-diagram').querySelector('.reader-node-feedback')?.remove();$('reader-diagram').append(note);return;}
+ const node=e.target.closest('[data-r-node],[data-r-edge]');if(node){e.preventDefault();e.stopImmediatePropagation();const n=node.dataset.rNode||node.dataset.rEdge;const note=document.createElement('p');note.className='reader-node-feedback';note.textContent=`選んだ対象：${n}。構成の追加・接続・移動は、上の「自由実験・詳細画面」で行えます。`;$('reader-diagram').querySelector('.reader-node-feedback')?.remove();$('reader-diagram').append(note);return;}
  const b=e.target.closest('[data-r-action]');if(!b)return;e.preventDefault();e.stopImmediatePropagation();
  switch(b.dataset.rAction){
-  case 'advance':setPhase(c,c.phase+1);break;
+  case 'advance':setPhase(c,c.phase+1,true);break;
+  case 'diagram':focusRegion('reader-figure');break;
+  case 'controls':focusRegion('reader-controls');break;
+  case 'guidance':focusRegion('reader-guidance');break;
   case 'play':A.play();break;
   case 'first':A.seek(0);break;
   case 'back':A.step(-1);break;
   case 'next':A.step(1);break;
   case 'last':if(ready(c))A.seek(c.result.frames.length-1);break;
-  case 'apply':if(!c.invalidKey)compute(c);else paint(c);break;
+  case 'apply':compute(c);break;
   case 'reset':reset(c);break;
   case 'variant':variant(c);break;
   case 'baseline':if(ready(c)){c.baseline={params:clone(c.params),result:c.result};c.compareOpen=true;renderComparison(c);}break;
-  case 'restore':if(c.baseline){c.params=clone(c.baseline.params);c.invalidKey=null;renderControls(c);compute(c);}break;
+  case 'restore':if(c.baseline){c.params=clone(c.baseline.params);c.invalidInputs={};c.codeDirty=false;c.noteFocus=null;renderControls(c);compute(c);}break;
   case 'clear-compare':c.baseline=null;renderComparison(c);break;
  }
 },true);
@@ -179,7 +210,7 @@ function fieldEvent(e){
  const c=A.current;if(!c?.reader)return;const el=e.target;
  if(el.id==='reader-scrubber'){if(e.type==='input')A.seek(Number(el.value));return;}
  if(el.id==='reader-speed'){if(e.type==='change')c.player.setSpeed(Number(el.value));return;}
- if(el.dataset.rNumber!==undefined){if(e.type==='input')change(c,el.dataset.rNumber,el.value,{fromNumber:true});return;}
+ if(el.dataset.rNumber!==undefined){if(e.type==='input')change(c,el.dataset.rNumber,el.value);return;}
  const key=el.dataset.rParam;if(key===undefined)return;const ctrl=c.lab.controls.find(x=>x.key===key);if(!ctrl)return;
  if((ctrl.type==='toggle'||ctrl.type==='select')&&e.type!=='change')return;
  if(ctrl.type!=='toggle'&&ctrl.type!=='select'&&e.type!=='input')return;
@@ -189,7 +220,6 @@ document.addEventListener('input',fieldEvent,true);document.addEventListener('ch
 document.addEventListener('pointerdown',e=>{if(e.target.id==='reader-scrubber'&&A.current?.reader)A.current.player.pause();},true);
 document.addEventListener('toggle',e=>{const c=A.current;if(!c?.reader)return;if(e.target.id==='reader-compare-details')c.compareOpen=e.target.open;if(e.target.id==='reader-frame-table')c.tableOpen=e.target.open;},true);
 document.addEventListener('keydown',e=>{if(A.current?.reader&&e.key==='Enter'&&e.target.matches('[data-r-number],[data-r-param]:not(textarea)')){e.preventDefault();A.runCurrent();}},true);
-// Cards and course entry points are about the subject, not completion or activity.
 A.labCard=lab=>`<a class="lab-card reader-unit-card" href="#/lab/${lab.id}"><div class="lab-card-top">${A.pill(lab.track)}<span>${h(lab.course.split('／')[0])}</span></div><h3>${h(lab.unit)}</h3><p>${h(lab.summary)}</p><div class="reader-card-question">${h(lab.question)}</div><div class="lab-card-bottom"><span>解説と図を開く</span>${icon('arrow',17)}</div></a>`;
 const courseCard=course=>`<a class="reader-course-card" href="#/course/${course.id}"><span class="reader-overline">授業の並びから探す</span><h2>${h(course.name)}</h2><p>${h(course.description)}</p><span>単元を選ぶ →</span></a>`;
 A.views.home=()=>{
