@@ -35,7 +35,7 @@ jobs:
       - name: Install browser test tools
         run: |
           npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0
-          npx playwright install --with-deps chromium > review-output/browser-install.txt 2>&1 || { tail -n 40 review-output/browser-install.txt; exit 1; }
+          npx playwright install chromium > review-output/browser-install.txt 2>&1 || { tail -n 40 review-output/browser-install.txt; exit 1; }
       - name: Test all units on actual HTTP documents
         run: node tests/reader-browser.mjs
       - name: Test input recovery and playback regressions
