@@ -2,14 +2,15 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {L,run} from './helpers.mjs';
 
-test('全20分野・N01–N20・S01–S24・総合8演習を収録',()=>{
- assert.equal(L.areas.length,20);assert.equal(L.labs.length,144);assert.equal(new Set(L.labs.map(l=>l.id)).size,L.labs.length);
+test('全20分野・旧144単元・N01–N20・S01–S24・総合8演習を維持',()=>{
+ assert.equal(L.areas.length,20);assert.equal(L.legacyLabIds.length,144);assert.equal(L.labs.length,159);assert.equal(new Set(L.labs.map(l=>l.id)).size,L.labs.length);
+ for(const id of L.legacyLabIds)assert.ok(L.labs.some(l=>l.id===id),id);
  for(const area of L.areas)assert.ok(L.labs.some(l=>l.area===area.id),area.id);
  for(const [prefix,total]of [['N',20],['S',24]])for(let i=1;i<=total;i++)assert.ok(L.labs.some(l=>l.topic===prefix+String(i).padStart(2,'0')),prefix+i);
  assert.equal(L.labs.filter(l=>l.track==='missions').length,8);
 });
-test('実験・学習ルート・科目・用語・出典に壊れた参照がない',()=>{
- for(const lab of L.labs){assert.ok(L.engines[lab.engine],lab.id);assert.ok(lab.title&&lab.question&&lab.guide.length===3&&lab.lesson&&lab.limits&&lab.scope,lab.id);for(const id of lab.prereq)assert.ok(L.labs.some(l=>l.id===id),id);for(const id of lab.sources)assert.ok(L.sources[id],id);assert.ok(lab.challenge?.options.length===3,lab.id);assert.ok(lab.challenge.answer>=0&&lab.challenge.answer<=2,lab.id);}
+test('実験・ルート・科目・用語・出典に壊れた参照がない',()=>{
+ for(const lab of L.labs){assert.ok(L.engines[lab.engine],lab.id);assert.ok(lab.title&&lab.question&&lab.guide.length===3&&lab.lesson&&lab.limits&&lab.scope,lab.id);for(const id of lab.prereq)assert.ok(L.labs.some(l=>l.id===id),id);for(const id of lab.sources)assert.ok(L.sources[id],id);assert.equal(lab.challenge?.options.length,3,lab.id);assert.ok(lab.challenge.answer>=0&&lab.challenge.answer<=2,lab.id);}
  for(const route of L.routes)for(const id of route.labs)assert.ok(L.labs.some(l=>l.id===id),id);
  for(const c of L.courses)for(const id of c.labs)assert.ok(L.labs.some(l=>l.id===id),id);
  for(const g of L.glossary)assert.ok(L.labs.some(l=>l.id===g.lab),g.term);

@@ -1,4 +1,5 @@
-for(const name of ['core','network','foundations','security','git','missions','catalog','extensions','learning','pedagogy','player','visuals'])await import(`../src/${name}.js`);
+import {modelModules,visualModules} from '../scripts/modules.mjs';
+for(const name of [...modelModules,...visualModules])await import(`../src/${name}.js`);
 export const L=globalThis.CSL;
 export const lab=id=>L.labs.find(l=>l.id===id);
 export const run=(id,params={})=>L.run(lab(id),{...lab(id).defaults,...params});
