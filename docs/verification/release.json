@@ -1,0 +1,60 @@
+{
+  "version": "2.0.0",
+  "packaged_at_utc": "2026-09-07T01:54:55.128591+00:00",
+  "input_archive": "Visual-CS-Lab-source.zip",
+  "input_archive_sha256": "4630df0c0a59b4774e20b2da6d1a166e5dad2c1efe20319ef4345b2a17761c2c",
+  "html": "index.html",
+  "html_bytes": 541299,
+  "html_sha256": "20bb3e7a3821214366df140622d6e37a7fe674489335ceffac86a920c561df94",
+  "inventory": {
+    "labs": 144,
+    "counts": {
+      "core": 65,
+      "network": 34,
+      "security": 37,
+      "missions": 8
+    },
+    "areas": 20,
+    "routes": 8,
+    "engines": 103,
+    "original_lab_ids_preserved": true
+  },
+  "tests": {
+    "node_pass": 1133,
+    "node_fail": 0,
+    "browser_main_pass": 3330,
+    "browser_additional_pass": 46,
+    "browser_exception_count": 0,
+    "browser_request_count": 0,
+    "browser_actual_calculation_labs": 139,
+    "browser_crypto_context_unavailable_labs": 5,
+    "browser_restriction": "offline page.set_content, not real URL navigation; no policy modifications",
+    "native_storage_cleanup": "removal-only tested with explicit double; no real-origin cleanup confirmed",
+    "native_crypto": "5 real computations tested in Node.js; unsupported-origin messages tested in browser"
+  },
+  "environment": {
+    "node": "22.16.0",
+    "chromium": "144.0.7559.96",
+    "platform": "Linux Debian 13",
+    "physical_mobile_safari_firefox_tested": false
+  },
+  "runtime_source_sha256": {
+    "src/app.js": "190c966de6c5a80f0305715176b5d61aa26ec3eff4d36495468590b5de6fdd64",
+    "src/boot.js": "70828a8f034195ad559f74441d64f91fab67a492af8085e2ed1564b345151f1d",
+    "src/catalog.js": "0cc30b887869c33704b074b06365c4d29f2282a35fe656a2d04cafa7c6497c62",
+    "src/core.js": "e022b3f83e9fda5ca8655ef5bbd7df821a63059543719d0081a389d10c3bb29c",
+    "src/extensions.js": "34286723f93da5cee7ed892780d945bb8d9fce4a49710ae85e4d43014dc3d642",
+    "src/foundations.js": "657d906209caf34e196e9a3c81ba3d1e85034fad6c7c44946b5c61c029afe8b3",
+    "src/git.js": "9d523724902dd309e1d9eb4fc6e1aa2c65233053e103fe3fdd2289f0a3117c96",
+    "src/learning.js": "dfc6f0f2efe6b6c77d6fefbbd7fc67008931099cac1db1c607bd3f5df68ad2b2",
+    "src/missions.js": "dbe6180085886e24e3309730b7bffec274d9b4eb58a1f47cacd650f11e58db29",
+    "src/network.js": "3ce84354c38a76457cf6e6700e5d66a44ff9d1ca43a41128d650c0de942f3c64",
+    "src/pages.js": "a5b5d0831f5e2b54ba44c26fad4bcd92d8ac1a5c90c798ae36582a226a8fbf21",
+    "src/pedagogy.js": "35a9677f61eaba0088602b4641f0fee25cb586c5d0de857b2f420a4bf7a8e71e",
+    "src/player.js": "487382b9907e16b8b7d433db9f4e023e81f603ab7584046097795993abef0d62",
+    "src/security.js": "47f6bd500faad9efcb8295fe2f0dc5fa8d532291356dd00b65a03d655b2190f2",
+    "src/style.css": "ccada647bbef648e1bbcb782dd9e8e3d24d2bc102a3ea270c154ace097fdb595",
+    "src/visuals.js": "160bc867ea61cbc9d79af7562bab76c1f4430485038bdb3be7ec5e4cf1287866",
+    "src/workbench.js": "bc532827782603cf1edf5fbf96bc48242f17b96f58a1adcdd5cc16fbe4b1f153"
+  }
+}
