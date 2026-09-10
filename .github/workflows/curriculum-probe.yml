@@ -25,9 +25,14 @@ jobs:
           node-version: '22'
       - name: Check syntax, model bounds and independent numerical examples
         run: node scripts/curriculum-probe.mjs
+      - name: Archive the exact source used by this check
+        if: always()
+        run: |
+          mkdir -p review-output
+          git archive --format=zip --prefix=visual-cs-lab/ HEAD -o review-output/curriculum-source.zip
       - uses: actions/upload-artifact@v5
         if: always()
         with:
           name: curriculum-model-probe
-          path: review-output/curriculum-probe.json
+          path: review-output/
           retention-days: 14
