@@ -1,6 +1,6 @@
 {
   "name": "visual-cs-lab",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "private": true,
   "description": "小さな例・解説・操作を結び付ける情報科学とセキュリティ・ネットワークの実験室",
   "type": "module",
@@ -13,5 +13,7 @@
     "inventory": "node scripts/inventory.mjs",
     "check": "npm run build && npm test && npm run inventory"
   },
-  "engines": {"node": ">=20"}
+  "engines": {
+    "node": ">=20"
+  }
 }

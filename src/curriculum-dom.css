@@ -1,0 +1,15 @@
+/* These deliberately different examples are confined to the experiment box. */
+.cv-catalogue-gateway{margin:20px 0 26px;min-width:0;border:1px solid #42546b;border-radius:11px;background:#111b28}
+.cv-catalogue-gateway>details>summary{cursor:pointer;padding:18px 20px;color:#e4edf8;font-size:16px;line-height:1.8;min-height:52px}
+.cv-catalogue-gateway>details>summary span{display:inline-block;margin-left:12px;color:#a8dacc;font-size:12px;font-family:var(--mono)}
+.cv-catalogue-content{padding:0 20px 22px;min-width:0}.cv-catalogue-content>p{color:#b4c2d3;font-size:13px;margin:10px 0 18px;line-height:1.9}.cv-catalogue-content>label{display:block;margin:14px 0 8px;font-size:14px;color:#e1eaf7}.cv-catalogue-content>input{width:100%;min-height:46px;padding:10px 14px;color:#e4edf8;background:#0c1521;border:1px solid #607b91;font-size:16px}
+.cv-catalogue-content [hidden]{display:none!important}.cv-curriculum-index{max-height:72vh;overflow:auto;overscroll-behavior:contain;scrollbar-color:#6b8a9e #131d29;padding-right:4px}
+.cv-lesson-sections h3{font-size:15px;line-height:1.8;color:#e0ebf7}.cv-lesson-sections h3 small{display:inline-block;margin-left:10px;font-family:var(--mono);color:#9dd5c4;font-weight:400}
+.cv-demo-scroll{max-width:100%;overflow:auto;overscroll-behavior:contain;padding:6px 0 16px}.cv-layout-box{padding:12px;border:2px solid #9bbad6;background:#0d1722;min-height:140px;align-items:flex-start}
+.cv-layout-item{width:100px;min-width:0;flex-shrink:0;padding:12px;border:2px solid #9bc9bc;background:#24443d;color:#e3f1eb;line-height:1.7;overflow-wrap:anywhere}
+.cv-demo-form{display:flex;flex-direction:column;align-items:flex-start;gap:12px}.cv-demo-form .cv-demo-field{width:100%}.cv-faux-button{display:inline-block;border:1px solid #7da69e;border-radius:7px;padding:10px 18px;color:#daf1e8;background:#203f38;cursor:pointer;min-height:44px;line-height:1.5}
+.cv-demo .cv-hide-focus input:focus,.cv-demo .cv-hide-focus button:focus{outline:none;box-shadow:none}
+.cv-event-parent{padding:20px;border:2px dashed #97b5ce;border-radius:8px;background:#0e1925;display:flex;gap:18px;flex-direction:column;align-items:flex-start}.cv-event-parent>span{color:#c7d9eb;font-size:14px}.cv-demo ol{padding-left:25px;line-height:1.9;color:#bfe0d5}
+.cv-demo .table-wrap{margin-top:16px}.cv-demo .data-table th,.cv-demo .data-table td{font-size:12px;line-height:1.7;padding:9px 12px}.cv-demo p[data-cv-output]{min-height:44px;margin:15px 0 8px;color:#b8e2d5;overflow-wrap:anywhere}
+.reader-diagram:has(.cv-demo){min-width:0}.cv-demo{width:100%;min-width:0}.cv-demo form{max-width:100%}.cv-demo-form input{max-width:100%}
+@media(max-width:650px){.cv-catalogue-content{padding:0 12px 16px}.cv-catalogue-gateway>details>summary{padding:15px;font-size:15px}.cv-catalogue-gateway>details>summary span{margin-left:0;display:block}.cv-curriculum-index{max-height:65vh}.cv-layout-item{font-size:14px}.cv-demo{padding:14px}.cv-lesson-sections .cv-section-body{padding:0 14px 16px}}

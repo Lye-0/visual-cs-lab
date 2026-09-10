@@ -1,0 +1,5530 @@
+{
+  "sourceCommit": "b16714ed8eabcaad08b5d93540614b5ead03aa14",
+  "generatedAt": "2026-09-10T09:54:33.502Z",
+  "runURL": "https://github.com/Lye-0/visual-cs-lab/actions/runs/34462612578",
+  "baselineUnits": 159,
+  "addedModels": 155,
+  "units": 314,
+  "areas": 20,
+  "node": {
+    "tests": 3001,
+    "passed": 3001,
+    "failed": 0,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "probe": {
+    "registered": 155,
+    "passed": 1882,
+    "failed": 0,
+    "missing": []
+  },
+  "browser": {
+    "browser": "153.0.8010.12",
+    "viewports": [
+      {
+        "name": "desktop",
+        "width": 1440,
+        "height": 1000
+      },
+      {
+        "name": "mobile",
+        "width": 390,
+        "height": 844
+      }
+    ],
+    "passed": 645,
+    "failed": 0
+  },
+  "regressions": {
+    "passed": 27,
+    "failed": 0
+  },
+  "generatedFiles": {
+    "index.html": "0dddeeee0eb810ed3665feeb49cb6e36eef421fc9cc8a91276c6609a336f7077",
+    "docs/EXPERIMENTS.md": "3b7ff8896a325c1e648c5f6f4401068aa4f5dc2e7129de5ce7347bf1e0b7008c",
+    "docs/experiments.json": "2764b131f6e18263f13d23026ac5d8c3e3128e760f0785cbb0a9fb16515f9681"
+  },
+  "coverage": {
+    "target": 155,
+    "registered": 155,
+    "baseline": 159,
+    "units": 314,
+    "kind": "bounded-teaching-models",
+    "groups": [
+      {
+        "id": "A",
+        "name": "数学・線形代数・数値解析",
+        "course": "数学・数学演習・情報基礎数学・数値解析",
+        "ids": [
+          "gap-001",
+          "gap-002",
+          "gap-003",
+          "gap-004",
+          "gap-005",
+          "gap-006",
+          "gap-007",
+          "gap-008",
+          "gap-009",
+          "gap-010"
+        ]
+      },
+      {
+        "id": "B",
+        "name": "確率・統計・多変量解析",
+        "course": "確率・統計・多変量解析・データ線形分析法",
+        "ids": [
+          "gap-011",
+          "gap-012",
+          "gap-013",
+          "gap-014",
+          "gap-015",
+          "gap-016",
+          "gap-017"
+        ]
+      },
+      {
+        "id": "C",
+        "name": "離散数学・論理・計算理論",
+        "course": "情報基礎数学・離散数学・計算機科学入門",
+        "ids": [
+          "gap-018",
+          "gap-019",
+          "gap-020",
+          "gap-021",
+          "gap-022",
+          "gap-023",
+          "gap-024",
+          "gap-025",
+          "gap-026",
+          "gap-027"
+        ]
+      },
+      {
+        "id": "D",
+        "name": "情報理論・符号・データ表現",
+        "course": "情報理論・計算機科学入門",
+        "ids": [
+          "gap-028",
+          "gap-029",
+          "gap-030",
+          "gap-031",
+          "gap-032",
+          "gap-033",
+          "gap-034"
+        ]
+      },
+      {
+        "id": "E",
+        "name": "プログラミング・オブジェクト指向",
+        "course": "プログラミング言語・プログラミング演習・オブジェクト指向論",
+        "ids": [
+          "gap-035",
+          "gap-036",
+          "gap-037",
+          "gap-038",
+          "gap-039",
+          "gap-040",
+          "gap-041",
+          "gap-042"
+        ]
+      },
+      {
+        "id": "F",
+        "name": "データ構造・アルゴリズム",
+        "course": "データ構造とアルゴリズム・コンピュータプログラミング論",
+        "ids": [
+          "gap-043",
+          "gap-044",
+          "gap-045",
+          "gap-046",
+          "gap-047",
+          "gap-048",
+          "gap-049",
+          "gap-050",
+          "gap-051"
+        ]
+      },
+      {
+        "id": "G",
+        "name": "言語処理系・システムソフトウェア",
+        "course": "言語処理系・システムソフトウェア構成論",
+        "ids": [
+          "gap-052",
+          "gap-053",
+          "gap-054",
+          "gap-055",
+          "gap-056",
+          "gap-057",
+          "gap-058"
+        ]
+      },
+      {
+        "id": "H",
+        "name": "電気電子・論理回路",
+        "course": "電気電子回路・論理回路・計算機構成論",
+        "ids": [
+          "gap-059",
+          "gap-060",
+          "gap-061",
+          "gap-062",
+          "gap-063",
+          "gap-064",
+          "gap-065"
+        ]
+      },
+      {
+        "id": "I",
+        "name": "計算機アーキテクチャ",
+        "course": "計算機構成論・計算機アーキテクチャ",
+        "ids": [
+          "gap-066",
+          "gap-067",
+          "gap-068",
+          "gap-069",
+          "gap-070",
+          "gap-071",
+          "gap-072",
+          "gap-073"
+        ]
+      },
+      {
+        "id": "J",
+        "name": "OS・並行・並列処理",
+        "course": "オペレーティングシステム・システムソフトウェア構成論",
+        "ids": [
+          "gap-074",
+          "gap-075",
+          "gap-076",
+          "gap-077",
+          "gap-078",
+          "gap-079",
+          "gap-080",
+          "gap-081"
+        ]
+      },
+      {
+        "id": "K",
+        "name": "分散システム",
+        "course": "分散システム・情報通信ネットワーク",
+        "ids": [
+          "gap-082",
+          "gap-083",
+          "gap-084",
+          "gap-085",
+          "gap-086",
+          "gap-087"
+        ]
+      },
+      {
+        "id": "L",
+        "name": "データモデル・データベース",
+        "course": "データモデル論・データベース",
+        "ids": [
+          "gap-088",
+          "gap-089",
+          "gap-090",
+          "gap-091",
+          "gap-092",
+          "gap-093",
+          "gap-094"
+        ]
+      },
+      {
+        "id": "M",
+        "name": "ネットワーク・情報通信",
+        "course": "コンピュータネットワーク・インターネット技術・情報通信ネットワーク",
+        "ids": [
+          "gap-095",
+          "gap-096",
+          "gap-097",
+          "gap-098",
+          "gap-099",
+          "gap-100",
+          "gap-101",
+          "gap-102",
+          "gap-103",
+          "gap-104",
+          "gap-105",
+          "gap-106",
+          "gap-107",
+          "gap-108"
+        ]
+      },
+      {
+        "id": "N",
+        "name": "セキュリティ・暗号",
+        "course": "ネットワークセキュリティ・システムセキュリティ・暗号理論",
+        "ids": [
+          "gap-109",
+          "gap-110",
+          "gap-111",
+          "gap-112",
+          "gap-113",
+          "gap-114",
+          "gap-115",
+          "gap-116",
+          "gap-117",
+          "gap-118",
+          "gap-119",
+          "gap-120",
+          "gap-121"
+        ]
+      },
+      {
+        "id": "O",
+        "name": "AI・データサイエンス・自然言語処理",
+        "course": "人工知能・データサイエンス・自然言語処理",
+        "ids": [
+          "gap-122",
+          "gap-123",
+          "gap-124",
+          "gap-125",
+          "gap-126",
+          "gap-127",
+          "gap-128",
+          "gap-129",
+          "gap-130",
+          "gap-131",
+          "gap-132"
+        ]
+      },
+      {
+        "id": "P",
+        "name": "信号処理・画像・音・CG",
+        "course": "フーリエ解析・デジタル信号処理・コンピュータグラフィックス",
+        "ids": [
+          "gap-133",
+          "gap-134",
+          "gap-135",
+          "gap-136",
+          "gap-137",
+          "gap-138",
+          "gap-139"
+        ]
+      },
+      {
+        "id": "Q",
+        "name": "IoT・組み込み・制御",
+        "course": "IoT・電気電子回路・開発演習",
+        "ids": [
+          "gap-140",
+          "gap-141",
+          "gap-142",
+          "gap-143"
+        ]
+      },
+      {
+        "id": "R",
+        "name": "ソフトウェア工学・HCI・倫理・研究",
+        "course": "ソフトウェア工学・ユーザビリティ工学・ヒューマンインタフェース・情報倫理と情報技術",
+        "ids": [
+          "gap-144",
+          "gap-145",
+          "gap-146",
+          "gap-147",
+          "gap-148",
+          "gap-149",
+          "gap-150",
+          "gap-151",
+          "gap-152",
+          "gap-153"
+        ]
+      },
+      {
+        "id": "S",
+        "name": "Webアプリケーション",
+        "course": "インターネット技術・プログラミング演習・開発演習",
+        "ids": [
+          "gap-154",
+          "gap-155"
+        ]
+      }
+    ],
+    "entries": [
+      {
+        "number": 1,
+        "id": "gap-001",
+        "tag": "GAP-001",
+        "title": "ベクトル空間・基底・直交への分解",
+        "group": "A",
+        "area": "C03",
+        "scope": "2次元実ベクトル。線形結合、階数、直交射影、Gram–Schmidtを実計算します。抽象ベクトル空間の一般証明は解説で区別します。",
+        "targets": [
+          {
+            "name": "張る空間",
+            "description": "矢印の線形結合で到達できる点の集合です。",
+            "formula": "w=αu+βv"
+          },
+          {
+            "name": "線形独立",
+            "description": "一方が他方の定数倍でなければ、2次元で独立です。",
+            "formula": "det[u v]≠0"
+          },
+          {
+            "name": "内積・直交射影",
+            "description": "内積で同じ方向の成分を取り出します。",
+            "formula": "projᵤv=(u·v)/(u·u) u"
+          },
+          {
+            "name": "Gram–Schmidt",
+            "description": "射影を引いて直交する方向を作ります。",
+            "formula": "v⊥=v−projᵤv"
+          }
+        ]
+      },
+      {
+        "number": 2,
+        "id": "gap-002",
+        "tag": "GAP-002",
+        "title": "連立一次方程式・掃き出し法・逆行列",
+        "group": "A",
+        "area": "C03",
+        "scope": "最大5元の実行列。部分ピボット選択つきGauss–Jordan法。1e−10の数値しきい値を使い、厳密な記号計算ではありません。",
+        "targets": [
+          {
+            "name": "拡大係数行列",
+            "description": "係数と右辺を並べ、同じ行操作を両方へ適用します。",
+            "formula": "[A | b]"
+          },
+          {
+            "name": "階数",
+            "description": "独立した制約の数です。未知数の数と比較します。",
+            "formula": "rank(A)"
+          },
+          {
+            "name": "矛盾",
+            "description": "係数がすべて0なのに右辺が非零なら解はありません。",
+            "formula": "0=b, b≠0"
+          },
+          {
+            "name": "逆行列",
+            "description": "単位行列を横に置き、同じ操作を続けて求めます。",
+            "formula": "[A|I] → [I|A⁻¹]"
+          }
+        ]
+      },
+      {
+        "number": 3,
+        "id": "gap-003",
+        "tag": "GAP-003",
+        "title": "固有値・固有ベクトル・対角化",
+        "group": "A",
+        "area": "C03",
+        "scope": "2×2実対称行列の固有分解と反復。対称行列では直交基底を選べます。非対称・複素固有値・Jordan標準形はこの操作モデルの対象外です。",
+        "targets": [
+          {
+            "name": "固有対",
+            "description": "変換しても同一直線上に残る非零ベクトルと倍率です。",
+            "formula": "Av=λv"
+          },
+          {
+            "name": "直交対角化",
+            "description": "実対称行列は直交する固有ベクトルで分解できます。",
+            "formula": "A=QΛQᵀ"
+          },
+          {
+            "name": "反復",
+            "description": "方向ごとの倍率が累乗されます。",
+            "formula": "Aᵏv=λᵏv"
+          }
+        ]
+      },
+      {
+        "number": 4,
+        "id": "gap-004",
+        "tag": "GAP-004",
+        "title": "極限・連続・微分法・テイラー近似",
+        "group": "A",
+        "area": "C03",
+        "scope": "x²、sin x、exp x、sin(x²)の差分と導関数。0を中心とするsin/expのTaylor多項式。段差・絶対値の片側極限も選べます。",
+        "targets": [
+          {
+            "name": "極限と連続",
+            "description": "左右から近づけた関数値が一致し、その点の値とも一致するかを調べます。",
+            "formula": ""
+          },
+          {
+            "name": "導関数",
+            "description": "変化量の比の極限です。",
+            "formula": "f′(x)=lim h→0 (f(x+h)−f(x))/h"
+          },
+          {
+            "name": "連鎖律",
+            "description": "合成関数の内側と外側の変化率を掛けます。",
+            "formula": "(sin(x²))′=cos(x²)·2x"
+          },
+          {
+            "name": "Taylor近似",
+            "description": "導関数から多項式を作り、残差を調べます。",
+            "formula": "eˣ≈Σ xᵏ/k!"
+          }
+        ]
+      },
+      {
+        "number": 5,
+        "id": "gap-005",
+        "tag": "GAP-005",
+        "title": "積分・累積量・置換と部分積分",
+        "group": "A",
+        "area": "C03",
+        "scope": "有限区間の矩形・台形・Simpson則、x²・sin x・exp x。置換の例2x cos(x²)と部分積分の例x exp xを実計算します。特異点を持つ広義積分は含みません。",
+        "targets": [
+          {
+            "name": "微積分の基本定理",
+            "description": "累積量の微分は元の関数に戻ります。",
+            "formula": "∫ₐᵇ f(x)dx=F(b)−F(a)"
+          },
+          {
+            "name": "置換積分",
+            "description": "新しい変数とその微分をそろえて置き換えます。",
+            "formula": "u=x², du=2x dx"
+          },
+          {
+            "name": "部分積分",
+            "description": "積の微分公式を積分へ使います。",
+            "formula": "∫u dv=uv−∫v du"
+          },
+          {
+            "name": "数値積分",
+            "description": "矩形・台形・放物線で局所的な形を近似します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 6,
+        "id": "gap-006",
+        "tag": "GAP-006",
+        "title": "偏微分・勾配・ヤコビ行列・重積分",
+        "group": "A",
+        "area": "C03",
+        "scope": "f(x,y)=a x²+bxy+c y²、変換T(x,y)=(x²−y²,2xy)、有限長方形の中点積分。2変数の多項式に限定します。",
+        "targets": [
+          {
+            "name": "偏微分",
+            "description": "ほかの変数を固定して微分します。",
+            "formula": "∂f/∂x=2ax+by"
+          },
+          {
+            "name": "勾配",
+            "description": "偏微分を成分とするベクトルです。",
+            "formula": "∇f=(fₓ,fᵧ)"
+          },
+          {
+            "name": "ヤコビ行列",
+            "description": "各出力が各入力にどれだけ依存するかを並べます。",
+            "formula": "Jᵢⱼ=∂Tᵢ/∂xⱼ"
+          },
+          {
+            "name": "重積分",
+            "description": "長方形の各小領域の値に面積を掛けて累積します。",
+            "formula": "Σ f(xᵢ,yⱼ) ΔxΔy"
+          }
+        ]
+      },
+      {
+        "number": 7,
+        "id": "gap-007",
+        "tag": "GAP-007",
+        "title": "複素数・オイラーの公式・振幅と位相",
+        "group": "A",
+        "area": "C03",
+        "scope": "複素平面上の積・和と複素指数。度を入力して内部はラジアンで計算します。解析関数論は含みません。",
+        "targets": [
+          {
+            "name": "直交形式",
+            "description": "横と縦の成分で数を表します。",
+            "formula": "z=a+ib"
+          },
+          {
+            "name": "極形式",
+            "description": "大きさと角度で表します。",
+            "formula": "z=r exp(iθ)"
+          },
+          {
+            "name": "オイラーの公式",
+            "description": "複素指数を三角関数へ対応させます。",
+            "formula": "exp(iθ)=cosθ+i sinθ"
+          },
+          {
+            "name": "波と位相",
+            "description": "時間に対する回転を実部で観測します。",
+            "formula": "Re[r exp(i(ωt+θ))]=r cos(ωt+θ)"
+          }
+        ]
+      },
+      {
+        "number": 8,
+        "id": "gap-008",
+        "tag": "GAP-008",
+        "title": "微分方程式・オイラー法・ルンゲクッタ法",
+        "group": "A",
+        "area": "C03",
+        "scope": "dy/dt=−kyの初期値問題。前進Eulerと古典4次Runge–Kuttaを同条件で比較します。解析解との誤差も算出します。",
+        "targets": [
+          {
+            "name": "初期値問題",
+            "description": "方程式と最初の値をセットで指定します。",
+            "formula": "y′=f(t,y), y(0)=y₀"
+          },
+          {
+            "name": "Euler法",
+            "description": "今の傾きをhだけ延長します。",
+            "formula": "yₙ₊₁=yₙ+h f(tₙ,yₙ)"
+          },
+          {
+            "name": "RK4",
+            "description": "4つの傾きを1:2:2:1で平均します。",
+            "formula": "yₙ₊₁=yₙ+h(k₁+2k₂+2k₃+k₄)/6"
+          },
+          {
+            "name": "安定性",
+            "description": "刻みが大きすぎると、本来減衰する問題でも増幅する場合があります。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 9,
+        "id": "gap-009",
+        "tag": "GAP-009",
+        "title": "数値解析・求根・補間・丸め誤差",
+        "group": "A",
+        "area": "C03",
+        "scope": "x²−aの二分法・Newton法、3点Lagrange補間、倍精度の桁落ち、対称2×2行列の条件数。入力の範囲を限定して停止・失敗も表示します。",
+        "targets": [
+          {
+            "name": "二分法",
+            "description": "根を挟んだ区間を保って幅を半分にします。",
+            "formula": ""
+          },
+          {
+            "name": "Newton法",
+            "description": "接線から次の近似値を求めます。",
+            "formula": "xₙ₊₁=xₙ−f(xₙ)/f′(xₙ)"
+          },
+          {
+            "name": "補間",
+            "description": "既知の点を通る多項式を構成します。",
+            "formula": ""
+          },
+          {
+            "name": "桁落ち",
+            "description": "近い値を引いたとき有効桁が失われます。",
+            "formula": ""
+          },
+          {
+            "name": "条件数",
+            "description": "問題自体が摂動を増幅しやすいかを表します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 10,
+        "id": "gap-010",
+        "tag": "GAP-010",
+        "title": "最適化・勾配・制約・局所解",
+        "group": "A",
+        "area": "C03",
+        "scope": "2変数の二次目的関数、箱制約への射影、2変数LPの頂点列挙、多峰性1次元関数の勾配降下を実計算します。一般の非凸最適化ソルバーではありません。",
+        "targets": [
+          {
+            "name": "目的関数",
+            "description": "何を小さくまたは大きくするかを数式で定めます。",
+            "formula": ""
+          },
+          {
+            "name": "制約集合",
+            "description": "解が満たさなければならない条件です。",
+            "formula": ""
+          },
+          {
+            "name": "射影勾配法",
+            "description": "一度動いた点を許される集合へ戻します。",
+            "formula": "x←ΠC(x−η∇f)"
+          },
+          {
+            "name": "線形計画",
+            "description": "線形の目的と不等式から実行可能な頂点を比較します。",
+            "formula": ""
+          },
+          {
+            "name": "局所解",
+            "description": "近くで最良でも、別の領域によりよい点があり得ます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 11,
+        "id": "gap-011",
+        "tag": "GAP-011",
+        "title": "平均・分散・共分散・相関",
+        "group": "B",
+        "area": "C03",
+        "scope": "2〜60個の観測値。母分散と不偏分散、Pearson相関、四分位は上下半分の中央値として計算。分散0の相関は未定義と表示します。",
+        "targets": [
+          {
+            "name": "平均と中央値",
+            "description": "中心を表す別の量で、外れ値の影響も異なります。",
+            "formula": ""
+          },
+          {
+            "name": "母分散・不偏分散",
+            "description": "記述する集団と、標本から母分散を推定する場合で分母を区別します。",
+            "formula": "Σ(x−x̄)²/n または / (n−1)"
+          },
+          {
+            "name": "共分散",
+            "description": "同じ観測の偏差の積を集計します。",
+            "formula": "cov(X,Y)=Σ(x−x̄)(y−ȳ)/(n−1)"
+          },
+          {
+            "name": "相関",
+            "description": "単位を除いた線形な関係の強さです。",
+            "formula": "r=cov(X,Y)/(sX sY)"
+          }
+        ]
+      },
+      {
+        "number": 12,
+        "id": "gap-012",
+        "tag": "GAP-012",
+        "title": "確率変数・二項分布・ポアソン分布・正規分布",
+        "group": "B",
+        "area": "C03",
+        "scope": "二項分布n≤30、ポアソンλ≤15、正規μ=0・σ>0を実計算。ポアソンの図は有限区間で、区間外の確率を別に表示します。",
+        "targets": [
+          {
+            "name": "確率質量と密度",
+            "description": "離散では和、連続では積分で全体が1になります。",
+            "formula": ""
+          },
+          {
+            "name": "二項分布",
+            "description": "独立なn回の試行で成功する回数です。",
+            "formula": "P(X=k)=C(n,k)pᵏ(1−p)ⁿ⁻ᵏ"
+          },
+          {
+            "name": "ポアソン分布",
+            "description": "一定率で独立に生じる件数のモデルです。",
+            "formula": "P(X=k)=exp(−λ)λᵏ/k!"
+          },
+          {
+            "name": "正規分布",
+            "description": "中心と標準偏差で定まる連続分布です。",
+            "formula": ""
+          },
+          {
+            "name": "期待値・分散",
+            "description": "平均的な位置と二乗した広がりです。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 13,
+        "id": "gap-013",
+        "tag": "GAP-013",
+        "title": "同時分布・独立性・全確率・ベイズ更新",
+        "group": "B",
+        "area": "C03",
+        "scope": "2×2の同時確率表を非負の重みから正規化します。確率0の条件付き確率は未定義と表示します。",
+        "targets": [
+          {
+            "name": "同時分布",
+            "description": "複数の変数の組に確率を割り当てます。",
+            "formula": ""
+          },
+          {
+            "name": "周辺化",
+            "description": "関心のない変数のすべての値について足します。",
+            "formula": "P(X=x)=Σy P(x,y)"
+          },
+          {
+            "name": "独立",
+            "description": "すべての組で同時確率が周辺確率の積に一致します。",
+            "formula": "P(x,y)=P(x)P(y)"
+          },
+          {
+            "name": "全確率とベイズ",
+            "description": "条件ごとに分けて足し、条件の向きを入れ替えます。",
+            "formula": "P(X|Y)=P(Y|X)P(X)/P(Y)"
+          }
+        ]
+      },
+      {
+        "number": 14,
+        "id": "gap-014",
+        "tag": "GAP-014",
+        "title": "大数の法則・中心極限定理・標本平均",
+        "group": "B",
+        "area": "C03",
+        "scope": "一様・Bernoulli・指数分布からseed固定で標本を生成。標本平均の経験分布と理論分散を比較します。定理の一般証明ではありません。",
+        "targets": [
+          {
+            "name": "標本平均",
+            "description": "1つの標本内で平均を取ります。",
+            "formula": "X̄=ΣXᵢ/n"
+          },
+          {
+            "name": "大数の法則",
+            "description": "標本数を増やすと平均が安定していきます。",
+            "formula": ""
+          },
+          {
+            "name": "中心極限定理",
+            "description": "平均を中心化・尺度調整した分布を調べます。",
+            "formula": "√n(X̄−μ)/σ"
+          },
+          {
+            "name": "平均の標準誤差",
+            "description": "独立で同じ分布ならσ/√nです。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 15,
+        "id": "gap-015",
+        "tag": "GAP-015",
+        "title": "尤度・最尤推定・信頼区間",
+        "group": "B",
+        "area": "C03",
+        "scope": "Bernoulli比率の尤度・MLE・Wilson区間、正規母集団の平均のt区間。信頼係数90〜99%。事前分布を用いるBayes信用区間とは別です。",
+        "targets": [
+          {
+            "name": "尤度",
+            "description": "データを固定し、パラメータを動かして比較します。",
+            "formula": "L(p)∝pᵏ(1−p)ⁿ⁻ᵏ"
+          },
+          {
+            "name": "最尤推定",
+            "description": "尤度を最大にする値を求めます。",
+            "formula": "p̂=k/n"
+          },
+          {
+            "name": "Wilson区間",
+            "description": "比率の推定で正規近似の単純な幅より安定した区間を構成します。",
+            "formula": ""
+          },
+          {
+            "name": "t区間",
+            "description": "母分散未知の正規標本の平均について作ります。",
+            "formula": "x̄±t·s/√n"
+          }
+        ]
+      },
+      {
+        "number": 16,
+        "id": "gap-016",
+        "tag": "GAP-016",
+        "title": "仮説検定・p値・t検定・カイ二乗検定",
+        "group": "B",
+        "area": "C03",
+        "scope": "1標本両側t検定と2×2分割表の独立性のPearsonカイ二乗検定（連続性補正なし）。数値CDFを使用し、小さい期待度数には注意を表示します。",
+        "targets": [
+          {
+            "name": "帰無仮説",
+            "description": "検定統計量の分布を考えるために置く仮説です。",
+            "formula": ""
+          },
+          {
+            "name": "第一種・第二種の誤り",
+            "description": "真の帰無仮説を棄却する誤りと、偽なのに棄却しない誤りです。",
+            "formula": ""
+          },
+          {
+            "name": "t検定",
+            "description": "標本の標準誤差で平均差を尺度化します。",
+            "formula": "t=(x̄−μ₀)/(s/√n)"
+          },
+          {
+            "name": "独立性の検定",
+            "description": "独立なら期待される度数と比較します。",
+            "formula": "χ²=Σ(O−E)²/E"
+          },
+          {
+            "name": "p値",
+            "description": "帰無仮説の下で、今回以上に極端な結果の確率です。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 17,
+        "id": "gap-017",
+        "tag": "GAP-017",
+        "title": "重回帰・主成分分析・SVD・因子分析",
+        "group": "B",
+        "area": "C03",
+        "scope": "最大12行×5列の実データ。重回帰は最終列を目的変数として切片つき最小二乗、PCAは共分散行列、SVDは実固有分解、1因子の主因子法は相関行列の反復近似です。",
+        "targets": [
+          {
+            "name": "最小二乗の重回帰",
+            "description": "複数の説明変数から残差二乗和を小さくする係数を求めます。",
+            "formula": "β=(XᵀX)⁻¹Xᵀy"
+          },
+          {
+            "name": "PCA",
+            "description": "共分散行列の固有ベクトルへ座標を移します。",
+            "formula": ""
+          },
+          {
+            "name": "SVD",
+            "description": "行列を左右の方向と特異値に分けます。",
+            "formula": "A=UΣVᵀ"
+          },
+          {
+            "name": "因子分析",
+            "description": "共通因子と独自分散で相関をモデル化します。",
+            "formula": "R≈λλᵀ+Ψ"
+          },
+          {
+            "name": "前処理",
+            "description": "中心化・標準化の違いを明示します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 18,
+        "id": "gap-018",
+        "tag": "GAP-018",
+        "title": "命題論理・述語論理・含意と量化子",
+        "group": "C",
+        "area": "C02",
+        "scope": "最大5命題の真理値表、論理式の同値判定、有限領域0〜nの量化。整数全体についての証明ではありません。式は専用パーサで解析します。",
+        "targets": [
+          {
+            "name": "論理結合子",
+            "description": "否定、連言、選言を真理値から計算します。",
+            "formula": "!, &&, ||"
+          },
+          {
+            "name": "含意・同値",
+            "description": "成り立つ条件の向きを表します。",
+            "formula": "a→b ≡ ¬a∨b"
+          },
+          {
+            "name": "必要・十分条件",
+            "description": "a→bならaはbの十分条件、bはaの必要条件です。",
+            "formula": ""
+          },
+          {
+            "name": "量化子",
+            "description": "全称と存在では、偽または真の1例が果たす役割が異なります。",
+            "formula": "∀x P(x), ∃x P(x)"
+          }
+        ]
+      },
+      {
+        "number": 19,
+        "id": "gap-019",
+        "tag": "GAP-019",
+        "title": "証明・数学的帰納法・ループ不変条件",
+        "group": "C",
+        "area": "C02",
+        "scope": "自然数和の二次多項式に対する帰納法の係数照合、ループ不変条件、偶奇の対偶証明、√2の背理法を段階表示。任意の証明を自動検証する定理証明器ではありません。",
+        "targets": [
+          {
+            "name": "直接証明",
+            "description": "前提と定義から結論へ論理的に進みます。",
+            "formula": ""
+          },
+          {
+            "name": "対偶",
+            "description": "a→bと¬b→¬aは同値ですが、逆b→aとは違います。",
+            "formula": ""
+          },
+          {
+            "name": "背理法",
+            "description": "結論の否定を仮定して矛盾を導きます。",
+            "formula": ""
+          },
+          {
+            "name": "数学的帰納法",
+            "description": "出発点と任意の1歩をつなぎます。",
+            "formula": "P(0) ∧ ∀n(P(n)→P(n+1))"
+          },
+          {
+            "name": "不変条件",
+            "description": "開始・維持・終了条件の3段階でプログラムを説明します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 20,
+        "id": "gap-020",
+        "tag": "GAP-020",
+        "title": "関係・同値類・順序・写像",
+        "group": "C",
+        "area": "C02",
+        "scope": "集合{1,2,3,4}上の関係の全組合せ検査。剰余関係・整除関係・ユーザー指定関係と、4要素の写像を扱います。",
+        "targets": [
+          {
+            "name": "同値関係",
+            "description": "区別しない要素を同じ類へまとめます。",
+            "formula": ""
+          },
+          {
+            "name": "半順序",
+            "description": "比較できない組を許す順序です。",
+            "formula": ""
+          },
+          {
+            "name": "ハッセ図",
+            "description": "半順序の直接の上下関係だけを描きます。",
+            "formula": ""
+          },
+          {
+            "name": "単射・全射・全単射",
+            "description": "行き先の重複と、到達しない要素を別に確認します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 21,
+        "id": "gap-021",
+        "tag": "GAP-021",
+        "title": "組合せ・包除原理・鳩の巣原理・漸化式",
+        "group": "C",
+        "area": "C02",
+        "scope": "n≤10の順列・組合せ、2集合の包除、有限の箱への配置、Fibonacci漸化式。巨大な集合の列挙は行いません。",
+        "targets": [
+          {
+            "name": "順列・組合せ",
+            "description": "順番を区別するかを問題の意味から決めます。",
+            "formula": "P(n,k)=n!/(n−k)!, C(n,k)=P(n,k)/k!"
+          },
+          {
+            "name": "包除原理",
+            "description": "重複して数えた部分を調整します。",
+            "formula": "|A∪B|=|A|+|B|−|A∩B|"
+          },
+          {
+            "name": "鳩の巣原理",
+            "description": "n個をk箱へ入れると少なくとも1箱にceil(n/k)個です。",
+            "formula": ""
+          },
+          {
+            "name": "漸化式",
+            "description": "小さい問題の値から次の値を定義します。",
+            "formula": "Fₙ=Fₙ₋₁+Fₙ₋₂"
+          }
+        ]
+      },
+      {
+        "number": 22,
+        "id": "gap-022",
+        "tag": "GAP-022",
+        "title": "グラフの表現・連結性・木と閉路",
+        "group": "C",
+        "area": "C02",
+        "scope": "12頂点・40辺以下のグラフ。隣接行列、隣接リスト、到達性、無向連結成分、閉路、木の条件を実計算します。",
+        "targets": [
+          {
+            "name": "隣接行列",
+            "description": "頂点の組ごとの辺を表で持ちます。",
+            "formula": ""
+          },
+          {
+            "name": "隣接リスト",
+            "description": "頂点ごとの接続先を並べます。",
+            "formula": ""
+          },
+          {
+            "name": "連結と到達性",
+            "description": "辺の向きを守って目的の頂点へ進めるかを調べます。",
+            "formula": ""
+          },
+          {
+            "name": "木と閉路",
+            "description": "連結性と循環の有無を同時に確認します。",
+            "formula": "無向連結木なら |E|=|V|−1"
+          }
+        ]
+      },
+      {
+        "number": 23,
+        "id": "gap-023",
+        "tag": "GAP-023",
+        "title": "計算量・漸化式・償却解析",
+        "group": "C",
+        "area": "C02",
+        "scope": "線形・二分探索・二重ループ・分割統治の再帰コスト・倍増配列の移動回数を数えます。実機の秒数や有限測定だけによる漸近証明とは区別します。",
+        "targets": [
+          {
+            "name": "漸近記法",
+            "description": "十分大きい入力での上界・下界・同程度を定数倍の範囲で表します。",
+            "formula": ""
+          },
+          {
+            "name": "最悪と平均",
+            "description": "入力による差と入力分布の前提を明示します。",
+            "formula": ""
+          },
+          {
+            "name": "漸化式",
+            "description": "再帰の部分問題と、その場の仕事を分けます。",
+            "formula": "T(n)=2T(n/2)+n"
+          },
+          {
+            "name": "償却解析",
+            "description": "高価な操作がまれに起きる列の総費用を割ります。",
+            "formula": "倍増配列の追加は償却O(1)"
+          }
+        ]
+      },
+      {
+        "number": 24,
+        "id": "gap-024",
+        "tag": "GAP-024",
+        "title": "正規表現・ε-NFA・DFA・最小化",
+        "group": "C",
+        "area": "C02",
+        "scope": "0,1,a,bの正規表現、選択|・連接・反復*・ε。Thompson法、ε閉包、subset構成、分割精緻化による最小化を実計算。DFA64状態・入力24文字まで。",
+        "targets": [
+          {
+            "name": "正規表現",
+            "description": "連接・選択・反復から文字列集合を表します。",
+            "formula": ""
+          },
+          {
+            "name": "ε閉包",
+            "description": "文字を消費せず到達できる状態を全部集めます。",
+            "formula": ""
+          },
+          {
+            "name": "集合構成",
+            "description": "可能なNFA状態の集合をDFAの状態にします。",
+            "formula": ""
+          },
+          {
+            "name": "最小化",
+            "description": "将来の入力で区別できないDFA状態をまとめます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 25,
+        "id": "gap-025",
+        "tag": "GAP-025",
+        "title": "文脈自由文法・導出・スタック・曖昧性",
+        "group": "C",
+        "area": "C02",
+        "scope": "文法S→(S)S|εによる括弧列の導出とPDA、4個以下の数の+/*式に対する全二分構文木を列挙します。一般のCFG解析器ではありません。",
+        "targets": [
+          {
+            "name": "文脈自由文法",
+            "description": "非終端記号を生成規則で置き換えます。",
+            "formula": "S→(S)S | ε"
+          },
+          {
+            "name": "導出",
+            "description": "規則適用を順に示して終端文字列へ進みます。",
+            "formula": ""
+          },
+          {
+            "name": "PDA",
+            "description": "状態に加えてスタックを持つ計算モデルです。",
+            "formula": ""
+          },
+          {
+            "name": "曖昧性",
+            "description": "同じ文字列に複数の構文木が対応する場合です。",
+            "formula": "E→E+E | E*E | number"
+          }
+        ]
+      },
+      {
+        "number": 26,
+        "id": "gap-026",
+        "tag": "GAP-026",
+        "title": "チューリングマシン・停止・決定不能性",
+        "group": "C",
+        "area": "C02",
+        "scope": "0/1/空白を使う決定的1テープ機械を最大80手実行。有限テープの非空白領域と完全な配置の反復を検査。一般の停止問題を判定するものではありません。",
+        "targets": [
+          {
+            "name": "配置",
+            "description": "状態・ヘッド位置・テープ内容をまとめた完全な状況です。",
+            "formula": ""
+          },
+          {
+            "name": "停止と実行上限",
+            "description": "停止を観測した結果と、上限で中断した結果を分けます。",
+            "formula": ""
+          },
+          {
+            "name": "同一配置の反復",
+            "description": "決定的な機械で完全配置が繰り返せば以後もループします。",
+            "formula": ""
+          },
+          {
+            "name": "決定不能性",
+            "description": "すべてを判定する機械を仮定し、その判定と逆に動く機械を構成すると矛盾する、という考え方です。",
+            "formula": ""
+          },
+          {
+            "name": "帰着",
+            "description": "ある問題の判定器が別の問題の判定器を作れるなら、困難さを移せます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 27,
+        "id": "gap-027",
+        "tag": "GAP-027",
+        "title": "P・NP・証明書・帰着の考え方",
+        "group": "C",
+        "area": "C02",
+        "scope": "最大8頂点の彩色全探索と証明書検証、最大8変数の3CNF充足全探索、3SATから頂点被覆への標準的なガジェットを具体例で構成します。例の実行時間で困難性を証明しません。",
+        "targets": [
+          {
+            "name": "P",
+            "description": "入力長の多項式に収まる手順で解ける決定問題です。",
+            "formula": ""
+          },
+          {
+            "name": "NPと証明書",
+            "description": "肯定の証拠を多項式時間で検証できます。",
+            "formula": ""
+          },
+          {
+            "name": "NP完全",
+            "description": "NPに属し、NPの各問題が多項式時間で帰着できる問題です。",
+            "formula": ""
+          },
+          {
+            "name": "3SAT→頂点被覆",
+            "description": "変数の2頂点、節の三角形、対応するリテラルへの辺を構成します。",
+            "formula": ""
+          },
+          {
+            "name": "探索と検証",
+            "description": "候補数と1候補を確かめる仕事を分けて数えます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 28,
+        "id": "gap-028",
+        "tag": "GAP-028",
+        "title": "情報源符号化の限界・平均符号長・ブロック化",
+        "group": "D",
+        "area": "C01",
+        "scope": "独立な2記号情報源の1〜6記号ブロックにHuffman符号を構成し、最大64語を実計算します。辞書や確率表を送る費用は含めず、符号化定理と有限例を区別します。",
+        "targets": [
+          {
+            "name": "平均符号長",
+            "description": "各符号語の長さを、その語の確率で重み付けします。",
+            "formula": "L=Σpᵢlᵢ"
+          },
+          {
+            "name": "エントロピーと下限",
+            "description": "一意復号可能な符号の平均長は情報源のエントロピーを下回りません。",
+            "formula": "H≤L"
+          },
+          {
+            "name": "ブロック化",
+            "description": "独立な記号をb個まとめ、1記号あたりへ割り戻します。",
+            "formula": "H≤Lblock/b<H+1/b"
+          },
+          {
+            "name": "冗長度",
+            "description": "エントロピーを超える平均の符号長です。",
+            "formula": "L/b−H"
+          }
+        ]
+      },
+      {
+        "number": 29,
+        "id": "gap-029",
+        "tag": "GAP-029",
+        "title": "一般の通信路・入力分布・容量と符号化率",
+        "group": "D",
+        "area": "C01",
+        "scope": "2入力・2〜4出力の離散無記憶通信路。相互情報量を計算し、凹な1変数関数を三分探索して容量の数値近似を求めます。有限長の最適符号を生成するものではありません。",
+        "targets": [
+          {
+            "name": "通信路行列",
+            "description": "入力を固定したときの出力の条件付き確率です。",
+            "formula": "Wᵢⱼ=P(Y=j|X=i)"
+          },
+          {
+            "name": "相互情報量",
+            "description": "出力分布と条件付き分布を比較します。",
+            "formula": "I(X;Y)=H(Y)−Σx P(x)H(Y|x)"
+          },
+          {
+            "name": "通信路容量",
+            "description": "入力分布を選んで相互情報量を最大にします。",
+            "formula": "C=max P(X) I(X;Y)"
+          },
+          {
+            "name": "符号化率と定理",
+            "description": "無記憶通信路の条件下で、容量と信頼できる伝送率の関係を考えます。",
+            "formula": "R<C と R>C は異なる領域"
+          }
+        ]
+      },
+      {
+        "number": 30,
+        "id": "gap-030",
+        "tag": "GAP-030",
+        "title": "Sardinas–Patterson法と一意的復号可能性",
+        "group": "D",
+        "area": "C01",
+        "scope": "2〜6個、各1〜8bitの符号語について、語尾の到達可能性を全探索するSardinas–Patterson判定。空語の符号化と非2元符号は入力範囲外です。",
+        "targets": [
+          {
+            "name": "瞬時復号可能",
+            "description": "符号語が互いの接頭辞にならない場合、遅れず区切れます。",
+            "formula": ""
+          },
+          {
+            "name": "一意的復号可能",
+            "description": "符号語を連結したすべての列について元の記号列が一意です。",
+            "formula": ""
+          },
+          {
+            "name": "残余語尾",
+            "description": "区切りの食い違いを語尾の集合へ圧縮して調べます。",
+            "formula": ""
+          },
+          {
+            "name": "停止条件",
+            "description": "空語へ合流すれば非一意、新しい語尾がなくなれば一意です。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 31,
+        "id": "gap-031",
+        "tag": "GAP-031",
+        "title": "最小距離・誤り検出・SECDEDと訂正の限界",
+        "group": "D",
+        "area": "C01",
+        "scope": "4情報bitのパリティ符号・3重反復・Hamming(7,4)・拡張Hamming(8,4)。全16符号語の最小距離、受信語からの復号と実験側の正解比較を分離します。",
+        "targets": [
+          {
+            "name": "最小距離",
+            "description": "符号語のすべての異なる組で距離を比べ、最小値を取ります。",
+            "formula": ""
+          },
+          {
+            "name": "検出と訂正",
+            "description": "間違いを知らせることと、正しい語を一意に復元することは異なります。",
+            "formula": "検出≤d−1, 訂正≤floor((d−1)/2)"
+          },
+          {
+            "name": "SECDED",
+            "description": "単一誤り訂正・二重誤り検出を行う拡張符号です。",
+            "formula": ""
+          },
+          {
+            "name": "受信側と実験側",
+            "description": "復号の判断は受信語だけ、正解比較は実験の評価として別に示します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 32,
+        "id": "gap-032",
+        "tag": "GAP-032",
+        "title": "巡回符号・BCH・Reed–Solomon・畳込み符号",
+        "group": "D",
+        "area": "C01",
+        "scope": "CRC生成多項式1011、BCH(15,7,5)の111010001、F7上の評価型RS(5,3)、拘束長3・生成器(7,5)の終端付き畳込み符号。BCH/RSは小さい全符号語による最近傍復号、畳込み符号はViterbiを実計算します。",
+        "targets": [
+          {
+            "name": "巡回符号とGF(2)",
+            "description": "XORで多項式の剰余を計算し、生成多項式の倍数を作ります。",
+            "formula": ""
+          },
+          {
+            "name": "BCH",
+            "description": "指定した有限体の根を持つ多項式で設計される符号です。ここでは二重誤り訂正の(15,7)を扱います。",
+            "formula": ""
+          },
+          {
+            "name": "Reed–Solomon",
+            "description": "異なる評価点で次数k−1以下の多項式の値を送ります。",
+            "formula": "d=n−k+1"
+          },
+          {
+            "name": "畳込み符号",
+            "description": "過去の入力を保持する状態によって冗長な出力を作ります。",
+            "formula": ""
+          },
+          {
+            "name": "Viterbi復号",
+            "description": "各状態へ至る最小距離の経路を逐次残します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 33,
+        "id": "gap-033",
+        "tag": "GAP-033",
+        "title": "LZ78の辞書圧縮・算術符号化と復号",
+        "group": "D",
+        "area": "C01",
+        "scope": "最大12文字、アルファベットABCのLZ78と静的算術符号化。算術符号はBigIntの有理区間とdyadic区間で厳密に生成・復号します。文字数・確率表・辞書形式などのメタデータ費用は別です。",
+        "targets": [
+          {
+            "name": "LZ78",
+            "description": "すでに知る並びを辞書番号で参照して次の文字を追加します。",
+            "formula": ""
+          },
+          {
+            "name": "辞書の再構成",
+            "description": "復号側も同じ順序で辞書を作ります。",
+            "formula": ""
+          },
+          {
+            "name": "算術符号化",
+            "description": "各文字で現在の区間を確率の比に分けます。",
+            "formula": ""
+          },
+          {
+            "name": "厳密な区間",
+            "description": "整数の分子・分母で計算して丸めによる区間崩壊を避けます。",
+            "formula": ""
+          },
+          {
+            "name": "付加情報",
+            "description": "アルファベットや長さを共有しないと復号できません。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 34,
+        "id": "gap-034",
+        "tag": "GAP-034",
+        "title": "ビット演算・固定小数点・桁あふれ・エンディアン",
+        "group": "D",
+        "area": "C01",
+        "scope": "8/16bit整数演算、符号付き8bit固定小数点、32bitのバイト順、UnicodeのNFC/NFD/NFKC正規化を実計算。JavaScriptの文字数とUnicode文字の見え方も区別します。",
+        "targets": [
+          {
+            "name": "ビット演算",
+            "description": "AND・OR・XOR・シフトは位置ごとの規則で計算します。",
+            "formula": ""
+          },
+          {
+            "name": "固定小数点",
+            "description": "整数を一定倍率で解釈し、小数を表します。",
+            "formula": "x≈integer/2ᶠ"
+          },
+          {
+            "name": "桁あふれ",
+            "description": "保存できる幅を越えた計算値と、切り詰めた値を分けます。",
+            "formula": ""
+          },
+          {
+            "name": "エンディアン",
+            "description": "複数バイトの並ぶ順番です。",
+            "formula": ""
+          },
+          {
+            "name": "Unicode正規化",
+            "description": "合成・分解・互換の規則でコードポイント列をそろえます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 35,
+        "id": "gap-035",
+        "tag": "GAP-035",
+        "title": "自分で書くプログラム・配列・文字列・関数",
+        "group": "E",
+        "area": "C04",
+        "scope": "教材用言語のlet/const、配列・文字列、if、while、for、関数・再帰、入出力をASTから実行。最大400文・呼出し深さ12。JavaScript全体や外部APIは実行しません。",
+        "targets": [
+          {
+            "name": "値と変数",
+            "description": "右辺を評価した後に、名前と値を結び付けます。",
+            "formula": ""
+          },
+          {
+            "name": "配列と文字列",
+            "description": "配列は変更可能、文字列は添字で読み取る値として扱います。",
+            "formula": ""
+          },
+          {
+            "name": "分岐と反復",
+            "description": "条件が決める実行経路を追います。",
+            "formula": ""
+          },
+          {
+            "name": "関数",
+            "description": "引数、局所環境、戻り値を使って処理を分けます。",
+            "formula": ""
+          },
+          {
+            "name": "入力・出力",
+            "description": "inputとprintはこの実験内だけの入出力です。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 36,
+        "id": "gap-036",
+        "tag": "GAP-036",
+        "title": "値渡し・参照の共有・コピー・スコープ",
+        "group": "E",
+        "area": "C04",
+        "scope": "教材言語の数値と配列の値渡し、浅いコピーと共有参照、ブロックスコープ、閉じた関数環境を実行して観察します。特定のC/C++ABIやポインタ演算ではありません。",
+        "targets": [
+          {
+            "name": "値渡し",
+            "description": "仮引数に値を複製しますが、参照の先の物体までは複製しません。",
+            "formula": ""
+          },
+          {
+            "name": "別名参照",
+            "description": "異なる変数が同じ配列IDへ対応する状態です。",
+            "formula": ""
+          },
+          {
+            "name": "浅いコピー",
+            "description": "配列の要素を新しい配列へコピーします。",
+            "formula": ""
+          },
+          {
+            "name": "スコープ",
+            "description": "どの宣言が名前の参照先になるかを決めます。",
+            "formula": ""
+          },
+          {
+            "name": "生存期間",
+            "description": "実行中のブロックと、参照で残る環境の寿命を区別します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 37,
+        "id": "gap-037",
+        "tag": "GAP-037",
+        "title": "クラス・インスタンス・コンストラクタ・カプセル化",
+        "group": "E",
+        "area": "C04",
+        "scope": "Counterクラスを持つ小さなオブジェクト機械。new・add・read・set・aliasの操作列を実行し、privateな値への直接更新を拒否します。任意のクラス構文のコンパイルではありません。",
+        "targets": [
+          {
+            "name": "クラス",
+            "description": "状態と操作の設計図です。",
+            "formula": ""
+          },
+          {
+            "name": "インスタンス",
+            "description": "設計図から作られた、固有の状態を持つ対象です。",
+            "formula": ""
+          },
+          {
+            "name": "コンストラクタ",
+            "description": "新しい対象の初期状態を設定します。",
+            "formula": ""
+          },
+          {
+            "name": "メソッドとthis",
+            "description": "呼出しの対象になったインスタンスを操作します。",
+            "formula": ""
+          },
+          {
+            "name": "カプセル化",
+            "description": "外部から許す操作を通じて状態の整合性を守ります。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 38,
+        "id": "gap-038",
+        "tag": "GAP-038",
+        "title": "継承・動的ディスパッチ・インターフェース・合成",
+        "group": "E",
+        "area": "C04",
+        "scope": "Shape・Rectangle・Circleの小さなクラス階層でメソッド探索を実行。インターフェースの実装確認と、図形を保持するFrameの合成呼出しを比較します。",
+        "targets": [
+          {
+            "name": "オーバーライド",
+            "description": "派生クラスが同名の操作を独自に実装します。",
+            "formula": ""
+          },
+          {
+            "name": "多態性",
+            "description": "共通の操作を、実体ごとの振る舞いに適用します。",
+            "formula": ""
+          },
+          {
+            "name": "メソッド探索",
+            "description": "実体から親へたどって実装を探します。",
+            "formula": ""
+          },
+          {
+            "name": "インターフェース",
+            "description": "どの操作を提供するかの契約で、継承関係そのものとは異なります。",
+            "formula": ""
+          },
+          {
+            "name": "合成と委譲",
+            "description": "物体の中に別の物体を保持し、その操作を呼びます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 39,
+        "id": "gap-039",
+        "tag": "GAP-039",
+        "title": "型検査・型変換・ジェネリクス・null",
+        "group": "E",
+        "area": "C04",
+        "scope": "教材言語のnumber/string/boolean/null/配列型の静的検査と実行比較。別モードでidentity<T>とBox<T>の型パラメータの置換を小さな値で計算します。汎用の型推論器ではありません。",
+        "targets": [
+          {
+            "name": "静的・動的検査",
+            "description": "どの情報をどの時点で調べるかを区別します。",
+            "formula": ""
+          },
+          {
+            "name": "型変換",
+            "description": "変換の意図を明示してから演算します。",
+            "formula": ""
+          },
+          {
+            "name": "型パラメータ",
+            "description": "型を変数として使い、呼出し時に具体的な型へ置き換えます。",
+            "formula": "identity<T>(x:T):T"
+          },
+          {
+            "name": "null",
+            "description": "値がない状態を、通常の数値や文字列と区別します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 40,
+        "id": "gap-040",
+        "tag": "GAP-040",
+        "title": "高階関数・クロージャ・不変データ・遅延評価",
+        "group": "E",
+        "area": "C04",
+        "scope": "教材言語の関数値・クロージャ、map/filter/reduceを実行。配列の浅いコピーと共有、有限列の遅延パイプラインを実計算します。一般の関数型言語の意味論ではありません。",
+        "targets": [
+          {
+            "name": "高階関数",
+            "description": "関数を引数や戻り値にする関数です。",
+            "formula": ""
+          },
+          {
+            "name": "クロージャ",
+            "description": "作られた場所の環境を参照する関数値です。",
+            "formula": ""
+          },
+          {
+            "name": "不変とコピー",
+            "description": "元を変更しない操作と、同じ配列の書換えを分けます。",
+            "formula": ""
+          },
+          {
+            "name": "遅延評価",
+            "description": "必要になった結果だけを計算します。",
+            "formula": ""
+          },
+          {
+            "name": "副作用",
+            "description": "返り値以外の状態を変更する効果です。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 41,
+        "id": "gap-041",
+        "tag": "GAP-041",
+        "title": "例外・伝播・早期return・資源の後始末",
+        "group": "E",
+        "area": "C04",
+        "scope": "教材言語のtry/catch/finallyとreturnを実行し、資源を開いた状態を仮想変数で表します。実際のファイルやOS資源は開きません。",
+        "targets": [
+          {
+            "name": "例外の伝播",
+            "description": "処理できるcatchまで呼出し階層を戻ります。",
+            "formula": ""
+          },
+          {
+            "name": "スタックの巻戻し",
+            "description": "関数から抜ける際に各環境を離れます。",
+            "formula": ""
+          },
+          {
+            "name": "finally",
+            "description": "通常終了やreturnとは別に、後始末を置く場所です。",
+            "formula": ""
+          },
+          {
+            "name": "資源管理",
+            "description": "所有する資源の取得と解放の対応を保ちます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 42,
+        "id": "gap-042",
+        "tag": "GAP-042",
+        "title": "モジュール・公開範囲・依存・文字とバイトの入出力",
+        "group": "E",
+        "area": "C04",
+        "scope": "math/util/appの仮想モジュール解決、公開シンボルの検証、循環検出、UTF-8の分割入力を実計算します。実ファイルや外部パッケージは読み書きしません。",
+        "targets": [
+          {
+            "name": "モジュール境界",
+            "description": "同じ名前の衝突を避け、公開範囲を管理します。",
+            "formula": ""
+          },
+          {
+            "name": "exportとimport",
+            "description": "提供する名前と利用する名前の契約を合わせます。",
+            "formula": ""
+          },
+          {
+            "name": "依存関係",
+            "description": "先に必要なモジュールを解決します。",
+            "formula": ""
+          },
+          {
+            "name": "文字とバイト",
+            "description": "UTF-8などの規則に従ってバイト列を文字へ復号します。",
+            "formula": ""
+          },
+          {
+            "name": "部分読取り",
+            "description": "文字の途中でバイト列が区切られる場合に状態を持って復号します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 43,
+        "id": "gap-043",
+        "tag": "GAP-043",
+        "title": "配列・連結リスト・動的配列の挿入と削除",
+        "group": "F",
+        "area": "C05",
+        "scope": "最大16要素の配列と単方向リスト。挿入・削除、倍増による再確保、先行ノードまでの探索を実際に計算します。アドレスは教材内のIDです。",
+        "targets": [
+          {
+            "name": "配列",
+            "description": "添字で直接アクセスできますが、途中の挿入・削除では移動が必要です。",
+            "formula": ""
+          },
+          {
+            "name": "連結リスト",
+            "description": "各ノードが次のノードを参照します。",
+            "formula": ""
+          },
+          {
+            "name": "再確保",
+            "description": "容量が不足したら別の大きい領域へ移します。",
+            "formula": ""
+          },
+          {
+            "name": "操作の費用",
+            "description": "探索・移動・コピー・参照変更を別々に数えます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 44,
+        "id": "gap-044",
+        "tag": "GAP-044",
+        "title": "探索木の走査・削除・AVLと赤黒木の回転",
+        "group": "F",
+        "area": "C05",
+        "scope": "20個以下の一意な数値キー。BST・AVL・左傾赤黒木の挿入と削除、探索、3種類の走査を実計算。重複キーは同じ要素として1回だけ登録します。",
+        "targets": [
+          {
+            "name": "木の走査",
+            "description": "根をいつ処理するかで前順・中順・後順が変わります。",
+            "formula": ""
+          },
+          {
+            "name": "削除",
+            "description": "子が0個・1個・2個の場合を区別します。",
+            "formula": ""
+          },
+          {
+            "name": "回転",
+            "description": "局所的な接続変更で中順の大小関係を保ちます。",
+            "formula": ""
+          },
+          {
+            "name": "AVL",
+            "description": "各節点で左右の高さの差を1以内に保ちます。",
+            "formula": ""
+          },
+          {
+            "name": "赤黒木",
+            "description": "連続する赤や黒高さの条件を維持します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 45,
+        "id": "gap-045",
+        "tag": "GAP-045",
+        "title": "ヒープ構築・最小値の取出し・優先度の更新",
+        "group": "F",
+        "area": "C05",
+        "scope": "最大20要素の最小ヒープ。下からのheapifyと逐次挿入、根の削除、指定添字のキー更新を実計算します。更新値が増えた場合は下方向へ修復します。",
+        "targets": [
+          {
+            "name": "優先度付きキュー",
+            "description": "追加・最小値参照・最小値取出しを提供します。",
+            "formula": ""
+          },
+          {
+            "name": "heapify",
+            "description": "葉に近い親から下へ修復します。",
+            "formula": ""
+          },
+          {
+            "name": "取出し",
+            "description": "根を返し、末尾を根へ移してから修復します。",
+            "formula": ""
+          },
+          {
+            "name": "decrease-key",
+            "description": "小さくなった値を親と比べて上へ動かします。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 46,
+        "id": "gap-046",
+        "tag": "GAP-046",
+        "title": "ハッシュ表・探索法・削除印・負荷率・再配置",
+        "group": "F",
+        "area": "C05",
+        "scope": "整数キーを持つ集合。チェイン法、線形探索、二次探索、削除印、負荷率0.7での拡張を実計算します。二次探索が全スロットを訪問しない場合は拒否を表示します。",
+        "targets": [
+          {
+            "name": "負荷率",
+            "description": "登録済みキー数をスロット数で割ります。",
+            "formula": ""
+          },
+          {
+            "name": "開番地法",
+            "description": "衝突したキーを別のスロットへ置きます。",
+            "formula": ""
+          },
+          {
+            "name": "削除印",
+            "description": "削除した場所で探索を終了させないための印です。",
+            "formula": ""
+          },
+          {
+            "name": "再ハッシュ",
+            "description": "サイズ変更後の規則で全キーを置き直します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 47,
+        "id": "gap-047",
+        "tag": "GAP-047",
+        "title": "最小全域木・Prim・Kruskal・Union-Find",
+        "group": "F",
+        "area": "C06",
+        "scope": "12頂点・40辺までの無向重み付きグラフ。PrimとKruskalを実行し、非連結なら全域森を返します。Union-Findはrankと経路圧縮を使います。",
+        "targets": [
+          {
+            "name": "最小全域木",
+            "description": "全頂点を含む木のうち辺の重みの合計が最小のものです。",
+            "formula": ""
+          },
+          {
+            "name": "Kruskal",
+            "description": "重み順に辺を選び、同じ成分を結ぶ辺を避けます。",
+            "formula": ""
+          },
+          {
+            "name": "Prim",
+            "description": "現在の集合と外側の境界の最小辺を選びます。",
+            "formula": ""
+          },
+          {
+            "name": "Union-Find",
+            "description": "頂点がどの成分に属するかを高速に管理します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 48,
+        "id": "gap-048",
+        "tag": "GAP-048",
+        "title": "最短経路・負の辺・Bellman–Ford・Floyd–Warshall",
+        "group": "F",
+        "area": "C06",
+        "scope": "12頂点以下の有向・無向グラフ。Dijkstra、Bellman–Ford、Floyd–Warshallを実行。到達可能な負閉路の影響を伝播して、有限の最短値を捏造しません。",
+        "targets": [
+          {
+            "name": "緩和",
+            "description": "今の経路より安い候補があれば更新します。",
+            "formula": "d(v)←min(d(v),d(u)+w)"
+          },
+          {
+            "name": "Dijkstra",
+            "description": "非負の辺を前提に最小の暫定距離を確定します。",
+            "formula": ""
+          },
+          {
+            "name": "Bellman–Ford",
+            "description": "最大V−1回の辺の緩和後も改善できれば負閉路の影響を調べます。",
+            "formula": ""
+          },
+          {
+            "name": "Floyd–Warshall",
+            "description": "許す中継点を1個ずつ増やして全点対を求めます。",
+            "formula": ""
+          },
+          {
+            "name": "負閉路",
+            "description": "回るたび費用が減り、有限な最小値が存在しない場合です。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 49,
+        "id": "gap-049",
+        "tag": "GAP-049",
+        "title": "依存順序・強連結成分・最大流・マッチング",
+        "group": "F",
+        "area": "C06",
+        "scope": "12頂点・40辺以下。Kahn法、Tarjan法、Edmonds–Karp、二部グラフの増加道法を実行します。最大流の容量は非負、マッチングは無向として二部性を検査します。",
+        "targets": [
+          {
+            "name": "トポロジカルソート",
+            "description": "有向非巡回グラフの依存順序です。",
+            "formula": ""
+          },
+          {
+            "name": "強連結成分",
+            "description": "互いに行き来できる頂点をまとめます。",
+            "formula": ""
+          },
+          {
+            "name": "最大流と残余辺",
+            "description": "容量を守りながら増加道を探し、逆辺で既存の流れを修正します。",
+            "formula": ""
+          },
+          {
+            "name": "二部マッチング",
+            "description": "両側の頂点を重複せず結ぶ辺を選びます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 50,
+        "id": "gap-050",
+        "tag": "GAP-050",
+        "title": "貪欲法・動的計画法・復元・バックトラック・安定性",
+        "group": "F",
+        "area": "C06",
+        "scope": "釣銭の貪欲/DP、0-1ナップサックの復元、7以下のN-Queens全探索、安定/不安定なmergeの比較を実計算します。各問題を小さな入力へ限定します。",
+        "targets": [
+          {
+            "name": "貪欲法",
+            "description": "局所選択が全体最適を保つ証明が必要です。",
+            "formula": ""
+          },
+          {
+            "name": "DPと復元",
+            "description": "値の表と、その値を作った選択を別に保持します。",
+            "formula": ""
+          },
+          {
+            "name": "分割統治",
+            "description": "部分問題に分けて解き、結果を組み合わせます。",
+            "formula": ""
+          },
+          {
+            "name": "バックトラック",
+            "description": "部分解が制約を満たさなければ戻って別の候補へ進みます。",
+            "formula": ""
+          },
+          {
+            "name": "安定ソート",
+            "description": "同じキーの要素同士の元の順番を保ちます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 51,
+        "id": "gap-051",
+        "tag": "GAP-051",
+        "title": "KMP文字列探索・接頭辞表・トライ木",
+        "group": "F",
+        "area": "C06",
+        "scope": "コードポイント単位のKMP（本文80文字・パターン16文字以下）と12語のトライ木・接頭辞検索。書記素クラスタや形態素単位の検索ではありません。",
+        "targets": [
+          {
+            "name": "接頭辞表",
+            "description": "パターンの各位置までで、接尾辞とも一致する最長の真の接頭辞長を記録します。",
+            "formula": ""
+          },
+          {
+            "name": "KMP",
+            "description": "本文を後ろへ戻さずに一致候補を更新します。",
+            "formula": ""
+          },
+          {
+            "name": "トライ木",
+            "description": "単語の共通する先頭部分を共有します。",
+            "formula": ""
+          },
+          {
+            "name": "接頭辞検索",
+            "description": "指定した接頭辞の節点から下だけを調べます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 52,
+        "id": "gap-052",
+        "tag": "GAP-052",
+        "title": "LL・SLR構文解析と文法の曖昧さ",
+        "group": "G",
+        "area": "C07",
+        "scope": "30規則・LR状態90個・180操作以内のLL(1)／SLR(1)パーサー。文法も入力も編集可能。規則衝突は隠さず報告します。",
+        "targets": [
+          {
+            "name": "字句解析",
+            "description": "数値のまとまりを1つのnに置き換え、文法が扱う端末列を作ります。",
+            "formula": ""
+          },
+          {
+            "name": "FIRST・FOLLOW",
+            "description": "先頭に来る端末と、非端末の直後に来る端末を反復で求めます。",
+            "formula": ""
+          },
+          {
+            "name": "LL(1)",
+            "description": "非端末と先読みの組で展開規則を選びます。",
+            "formula": ""
+          },
+          {
+            "name": "SLR(1)",
+            "description": "LR(0)項集合とFOLLOWによってシフト・還元を決めます。",
+            "formula": ""
+          },
+          {
+            "name": "構文エラー",
+            "description": "期待した記号や規則がなくなった時点を表示します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 53,
+        "id": "gap-053",
+        "tag": "GAP-053",
+        "title": "記号表・名前解決・静的型検査",
+        "group": "G",
+        "area": "C07",
+        "scope": "教材言語の宣言・代入・ブロック・関数・条件・反復を静的に検査。完全な型推論ではなく、number/string/boolean/array/functionの区別です。",
+        "targets": [
+          {
+            "name": "記号表",
+            "description": "宣言と参照を環境ごとに管理します。",
+            "formula": ""
+          },
+          {
+            "name": "スコープ",
+            "description": "内側で見つからない名前を外側へ探します。",
+            "formula": ""
+          },
+          {
+            "name": "意味解析",
+            "description": "構文が合っていても未定義名や重複宣言を検出します。",
+            "formula": ""
+          },
+          {
+            "name": "型検査",
+            "description": "演算の左右や代入先の型が一致するかを確認します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 54,
+        "id": "gap-054",
+        "tag": "GAP-054",
+        "title": "三番地コード・データフロー・最適化",
+        "group": "G",
+        "area": "C07",
+        "scope": "副作用のない算術式を三番地コードへ変換し、定数畳込み・共通式除去・到達しない一時値の除去を実行。変数a,bのみ、制御フローは条件付き2式の基本ブロックで扱います。",
+        "targets": [
+          {
+            "name": "三番地コード",
+            "description": "構文木を一時変数間の演算へ分けます。",
+            "formula": ""
+          },
+          {
+            "name": "定数畳込み",
+            "description": "入力に依存しない計算を先に行います。",
+            "formula": ""
+          },
+          {
+            "name": "共通部分式除去",
+            "description": "同じ演算と同じ入力を持つ値を再利用します。",
+            "formula": ""
+          },
+          {
+            "name": "不要コード除去",
+            "description": "最終的な値に届かない一時変数をたどって除きます。",
+            "formula": ""
+          },
+          {
+            "name": "制御フロー",
+            "description": "分岐・合流を基本ブロック間の辺で表します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 55,
+        "id": "gap-055",
+        "tag": "GAP-055",
+        "title": "レジスタ割当・退避・呼出しフレーム",
+        "group": "G",
+        "area": "C07",
+        "scope": "算術式の三番地コードに対する生存区間と線形走査割当。退避位置を表示します。呼出しフレームは教材言語の実行トレースで確認し、実在CPUのABIとは区別します。",
+        "targets": [
+          {
+            "name": "コード生成",
+            "description": "中間値を実行用の操作と保存先へ割り当てます。",
+            "formula": ""
+          },
+          {
+            "name": "生存区間",
+            "description": "値の定義と最後の使用を対応させます。",
+            "formula": ""
+          },
+          {
+            "name": "スピル",
+            "description": "レジスタ不足時はスタック上の退避位置を使います。",
+            "formula": ""
+          },
+          {
+            "name": "呼出し規約",
+            "description": "引数・戻り値・戻る実行位置の受渡しを規則化します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 56,
+        "id": "gap-056",
+        "tag": "GAP-056",
+        "title": "アセンブル・リンク・再配置・ロード",
+        "group": "G",
+        "area": "C07",
+        "scope": "4バイト固定語の教材アセンブリ。DATA、LOAD、ADD、JMP、HALTとラベルを2モジュールで解析。絶対・PC相対再配置と読み込み位置を計算します。",
+        "targets": [
+          {
+            "name": "シンボル表",
+            "description": "ラベル名とモジュール内の位置を対応させます。",
+            "formula": ""
+          },
+          {
+            "name": "オブジェクト",
+            "description": "命令・データと未解決参照を保持します。",
+            "formula": ""
+          },
+          {
+            "name": "再配置",
+            "description": "配置が決まった後に参照先の値を補います。",
+            "formula": ""
+          },
+          {
+            "name": "動的な解決",
+            "description": "読み込み時に決まる配置と、ファイル内の相対位置を区別します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 57,
+        "id": "gap-057",
+        "tag": "GAP-057",
+        "title": "インタプリタ・VM・JITの仕事の分担",
+        "group": "G",
+        "area": "C07",
+        "scope": "式AST評価・スタックバイトコード生成と実行・数値型ガード付き特殊化を実計算。コストは操作回数で、実機時間やネイティブコードの速度ではありません。",
+        "targets": [
+          {
+            "name": "ASTインタプリタ",
+            "description": "構文の木をたどって演算します。",
+            "formula": ""
+          },
+          {
+            "name": "バイトコードVM",
+            "description": "スタックの値に対して命令を適用します。",
+            "formula": ""
+          },
+          {
+            "name": "JITの前提",
+            "description": "実行時の情報に基づく最適化には条件が付きます。",
+            "formula": ""
+          },
+          {
+            "name": "ガードと復帰",
+            "description": "前提が崩れると通常の経路で計算またはエラーを扱います。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 58,
+        "id": "gap-058",
+        "tag": "GAP-058",
+        "title": "参照カウント・コピーGC・世代別GC",
+        "group": "G",
+        "area": "C07",
+        "scope": "最大12オブジェクトの参照グラフ。Mark-Sweep、参照カウント、半空間コピー、2世代のminor GCを比較。実際のヒープではなく仮想アドレスを計算します。",
+        "targets": [
+          {
+            "name": "参照カウント",
+            "description": "数が0になった物を解放し、その物からの参照を減らします。",
+            "formula": ""
+          },
+          {
+            "name": "循環参照",
+            "description": "互いの数は0でなくても、ルートから届かない場合があります。",
+            "formula": ""
+          },
+          {
+            "name": "コピー方式",
+            "description": "到達した物を新領域へ移し、参照を書き換えます。",
+            "formula": ""
+          },
+          {
+            "name": "世代別GC",
+            "description": "若い領域だけの回収では世代間参照を別途記録します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 59,
+        "id": "gap-059",
+        "tag": "GAP-059",
+        "title": "電圧・電流・抵抗とキルヒホッフの法則",
+        "group": "H",
+        "area": "C08",
+        "scope": "理想直流電源と正の抵抗の節点解析。直列・並列と、最大8未知節点の編集可能な抵抗網を解きます。接地0と電源V以外の理想電圧源は対象外です。",
+        "targets": [
+          {
+            "name": "オームの法則",
+            "description": "電位差と電流を正の抵抗で対応させます。",
+            "formula": "I=(Va−Vb)/R"
+          },
+          {
+            "name": "直列・並列",
+            "description": "直列は同じ電流、並列は同じ両端電圧を共有します。",
+            "formula": ""
+          },
+          {
+            "name": "KCL",
+            "description": "未知節点の流出電流の和を0にします。",
+            "formula": ""
+          },
+          {
+            "name": "KVL",
+            "description": "節点電位の差を一周足すと0になります。",
+            "formula": ""
+          },
+          {
+            "name": "消費電力",
+            "description": "抵抗で消費される電力と電源の供給電力を照合します。",
+            "formula": "P=VI=I²R"
+          }
+        ]
+      },
+      {
+        "number": 60,
+        "id": "gap-060",
+        "tag": "GAP-060",
+        "title": "RC・RL・RLCの過渡応答と交流",
+        "group": "H",
+        "area": "C08",
+        "scope": "理想RC・RLのステップ応答、直列RLCのコンデンサ電圧の解析解、正弦波定常状態のインピーダンス。部品の非線形性は含みません。",
+        "targets": [
+          {
+            "name": "コンデンサ",
+            "description": "電荷と電圧が対応し、電圧の変化率で電流が決まります。",
+            "formula": "i=C dv/dt"
+          },
+          {
+            "name": "コイル",
+            "description": "電流の変化率に対応する電圧が生まれます。",
+            "formula": "v=L di/dt"
+          },
+          {
+            "name": "インピーダンス",
+            "description": "大きさと位相を含めた交流の抵抗に相当します。",
+            "formula": "ZL=jωL, ZC=1/(jωC)"
+          },
+          {
+            "name": "減衰と共振",
+            "description": "RLCでは固有角周波数と抵抗の減衰が応答を決めます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 61,
+        "id": "gap-061",
+        "tag": "GAP-061",
+        "title": "ダイオード・トランジスタ・CMOS",
+        "group": "H",
+        "area": "C08",
+        "scope": "Shockley式と直列抵抗、理想化したBJTスイッチ、長チャネルMOSの二乗則、対称CMOSインバータの静特性。SPICE精度・破壊・発熱は対象外です。",
+        "targets": [
+          {
+            "name": "ダイオード",
+            "description": "順方向電圧に対して電流が急激に増える非線形素子です。",
+            "formula": ""
+          },
+          {
+            "name": "BJT",
+            "description": "ベース側の入力でコレクタの電流を制御し、負荷で飽和します。",
+            "formula": ""
+          },
+          {
+            "name": "MOSFET",
+            "description": "ゲート電圧とドレイン電圧から電流領域を分けます。",
+            "formula": ""
+          },
+          {
+            "name": "CMOS",
+            "description": "PMOSとNMOSを相補的に使い、電圧を反転させます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 62,
+        "id": "gap-062",
+        "tag": "GAP-062",
+        "title": "真理値表・カルノー図・論理式の簡単化",
+        "group": "H",
+        "area": "C08",
+        "scope": "最大4変数a,b,c,dの論理式を全16入力で評価。全cube列挙と被覆探索により積和形を簡単化し、Gray順のカルノー図と対応させます。",
+        "targets": [
+          {
+            "name": "標準積和形",
+            "description": "出力が1の入力の条件をORでまとめます。",
+            "formula": ""
+          },
+          {
+            "name": "カルノー図",
+            "description": "Gray順で1ビットだけ異なる入力を隣接させます。",
+            "formula": ""
+          },
+          {
+            "name": "主項と被覆",
+            "description": "さらに条件を外せない項から、必要な1を覆う集合を選びます。",
+            "formula": ""
+          },
+          {
+            "name": "等価性",
+            "description": "指定した入力に対する真理値表を全数で照合します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 63,
+        "id": "gap-063",
+        "tag": "GAP-063",
+        "title": "半加算器から多ビットALU・Mux・デコーダへ",
+        "group": "H",
+        "area": "C08",
+        "scope": "4〜8ビットのリップル加減算、AND/OR/XOR、4入力Mux、3ビットデコーダ。carryとsigned overflowを別計算し、各桁の中間値を表示します。",
+        "targets": [
+          {
+            "name": "半加算器",
+            "description": "2入力の和XORと繰上がりANDを計算します。",
+            "formula": ""
+          },
+          {
+            "name": "全加算器",
+            "description": "前の桁のcarryをさらに足します。",
+            "formula": ""
+          },
+          {
+            "name": "多ビットALU",
+            "description": "減算はBを反転して1を足す方式で計算します。",
+            "formula": ""
+          },
+          {
+            "name": "Mux・デコーダ",
+            "description": "選択する回路と、番号をone-hotへ展開する回路を区別します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 64,
+        "id": "gap-064",
+        "tag": "GAP-064",
+        "title": "ラッチ・DFF・カウンタ・状態機械",
+        "group": "H",
+        "area": "C08",
+        "scope": "最大40行のクロック・データ・load・reset列を実行。Dラッチ、立上りDFF、load付きレジスタ、4ビットカウンタ、101検出Mealy機械。非同期の実素子挙動は再現しません。",
+        "targets": [
+          {
+            "name": "ラッチ",
+            "description": "有効期間中は入力を出力へ通します。",
+            "formula": ""
+          },
+          {
+            "name": "DFF",
+            "description": "立上りなどの決まった端で値を保持します。",
+            "formula": ""
+          },
+          {
+            "name": "Muxと保持",
+            "description": "loadが0なら現在値を戻し、1なら新しい値を取り込みます。",
+            "formula": ""
+          },
+          {
+            "name": "状態遷移",
+            "description": "過去をすべて保存せず、必要な情報を現在状態へまとめます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 65,
+        "id": "gap-065",
+        "tag": "GAP-065",
+        "title": "ゲート遅延・ハザード・小さなHDL",
+        "group": "H",
+        "area": "C08",
+        "scope": "AND/OR/XOR/NAND/NOTの組合せ回路の離散イベントシミュレーション。最大16ゲート・400イベント。単位は仮想ns、輸送遅延と慣性遅延を比較します。",
+        "targets": [
+          {
+            "name": "ゲート遅延",
+            "description": "入力の変化を将来の出力イベントとして予約します。",
+            "formula": ""
+          },
+          {
+            "name": "静的ハザード",
+            "description": "最終値が同じでも過渡的な出力が変わることがあります。",
+            "formula": ""
+          },
+          {
+            "name": "慣性・輸送遅延",
+            "description": "短いパルスを抑えるか、そのまま遅らせるかを区別します。",
+            "formula": ""
+          },
+          {
+            "name": "組合せ回路の検証",
+            "description": "循環のない接続と、同じ入力に対する最終論理を確かめます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 66,
+        "id": "gap-066",
+        "tag": "GAP-066",
+        "title": "命令形式・即値・直接・間接アドレス",
+        "group": "I",
+        "area": "C09",
+        "scope": "16ビット教材命令（opcode4・rd2・mode2・operand8）を符号化・復号。4レジスタ、256語の仮想メモリ。実在するISAとは異なります。",
+        "targets": [
+          {
+            "name": "命令形式",
+            "description": "同じビット列を欄の位置に応じて復号します。",
+            "formula": ""
+          },
+          {
+            "name": "即値",
+            "description": "命令の中の値をそのまま演算へ渡します。",
+            "formula": ""
+          },
+          {
+            "name": "直接指定",
+            "description": "オペランドをメモリアドレスとして使います。",
+            "formula": ""
+          },
+          {
+            "name": "間接指定",
+            "description": "まず参照先を求め、その先の値を読みます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 67,
+        "id": "gap-067",
+        "tag": "GAP-067",
+        "title": "CPUデータパスと制御信号",
+        "group": "I",
+        "area": "C09",
+        "scope": "4レジスタ・64語メモリ・最大64命令実行の教材ISA。各命令を取得・読出し・演算・メモリ・書戻しへ分け、制御信号を対応表示します。",
+        "targets": [
+          {
+            "name": "PCと命令レジスタ",
+            "description": "次の命令位置から命令を取り込みます。",
+            "formula": ""
+          },
+          {
+            "name": "レジスタ読出し",
+            "description": "命令が指定した入力レジスタを読みます。",
+            "formula": ""
+          },
+          {
+            "name": "ALUと選択信号",
+            "description": "算術・論理の演算とアドレスを計算します。",
+            "formula": ""
+          },
+          {
+            "name": "メモリと書戻し",
+            "description": "読出しと書込みを区別し、必要なレジスタだけ更新します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 68,
+        "id": "gap-068",
+        "tag": "GAP-068",
+        "title": "割込み・例外・MMIO・DMA",
+        "group": "I",
+        "area": "C09",
+        "scope": "周期的にデータを用意する1機器のポーリング・割込み・DMAを離散時間で比較。仮想MMIO・CPU仕事・バス使用を分けます。例外は同期した故障命令で停止する教材です。",
+        "targets": [
+          {
+            "name": "ポーリング",
+            "description": "状態レジスタをCPUが繰り返し調べます。",
+            "formula": ""
+          },
+          {
+            "name": "割込み",
+            "description": "PCなどを保存し、処理後に主処理へ戻ります。",
+            "formula": ""
+          },
+          {
+            "name": "メモリマップドI/O",
+            "description": "アドレスに対応する状態・データレジスタへアクセスします。",
+            "formula": ""
+          },
+          {
+            "name": "DMA",
+            "description": "転送のCPU負担を減らしてもメモリ帯域は消費します。",
+            "formula": ""
+          },
+          {
+            "name": "例外",
+            "description": "命令に同期した異常と、外部からの通知を区別します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 69,
+        "id": "gap-069",
+        "tag": "GAP-069",
+        "title": "パイプラインの依存・待機・転送・分岐破棄",
+        "group": "I",
+        "area": "C09",
+        "scope": "実行された教材ISA命令列をIF/ID/EX/MEM/WBへ配置。RAW依存、load-use、転送、単一メモリポート、EXで解決する分岐の2サイクル破棄を計算します。out-of-order実行は対象外です。",
+        "targets": [
+          {
+            "name": "RAW依存",
+            "description": "前の書込みの値が使えるまで読出しを待ちます。",
+            "formula": ""
+          },
+          {
+            "name": "フォワーディング",
+            "description": "ALU等から後続のEXへ値を直接渡します。",
+            "formula": ""
+          },
+          {
+            "name": "load-use",
+            "description": "メモリ読出しの結果はALU結果より遅く使えます。",
+            "formula": ""
+          },
+          {
+            "name": "制御・構造ハザード",
+            "description": "分岐の誤予測と資源の同時使用も待ち時間の原因です。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 70,
+        "id": "gap-070",
+        "tag": "GAP-070",
+        "title": "連想キャッシュ・LRU・書込み方針",
+        "group": "I",
+        "area": "C09",
+        "scope": "4語ブロックのL1セット連想LRU＋2倍容量L2。L2はwrite-through、L1はwrite-back/throughとwrite-allocate選択。非包含・単一CPUの教材です。",
+        "targets": [
+          {
+            "name": "タグ・セット・オフセット",
+            "description": "番地を配置先とブロック内の位置に分けます。",
+            "formula": ""
+          },
+          {
+            "name": "セット連想とLRU",
+            "description": "同じセットの複数候補から置換先を選びます。",
+            "formula": ""
+          },
+          {
+            "name": "書込み方針",
+            "description": "dirtyを持つ方式とすぐ次階層へ書く方式を比べます。",
+            "formula": ""
+          },
+          {
+            "name": "局所性と多段階層",
+            "description": "近い番地・繰返す番地と、L1/L2/主記憶のアクセスを対応させます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 71,
+        "id": "gap-071",
+        "tag": "GAP-071",
+        "title": "MSI・アトミック操作・メモリ順序",
+        "group": "I",
+        "area": "C09",
+        "scope": "2CPU・1仮想行のMSIを状態遷移で実行。INCは明示的なread/write分割とatomicを比較。別モードで2変数のstore bufferとfenceを示します。",
+        "targets": [
+          {
+            "name": "MSI",
+            "description": "書込む前に他方をInvalidへし、必要ならdirtyを共有メモリへ反映します。",
+            "formula": ""
+          },
+          {
+            "name": "アトミック",
+            "description": "read-modify-writeを割り込めない操作として扱います。",
+            "formula": ""
+          },
+          {
+            "name": "メモリ順序",
+            "description": "別位置のstoreとloadの見える順序を区別します。",
+            "formula": ""
+          },
+          {
+            "name": "fence",
+            "description": "前のstoreを反映してから後のloadを行う制約を置きます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 72,
+        "id": "gap-072",
+        "tag": "GAP-072",
+        "title": "多段ページ表・ページフォールト・Copy-on-Write",
+        "group": "I",
+        "area": "C09",
+        "scope": "16ビット仮想番地・256語ページ・2段ページ表・ASID付きTLB・2〜8物理フレームのモデル。fork後の共有とCOW、LRU退避、アクセス拒否を実行します。",
+        "targets": [
+          {
+            "name": "多段ページ表",
+            "description": "上位VPNと下位VPNで必要な表へ到達します。",
+            "formula": ""
+          },
+          {
+            "name": "TLB・ASID",
+            "description": "プロセスとページの組で変換をキャッシュします。",
+            "formula": ""
+          },
+          {
+            "name": "ページフォールト",
+            "description": "未配置の有効ページを読み込み、必要なら別ページを退避します。",
+            "formula": ""
+          },
+          {
+            "name": "COW",
+            "description": "共有ページへの書込み前にコピーして対応先を変更します。",
+            "formula": ""
+          },
+          {
+            "name": "権限",
+            "description": "ページが存在しても操作の種類が許可されるとは限りません。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 73,
+        "id": "gap-073",
+        "tag": "GAP-073",
+        "title": "CPI・Amdahlの法則・性能のボトルネック",
+        "group": "I",
+        "area": "C09",
+        "scope": "命令数と平均CPIの時間式、固定仕事量のAmdahl、演算強度と帯域のroofline上限を計算。入力は教材用で実機測定結果ではありません。",
+        "targets": [
+          {
+            "name": "CPI・IPC",
+            "description": "命令あたりの平均サイクルと、サイクルあたりの命令数を区別します。",
+            "formula": ""
+          },
+          {
+            "name": "Amdahl",
+            "description": "並列化できない時間が残る上限を計算します。",
+            "formula": "S=1/((1−p)+p/N)"
+          },
+          {
+            "name": "roofline",
+            "description": "演算器とメモリ帯域の小さい側で上限が決まります。",
+            "formula": "上限=min(peak, intensity×bandwidth)"
+          },
+          {
+            "name": "条件をそろえる",
+            "description": "入力・仕事量・計測区間をそろえて性能を比較します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 74,
+        "id": "gap-074",
+        "tag": "GAP-074",
+        "title": "プロセス・スレッド・システムコール",
+        "group": "J",
+        "area": "C11",
+        "scope": "仮想的なfork・thread・exec・read/write・wait・exitを最大40操作で追跡。レジスタ、PC、アドレス空間、カーネルへの入出を分離した機能モデルです。",
+        "targets": [
+          {
+            "name": "プロセス",
+            "description": "独立したアドレス空間と資源を持つ実行の単位です。",
+            "formula": ""
+          },
+          {
+            "name": "スレッド",
+            "description": "実行位置は別でも同じプロセスのメモリを共有します。",
+            "formula": ""
+          },
+          {
+            "name": "システムコール",
+            "description": "ユーザーの要求でカーネル処理へ入り、結果を受け取って戻ります。",
+            "formula": ""
+          },
+          {
+            "name": "コンテキストスイッチ",
+            "description": "PC・レジスタを保存し、別の実行主体の状態を復元します。",
+            "formula": ""
+          },
+          {
+            "name": "fork・exec・wait",
+            "description": "生成、イメージ置換、子の終了待ちは別の操作です。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 75,
+        "id": "gap-075",
+        "tag": "GAP-075",
+        "title": "到着時刻・I/O・優先度を含むCPUスケジューリング",
+        "group": "J",
+        "area": "C11",
+        "scope": "最大6仕事のFCFS/SJF/SRTF/RR/優先度方式を離散時間で実行。到着、I/O待機、切替えコスト、優先度のagingを含み、600tickで中断します。",
+        "targets": [
+          {
+            "name": "到着とready",
+            "description": "まだ到着していない仕事やI/O待ちはCPU候補にしません。",
+            "formula": ""
+          },
+          {
+            "name": "プリエンプション",
+            "description": "途中の実行を保存して別の仕事へ切り替えます。",
+            "formula": ""
+          },
+          {
+            "name": "応答・待ち・ターンアラウンド",
+            "description": "最初に動くまで、readyで待つ時間、完了までを別集計します。",
+            "formula": ""
+          },
+          {
+            "name": "優先度とaging",
+            "description": "長い待ちを反映して選ばれやすさを調整します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 76,
+        "id": "gap-076",
+        "tag": "GAP-076",
+        "title": "パイプ・ファイル記述子・共有メモリ・シグナル",
+        "group": "J",
+        "area": "C11",
+        "scope": "容量4〜12文字の仮想パイプ、dup/close、blocking read/write、通知によるEINTRを実行。別モードでは共有メモリとメッセージのコピーの違いを扱います。",
+        "targets": [
+          {
+            "name": "ファイル記述子",
+            "description": "小さな番号から、開いている通信・ファイルの入口を参照します。",
+            "formula": ""
+          },
+          {
+            "name": "パイプ・EOF",
+            "description": "空で待つ条件と、もう届かないことを知らせるEOFを分けます。",
+            "formula": ""
+          },
+          {
+            "name": "共有とコピー",
+            "description": "同じ保存場所を参照する場合と、送信時の内容を複製する場合を比べます。",
+            "formula": ""
+          },
+          {
+            "name": "シグナル",
+            "description": "通常のデータとは別の通知で、待機が中断される場合があります。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 77,
+        "id": "gap-077",
+        "tag": "GAP-077",
+        "title": "mutex・条件変数・waitと再確認",
+        "group": "J",
+        "area": "C11",
+        "scope": "有界バッファのput/getと条件変数を操作列で実行。wait時のmutex解放、signal後の再獲得、述語while再確認と誤ったif、虚偽のwakeを比較します。",
+        "targets": [
+          {
+            "name": "mutex",
+            "description": "共有状態を見る・変更する範囲を排他的にします。",
+            "formula": ""
+          },
+          {
+            "name": "条件変数",
+            "description": "状態が変化した可能性を通知し、述語自体は別途確認します。",
+            "formula": ""
+          },
+          {
+            "name": "atomic release-and-wait",
+            "description": "通知との隙間を作らずに解放と待機へ移ります。",
+            "formula": ""
+          },
+          {
+            "name": "while再確認",
+            "description": "起床やmutex獲得の後に条件をもう一度調べます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 78,
+        "id": "gap-078",
+        "tag": "GAP-078",
+        "title": "複数資源のデッドロック検出と銀行家の算法",
+        "group": "J",
+        "area": "C11",
+        "scope": "最大6プロセス×4資源のallocation/maximum/availableを入力。安全系列、要求の仮割当、待ち要求による検出を計算します。安全でない状態を現在のデッドロックと混同しません。",
+        "targets": [
+          {
+            "name": "成立条件",
+            "description": "排他、保持待ち、非横取り、循環待ちを区別します。",
+            "formula": ""
+          },
+          {
+            "name": "複数インスタンス",
+            "description": "資源の個数をベクトルで管理します。",
+            "formula": ""
+          },
+          {
+            "name": "安全系列",
+            "description": "誰かの完了と返却を仮定し、全員が終わる順番を探します。",
+            "formula": ""
+          },
+          {
+            "name": "要求の審査",
+            "description": "現在の空きだけでなく、仮割当後の安全性も調べます。",
+            "formula": ""
+          },
+          {
+            "name": "検出と回避",
+            "description": "現在の要求と将来の最大要求では意味が異なります。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 79,
+        "id": "gap-079",
+        "tag": "GAP-079",
+        "title": "パス・リンク・openとunlink・ジャーナル",
+        "group": "J",
+        "area": "C11",
+        "scope": "仮想ディレクトリの名前→inode、ハードリンク、最大8段のsymlink解決、open fdの参照数を計算。journalモードは名前変更の原子性を故障位置で比較します。",
+        "targets": [
+          {
+            "name": "パス探索",
+            "description": "名前の表をたどり、リンク先を必要に応じて解決します。",
+            "formula": ""
+          },
+          {
+            "name": "ハードリンクとsymlink",
+            "description": "inodeの共有とパスの参照は違います。",
+            "formula": ""
+          },
+          {
+            "name": "openとunlink",
+            "description": "名前の参照と開いたfdの参照を別に数えます。",
+            "formula": ""
+          },
+          {
+            "name": "ジャーナリング",
+            "description": "確定を記録してから原子的に反映し、中間状態で復旧しないようにします。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 80,
+        "id": "gap-080",
+        "tag": "GAP-080",
+        "title": "仮想マシン・コンテナ・名前空間・資源制限",
+        "group": "J",
+        "area": "C11",
+        "scope": "2ゲストのPID・ファイル名前空間、共有カーネル／別カーネルの構成、CPU quotaとメモリ上限を仮想的に計算します。実環境への侵入や隔離の実装を行いません。",
+        "targets": [
+          {
+            "name": "仮想化",
+            "description": "仮想ハードウェア上にゲストカーネルを置きます。",
+            "formula": ""
+          },
+          {
+            "name": "コンテナ",
+            "description": "ホストカーネルを共有しながら見える資源を分けます。",
+            "formula": ""
+          },
+          {
+            "name": "名前空間",
+            "description": "同じ名前を各環境の別の対象へ対応付けます。",
+            "formula": ""
+          },
+          {
+            "name": "CPU・メモリ制限",
+            "description": "名前を分けることと消費量を制限することは別です。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 81,
+        "id": "gap-081",
+        "tag": "GAP-081",
+        "title": "仕事の分割・スレッドプール・並列集約・SIMD",
+        "group": "J",
+        "area": "C11",
+        "scope": "最大24仕事の静的分割・動的work queue・SIMD幅ごとの遅いlaneの待機を計算。集約は木構造と逐次の操作数を比較し、barrierを省いた早期読出しも表示します。",
+        "targets": [
+          {
+            "name": "静的・動的分割",
+            "description": "担当を先に決めるか、空いたworkerへ割り当てるかを選びます。",
+            "formula": ""
+          },
+          {
+            "name": "スレッドプール",
+            "description": "限られたworkerが複数の仕事を順に処理します。",
+            "formula": ""
+          },
+          {
+            "name": "並列reduction",
+            "description": "部分結果を木状に結合して依存の深さを減らします。",
+            "formula": ""
+          },
+          {
+            "name": "SIMD・GPU",
+            "description": "laneのグループ内で同期し、遅いlaneや分岐の影響を受けます。",
+            "formula": ""
+          },
+          {
+            "name": "barrier",
+            "description": "全結果が揃う時刻と、早期に読む時刻を分けます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 82,
+        "id": "gap-082",
+        "tag": "GAP-082",
+        "title": "Lamport時計・ベクトル時計・因果関係",
+        "group": "K",
+        "area": "C12",
+        "scope": "A/B/Cのlocal・send・recvを最大40イベントで実行。Lamport時計と3成分ベクトル時計を計算し、2イベントのhappens-beforeと並行性を判定します。",
+        "targets": [
+          {
+            "name": "happens-before",
+            "description": "同じ機器の順序、送受信の順序、その推移閉包を使います。",
+            "formula": ""
+          },
+          {
+            "name": "Lamport時計",
+            "description": "因果的に前なら小さい値になりますが、逆は一般に成り立ちません。",
+            "formula": ""
+          },
+          {
+            "name": "ベクトル時計",
+            "description": "各機器の既知の進み方を成分として記録します。",
+            "formula": ""
+          },
+          {
+            "name": "並行性",
+            "description": "どちらのベクトルも成分ごとに小さくないときは並行です。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 83,
+        "id": "gap-083",
+        "tag": "GAP-083",
+        "title": "クォーラム・線形化可能性・結果整合性",
+        "group": "K",
+        "area": "C12",
+        "scope": "5複製のversion付きread/writeとread-backを比較。分断時の到達ノード数を操作します。履歴モードは初期値0のレジスタ8操作以内で線形化順序を全探索します。",
+        "targets": [
+          {
+            "name": "クォーラムの交差",
+            "description": "読書きが共有する複製があるかを確認します。",
+            "formula": ""
+          },
+          {
+            "name": "線形化可能性",
+            "description": "実時間の前後を保つ逐次的な説明が存在するかを調べます。",
+            "formula": ""
+          },
+          {
+            "name": "結果整合性",
+            "description": "通信が回復し更新を十分に配送した後の一致を確認します。",
+            "formula": ""
+          },
+          {
+            "name": "分断時の選択",
+            "description": "届かない応答を待つか、古い可能性のある値を返すかを分けます。",
+            "formula": ""
+          },
+          {
+            "name": "read-back",
+            "description": "読み取ったversionを複製へ反映する追加段階を扱います。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 84,
+        "id": "gap-084",
+        "tag": "GAP-084",
+        "title": "Raftの選挙・ログ複製・確定・故障回復",
+        "group": "K",
+        "area": "C12",
+        "scope": "3または5ノードの手動イベントRaftモデル。term、投票の一回性、logの新しさ、AppendEntries整合、matchIndexと現在termの過半数確定を追跡。時間切れはelect操作で明示します。",
+        "targets": [
+          {
+            "name": "termと投票",
+            "description": "古いtermの要求を拒否し、同じtermの二重投票を防ぎます。",
+            "formula": ""
+          },
+          {
+            "name": "logの新しさ",
+            "description": "最後のtermと長さを比べ、古い候補に投票しません。",
+            "formula": ""
+          },
+          {
+            "name": "AppendEntries",
+            "description": "一致するprefixの後を修正し、leaderのlogを複製します。",
+            "formula": ""
+          },
+          {
+            "name": "確定条件",
+            "description": "leaderの現在termのエントリが過半数に届くことを確認します。",
+            "formula": ""
+          },
+          {
+            "name": "故障と回復",
+            "description": "停止しても保持する状態と、再選出で変わる役割を分けます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 85,
+        "id": "gap-085",
+        "tag": "GAP-085",
+        "title": "RPC・タイムアウト・再試行・冪等性",
+        "group": "K",
+        "area": "C12",
+        "scope": "単一仮想サービスのカウンタ更新を最大5回再試行。要求・応答の喪失、処理後の再起動、安定した要求IDと永続的dedupを比較します。実ネットワークには送信しません。",
+        "targets": [
+          {
+            "name": "タイムアウト",
+            "description": "応答がない理由を一意に決めることはできません。",
+            "formula": ""
+          },
+          {
+            "name": "再試行",
+            "description": "同じ業務操作であることを識別できるIDを維持します。",
+            "formula": ""
+          },
+          {
+            "name": "冪等性",
+            "description": "同じ操作を繰り返しても結果が重複しない設計を考えます。",
+            "formula": ""
+          },
+          {
+            "name": "原子的dedup",
+            "description": "記録だけ、更新だけが残らないように一体で確定します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 86,
+        "id": "gap-086",
+        "tag": "GAP-086",
+        "title": "2相コミット・in-doubt・Sagaの補償",
+        "group": "K",
+        "area": "C12",
+        "scope": "2参加者の資源移動をprepare/commit/abortで実行。調整役の永続判断と復帰、prepare後の待機を比較。Sagaは2ステップと明示的な補償失敗を扱います。",
+        "targets": [
+          {
+            "name": "prepare",
+            "description": "参加者は実行可能性を確認し、約束した資源を保持します。",
+            "formula": ""
+          },
+          {
+            "name": "決定ログ",
+            "description": "復旧時にも同じcommit/abortを返すため判断を永続化します。",
+            "formula": ""
+          },
+          {
+            "name": "blocking",
+            "description": "準備済みでも決定が不明なら処理を保留します。",
+            "formula": ""
+          },
+          {
+            "name": "Saga",
+            "description": "個別コミットの後に、業務的な補償操作を組み合わせます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 87,
+        "id": "gap-087",
+        "tag": "GAP-087",
+        "title": "シャーディング・コンシステントハッシュ・複製配置",
+        "group": "K",
+        "area": "C12",
+        "scope": "2〜7ノード、1〜24仮想ノード、最大60キーを決定的な32ビットハッシュで配置。剰余とリング、異なる物理ノードへの複製を比較します。ハッシュは暗号用ではありません。",
+        "targets": [
+          {
+            "name": "シャーディング",
+            "description": "キーを担当する物理ノードへ割り当てます。",
+            "formula": ""
+          },
+          {
+            "name": "リングと仮想ノード",
+            "description": "同じ物理ノードの複数点で配置の偏りを緩和します。",
+            "formula": ""
+          },
+          {
+            "name": "レプリカ配置",
+            "description": "異なる物理ノードを選び、同時に失わないようにします。",
+            "formula": ""
+          },
+          {
+            "name": "再配置と復旧",
+            "description": "新担当の計算と、元データが残っていることは別の条件です。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 88,
+        "id": "gap-088",
+        "tag": "GAP-088",
+        "title": "ER図・関係モデル・主キーと外部キー",
+        "group": "L",
+        "area": "C14",
+        "scope": "学生・科目・履修の3表を編集し、PKの一意性／非NULL、FK、必須値を実データで検証します。履修の複合主キーを使い、多対多の関係を表します。",
+        "targets": [
+          {
+            "name": "エンティティと関係",
+            "description": "独立した対象と、対象間の対応を分けます。",
+            "formula": ""
+          },
+          {
+            "name": "複合主キー",
+            "description": "複数の列の組で行を識別する場合があります。",
+            "formula": ""
+          },
+          {
+            "name": "参照整合性",
+            "description": "参照先のキーが存在するかを調べます。",
+            "formula": ""
+          },
+          {
+            "name": "スキーマと制約",
+            "description": "列の名前だけでなく、許されるデータの条件を定めます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 89,
+        "id": "gap-089",
+        "tag": "GAP-089",
+        "title": "関数従属性・候補キー・3NF・BCNF分解",
+        "group": "L",
+        "area": "C14",
+        "scope": "最大7属性・28単一右辺FDの閉包と候補キーを計算。最小被覆から3NF合成、投影FDを列挙したBCNF分解と従属性保存を確認します。入力は1NFの関係を仮定します。",
+        "targets": [
+          {
+            "name": "属性閉包",
+            "description": "従属性を繰り返し適用し、分かる属性を増やします。",
+            "formula": ""
+          },
+          {
+            "name": "候補キー",
+            "description": "全属性を決める集合から余分な属性を外します。",
+            "formula": ""
+          },
+          {
+            "name": "2NF・3NF・BCNF",
+            "description": "部分従属、非キーの従属、決定項の条件を分けます。",
+            "formula": ""
+          },
+          {
+            "name": "無損失分解",
+            "description": "BCNFの各分解は共有属性が一方を決める形で行います。",
+            "formula": ""
+          },
+          {
+            "name": "従属性保存",
+            "description": "分解先だけのFD検査で元の制約を検査できるかを調べます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 90,
+        "id": "gap-090",
+        "tag": "GAP-090",
+        "title": "SQLを実行する・集約・結合・副問合せ・NULL",
+        "group": "L",
+        "area": "C14",
+        "scope": "独自の有界SQLインタプリタ。SELECT/DISTINCT/WHERE/INNER・LEFT JOIN/GROUP BY/HAVING/ORDER/LIMIT、非相関IN副問合せ、COUNT/SUM/AVG/MIN/MAX/COALESCE、INSERT/UPDATE/DELETEを実行。全SQL構文ではありません。",
+        "targets": [
+          {
+            "name": "関係演算",
+            "description": "選択・射影・結合が行の集合へ与える変化を追います。",
+            "formula": ""
+          },
+          {
+            "name": "集約",
+            "description": "COUNT(*)とCOUNT(列)、NULLを除くAVGの違いを確認します。",
+            "formula": ""
+          },
+          {
+            "name": "NULLと三値論理",
+            "description": "FALSEだけでなくUNKNOWNもWHEREでは残しません。",
+            "formula": ""
+          },
+          {
+            "name": "副問合せ",
+            "description": "別のSELECTの結果をINの比較集合として使います。",
+            "formula": ""
+          },
+          {
+            "name": "更新",
+            "description": "UPDATE/INSERT/DELETEが実データを変える過程を確認します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 91,
+        "id": "gap-091",
+        "tag": "GAP-091",
+        "title": "複合索引・JOINの実行計画・B+木の削除",
+        "group": "L",
+        "area": "C14",
+        "scope": "合成した最大120行の複合索引の候補走査、Nested Loop/Hash/Merge JOINの比較、最大40キーの次数4 B+木の挿入・借用・併合・根縮小を実行します。コストは教材操作数です。",
+        "targets": [
+          {
+            "name": "複合索引",
+            "description": "先頭列の等値・範囲条件が候補を決めます。",
+            "formula": ""
+          },
+          {
+            "name": "実行計画",
+            "description": "同じ関係演算をどの算法で行うかを選びます。",
+            "formula": ""
+          },
+          {
+            "name": "JOIN算法",
+            "description": "二重ループ、hash、mergeで探索の仕事が変わります。",
+            "formula": ""
+          },
+          {
+            "name": "B+木の削除",
+            "description": "少なくなり過ぎた葉・内部節点を借用や併合で修復します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 92,
+        "id": "gap-092",
+        "tag": "GAP-092",
+        "title": "分離レベル・MVCC・更新異常・直列化",
+        "group": "L",
+        "area": "C14",
+        "scope": "2トランザクションのread/write/scan/commitをversion付きデータで実行。RU、RC、snapshot isolation、snapshot＋保守的read検証を比較します。特定DBの全分離規則ではありません。",
+        "targets": [
+          {
+            "name": "RU・RC",
+            "description": "未確定値も見るか、各文で確定済みの最新値だけを見るかを分けます。",
+            "formula": ""
+          },
+          {
+            "name": "snapshot",
+            "description": "開始時点の確定versionを読み続けます。",
+            "formula": ""
+          },
+          {
+            "name": "write skew",
+            "description": "別行への書込みでも、共有する条件を壊すことがあります。",
+            "formula": ""
+          },
+          {
+            "name": "直列化可能性",
+            "description": "同時履歴を逐次の実行と等価に説明できるかを考えます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 93,
+        "id": "gap-093",
+        "tag": "GAP-093",
+        "title": "WAL・チェックポイント・REDO・UNDO",
+        "group": "L",
+        "area": "C14",
+        "scope": "x/yのページ、LSN付き更新ログ、厳密write lock、commit時のlog flush、STEALページflushを実行。復旧はdurable logをREDOし、未確定TXを逆順UNDOする基本形です。",
+        "targets": [
+          {
+            "name": "ログとページ",
+            "description": "操作の記録と、現在値を置くページの永続化を区別します。",
+            "formula": ""
+          },
+          {
+            "name": "WAL",
+            "description": "更新済みページに対応するログを先に永続化します。",
+            "formula": ""
+          },
+          {
+            "name": "REDO",
+            "description": "commit済みでも未反映の変更をページLSNと照合します。",
+            "formula": ""
+          },
+          {
+            "name": "UNDO",
+            "description": "未確定TXの変更を逆向きに戻します。",
+            "formula": ""
+          },
+          {
+            "name": "チェックポイント",
+            "description": "復旧のための進捗と実行中TXを記録します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 94,
+        "id": "gap-094",
+        "tag": "GAP-094",
+        "title": "キー・値・文書・グラフのデータモデル",
+        "group": "L",
+        "area": "C14",
+        "scope": "同じ利用者・注文・友人関係の合成データをKV参照、埋込み文書、隣接リストBFSで検索。名前変更の重複更新と、入力した対象・深さによるアクセス数を比較します。",
+        "targets": [
+          {
+            "name": "KV",
+            "description": "キーの選び方で効率よく取り出せる問いが変わります。",
+            "formula": ""
+          },
+          {
+            "name": "文書",
+            "description": "一緒に読む情報をまとめる代わりに重複を管理します。",
+            "formula": ""
+          },
+          {
+            "name": "グラフ",
+            "description": "関係を直接たどり、到達範囲や経路を調べます。",
+            "formula": ""
+          },
+          {
+            "name": "非正規化",
+            "description": "更新の手間と読出しの局所性を比較します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 95,
+        "id": "gap-095",
+        "tag": "GAP-095",
+        "title": "Ethernetフレーム・VLAN・MAC表の期限・STP",
+        "group": "M",
+        "area": "C13",
+        "scope": "3スイッチの三角形と3端末。収束後のSTPのroot/designated/alternate port、VLAN別MAC学習・期限、unknown unicastの転送を実行。ループ注入時は100転送で打ち切ります。",
+        "targets": [
+          {
+            "name": "フレームと802.1Q",
+            "description": "宛先・送信元MACと、trunkを通るVLANタグを区別します。",
+            "formula": ""
+          },
+          {
+            "name": "MAC学習",
+            "description": "送信元が来た場所をVIDと一緒に覚えます。",
+            "formula": ""
+          },
+          {
+            "name": "エージング",
+            "description": "以前の接続情報を期限後に使い続けないようにします。",
+            "formula": ""
+          },
+          {
+            "name": "BPDUとroot選出",
+            "description": "bridgeの優先順位とrootへのコストを比較します。",
+            "formula": ""
+          },
+          {
+            "name": "ポート役割",
+            "description": "root・designatedを使い、alternateを待機させます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 96,
+        "id": "gap-096",
+        "tag": "GAP-096",
+        "title": "ARP・NDP・DHCP・SLAACの状態と有効期間",
+        "group": "M",
+        "area": "C13",
+        "scope": "単一クライアントのDHCP DORA・T1/T2・期限切れ、ARP cache、IPv6 DAD・preferred/valid lifetime、NDP reachabilityの時間イベントを計算。実端末の設定は変更しません。",
+        "targets": [
+          {
+            "name": "DHCP T1/T2",
+            "description": "unicast更新とbroadcast再束縛を別時点で行います。",
+            "formula": ""
+          },
+          {
+            "name": "ARPの期限",
+            "description": "IPv4→MACの対応を再確認する必要があります。",
+            "formula": ""
+          },
+          {
+            "name": "DAD",
+            "description": "使用前に重複がないか調べます。",
+            "formula": ""
+          },
+          {
+            "name": "preferred/valid",
+            "description": "新規通信へ推奨しない状態と、使用できない状態を分けます。",
+            "formula": ""
+          },
+          {
+            "name": "NDP状態",
+            "description": "REACHABLEからSTALE・DELAY・PROBEへ進み確認します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 97,
+        "id": "gap-097",
+        "tag": "GAP-097",
+        "title": "IPヘッダー・TTL・ICMP・断片化・経路MTU",
+        "group": "M",
+        "area": "C13",
+        "scope": "3ルーター経路でIPv4/IPv6のサイズとTTL/Hop Limitを検査。IPv4の8byte単位断片化とchecksum、DF時のICMP、IPv6 PTB後の送信元分割を計算します。",
+        "targets": [
+          {
+            "name": "IPヘッダー",
+            "description": "長さ、プロトコル、識別、TTL、宛先などの役割を分けます。",
+            "formula": ""
+          },
+          {
+            "name": "ICMP",
+            "description": "配送不能やTTL超過を送信元へ通知します。",
+            "formula": ""
+          },
+          {
+            "name": "断片化",
+            "description": "IPv4のoffsetは8byte単位で、元のデータの位置を表します。",
+            "formula": ""
+          },
+          {
+            "name": "PMTUD",
+            "description": "途中の上限を通知から学び、送信元がサイズを調整します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 98,
+        "id": "gap-098",
+        "tag": "GAP-098",
+        "title": "DNSの委任・権威・CNAME・否定応答のキャッシュ",
+        "group": "M",
+        "area": "C13",
+        "scope": "root→test→example.testの委任と、編集可能なzone内のA/AAAA/MX/TXT/CNAMEを解決。再帰resolverの正・負キャッシュを時刻で比較します。外部DNSは問い合わせません。",
+        "targets": [
+          {
+            "name": "再帰と反復",
+            "description": "クライアントは解決を依頼し、resolverは担当先を順に問い合わせます。",
+            "formula": ""
+          },
+          {
+            "name": "委任と権威",
+            "description": "親が子の担当を示し、子がzone内の答えを管理します。",
+            "formula": ""
+          },
+          {
+            "name": "レコードとCNAME",
+            "description": "別名をたどる場合と、求めた種別の値を返す場合を分けます。",
+            "formula": ""
+          },
+          {
+            "name": "正・負キャッシュ",
+            "description": "有効な値と存在しないという情報のどちらにも期限があります。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 99,
+        "id": "gap-099",
+        "tag": "GAP-099",
+        "title": "TCPのbyte番号・SACK・再送タイマー・接続終了",
+        "group": "M",
+        "area": "C13",
+        "scope": "最大2400byteの離散イベントTCP教材。SYN/FIN、byte単位SEQ/ACK、window、1回の損失、重複ACK、SACK範囲、RTO・Karn条件つきRTT推定を計算。輻輳制御は別単元です。",
+        "targets": [
+          {
+            "name": "SEQ・累積ACK",
+            "description": "番号はpacket個数でなくbyte位置です。SYN/FINも1を消費します。",
+            "formula": ""
+          },
+          {
+            "name": "SACK",
+            "description": "累積ACKより先の到着範囲を示します。",
+            "formula": ""
+          },
+          {
+            "name": "RTT・RTO",
+            "description": "再送で曖昧になった標本を避け、変動も含めてタイマーを更新します。",
+            "formula": ""
+          },
+          {
+            "name": "fast retransmit",
+            "description": "同じACKが続くことから失われた先頭の再送を試みます。",
+            "formula": ""
+          },
+          {
+            "name": "half-close・TIME_WAIT",
+            "description": "送信方向の終了と両方向の終了を区別します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 100,
+        "id": "gap-100",
+        "tag": "GAP-100",
+        "title": "受信window・輻輳window・送信量の制約",
+        "group": "M",
+        "area": "C13",
+        "scope": "30ラウンドのsegment粒度モデル。受信バッファとアプリの読出し、cwndのslow start/AIMD、有限リンク容量での損失、再送待ち、zero-window確認を分離して計算します。",
+        "targets": [
+          {
+            "name": "フロー制御",
+            "description": "受信アプリが消費できる量と空き領域を管理します。",
+            "formula": ""
+          },
+          {
+            "name": "輻輳制御",
+            "description": "途中の損失を受けてcwndを調整します。",
+            "formula": ""
+          },
+          {
+            "name": "in flight",
+            "description": "未確認のデータが既に上限を占めています。",
+            "formula": ""
+          },
+          {
+            "name": "zero window",
+            "description": "相手の受入れ余裕が戻ることを確認します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 101,
+        "id": "gap-101",
+        "tag": "GAP-101",
+        "title": "RIP・リンク状態・BGPの情報伝播と経路選択",
+        "group": "M",
+        "area": "C13",
+        "scope": "最大8頂点の同期ラウンドの距離ベクトル、sequence付きLSA flood＋SPF、AS-path-vectorを比較。RIPは上限16、OSPFは単一areaの基本動作、BGPは単一prefixの方針選択です。",
+        "targets": [
+          {
+            "name": "距離ベクトル",
+            "description": "隣の距離へ自分からのコストを足し、古い情報による問題を考えます。",
+            "formula": ""
+          },
+          {
+            "name": "LSAとSPF",
+            "description": "新しいsequenceの接続情報を広げてから経路を再計算します。",
+            "formula": ""
+          },
+          {
+            "name": "隣接・障害検出",
+            "description": "経路変更が届くまで、各機器が異なる知識を持ちます。",
+            "formula": ""
+          },
+          {
+            "name": "BGP",
+            "description": "AS_PATHのループを拒否し、local preference等の方針で選びます。",
+            "formula": ""
+          },
+          {
+            "name": "階層化",
+            "description": "OSPFのareaとABRの要約は、広げる詳細情報の範囲を分ける考え方です。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 102,
+        "id": "gap-102",
+        "tag": "GAP-102",
+        "title": "Littleの法則・M/M/1・トークンバケット",
+        "group": "M",
+        "area": "C13",
+        "scope": "指数分布の到着・サービス時間をseed固定で発生させるFCFS単一サーバー。空から始め最後まで排出する有限標本のLittleの等式と定常理論を区別。別モードでpolicing/shapingを計算します。",
+        "targets": [
+          {
+            "name": "Littleの法則",
+            "description": "同じ観測区間・対象集合でL=λWを照合します。",
+            "formula": ""
+          },
+          {
+            "name": "M/M/1",
+            "description": "指数到着・指数サービス・単一サーバーの条件を使います。",
+            "formula": ""
+          },
+          {
+            "name": "安定性",
+            "description": "ρ=λ/μが1以上なら無限バッファの定常平均は存在しません。",
+            "formula": ""
+          },
+          {
+            "name": "token bucket",
+            "description": "時間でtokenを補充し、容量でburstを制限します。",
+            "formula": ""
+          },
+          {
+            "name": "policingとshaping",
+            "description": "超過を捨てる方法と待たせる方法を分けます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 103,
+        "id": "gap-103",
+        "tag": "GAP-103",
+        "title": "CSMA/CA・バックオフ・隠れ端末・RTS/CTS",
+        "group": "M",
+        "area": "C13",
+        "scope": "2〜6端末とAPのslotモデル。carrier sense・DIFS・乱数backoff・衝突後CW増加・RTS/CTSのNAVを計算。仮想slot最大600で終了し、実無線PHYの再現ではありません。",
+        "targets": [
+          {
+            "name": "carrier sense",
+            "description": "自分から聞こえる送信中の信号でbackoffを止めます。",
+            "formula": ""
+          },
+          {
+            "name": "隠れ端末",
+            "description": "端末同士は聞こえなくても受信APで衝突する場合があります。",
+            "formula": ""
+          },
+          {
+            "name": "backoff",
+            "description": "衝突後は乱数を選ぶ範囲を広げます。",
+            "formula": ""
+          },
+          {
+            "name": "RTS/CTS・NAV",
+            "description": "APから聞こえる予約によって他端末を待機させます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 104,
+        "id": "gap-104",
+        "tag": "GAP-104",
+        "title": "BPSK・QPSK・QAM・OFDMとSNR",
+        "group": "M",
+        "area": "C13",
+        "scope": "正規化BPSK/QPSK/16QAMの変調と最近傍復調、8carrierの単位的IFFT/FFT OFDM、2tapチャネル・CP・等化を計算。seed付き複素AWGNで誤りを比較します。",
+        "targets": [
+          {
+            "name": "I/Qと位相",
+            "description": "複素数の実部・虚部で信号を表します。",
+            "formula": ""
+          },
+          {
+            "name": "QAMと判定",
+            "description": "近い候補へ雑音で移るとbitの誤りが起きます。",
+            "formula": ""
+          },
+          {
+            "name": "OFDM",
+            "description": "複数carrierをIFFTで合成しFFTで分離します。",
+            "formula": ""
+          },
+          {
+            "name": "CPと等化",
+            "description": "反射の影響を周波数ごとの係数で扱う前提を整えます。",
+            "formula": ""
+          },
+          {
+            "name": "SNRとBER",
+            "description": "雑音の設定と実際に誤ったbitの割合を分けます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 105,
+        "id": "gap-105",
+        "tag": "GAP-105",
+        "title": "HTTPの意味・多重化・HTTP/3の接続準備",
+        "group": "M",
+        "area": "C13",
+        "scope": "仮想REST資源へのGET/HEAD/POST/PUT/DELETE/OPTIONS・ETag条件を評価。2転送方式のstream損失と、TCP+TLS／QUICの接続段階を比較。HPACK/QPACKや実HTTP parserは対象外です。",
+        "targets": [
+          {
+            "name": "メソッドと冪等性",
+            "description": "同じ要求の繰返しが資源状態へ与える意味を区別します。",
+            "formula": ""
+          },
+          {
+            "name": "条件付き要求",
+            "description": "ETagを照合し、未変更なら本文の再取得を避けます。",
+            "formula": ""
+          },
+          {
+            "name": "streamとHOL",
+            "description": "アプリのstreamと転送層の順序待ちを分けます。",
+            "formula": ""
+          },
+          {
+            "name": "QUICの準備",
+            "description": "UDP上でTLSの鍵確立を行い、TCPの握手とは区別します。",
+            "formula": ""
+          },
+          {
+            "name": "early data",
+            "description": "再開の速さだけでなく、再送・再演の安全な操作を選びます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 106,
+        "id": "gap-106",
+        "tag": "GAP-106",
+        "title": "PCAPのbyte列を読む・TCPを観測して診断する",
+        "group": "M",
+        "area": "C13",
+        "scope": "classic PCAP/Ethernet/IPv4/TCP・UDPの一部をbyteから解析。教材TCPからcaptureを生成し、外部送信なしでSEQ/ACK/長さ・IPv4 checksum・時刻を検査します。TLS復号や全protocol解析ではありません。",
+        "targets": [
+          {
+            "name": "capture形式",
+            "description": "レコードの長さと時刻を先に検証します。",
+            "formula": ""
+          },
+          {
+            "name": "ヘッダーの境界",
+            "description": "各層の長さから次の層の開始を求めます。",
+            "formula": ""
+          },
+          {
+            "name": "観測と推論",
+            "description": "byteから読める事実と、原因の仮説を分離します。",
+            "formula": ""
+          },
+          {
+            "name": "診断",
+            "description": "往復・再送候補・エラーの時系列を照合します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 107,
+        "id": "gap-107",
+        "tag": "GAP-107",
+        "title": "ESP・SA・認証付き暗号・リプレイwindow",
+        "group": "M",
+        "area": "C13",
+        "scope": "教材用の固定テスト鍵を使うAES-GCM、SPIとSEQをAADに含む仮想ESP、anti-replay bitmapを実計算。transport/tunnelの保護対象を分けます。IKEや実IPsec通信の実装ではありません。",
+        "targets": [
+          {
+            "name": "SAとSPI",
+            "description": "同じ接続先でも方向ごとの設定を区別します。",
+            "formula": ""
+          },
+          {
+            "name": "認証付き暗号",
+            "description": "暗号文と関連ヘッダーの改変を検出します。",
+            "formula": ""
+          },
+          {
+            "name": "anti-replay",
+            "description": "認証済みの番号だけでwindowを更新します。",
+            "formula": ""
+          },
+          {
+            "name": "transport/tunnel",
+            "description": "元IP headerを外へ残すか、内側全体を保護するかを分けます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 108,
+        "id": "gap-108",
+        "tag": "GAP-108",
+        "title": "IP・ARP・DNS・Firewallを連動させてネットワークを構築",
+        "group": "M",
+        "area": "C13",
+        "scope": "最大10機器のinterface・prefix・LAN・gateway・静的route・DNSレコード・状態付きACLを連動。双方向のDNS/TCP/仮想TLS確認/HTTP配送を順に計算。実通信・実TLS暗号処理は行いません。",
+        "targets": [
+          {
+            "name": "機器ごとの判断",
+            "description": "最短経路を全知の視点で選ばず、各機器の設定から転送します。",
+            "formula": ""
+          },
+          {
+            "name": "L2/L3",
+            "description": "次ホップMACは区間で変わり、最終IPは保ちます。",
+            "formula": ""
+          },
+          {
+            "name": "名前解決とアプリ",
+            "description": "DNSが成功してから得たIPでサービスへ進みます。",
+            "formula": ""
+          },
+          {
+            "name": "双方向とstate",
+            "description": "要求と応答の許可、既存通信の戻りを別に判断します。",
+            "formula": ""
+          },
+          {
+            "name": "障害の切り分け",
+            "description": "最初に止まった段階と、その判断に使った設定を確認します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 109,
+        "id": "gap-109",
+        "tag": "GAP-109",
+        "title": "データフローから脅威と対策を組み立てる",
+        "group": "N",
+        "area": "C15",
+        "scope": "編集可能な8頂点以下の権限遷移グラフ。主体の権限状態を辺に沿って伝播し、信頼境界・到達する資産・対策の全組合せを調べます。スコアは危険度の認定ではありません。",
+        "targets": [
+          {
+            "name": "資産・信頼境界",
+            "description": "守るデータと、別の信頼主体から情報が入る場所を分けます。",
+            "formula": ""
+          },
+          {
+            "name": "脅威と到達経路",
+            "description": "直通の道だけでなく、別サービスを通る経路も調べます。",
+            "formula": ""
+          },
+          {
+            "name": "対策の作用",
+            "description": "どの確認がどの辺を止めるかを追います。",
+            "formula": ""
+          },
+          {
+            "name": "リスクと機能",
+            "description": "遮断だけでなく正規の操作を維持する必要があります。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 110,
+        "id": "gap-110",
+        "tag": "GAP-110",
+        "title": "群・有限体・Eulerの定理・楕円曲線",
+        "group": "N",
+        "area": "C15",
+        "scope": "剰余の単元群、Euler phi、GF(2^8)の多項式演算、小さな曲線y²=x³+2x+2 mod17を実計算。実暗号の鍵長と安全性を表すものではありません。",
+        "targets": [
+          {
+            "name": "単元と逆元",
+            "description": "法mと互いに素な値だけが整数剰余の乗法逆元を持ちます。",
+            "formula": ""
+          },
+          {
+            "name": "Euler phi",
+            "description": "単元の個数φ(m)とa^φ(m) mod mを計算します。",
+            "formula": ""
+          },
+          {
+            "name": "有限体",
+            "description": "GF(2^8)ではXOR加算と多項式の剰余による乗算を使います。",
+            "formula": ""
+          },
+          {
+            "name": "楕円曲線群",
+            "description": "点の加法と倍算を有限体上で行い、無限遠点を含めます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 111,
+        "id": "gap-111",
+        "tag": "GAP-111",
+        "title": "AESの内部・暗号利用モード・完全秘匿の前提",
+        "group": "N",
+        "area": "C15",
+        "scope": "AES-128のS-box・鍵展開・10roundを実装し、ECB/CBC/CTRの3blockを計算。4bit OTPは全鍵を列挙。固定テスト鍵・IVであり実用禁止、認証タグはこのモード例には含みません。",
+        "targets": [
+          {
+            "name": "AESの状態と鍵展開",
+            "description": "16byte状態とroundごとの鍵を別々に計算します。",
+            "formula": ""
+          },
+          {
+            "name": "置換と拡散",
+            "description": "S-box、行移動、列の混合が入力差を広げます。",
+            "formula": ""
+          },
+          {
+            "name": "ECB/CBC/CTR",
+            "description": "同じblockやIV・counterの使い方による関係を比較します。",
+            "formula": ""
+          },
+          {
+            "name": "nonce再利用",
+            "description": "CTRの同じkeystreamで2平文を隠すとXORの関係が残ります。",
+            "formula": ""
+          },
+          {
+            "name": "完全秘匿",
+            "description": "独立一様な一回限りの鍵が平文と同じ長さある前提で考えます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 112,
+        "id": "gap-112",
+        "tag": "GAP-112",
+        "title": "衝突・原像・RSAの構造・OAEPの符号化",
+        "group": "N",
+        "area": "C15",
+        "scope": "SHA-256を4〜16bitに切り詰めた衝突探索、公開小RSAの生署名の乗法性、SHA-256/MGF1の128byte OAEP符号化・検査を実計算。OAEPはRSA演算前の符号化であり、それ自体は暗号ではありません。",
+        "targets": [
+          {
+            "name": "衝突と原像",
+            "description": "任意の2入力を合わせる探索と、決めたhashに合わせる探索を分けます。",
+            "formula": ""
+          },
+          {
+            "name": "誕生日境界",
+            "description": "候補の組の数が試行数の二乗で増えることを確認します。",
+            "formula": ""
+          },
+          {
+            "name": "署名の符号化",
+            "description": "生のRSA乗法性を、そのまま安全な署名に使いません。",
+            "formula": ""
+          },
+          {
+            "name": "OAEPとMGF1",
+            "description": "hash、padding、seedのマスクを計算し、復号側で構造を検査します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 113,
+        "id": "gap-113",
+        "tag": "GAP-113",
+        "title": "証明書チェーン・失効・ECDH・鍵導出",
+        "group": "N",
+        "area": "C15",
+        "scope": "公開test P-256鍵によるJSON形式の独自証明書チェーンを実署名・検証。信頼anchor、CA、名前、時刻、失効を分け、実ECDHとHKDFも計算します。X.509 DERや完全なTLS1.3実装ではありません。",
+        "targets": [
+          {
+            "name": "信頼anchor",
+            "description": "署名が自己一致することと、利用者が信頼した起点であることは別です。",
+            "formula": ""
+          },
+          {
+            "name": "発行権限と名前",
+            "description": "CAの役割、用途、対象の名前を確認します。",
+            "formula": ""
+          },
+          {
+            "name": "失効",
+            "description": "期間内でも使用を認めなくなった鍵・証明書を扱います。",
+            "formula": ""
+          },
+          {
+            "name": "ECDHとHKDF",
+            "description": "共有秘密からsaltとcontextを使って用途別の鍵を導出します。",
+            "formula": ""
+          },
+          {
+            "name": "前方秘匿性",
+            "description": "一時的な共有鍵の秘密と、長期の署名鍵を分離し消去する前提を考えます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 114,
+        "id": "gap-114",
+        "tag": "GAP-114",
+        "title": "JWT検証・PKCE・refresh rotation・パスキー",
+        "group": "N",
+        "area": "C15",
+        "scope": "固定test鍵のHS256 JWT、S256 PKCEのcode照合、refresh token family失効、P-256署名付き仮想WebAuthn assertionを実計算。実サービスのログインや本物の認証器を操作しません。",
+        "targets": [
+          {
+            "name": "JWTの受理条件",
+            "description": "算法を固定し、署名・iss・aud・exp・nbfを検証します。",
+            "formula": ""
+          },
+          {
+            "name": "PKCE",
+            "description": "認可codeをverifierの保有とredirect URIへ結び付けます。",
+            "formula": ""
+          },
+          {
+            "name": "refresh rotation",
+            "description": "既使用tokenの再演時に同じfamilyを失効させます。",
+            "formula": ""
+          },
+          {
+            "name": "WebAuthn",
+            "description": "RP ID hashとclientDataのorigin/challengeを署名対象と照合します。",
+            "formula": ""
+          },
+          {
+            "name": "OIDCのnonce",
+            "description": "ID tokenが今回の認証要求に対するものかを確認します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 115,
+        "id": "gap-115",
+        "tag": "GAP-115",
+        "title": "DAC・MAC・RBAC・ABACと職務分離",
+        "group": "N",
+        "area": "C15",
+        "scope": "POSIX型DAC、機密性BLP／完全性Bibaの単純ラベル、継承付きRBAC、有限属性のABAC式を実評価。実OSの完全なポリシー実装ではありません。",
+        "targets": [
+          {
+            "name": "DAC",
+            "description": "所有者・グループ・その他に対応するbitを選びます。",
+            "formula": ""
+          },
+          {
+            "name": "機密性と完全性",
+            "description": "情報を漏らす向きと、信頼性を汚す向きを区別します。",
+            "formula": ""
+          },
+          {
+            "name": "RBACの継承",
+            "description": "上位役割がどの下位役割を含むかをたどります。",
+            "formula": ""
+          },
+          {
+            "name": "ABAC",
+            "description": "認証状態、所有関係、時刻などの式から判断します。",
+            "formula": ""
+          },
+          {
+            "name": "職務分離",
+            "description": "許可条件に加えて同一人物の兼務を拒否します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 116,
+        "id": "gap-116",
+        "tag": "GAP-116",
+        "title": "入力境界と認可をコードで修正し、回帰テストする",
+        "group": "N",
+        "area": "C15",
+        "scope": "3行の仮想データを独自SQLインタプリタで実行。値の束縛と編集可能な認可式を別に検証し、入力・他人のIDの回帰ケースを実行します。別モードで出力エスケープとパス正規化を計算します。",
+        "targets": [
+          {
+            "name": "値と構造",
+            "description": "入力をSQLの構造へ連結しない実装を比較します。",
+            "formula": ""
+          },
+          {
+            "name": "オブジェクトの認可",
+            "description": "IDが存在することと、その主体が読めることは別です。",
+            "formula": ""
+          },
+          {
+            "name": "回帰テスト",
+            "description": "修正前に成立した反例が拒否され、正規要求が残るかを確認します。",
+            "formula": ""
+          },
+          {
+            "name": "出力とパスの文脈",
+            "description": "文字列を解釈する場所に応じてエスケープ・正規化・境界確認を行います。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 117,
+        "id": "gap-117",
+        "tag": "GAP-117",
+        "title": "状態付きFirewall・検知・RPKIの経路起点確認",
+        "group": "N",
+        "area": "C15",
+        "scope": "合成TCPフローのSYN/SYN-ACK/ACK/DATAとtoken bucket、観測イベントのしきい値を計算。別モードでROAのprefix・maxLength・originを照合。実ネットワーク防御製品ではありません。",
+        "targets": [
+          {
+            "name": "状態付き検査",
+            "description": "単一packetだけでなく同じ接続の前段を確認します。",
+            "formula": ""
+          },
+          {
+            "name": "レート制限",
+            "description": "資源を消費する到着量と正規利用者への影響を計算します。",
+            "formula": ""
+          },
+          {
+            "name": "検知の評価",
+            "description": "正常・異常の真のラベルと警告を別々に集計します。",
+            "formula": ""
+          },
+          {
+            "name": "ROA",
+            "description": "prefixを広告してよいoriginと最大の詳細度を照合します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 118,
+        "id": "gap-118",
+        "tag": "GAP-118",
+        "title": "範囲外アクセス・生存期間・canary・NX・ASLR",
+        "group": "N",
+        "area": "C15",
+        "scope": "小さな仮想byte配列と世代付きハンドルの操作。stackの境界・canary・NX、heapの解放と再利用、8bit整数のwrap、ページ権限を別に計算。ホストのメモリや実機命令を触りません。",
+        "targets": [
+          {
+            "name": "空間的安全性",
+            "description": "確保した領域の長さを越えないかを調べます。",
+            "formula": ""
+          },
+          {
+            "name": "時間的安全性",
+            "description": "同じ番地でも以前の割当は既に無効な場合があります。",
+            "formula": ""
+          },
+          {
+            "name": "防御の役割",
+            "description": "canary、NX、ASLRは検査する対象と保証が異なります。",
+            "formula": ""
+          },
+          {
+            "name": "整数の表現",
+            "description": "小さい整数へ丸めた後の長さと、本来の要求数を混同しません。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 119,
+        "id": "gap-119",
+        "tag": "GAP-119",
+        "title": "安全な開発の実検査・fuzzing・依存部品・生成物",
+        "group": "N",
+        "area": "C15",
+        "scope": "編集可能な有界言語を生成入力で実行しclamp仕様と照合。別モードで架空依存部品の到達性とロック照合、SHA-256の生成物・署名検査を行います。実在の脆弱性DBではありません。",
+        "targets": [
+          {
+            "name": "動的検査",
+            "description": "実際の出力を独立した仕様と照合します。",
+            "formula": ""
+          },
+          {
+            "name": "生成・境界入力",
+            "description": "通常値だけでなく、範囲の境目を意図的に選びます。",
+            "formula": ""
+          },
+          {
+            "name": "供給網",
+            "description": "部品の版・到達性・固定した内容を分けて確認します。",
+            "formula": ""
+          },
+          {
+            "name": "生成物の署名",
+            "description": "検査した内容と受け取った内容が同じかを検証します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 120,
+        "id": "gap-120",
+        "tag": "GAP-120",
+        "title": "証拠の保全・時系列・復元データを検証する",
+        "group": "N",
+        "area": "C15",
+        "scope": "編集可能な合成ログのsource時計補正、保全hashと受渡しhashチェーン、架空snapshotのデータ復元と再検証。現実の証拠能力や法的手続きを認定する教材ではありません。",
+        "targets": [
+          {
+            "name": "証拠の同一性",
+            "description": "取得時とその後のbyte列が同じかを確認します。",
+            "formula": ""
+          },
+          {
+            "name": "受渡しの履歴",
+            "description": "前のhashを含めた記録で途中の変更を検出します。",
+            "formula": ""
+          },
+          {
+            "name": "時系列と仮説",
+            "description": "補正した時刻と、認証情報を使った主体の推定を分けます。",
+            "formula": ""
+          },
+          {
+            "name": "復元と再発防止",
+            "description": "データを戻しただけで原因が解消したとは扱いません。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 121,
+        "id": "gap-121",
+        "tag": "GAP-121",
+        "title": "しきい値秘密分散・Schnorr証明・LWEの小さな計算",
+        "group": "N",
+        "area": "C15",
+        "scope": "GF257のt-of-n Shamir、位数11のSchnorr対話とnonce再利用、小次元LWEの暗号化・復号を実計算。公開seedと小定数のため実用不可、ML-KEMや本格ZKシステムではありません。",
+        "targets": [
+          {
+            "name": "Shamirの補間",
+            "description": "しきい値以上の点から定数項を復元します。",
+            "formula": ""
+          },
+          {
+            "name": "情報の不足",
+            "description": "少ない点でも多くの候補秘密に一致する多項式が存在します。",
+            "formula": ""
+          },
+          {
+            "name": "Schnorr",
+            "description": "g^z=t·y^cを確認し、nonce再利用時の漏えいを計算します。",
+            "formula": ""
+          },
+          {
+            "name": "LWE",
+            "description": "公開行列、秘密ベクトル、雑音を使って線形計算を隠します。",
+            "formula": ""
+          },
+          {
+            "name": "標準方式との区別",
+            "description": "小さな数の仕組み理解と、規格・実用パラメータの安全性を分けます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 122,
+        "id": "gap-122",
+        "tag": "GAP-122",
+        "title": "欠損値・外れ値・尺度・カテゴリの前処理",
+        "group": "O",
+        "area": "C17",
+        "scope": "8〜40行のJSONデータをtrain/testへ分け、trainだけから平均／中央値補完・標準化／min-max・カテゴリ辞書を推定して適用します。未知カテゴリを別欄に残します。",
+        "targets": [
+          {
+            "name": "欠損補完",
+            "description": "観測されたtrainの値だけから補完値を推定します。",
+            "formula": ""
+          },
+          {
+            "name": "標準化",
+            "description": "平均と標準偏差はfitした集合のものを固定して使います。",
+            "formula": ""
+          },
+          {
+            "name": "カテゴリ",
+            "description": "one-hotの辞書にない値を勝手に既知の種類へ混ぜません。",
+            "formula": ""
+          },
+          {
+            "name": "データ漏れ",
+            "description": "前処理にも学習段階と評価段階があります。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 123,
+        "id": "gap-123",
+        "tag": "GAP-123",
+        "title": "ロジスティック回帰・決定木・Random Forest・SVM",
+        "group": "O",
+        "area": "C17",
+        "scope": "2特徴・20〜100点の合成二値分類を実学習。batch logistic/linear hinge SVM、Gini分割の木、bootstrap＋1特徴選択の5本forestを比較。全方式の実用最適化は対象外です。",
+        "targets": [
+          {
+            "name": "logistic",
+            "description": "線形なscoreをsigmoidで二値の確率に写して学習します。",
+            "formula": ""
+          },
+          {
+            "name": "決定木",
+            "description": "不純度を下げる特徴としきい値を選びます。",
+            "formula": ""
+          },
+          {
+            "name": "forest",
+            "description": "標本を取り直した複数の木の出力を平均します。",
+            "formula": ""
+          },
+          {
+            "name": "SVM",
+            "description": "marginが不足する点にhinge lossを与えます。",
+            "formula": ""
+          },
+          {
+            "name": "モデルの表現力",
+            "description": "データを分ける境界の形と、trainへの適合を区別します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 124,
+        "id": "gap-124",
+        "tag": "GAP-124",
+        "title": "過学習・正則化・交差検証・データ漏れ",
+        "group": "O",
+        "area": "C17",
+        "scope": "sin(πx)＋seed雑音の回帰を多項式でfit。train/test分離、5-fold CV、係数のL2正則化、標本数によるlearning curveを実計算。目標値を特徴に混ぜる反例も用意します。",
+        "targets": [
+          {
+            "name": "train/validation/test",
+            "description": "学習・選択・最終評価の役割を分離します。",
+            "formula": ""
+          },
+          {
+            "name": "過学習と表現力",
+            "description": "複雑なモデルが雑音まで追う場合があります。",
+            "formula": ""
+          },
+          {
+            "name": "L2正則化",
+            "description": "係数の大きさにも費用を与えます。",
+            "formula": ""
+          },
+          {
+            "name": "learning curve",
+            "description": "標本数によるtrainとtestの違いを見ます。",
+            "formula": ""
+          },
+          {
+            "name": "リーク",
+            "description": "本来予測時に使えない情報を特徴に入れる反例を確認します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 125,
+        "id": "gap-125",
+        "tag": "GAP-125",
+        "title": "ニューラルネットワークの順伝播・損失・逆伝播",
+        "group": "O",
+        "area": "C17",
+        "scope": "XORの4点を2入力→tanh隠れ層→sigmoid出力で学習。batch交差エントロピーの解析勾配と有限差分を独立に照合します。最大6隠れunit、600更新の小モデルです。",
+        "targets": [
+          {
+            "name": "順伝播",
+            "description": "線形変換と活性化で次の層へ値を渡します。",
+            "formula": ""
+          },
+          {
+            "name": "交差エントロピー",
+            "description": "正しいlabelへ高い確率を与えるよう損失を計算します。",
+            "formula": ""
+          },
+          {
+            "name": "連鎖律と逆伝播",
+            "description": "後ろの誤差を局所微分で前へ伝えます。",
+            "formula": ""
+          },
+          {
+            "name": "勾配検査",
+            "description": "解析式と有限差分を別々に計算して照合します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 126,
+        "id": "gap-126",
+        "tag": "GAP-126",
+        "title": "A*・ゲーム探索・制約充足・知識からの計画",
+        "group": "O",
+        "area": "C17",
+        "scope": "5×5重み付き格子のA*とDijkstra照合、1〜3個取りゲームのminimax、4〜8Queensのbacktracking、鍵と扉の有限状態BFS計画を実行。一般AIの推論器ではありません。",
+        "targets": [
+          {
+            "name": "A*",
+            "description": "g+hの評価と、許容的な見積りの役割を確認します。",
+            "formula": ""
+          },
+          {
+            "name": "minimax",
+            "description": "自分の利益と相手の最善応答を交互に考えます。",
+            "formula": ""
+          },
+          {
+            "name": "制約充足",
+            "description": "部分的な配置で制約に違反したら枝を戻ります。",
+            "formula": ""
+          },
+          {
+            "name": "計画と知識",
+            "description": "行動の前提・追加・削除から到達する状態を探索します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 127,
+        "id": "gap-127",
+        "tag": "GAP-127",
+        "title": "強化学習・価値・探索と活用・Q学習",
+        "group": "O",
+        "area": "C17",
+        "scope": "4×4格子の有限MDPをtabular Q-learningで実学習。step報酬・goal・危険マス、ε-greedy、割引、確率的な行動ずれをseedで再現。1episode60step、最大300episodeです。",
+        "targets": [
+          {
+            "name": "状態・行動・報酬",
+            "description": "何を観測して何を選び、どの値を受け取るかを定義します。",
+            "formula": ""
+          },
+          {
+            "name": "Bellman型の目標",
+            "description": "rewardと割り引いた次の価値を組み合わせます。",
+            "formula": ""
+          },
+          {
+            "name": "探索と活用",
+            "description": "未知の行動を試す割合を操作します。",
+            "formula": ""
+          },
+          {
+            "name": "方策と価値",
+            "description": "Qの表と、その表から選ぶ行動を分けます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 128,
+        "id": "gap-128",
+        "tag": "GAP-128",
+        "title": "日本語の単語分割・形態素解析・最小コスト経路",
+        "group": "O",
+        "area": "C17",
+        "scope": "最大60文字・60辞書語のlatticeを作り、語コストと品詞遷移コストからViterbiで最小経路を求めます。未知語は1文字候補。実用辞書や統計形態素解析器の全体ではありません。",
+        "targets": [
+          {
+            "name": "単語境界",
+            "description": "文字列の位置と候補の長さを区別します。",
+            "formula": ""
+          },
+          {
+            "name": "品詞",
+            "description": "同じ位置に到着しても直前の品詞が違えば次の費用が変わります。",
+            "formula": ""
+          },
+          {
+            "name": "lattice",
+            "description": "複数候補を同時に残して全体の経路を選びます。",
+            "formula": ""
+          },
+          {
+            "name": "Viterbi",
+            "description": "位置と状態ごとの最小費用を再利用し、選んだ経路を戻ります。",
+            "formula": ""
+          },
+          {
+            "name": "未知語",
+            "description": "辞書にない部分も明示的な候補と費用で扱います。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 129,
+        "id": "gap-129",
+        "tag": "GAP-129",
+        "title": "TF-IDF・n-gram・共起ベクトル・文書類似度",
+        "group": "O",
+        "area": "C17",
+        "scope": "2〜12文書のTF-IDFとcosine、add-α bigram確率、最大24語のPPMI共起ベクトルを実計算。PPMIの2次元表示は射影であり、事前学習済み埋め込みではありません。",
+        "targets": [
+          {
+            "name": "bag of words",
+            "description": "単語の出現回数を列にし、基本形では順序を捨てます。",
+            "formula": ""
+          },
+          {
+            "name": "TF-IDF",
+            "description": "ここではidf=log((N+1)/(df+1))+1を使います。",
+            "formula": ""
+          },
+          {
+            "name": "n-gram",
+            "description": "前の語の条件を付け、平滑化で未観測の組も扱います。",
+            "formula": ""
+          },
+          {
+            "name": "分布的表現",
+            "description": "周囲の語の分布から同じ文脈に現れる語を近づけます。",
+            "formula": ""
+          },
+          {
+            "name": "cosine",
+            "description": "ベクトルの長さではなく方向の近さを計算します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 130,
+        "id": "gap-130",
+        "tag": "GAP-130",
+        "title": "構文木・係り受け・HMMと系列の推定",
+        "group": "O",
+        "area": "C17",
+        "scope": "12語以内の重み付きCKY＋単項閉包、4状態HMMのViterbi、手動arc-standard依存構文遷移を実行。英語の小辞書・手作り文法を使う形式モデルです。",
+        "targets": [
+          {
+            "name": "系列と局所判断",
+            "description": "各語だけでなく、前後の状態の得点を含めます。",
+            "formula": ""
+          },
+          {
+            "name": "HMMとViterbi",
+            "description": "状態列の最大得点を動的計画法で求めます。",
+            "formula": ""
+          },
+          {
+            "name": "CKY",
+            "description": "短い区間から二分の構文を組み合わせます。",
+            "formula": ""
+          },
+          {
+            "name": "依存構造",
+            "description": "head→dependentの辺とラベルを操作します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 131,
+        "id": "gap-131",
+        "tag": "GAP-131",
+        "title": "Self-Attention・位置情報・Multi-Head・Transformer",
+        "group": "O",
+        "area": "C17",
+        "scope": "最大8token×8特徴の単一toy Transformer block。Q/K/V、scaled dot-product attention、causal mask、multi-head結合、残差・LayerNorm・2層ReLUを計算。未学習の公開seed重みで、文章生成モデルではありません。",
+        "targets": [
+          {
+            "name": "Q/K/V",
+            "description": "何を探すか、何を持つか、どの値を渡すかを別の変換にします。",
+            "formula": ""
+          },
+          {
+            "name": "softmaxとmask",
+            "description": "候補の重みを正規化し、使えない位置を0にします。",
+            "formula": ""
+          },
+          {
+            "name": "位置情報",
+            "description": "順序を明示的に入力へ加えます。",
+            "formula": ""
+          },
+          {
+            "name": "Multi-Head",
+            "description": "別の部分空間の重み付き和を組み合わせます。",
+            "formula": ""
+          },
+          {
+            "name": "残差・LayerNorm・FFN",
+            "description": "混合した後の表現を元入力と合わせ、さらに変換します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 132,
+        "id": "gap-132",
+        "tag": "GAP-132",
+        "title": "文書分類・検索・生成文を評価する",
+        "group": "O",
+        "area": "C17",
+        "scope": "小さいMultinomial Naive Bayes分類器を実学習し混同行列を計算。別モードでTF-IDF検索のP@k/R@k/AP、単一参照sentence BLEU・ROUGE-L・WERを計算します。",
+        "targets": [
+          {
+            "name": "分類評価",
+            "description": "precision、recall、F1をclassごとに分けます。",
+            "formula": ""
+          },
+          {
+            "name": "検索評価",
+            "description": "上位kだけの評価と全順位でのAPを区別します。",
+            "formula": ""
+          },
+          {
+            "name": "生成評価",
+            "description": "n-gram一致、長さ、最長共通部分列、編集操作を別々に測ります。",
+            "formula": ""
+          },
+          {
+            "name": "評価の限界",
+            "description": "少数の参照と単語一致だけでは意味・事実の全てを確認できません。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 133,
+        "id": "gap-133",
+        "tag": "GAP-133",
+        "title": "フーリエ級数・DFT・FFT・逆変換と窓",
+        "group": "P",
+        "area": "C18",
+        "scope": "2のべき乗8〜64標本の複素FFT、独立な直接DFTとの照合、逆変換、3種類の窓。別モードで方形波の解析的なFourier級数を部分和として計算します。",
+        "targets": [
+          {
+            "name": "フーリエ級数",
+            "description": "周期関数を三角関数の和で表します。",
+            "formula": "square(x) ≈ Σ 4 sin((2k+1)x)/(π(2k+1))"
+          },
+          {
+            "name": "DFTとFFT",
+            "description": "FFTもDFTと同じ複素数の係数を返します。",
+            "formula": "X[k]=Σ x[n] exp(−j2πkn/N)"
+          },
+          {
+            "name": "逆変換",
+            "description": "全複素係数から標本列を復元します。",
+            "formula": ""
+          },
+          {
+            "name": "窓と漏れ",
+            "description": "区間を切り出す方法がスペクトルへ影響します。",
+            "formula": ""
+          },
+          {
+            "name": "連続時間との対応",
+            "description": "積分によるFourier変換と、有限標本の和を区別します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 134,
+        "id": "gap-134",
+        "tag": "GAP-134",
+        "title": "インパルス応答・FIR／IIR・周波数応答と極",
+        "group": "P",
+        "area": "C18",
+        "scope": "最大8係数のFIRと2次までのIIRを差分方程式で実行。初期状態0、64標本。周波数応答と分母の根を計算し、極零相殺は仮定しません。",
+        "targets": [
+          {
+            "name": "インパルス応答",
+            "description": "一つの刺激への応答から系の性質を調べます。",
+            "formula": ""
+          },
+          {
+            "name": "畳み込み",
+            "description": "入力をずらした応答の重ね合わせとして出力を計算します。",
+            "formula": ""
+          },
+          {
+            "name": "差分方程式",
+            "description": "過去の入力と出力を使います。",
+            "formula": "a0 y[n]=Σ bk x[n−k]−Σ(k≥1) ak y[n−k]"
+          },
+          {
+            "name": "Z変換",
+            "description": "遅れをz⁻¹の因子として表します。",
+            "formula": ""
+          },
+          {
+            "name": "周波数応答と安定性",
+            "description": "単位円上の応答と、分母の根を区別します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 135,
+        "id": "gap-135",
+        "tag": "GAP-135",
+        "title": "標本化・量子化・ディザ・信号の再構成",
+        "group": "P",
+        "area": "C18",
+        "scope": "1秒の正弦波、2〜32 sample/s、2〜8bitの端点を含む一様量子化。有限区間の零次保持・線形補間・有限sinc和を比較します。音声を外部へ送信しません。",
+        "targets": [
+          {
+            "name": "標本化",
+            "description": "記録する時刻の間隔を決めます。",
+            "formula": ""
+          },
+          {
+            "name": "量子化",
+            "description": "表現可能な段階へ丸めます。",
+            "formula": "L=2^b"
+          },
+          {
+            "name": "エイリアシング",
+            "description": "異なる波が同じ標本に見える場合があります。",
+            "formula": ""
+          },
+          {
+            "name": "ディザ",
+            "description": "丸める前の雑音で量子化誤差の性質を変えます。",
+            "formula": ""
+          },
+          {
+            "name": "再構成",
+            "description": "保存した点から連続的な表現を作ります。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 136,
+        "id": "gap-136",
+        "tag": "GAP-136",
+        "title": "RGB・ヒストグラム・二値化・形態学的処理",
+        "group": "P",
+        "area": "C18",
+        "scope": "独自の16×16 RGB画像。Y′の単純加重、HSV回転、二値化、3×3の膨張・収縮、CDFによる平坦化、逆写像の最近傍回転を実計算します。",
+        "targets": [
+          {
+            "name": "RGBとHSV",
+            "description": "同じ色を成分の値や色相・彩度・明度で表します。",
+            "formula": ""
+          },
+          {
+            "name": "ヒストグラム",
+            "description": "明るさごとの画素数を集計します。",
+            "formula": ""
+          },
+          {
+            "name": "二値化",
+            "description": "値をしきい値で分けます。",
+            "formula": ""
+          },
+          {
+            "name": "膨張と収縮",
+            "description": "近傍の最大・最小で二値領域を変えます。",
+            "formula": ""
+          },
+          {
+            "name": "逆写像",
+            "description": "移動先の画素から、参照する元の座標を求めます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 137,
+        "id": "gap-137",
+        "tag": "GAP-137",
+        "title": "3D描画：座標変換・クリッピング・画素・深度",
+        "group": "P",
+        "area": "C18",
+        "scope": "8頂点12三角形の立方体を回転し、透視投影、6平面クリッピング、重心座標による32×32ソフトウェア描画、深度検査を順に実行します。GPUやWebGLの完全な実装ではありません。",
+        "targets": [
+          {
+            "name": "座標の段階",
+            "description": "物体、視点、クリップ、画面の座標を区別します。",
+            "formula": ""
+          },
+          {
+            "name": "同次座標",
+            "description": "透視除算に使うwを保持します。",
+            "formula": ""
+          },
+          {
+            "name": "クリッピング",
+            "description": "平面との交点を追加して多角形を切り取ります。",
+            "formula": ""
+          },
+          {
+            "name": "ラスタライズ",
+            "description": "画素中心と三角形の重心座標を照合します。",
+            "formula": ""
+          },
+          {
+            "name": "深度検査",
+            "description": "近い面を残し、描画順への依存を減らします。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 138,
+        "id": "gap-138",
+        "tag": "GAP-138",
+        "title": "法線・照明・材質・テクスチャとアンチエイリアス",
+        "group": "P",
+        "area": "C18",
+        "scope": "解析的な球の表面法線にLambert拡散とPhong型鏡面項を適用。UVのチェッカーテクスチャと1／4／16点スーパーサンプリングを32×32で比較します。物理的な光輸送全体ではありません。",
+        "targets": [
+          {
+            "name": "法線",
+            "description": "表面の向きを表すベクトルです。",
+            "formula": ""
+          },
+          {
+            "name": "拡散と鏡面",
+            "description": "光と法線、反射方向と視線の関係を別々に使います。",
+            "formula": ""
+          },
+          {
+            "name": "材質",
+            "description": "同じ照明でも反射の係数や指数が異なります。",
+            "formula": ""
+          },
+          {
+            "name": "UV",
+            "description": "表面上の場所をテクスチャの座標へ移します。",
+            "formula": ""
+          },
+          {
+            "name": "アンチエイリアス",
+            "description": "画素の中の複数標本を平均します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 139,
+        "id": "gap-139",
+        "tag": "GAP-139",
+        "title": "ベジェ曲線・姿勢の補間・画像と音と動画の圧縮",
+        "group": "P",
+        "area": "C18",
+        "scope": "三次Bezierのde Casteljau法、2D角度の最短弧補間、8×8直交DCTと量子化、1次DPCM、16×16の整数画素ブロック照合を実行。JPEGや動画コンテナの完全な符号器ではありません。",
+        "targets": [
+          {
+            "name": "de Casteljau法",
+            "description": "制御点の補間を繰り返して曲線上の点を求めます。",
+            "formula": ""
+          },
+          {
+            "name": "姿勢の補間",
+            "description": "角度の周期性を考慮しない補間と比較します。",
+            "formula": ""
+          },
+          {
+            "name": "DCTと量子化",
+            "description": "変換だけなら戻せますが、係数を丸めると誤差が生じます。",
+            "formula": ""
+          },
+          {
+            "name": "DPCM",
+            "description": "復号側と同じ予測値からの差を符号化します。",
+            "formula": ""
+          },
+          {
+            "name": "動き補償",
+            "description": "前の画像の似た場所を探し、残差を作ります。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 140,
+        "id": "gap-140",
+        "tag": "GAP-140",
+        "title": "GPIO・タイマー・PWM・UART・I²C・SPI",
+        "group": "Q",
+        "area": "C19",
+        "scope": "8bit GPIO、比較器型PWM、8データbitのUART、7bitアドレスのI²C、4モードのSPIを有限の波形とレジスタとして再現します。実端末のポートを開きません。",
+        "targets": [
+          {
+            "name": "GPIO",
+            "description": "方向レジスタと出力値、実際の入力値を区別します。",
+            "formula": ""
+          },
+          {
+            "name": "PWM",
+            "description": "カウンタと比較値からパルス幅を決めます。",
+            "formula": "duty=min(compare,TOP+1)/(TOP+1)"
+          },
+          {
+            "name": "UART",
+            "description": "start、データ、任意のparity、stopを送ります。",
+            "formula": ""
+          },
+          {
+            "name": "I²C",
+            "description": "SCLとSDA、アドレス、ACK、再開始を区別します。",
+            "formula": ""
+          },
+          {
+            "name": "SPI",
+            "description": "CPOLとCPHAがクロックの休止値と標本化の辺を決めます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 141,
+        "id": "gap-141",
+        "tag": "GAP-141",
+        "title": "センサー・ADC・校正・省電力・CoAP",
+        "group": "Q",
+        "area": "C19",
+        "scope": "温度に比例する架空センサー、ADC、2点校正、seed固定雑音、周期の消費電流積算。CoAPのCON再送・重複排除・token対応を仮想交換として実行します。",
+        "targets": [
+          {
+            "name": "ADC",
+            "description": "基準電圧とbit数から量子化段階を決めます。",
+            "formula": ""
+          },
+          {
+            "name": "2点校正",
+            "description": "既知の二つの温度で得たコードから傾きと切片を求めます。",
+            "formula": ""
+          },
+          {
+            "name": "雑音と平均",
+            "description": "系統的なずれと試行ごとのばらつきを区別します。",
+            "formula": ""
+          },
+          {
+            "name": "sleepと平均電流",
+            "description": "各状態の電流を滞在時間で重み付けします。",
+            "formula": ""
+          },
+          {
+            "name": "CoAP",
+            "description": "Message IDの重複排除とtokenによる応答の対応を区別します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 142,
+        "id": "gap-142",
+        "tag": "GAP-142",
+        "title": "伝達関数・状態空間・安定性・遅れ・積分飽和",
+        "group": "Q",
+        "area": "C19",
+        "scope": "質量1、ばねと抵抗を持つ2状態系をdt=0.01秒のRK4で8秒積分。離散PID、測定遅れ、入力飽和、条件付き積分のanti-windupを計算します。",
+        "targets": [
+          {
+            "name": "状態空間",
+            "description": "位置と速度を別の状態として持ちます。",
+            "formula": "ẋ=v, v̇=u−bv−kx"
+          },
+          {
+            "name": "伝達関数",
+            "description": "初期状態0で入力と出力の関係を表します。",
+            "formula": "G(s)=1/(s²+bs+k)"
+          },
+          {
+            "name": "極と安定性",
+            "description": "分母の根が自然な応答に関係します。",
+            "formula": ""
+          },
+          {
+            "name": "遅れと飽和",
+            "description": "観測や操作には制限があります。",
+            "formula": ""
+          },
+          {
+            "name": "anti-windup",
+            "description": "飽和を悪化させる向きの積分を止めます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 143,
+        "id": "gap-143",
+        "tag": "GAP-143",
+        "title": "締切・RM／EDF・優先度逆転と優先度継承",
+        "group": "Q",
+        "area": "C19",
+        "scope": "1CPU、整数時間、プリエンプティブRM/EDF、独立周期タスク最大4。別の固定3タスクでmutex保持者の優先度継承を状態遷移として比較。実時間は使わない決定的なモデルです。",
+        "targets": [
+          {
+            "name": "周期と締切",
+            "description": "次の到着までの時間と、今回終える期限を分けます。",
+            "formula": ""
+          },
+          {
+            "name": "RMとEDF",
+            "description": "固定の優先度と、締切に基づく動的な優先度を比較します。",
+            "formula": ""
+          },
+          {
+            "name": "スケジューラビリティ",
+            "description": "前提付きの解析条件と有限実験を区別します。",
+            "formula": ""
+          },
+          {
+            "name": "優先度逆転",
+            "description": "共有資源の保持者が高優先度の仕事を待たせます。",
+            "formula": ""
+          },
+          {
+            "name": "優先度継承",
+            "description": "待っている仕事の優先度を保持者へ一時的に伝えます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 144,
+        "id": "gap-144",
+        "tag": "GAP-144",
+        "title": "要求・責務・依存関係・非機能条件を結び付ける",
+        "group": "R",
+        "area": "C20",
+        "scope": "最大8ノードのDAGのクリティカルパス、直列・独立並列の可用性、構成コスト、要求の比較を計算。仮定した部品値の設計演習で実サービスの保証ではありません。",
+        "targets": [
+          {
+            "name": "機能要求と非機能要求",
+            "description": "何ができるかと、どんな条件でできるかを分けます。",
+            "formula": ""
+          },
+          {
+            "name": "責務",
+            "description": "部品が担当する仕事を明確にします。",
+            "formula": ""
+          },
+          {
+            "name": "依存とクリティカルパス",
+            "description": "順序が必要な処理の最長経路を求めます。",
+            "formula": ""
+          },
+          {
+            "name": "品質のトレードオフ",
+            "description": "速度・可用性・コストなどを同時に比較します。",
+            "formula": ""
+          },
+          {
+            "name": "トレーサビリティ",
+            "description": "要求から部品と検証方法へたどれるようにします。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 145,
+        "id": "gap-145",
+        "tag": "GAP-145",
+        "title": "設計パターン・クラス図・リファクタリングの振舞い",
+        "group": "R",
+        "area": "C20",
+        "scope": "料金式のStrategy、通知のObserver、有限状態の注文処理を独自オブジェクトで実行。小さな参照と呼出し図を表示し、Web Atlasの実リポジトリ解析は行いません。",
+        "targets": [
+          {
+            "name": "UMLの役割",
+            "description": "構造と振舞いを別の視点から表します。",
+            "formula": ""
+          },
+          {
+            "name": "Strategy",
+            "description": "変わる計算をインターフェースの後ろへ分離します。",
+            "formula": ""
+          },
+          {
+            "name": "Observer",
+            "description": "通知する側と通知先の組合せを分離します。",
+            "formula": ""
+          },
+          {
+            "name": "状態と許可操作",
+            "description": "現在の状態によって可能な操作を変えます。",
+            "formula": ""
+          },
+          {
+            "name": "リファクタリング",
+            "description": "外から観察できる振舞いを保つ変更と、仕様変更を区別します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 146,
+        "id": "gap-146",
+        "tag": "GAP-146",
+        "title": "同値分割・境界値・実行網羅・性質の検査とデバッグ",
+        "group": "R",
+        "area": "C20",
+        "scope": "安全な教材言語のプログラムを複数入力で実行し、独立した0〜10への制限仕様と比較。実行されたソース行を集計し、失敗例を実際の実行フレームで追います。",
+        "targets": [
+          {
+            "name": "同値分割と境界値",
+            "description": "入力を振舞いの範囲に分け、境目を選びます。",
+            "formula": ""
+          },
+          {
+            "name": "独立した期待値",
+            "description": "検査対象とは別に仕様を表します。",
+            "formula": ""
+          },
+          {
+            "name": "実行網羅",
+            "description": "訪ねたソース行を記録します。条件網羅や経路網羅とは異なります。",
+            "formula": ""
+          },
+          {
+            "name": "性質の検査",
+            "description": "生成した入力でも仕様を満たすか試します。",
+            "formula": ""
+          },
+          {
+            "name": "デバッグ",
+            "description": "失敗した具体例から状態変化を追います。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 147,
+        "id": "gap-147",
+        "tag": "GAP-147",
+        "title": "共同開発：行の競合・変更の影響・CIの検証対象",
+        "group": "R",
+        "area": "C20",
+        "scope": "最大60行の独自3-way merge、DAGの変更影響とビルド順、revisionにひも付くtest/review/build/publishの状態機械。実GitやGitHubを書き換えません。",
+        "targets": [
+          {
+            "name": "3-way merge",
+            "description": "共通の元からの二つの変更を比較します。",
+            "formula": ""
+          },
+          {
+            "name": "競合",
+            "description": "同じ範囲の異なる変更は判断が必要です。",
+            "formula": ""
+          },
+          {
+            "name": "依存と再ビルド",
+            "description": "変更が影響する部品を逆向きにたどります。",
+            "formula": ""
+          },
+          {
+            "name": "レビューとCI",
+            "description": "結果を検証したrevisionに結び付けます。",
+            "formula": ""
+          },
+          {
+            "name": "配布と更新",
+            "description": "古い検証結果と現在の生成物を混同しません。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 148,
+        "id": "gap-148",
+        "tag": "GAP-148",
+        "title": "操作の手掛かり・フィードバック・取消しと認知負荷",
+        "group": "R",
+        "area": "C20",
+        "scope": "このページ内だけの3項目を削除する実際のUI。模擬遅延、処理中表示、確認、1回の取消しを切り替える例と、現在の枠内だけで計るクリック対象の実験です。",
+        "targets": [
+          {
+            "name": "メンタルモデル",
+            "description": "利用者が予想する動きと、実際の処理を比べます。",
+            "formula": ""
+          },
+          {
+            "name": "手掛かり",
+            "description": "何を操作できるかを見える形で示します。",
+            "formula": ""
+          },
+          {
+            "name": "フィードバック",
+            "description": "処理中と完了を区別して知らせます。",
+            "formula": ""
+          },
+          {
+            "name": "取消しと確認",
+            "description": "誤操作の防止と回復を分けます。",
+            "formula": ""
+          },
+          {
+            "name": "認知負荷",
+            "description": "判断に必要な情報と不要な情報を区別します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 149,
+        "id": "gap-149",
+        "tag": "GAP-149",
+        "title": "ユーザビリティ評価：対応・順序効果・比較実験",
+        "group": "R",
+        "area": "C20",
+        "scope": "明示した生成規則による合成参加者8〜32人。対応あり・なし、順序の釣合い、群の偏りを操作し、平均差とt近似区間を計算。実ユーザーの調査結果ではありません。",
+        "targets": [
+          {
+            "name": "ユーザーテスト",
+            "description": "課題を決め、操作の過程と結果を観察します。",
+            "formula": ""
+          },
+          {
+            "name": "対応のある比較",
+            "description": "同じ参加者の差を分析します。",
+            "formula": ""
+          },
+          {
+            "name": "順序効果",
+            "description": "先に試す経験が次の結果へ影響します。",
+            "formula": ""
+          },
+          {
+            "name": "交絡と割当",
+            "description": "条件以外の違いが混ざる場合があります。",
+            "formula": ""
+          },
+          {
+            "name": "不確かさ",
+            "description": "平均だけでなく、ばらつきと区間を示します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 150,
+        "id": "gap-150",
+        "tag": "GAP-150",
+        "title": "アクセシビリティ：名前・意味・フォーカス・操作",
+        "group": "R",
+        "area": "C20",
+        "scope": "この枠内のフォームでnative button／クリック用div、label、focus表示、live regionを切替。外側のサイトの操作性は維持します。自動的なWCAG適合判定ではありません。",
+        "targets": [
+          {
+            "name": "名前と役割",
+            "description": "見える文字とアクセシブルな名前を対応させます。",
+            "formula": ""
+          },
+          {
+            "name": "キーボード",
+            "description": "到達と実行をポインタ操作と区別します。",
+            "formula": ""
+          },
+          {
+            "name": "フォーカス",
+            "description": "現在の操作対象を見える形で示します。",
+            "formula": ""
+          },
+          {
+            "name": "意味構造と順序",
+            "description": "自然な文書の順番を基本にします。",
+            "formula": ""
+          },
+          {
+            "name": "状態の通知",
+            "description": "画面の変化をlive regionなどで伝えます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 151,
+        "id": "gap-151",
+        "tag": "GAP-151",
+        "title": "公平性・説明責任・ライセンスと情報倫理",
+        "group": "R",
+        "area": "C20",
+        "scope": "合成ラベル付き2群のしきい値判定を集計。別のモードでMIT/Apache-2.0の原文へ対応する確認事項と、架空の関係者の利益・不利益を整理。法的助言や自動的な倫理認定ではありません。",
+        "targets": [
+          {
+            "name": "公平性の指標",
+            "description": "選択率、TPR、FPRなどは異なる性質です。",
+            "formula": ""
+          },
+          {
+            "name": "基準率とトレードオフ",
+            "description": "群の内訳が違うと指標の同時達成にも影響します。",
+            "formula": ""
+          },
+          {
+            "name": "説明責任",
+            "description": "判断の根拠と限界を明示します。",
+            "formula": ""
+          },
+          {
+            "name": "許諾と表示",
+            "description": "公開されていることと無条件の利用を区別します。",
+            "formula": ""
+          },
+          {
+            "name": "専門家の責任",
+            "description": "影響を受ける関係者と、利益・不利益を検討します。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 152,
+        "id": "gap-152",
+        "tag": "GAP-152",
+        "title": "測定データ・条件統制・置換検定・再現性",
+        "group": "R",
+        "area": "C20",
+        "scope": "利用者が入力した2〜30個ずつの数値を解析。対応ありの符号反転または対応なしのラベル置換、seed固定Monte Carloとbootstrap区間。測定や割当の妥当性を自動では判断しません。",
+        "targets": [
+          {
+            "name": "測定誤差と条件統制",
+            "description": "測った値の意味と比較可能性を先に確認します。",
+            "formula": ""
+          },
+          {
+            "name": "対応づけ",
+            "description": "同じ対象の差と別対象の差を区別します。",
+            "formula": ""
+          },
+          {
+            "name": "置換検定",
+            "description": "帰無仮説の下で交換可能という前提を使います。",
+            "formula": ""
+          },
+          {
+            "name": "再標本化",
+            "description": "bootstrapで標本からの変動を調べます。",
+            "formula": ""
+          },
+          {
+            "name": "再現性",
+            "description": "同じ入力・設定・seedで計算を再現できます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 153,
+        "id": "gap-153",
+        "tag": "GAP-153",
+        "title": "研究の問い・根拠・引用・方法と結果と考察",
+        "group": "R",
+        "area": "C20",
+        "scope": "編集可能な観測値と、明示した主張・参照IDの対応を検査する教材。文章の意味をAIが理解して査読する機能ではなく、有限の主張形式と参照の存在を区別します。",
+        "targets": [
+          {
+            "name": "研究の問い",
+            "description": "何を、どの範囲で確かめるかを定めます。",
+            "formula": ""
+          },
+          {
+            "name": "先行研究と引用",
+            "description": "根拠の場所と関係を明示します。",
+            "formula": ""
+          },
+          {
+            "name": "方法と結果",
+            "description": "実施した手順と観測された値を分けます。",
+            "formula": ""
+          },
+          {
+            "name": "考察と限界",
+            "description": "解釈と、前提や未確認の範囲を示します。",
+            "formula": ""
+          },
+          {
+            "name": "発表",
+            "description": "主張と根拠と範囲が追えるように伝えます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 154,
+        "id": "gap-154",
+        "tag": "GAP-154",
+        "title": "DOM・CSS・レイアウト・イベント・フォームの内部",
+        "group": "S",
+        "area": "C13",
+        "scope": "枠内の本物のDOM要素でblock/flex/gridの配置と矩形を測定。入れ子のcapture/target/bubbleとフォーム検証を試します。ブラウザ全体の描画器を再実装する教材ではありません。",
+        "targets": [
+          {
+            "name": "DOM",
+            "description": "要素と親子関係を持つ木です。",
+            "formula": ""
+          },
+          {
+            "name": "CSSとレイアウト",
+            "description": "スタイルの規則と配置された矩形を区別します。",
+            "formula": ""
+          },
+          {
+            "name": "box model",
+            "description": "contentとpaddingとborderが幅へどう含まれるかを見ます。",
+            "formula": ""
+          },
+          {
+            "name": "イベント伝播",
+            "description": "capture・target・bubbleを順に追います。",
+            "formula": ""
+          },
+          {
+            "name": "フォーム",
+            "description": "制約の検証と送信の動作を分けます。",
+            "formula": ""
+          }
+        ]
+      },
+      {
+        "number": 155,
+        "id": "gap-155",
+        "tag": "GAP-155",
+        "title": "サーバー側のルーティング・API・検証・認可・DB",
+        "group": "S",
+        "area": "C13",
+        "scope": "仮想のHTTP要求を実際のroute/validator/権限/メモリDB関数へ通すモデル。GET/POST/PATCH/DELETE、4xx/5xx、独立した更新コピーによるrollbackを再現。外部APIや実DBへ接続しません。",
+        "targets": [
+          {
+            "name": "ルーティング",
+            "description": "メソッドとパスから処理を選びます。",
+            "formula": ""
+          },
+          {
+            "name": "認証と認可",
+            "description": "誰かと何を許すかを分けます。",
+            "formula": ""
+          },
+          {
+            "name": "入力検証",
+            "description": "構文、型、値の制約を確認します。",
+            "formula": ""
+          },
+          {
+            "name": "データ連携と更新",
+            "description": "公開状態と更新中の状態を分けます。",
+            "formula": ""
+          },
+          {
+            "name": "HTTP応答とエラー",
+            "description": "失敗段階に応じた応答を返し、内部情報を出しすぎないようにします。",
+            "formula": ""
+          }
+        ]
+      }
+    ],
+    "limitations": [
+      "各GAPの見出しには関連する細目が含まれます。再現する方式・規模・前提は個別のscopeに明記します。",
+      "科目との対応は科目名からの推定であり、大学の公式シラバスの確認済み範囲ではありません。",
+      "構造検査・数値テスト・ブラウザテストは、初心者の学習効果や科学分野全体の網羅を保証するものではありません。"
+    ]
+  },
+  "limitations": [
+    "Chromiumの自動試験です。モバイルは画面幅・タッチのエミュレーションで、実機やSafari・Firefoxの確認ではありません。",
+    "全GAP番号に実行可能な範囲限定モデルがあることと、関連する全専門事項を完全に再現することは同じではありません。",
+    "数値の独立した既知例、操作、表示の構造や配色を検査します。学習者による理解度評価は行っていません。",
+    "スクリーンショットは実際の画面のレビュー資料です。撮影したことを人による目視確認の完了として扱いません。",
+    "CHECK-01〜03の他コース固有科目・内容未確定の講義・一般教養等を、推測でカバー済みとはしていません。",
+    "提供された授業ノートPDF自体や学習履歴・ノートの保存機能は追加しません。"
+  ]
+}

@@ -4,6 +4,7 @@ import {spawn} from 'node:child_process';
 import {mkdir, writeFile} from 'node:fs/promises';
 import {setTimeout as sleep} from 'node:timers/promises';
 import {chromium} from 'playwright';
+import {captureDiagram} from './diagram-snapshot.mjs';
 
 const output = 'review-output';
 await mkdir(`${output}/screenshots`, {recursive:true});
@@ -55,7 +56,7 @@ try {
     assert.ok((await page.locator('#reader-guidance').textContent()).length>60);
     assert.equal(await page.locator('[data-r-phase]').count(),4);
     const first = await state(page);
-    const originalDiagram = await page.locator('#reader-diagram').innerHTML();
+    const originalDiagram = await captureDiagram(page);
     const originalExplanation = await page.locator('#reader-event').textContent();
     assert.ok(originalDiagram.length>60);
     if(first.count>1) {
@@ -65,7 +66,7 @@ try {
      await slider.focus();await slider.press('End');
      assert.equal((await state(page)).index,first.count-1);
      await slider.press('Home');assert.equal((await state(page)).index,0);
-     assert.equal(await page.locator('#reader-diagram').innerHTML(),originalDiagram);
+     assert.equal(await captureDiagram(page),originalDiagram);
      assert.equal(await page.locator('#reader-event').textContent(),originalExplanation);
     } else assert.equal(await page.locator('#reader-sequence-tools').isVisible(),false);
     await page.locator('[data-r-phase="1"]').click();

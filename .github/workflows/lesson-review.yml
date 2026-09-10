@@ -1,121 +1,54 @@
 name: Lesson review
 on:
   push:
-    branches: [feat/notebook-led-learning]
-    paths-ignore:
-      - index.html
-      - docs/EXPERIMENTS.md
-      - docs/experiments.json
-      - docs/verification/**
-      - docs/screenshots/**
+    branches: [main, feat/notebook-led-learning, feat/curriculum-gap-expansion]
   pull_request:
+  workflow_dispatch:
 permissions:
   contents: read
 concurrency:
-  group: lesson-review-${{ github.ref }}
+  group: lesson-review-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   review:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
+      # For pull_request, the default checkout is GitHub's prospective merge.
+      # The curriculum workflow separately verifies the exact PR head.
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
       - uses: actions/setup-node@v6
         with:
           node-version: '22'
-      - name: Build and test teaching models
+      - name: Check and build the committed revision
         run: |
           mkdir -p review-output
+          git rev-parse HEAD > review-output/tested-merge.txt
+          node scripts/curriculum-finalize.mjs
           npm run build
-          npm test > review-output/node-tests.txt 2>&1 || { tail -n 100 review-output/node-tests.txt; exit 1; }
-          tail -n 12 review-output/node-tests.txt
+          npm test > review-output/node-tests.txt 2>&1 || { tail -n 160 review-output/node-tests.txt; exit 1; }
+          tail -n 15 review-output/node-tests.txt
           npm run inventory
-      - name: Install browser test tools
+      - name: Install Chromium
         run: |
           npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0
-          npx playwright install chromium > review-output/browser-install.txt 2>&1 || { tail -n 40 review-output/browser-install.txt; exit 1; }
-      - name: Test all units on actual HTTP documents
+          npx playwright install chromium
+      - name: Test restored diagrams and all reader units
         run: node tests/reader-browser.mjs
-      - name: Test input recovery and playback regressions
-        run: node tests/reader-regressions.mjs
-      - name: Test SVG colors in the lesson reader
-        run: node tests/reader-svg-theme.mjs
-      - name: Record verified results and assemble artifacts
+      - name: Test input, keyboard and SVG regressions
         run: |
-          node scripts/review-summary.mjs
-          cp index.html review-output/Visual-CS-Lab.html
-          python3 - <<'PY'
-          import subprocess
-          from pathlib import Path
-          from zipfile import ZipFile, ZIP_DEFLATED
-          names = subprocess.check_output(['git', 'ls-files', '-z']).decode().split('\0')
-          reports = {
-              'docs/verification/v3.json': 'review-output/verification-v3.json',
-              'docs/verification/TEST_REPORT-v3.md': 'review-output/TEST_REPORT-v3.md',
-          }
-          with ZipFile('review-output/visual-cs-lab-source.zip', 'w', ZIP_DEFLATED) as archive:
-              for name in names:
-                  if name and name not in reports and Path(name).is_file():
-                      archive.write(name, 'visual-cs-lab/' + name)
-              for name, source in reports.items():
-                  archive.write(source, 'visual-cs-lab/' + name)
-              assert len(archive.namelist()) == len(set(archive.namelist())), 'Duplicate archive paths'
-          PY
+          node tests/pr-review-browser.mjs
+          node tests/reader-regressions.mjs
+          node tests/reader-svg-theme.mjs
+      - name: Ensure tests did not change the source
+        run: |
+          test "$(git rev-parse HEAD)" = "$(cat review-output/tested-merge.txt)"
+          git diff --exit-code HEAD -- src scripts tests package.json .github
       - uses: actions/upload-artifact@v5
         if: always()
         with:
-          name: visual-cs-lab-review
+          name: visual-cs-lab-review-${{ github.event_name }}-${{ github.run_attempt }}
           path: review-output/
           retention-days: 14
-  sync-generated:
-    name: Update verified generated files on the working branch
-    needs: review
-    if: github.event_name == 'push' && github.repository == 'Lye-0/visual-cs-lab' && github.ref == 'refs/heads/feat/notebook-led-learning'
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions:
-      contents: write
-      actions: read
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          ref: ${{ github.sha }}
-      - uses: actions/setup-node@v6
-        with:
-          node-version: '22'
-      - uses: actions/download-artifact@v5
-        with:
-          name: visual-cs-lab-review
-          path: review-output
-      - name: Rebuild and verify the exact tested outputs
-        run: |
-          npm run build
-          npm run inventory
-          node --input-type=module <<'JS'
-          import {readFile,copyFile,mkdir} from 'node:fs/promises';
-          import {createHash} from 'node:crypto';
-          import assert from 'node:assert/strict';
-          const report=JSON.parse(await readFile('review-output/verification-v3.json','utf8'));
-          assert.equal(report.sourceCommit,process.env.GITHUB_SHA);
-          for(const file of ['index.html','docs/EXPERIMENTS.md','docs/experiments.json']){
-            assert.equal(createHash('sha256').update(await readFile(file)).digest('hex'),report.generatedFiles[file],file);
-          }
-          await mkdir('docs/verification',{recursive:true});
-          await copyFile('review-output/verification-v3.json','docs/verification/v3.json');
-          await copyFile('review-output/TEST_REPORT-v3.md','docs/verification/TEST_REPORT-v3.md');
-          JS
-      - name: Commit generated files without rewriting history or touching main
-        run: |
-          expected=$(git ls-remote origin refs/heads/feat/notebook-led-learning | cut -f1)
-          if [ "$expected" != "$GITHUB_SHA" ]; then
-            echo '::notice::The working branch advanced. Verified artifacts are available; generated files were not pushed.'
-            exit 0
-          fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -- index.html docs/EXPERIMENTS.md docs/experiments.json docs/verification/v3.json docs/verification/TEST_REPORT-v3.md
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'build: 検証済みの教材HTMLと単元一覧を更新'
-          git push origin HEAD:refs/heads/feat/notebook-led-learning
