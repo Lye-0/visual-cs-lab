@@ -36,7 +36,9 @@ test('制御値の検証は範囲・ステップ・選択肢を守る',()=>{
  const s=L.labs.find(l=>l.id==='s08-access');assert.equal(L.validateParams(s,{role:'root'}).role,s.defaults.role);
 });
 test('既存図と拡張図の文字列はHTMLとして実行されずエスケープされる',()=>{
- for(const visual of [{type:'cells',rows:[{label:'<img onerror=alert(1)>',values:['</script><script>alert(2)</script>']}]},L.curriculum.cells([{label:'<img onerror=alert(1)>',values:['</script><script>alert(2)</script>']}]){
+ const unsafe={label:'<img onerror=alert(1)>',values:['</script><script>alert(2)</script>']};
+ const visuals=[{type:'cells',rows:[unsafe]},L.curriculum.cells([unsafe])];
+ for(const visual of visuals){
   const html=L.visualize(visual);assert.ok(html.includes('&lt;img'));assert.ok(html.includes('&lt;/script&gt;'));assert.ok(!html.includes('<script>'));
  }
 });
