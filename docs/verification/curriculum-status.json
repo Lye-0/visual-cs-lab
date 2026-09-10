@@ -1,6 +1,6 @@
 {
-  "sourceCommit": "e822854699171bed4a124912339990723fb03bcc",
-  "runId": "34458605879",
+  "sourceCommit": "7c6f25ab5694850b3d27bd36666c7b43f2dd2e1a",
+  "runId": "34458656615",
   "files": [
     "curriculum-ai.js",
     "curriculum-algorithms.js",
@@ -17,6 +17,7 @@
     "curriculum-kit.js",
     "curriculum-math.js",
     "curriculum-media.js",
+    "curriculum-navigation.js",
     "curriculum-network-advanced.js",
     "curriculum-network.js",
     "curriculum-nlp.js",
@@ -46,7 +47,7 @@
     "check": {
       "exit": 0,
       "errors": [],
-      "tail": "# skipped 0\n# todo 0\n# duration_ms 2468.593054\n\n> visual-cs-lab@3.0.0 inventory\n> node scripts/inventory.mjs\n\n{\n  \"total\": 267,\n  \"legacy\": 144,\n  \"engines\": 226,\n  \"counts\": {\n    \"core\": 173,\n    \"network\": 49,\n    \"security\": 37,\n    \"missions\": 8\n  }\n}"
+      "tail": "# skipped 0\n# todo 0\n# duration_ms 2503.031756\n\n> visual-cs-lab@3.0.0 inventory\n> node scripts/inventory.mjs\n\n{\n  \"total\": 267,\n  \"legacy\": 144,\n  \"engines\": 226,\n  \"counts\": {\n    \"core\": 173,\n    \"network\": 49,\n    \"security\": 37,\n    \"missions\": 8\n  }\n}"
     },
     "browser": {
       "exit": null,
