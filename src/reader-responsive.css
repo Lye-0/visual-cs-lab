@@ -1,0 +1,23 @@
+/* Retain readable diagrams on narrow screens; scroll the figure, not the page. */
+@media(min-width:1450px){.reader-layout{grid-template-columns:minmax(310px,.8fr) minmax(0,1.5fr)}.reader-guidance{padding-right:8px}}
+@media(max-width:1150px){.reader-layout{grid-template-columns:minmax(250px,.8fr) minmax(0,1.1fr);gap:19px}.reader-figure figcaption{display:block}.reader-live-dot{display:block;margin-top:9px}.reader-play-buttons .btn{font-size:12px}.reader-area-links{grid-template-columns:repeat(2,minmax(0,1fr))}.reader-unit-card h3{font-size:17px}}
+@media(max-width:900px){.reader-layout{grid-template-columns:minmax(0,1fr)}.reader-explanation{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:20px}.reader-explanation>*{min-width:0}.reader-terms{grid-column:1/-1;margin:0;padding-top:0}.reader-guidance{padding-bottom:0}.reader-controls{margin:0}.reader-phases button{font-size:12px}.reader-course-card{padding:22px}.reader-unit-card{padding:19px}.reader .study-svg{min-width:520px}}
+@media(max-width:620px){
+.main{padding:23px 16px 36px}.reader,.reader-library,.reader-course-page{font-size:15px}
+.reader-title{padding-bottom:20px}.reader-title h1{font-size:25px}.reader-title>p{font-size:15px}.reader-title-links{font-size:12px;display:grid;gap:7px}
+.reader-phases{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;padding:5px;margin-bottom:21px}.reader-phases button{font-size:13px;justify-content:flex-start;padding:10px;min-height:48px}
+.reader-explanation{display:flex;flex-direction:column;gap:20px}.reader-guidance h2{font-size:22px}.reader-idea{margin:19px 0}.reader-controls{padding:18px}
+.reader-demonstration{min-width:0}.reader-figure figcaption{padding:18px}.reader-figure figcaption h2{font-size:18px}.reader-diagram{padding:17px 12px;min-height:180px}.reader-diagram>svg,.reader .study-svg{min-width:540px}
+.reader-player{padding:10px 13px 14px}.reader-play-buttons .btn{font-size:12px;padding:8px 10px;min-height:44px}.reader-play-buttons [data-r-action=first],.reader-play-buttons [data-r-action=last]{flex:0 1 49px}
+.reader-play-buttons [data-r-action=next]{min-width:110px}.reader-event{padding:19px}.reader-event h3{font-size:19px}.reader-event>p:not(.reader-overline){font-size:15px}
+.reader-frame-table,.reader-current-conditions{padding-left:15px;padding-right:15px}.reader-result-details,.reader-comparison>details{padding:7px 15px}
+.reader-next-units{padding:25px 0}.reader-related-links{display:grid;gap:8px}.reader-related-links a{font-size:13px}
+.study-terms{grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:9px}.study-equation{font-size:14px;padding:13px}.study-check{grid-template-columns:92px minmax(0,1fr) 23px;gap:6px;font-size:11px;padding:7px}.study-chip{font-size:12px;padding:7px;min-height:44px}
+.study-seven{gap:3px;min-width:330px}.study-symbol{padding:7px 2px;font-size:12px}.study-symbol strong{font-size:23px}.study-symbol small{font-size:9px}.study-code-groups{font-size:11px}
+.study-envelope{padding:10px}.study-ip-envelope{padding:11px}.study-envelope-values{font-size:11px;gap:7px}.study-envelope-values b{font-size:12px}.study-envelope-label,.study-ip-envelope>div:first-child{font-size:13px}
+.study-companion{padding:18px 14px}.study-weight-bits{grid-template-columns:repeat(4,minmax(45px,1fr))}.study-table{font-size:12px}.study-caption,.study-instruction{font-size:12px}
+.reader-library-head{padding:0 0 23px}.reader-library-head h1{font-size:28px}.reader-library .home-search{margin-top:19px}.reader-library .home-search input{font-size:14px;min-height:48px}
+.reader-course-grid,.reader-specialist{grid-template-columns:minmax(0,1fr);gap:15px}.reader-course-card{padding:21px}.reader-course-card h2{font-size:22px}.reader-course-card p{font-size:14px}.reader-specialist{margin:23px 0}
+.reader-area-links{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.reader-area-links a{font-size:12px;padding:11px 10px}.reader-unit-card h3{font-size:18px}.reader-unit-card p{font-size:14px}.reader-course-group>h2{font-size:20px}
+}
+@media(prefers-reduced-motion:reduce){.reader *,.reader-library *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}

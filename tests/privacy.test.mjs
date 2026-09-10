@@ -20,12 +20,14 @@ test('毎回新しい一時状態から開始する',()=>{
  const a=load(undefined);a.current={answer:1,baseline:{}};a.settings.reduceMotion=true;
  const b=load(undefined);assert.equal(b.current,null);assert.equal(b.settings.reduceMotion,false);assert.notEqual(a,b);
 });
-test('ランタイムには新規の永続化・保存UIがない',async()=>{
- const files=['app','pages','workbench','boot'];const text=(await Promise.all(files.map(f=>readFile(new URL(`../src/${f}.js`,import.meta.url),'utf8')))).join('\n');
+test('解説画面にも新規の永続化・保存UIがない',async()=>{
+ const files=['app','pages','workbench','reader','boot'];const text=(await Promise.all(files.map(f=>readFile(new URL(`../src/${f}.js`,import.meta.url),'utf8')))).join('\n');
  assert.doesNotMatch(text,/localStorage\.(setItem|getItem|clear)|sessionStorage|indexedDB|document\.cookie|A\.persist|A\.store|data-action="(?:note|favorite|mark-understood|export-data|import-data)"/);
  assert.doesNotMatch(text,/A\.views\.notebook\s*=/);
 });
 test('検索は単元名・説明・用語に対応し全角英数とかなを正規化する',()=>{
  const a=load(undefined);assert.ok(a.searchLabs('ＴＣＰ').some(l=>l.id==='n11-tcp'));assert.ok(a.searchLabs('ネットワーク').length>0);
- assert.deepEqual(a.searchLabs('ネットワーク').map(l=>l.id),a.searchLabs('ねっとわーく').map(l=>l.id));assert.ok(a.searchLabs('TCP 再送').some(l=>l.id==='n11-tcp'));assert.equal(a.searchLabs('zzz_NO_SUCH_UNIT_93757').length,0);assert.equal(a.searchLabs(' ').length,144);
+ assert.deepEqual(a.searchLabs('ネットワーク').map(l=>l.id),a.searchLabs('ねっとわーく').map(l=>l.id));assert.ok(a.searchLabs('TCP 再送').some(l=>l.id==='n11-tcp'));assert.equal(a.searchLabs('zzz_NO_SUCH_UNIT_93757').length,0);assert.equal(a.searchLabs(' ').length,L.labs.length);
+ assert.ok(a.searchLabs('シンドローム').some(l=>l.id==='c01-linear-code'));
+ assert.ok(a.searchLabs('平均情報量').some(l=>l.id==='c01-entropy'));
 });
