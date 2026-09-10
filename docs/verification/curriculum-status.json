@@ -1,6 +1,6 @@
 {
-  "sourceCommit": "b736f2ffd9b999536dafa05ec4a622fbe52062f9",
-  "runId": "34446719631",
+  "sourceCommit": "9581369afe3af464aec8633618113f546e34d184",
+  "runId": "34447159058",
   "files": [
     "curriculum-algorithms.js",
     "curriculum-architecture.js",
@@ -12,6 +12,7 @@
     "curriculum-programming.js",
     "curriculum-runtime.js",
     "curriculum-statistics.js",
+    "curriculum-systems.js",
     "curriculum-theory.js",
     "curriculum-tools.js",
     "curriculum-visuals.js",
@@ -21,12 +22,12 @@
     "probe": {
       "exit": 0,
       "errors": [],
-      "tail": "{\n  \"registered\": 73,\n  \"target\": 155,\n  \"passed\": 787,\n  \"failed\": 0,\n  \"missing\": [\n    \"GAP-074\",\n    \"GAP-075\",\n    \"GAP-076\",\n    \"GAP-077\",\n    \"GAP-078\",\n    \"GAP-079\",\n    \"GAP-080\",\n    \"GAP-081\",\n    \"GAP-082\",\n    \"GAP-083\",\n    \"GAP-084\",\n    \"GAP-085\",\n    \"GAP-086\",\n    \"GAP-087\",\n    \"GAP-088\",\n    \"GAP-089\",\n    \"GAP-090\",\n    \"GAP-091\",\n    \"GAP-092\",\n    \"GAP-093\",\n    \"GAP-094\",\n    \"GAP-095\",\n    \"GAP-096\",\n    \"GAP-097\",\n    \"GAP-098\",\n    \"GAP-099\",\n    \"GAP-100\",\n    \"GAP-101\",\n    \"GAP-102\",\n    \"GAP-103\",\n    \"GAP-104\",\n    \"GAP-105\",\n    \"GAP-106\",\n    \"GAP-107\",\n    \"GAP-108\",\n    \"GAP-109\",\n    \"GAP-110\",\n    \"GAP-111\",\n    \"GAP-112\",\n    \"GAP-113\",\n    \"GAP-114\",\n    \"GAP-115\",\n    \"GAP-116\",\n    \"GAP-117\",\n    \"GAP-118\",\n    \"GAP-119\",\n    \"GAP-120\",\n    \"GAP-121\",\n    \"GAP-122\",\n    \"GAP-123\",\n    \"GAP-124\",\n    \"GAP-125\",\n    \"GAP-126\",\n    \"GAP-127\",\n    \"GAP-128\",\n    \"GAP-129\",\n    \"GAP-130\",\n    \"GAP-131\",\n    \"GAP-132\",\n    \"GAP-133\",\n    \"GAP-134\",\n    \"GAP-135\",\n    \"GAP-136\",\n    \"GAP-137\",\n    \"GAP-138\",\n    \"GAP-139\",\n    \"GAP-140\",\n    \"GAP-141\",\n    \"GAP-142\",\n    \"GAP-143\",\n    \"GAP-144\",\n    \"GAP-145\",\n    \"GAP-146\",\n    \"GAP-147\",\n    \"GAP-148\",\n    \"GAP-149\",\n    \"GAP-150\",\n    \"GAP-151\",\n    \"GAP-152\",\n    \"GAP-153\",\n    \"GAP-154\",\n    \"GAP-155\"\n  ]\n}\n"
+      "tail": "{\n  \"registered\": 81,\n  \"target\": 155,\n  \"passed\": 873,\n  \"failed\": 0,\n  \"missing\": [\n    \"GAP-082\",\n    \"GAP-083\",\n    \"GAP-084\",\n    \"GAP-085\",\n    \"GAP-086\",\n    \"GAP-087\",\n    \"GAP-088\",\n    \"GAP-089\",\n    \"GAP-090\",\n    \"GAP-091\",\n    \"GAP-092\",\n    \"GAP-093\",\n    \"GAP-094\",\n    \"GAP-095\",\n    \"GAP-096\",\n    \"GAP-097\",\n    \"GAP-098\",\n    \"GAP-099\",\n    \"GAP-100\",\n    \"GAP-101\",\n    \"GAP-102\",\n    \"GAP-103\",\n    \"GAP-104\",\n    \"GAP-105\",\n    \"GAP-106\",\n    \"GAP-107\",\n    \"GAP-108\",\n    \"GAP-109\",\n    \"GAP-110\",\n    \"GAP-111\",\n    \"GAP-112\",\n    \"GAP-113\",\n    \"GAP-114\",\n    \"GAP-115\",\n    \"GAP-116\",\n    \"GAP-117\",\n    \"GAP-118\",\n    \"GAP-119\",\n    \"GAP-120\",\n    \"GAP-121\",\n    \"GAP-122\",\n    \"GAP-123\",\n    \"GAP-124\",\n    \"GAP-125\",\n    \"GAP-126\",\n    \"GAP-127\",\n    \"GAP-128\",\n    \"GAP-129\",\n    \"GAP-130\",\n    \"GAP-131\",\n    \"GAP-132\",\n    \"GAP-133\",\n    \"GAP-134\",\n    \"GAP-135\",\n    \"GAP-136\",\n    \"GAP-137\",\n    \"GAP-138\",\n    \"GAP-139\",\n    \"GAP-140\",\n    \"GAP-141\",\n    \"GAP-142\",\n    \"GAP-143\",\n    \"GAP-144\",\n    \"GAP-145\",\n    \"GAP-146\",\n    \"GAP-147\",\n    \"GAP-148\",\n    \"GAP-149\",\n    \"GAP-150\",\n    \"GAP-151\",\n    \"GAP-152\",\n    \"GAP-153\",\n    \"GAP-154\",\n    \"GAP-155\"\n  ]\n}\n"
     },
     "check": {
       "exit": 0,
       "errors": [],
-      "tail": "# skipped 0\n# todo 0\n# duration_ms 1815.006042\n\n> visual-cs-lab@3.0.0 inventory\n> node scripts/inventory.mjs\n\n{\n  \"total\": 232,\n  \"legacy\": 144,\n  \"engines\": 191,\n  \"counts\": {\n    \"core\": 152,\n    \"network\": 35,\n    \"security\": 37,\n    \"missions\": 8\n  }\n}"
+      "tail": "# skipped 0\n# todo 0\n# duration_ms 1489.972037\n\n> visual-cs-lab@3.0.0 inventory\n> node scripts/inventory.mjs\n\n{\n  \"total\": 232,\n  \"legacy\": 144,\n  \"engines\": 191,\n  \"counts\": {\n    \"core\": 152,\n    \"network\": 35,\n    \"security\": 37,\n    \"missions\": 8\n  }\n}"
     },
     "browser": {
       "exit": null,
@@ -35,19 +36,11 @@
     }
   },
   "curriculum-probe.json": {
-    "sourceCommit": "b736f2ffd9b999536dafa05ec4a622fbe52062f9",
-    "at": "2026-09-10T06:46:24.259Z",
-    "registered": 73,
+    "sourceCommit": "9581369afe3af464aec8633618113f546e34d184",
+    "at": "2026-09-10T06:52:03.786Z",
+    "registered": 81,
     "target": 155,
     "missing": [
-      "GAP-074",
-      "GAP-075",
-      "GAP-076",
-      "GAP-077",
-      "GAP-078",
-      "GAP-079",
-      "GAP-080",
-      "GAP-081",
       "GAP-082",
       "GAP-083",
       "GAP-084",
@@ -124,7 +117,7 @@
       "GAP-155"
     ],
     "errors": [],
-    "passed": 787,
+    "passed": 873,
     "failed": 0,
     "failures": []
   }
