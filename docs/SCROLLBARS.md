@@ -12,6 +12,12 @@ Firefoxなどでは標準の`scrollbar-width: thin`と`scrollbar-color`で細さ
 
 `tests/scrollbars.test.mjs`は読み込み順、スクロールを隠さないこと、主なダーク背景とのコントラストを確認します。`tests/scrollbars-browser.mjs`は実HTTP文書の計算済みスタイル、サイドバーのホイール・キーボード、横方向のスクロール、強制配色とモバイル幅を検査します。実行結果とスクリーンショットはStatic site compatibilityのArtifactsに保存します。WebKit自動試験はSafari実機試験とは区別します。
 
+FirefoxのPlaywright用headlessモードには、スクロールバーを隠す`scrollbar-width: none !important`のエージェントスタイルが入ります。この外観テストだけはFirefoxをheadedモードで起動し、LinuxのCIでは`xvfb-run -a`の仮想画面で実行します。サイトのCSSを強制上書きしたり、`none`を成功扱いにすることはしません。Chromiumでも自動化用の`--hide-scrollbars`を除外します。通常の教材試験のheadless設定は変えません。
+
+ローカル実行はPlaywright導入後に`BROWSER=firefox xvfb-run -a node tests/scrollbars-browser.mjs`（Linux）。WindowsのPowerShellでは`$env:BROWSER='firefox'; node tests/scrollbars-browser.mjs`で実際のFirefoxウィンドウを使います。
+
 参考:
 - https://developer.chrome.com/docs/css-ui/scrollbar-styling
 - https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/scrollbar-color
+- https://github.com/microsoft/playwright/blob/main/browser_patches/firefox/juggler/components/Juggler.js
+- https://github.com/microsoft/playwright/blob/main/browser_patches/firefox/juggler/content/hidden-scrollbars.css

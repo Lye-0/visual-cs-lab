@@ -42,7 +42,15 @@ jobs:
       - name: Check scrollbar finish and native scrolling
         env:
           BROWSER: ${{ matrix.browser }}
-        run: node tests/scrollbars-browser.mjs
+        run: |
+          # Firefox's headless automation injects scrollbar-width:none!important.
+          # A real window under Xvfb preserves native scrollbar styling without
+          # changing application CSS or accepting invisible controls in the test.
+          if [ "$BROWSER" = firefox ]; then
+            xvfb-run -a node tests/scrollbars-browser.mjs
+          else
+            node tests/scrollbars-browser.mjs
+          fi
       - name: Ensure the published files did not need any build-time repair
         run: git diff --exit-code HEAD -- index.html src assets .nojekyll scripts tests package.json .github
       - uses: actions/upload-artifact@v5

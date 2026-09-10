@@ -1,5 +1,7 @@
-// Inspect the real native scroll containers, including Windows-style classic
-// scrollbar pseudo-elements, without replacing the page with test markup.
+// Inspect the real native scroll containers without replacing page markup.
+// Firefox's Playwright headless agent installs scrollbar-width:none!important.
+// This appearance test therefore uses a headed Firefox (xvfb-run on Linux),
+// rather than weakening assertions or overriding the browser's user styles.
 import assert from 'node:assert/strict';
 import {spawn} from 'node:child_process';
 import {setTimeout as sleep} from 'node:timers/promises';
@@ -30,7 +32,9 @@ function assertTheme(s){
 }
 try{
  for(let i=0;i<100;i++){try{if((await fetch(base)).ok)break;}catch{}if(i===99)throw Error(serverLog||'server startup failed');await sleep(100);}
- browser=await engine.launch({headless:true});report.browser=browser.version();
+ // Do not let automation hide the very UI whose appearance is under test.
+ browser=await engine.launch({headless:name!=='firefox',...(name==='chromium'?{ignoreDefaultArgs:['--hide-scrollbars']}:{})});
+ report.browser=browser.version();report.headless=name!=='firefox';
  const context=await browser.newContext({viewport:{width:1440,height:900},reducedMotion:'reduce'});
  const page=await context.newPage();page.setDefaultTimeout(8000);page.on('pageerror',e=>report.errors.push(e.message));
  await open(page);
