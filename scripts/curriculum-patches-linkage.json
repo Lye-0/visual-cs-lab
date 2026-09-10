@@ -1,0 +1,4 @@
+[
+ {"path":"src/curriculum-network-advanced.js","old":"const L=CSL,K=L.curriculum,{define:D,f:F,result:out,r,s,t,codeInput:code,round:q}=K;","new":"const L=CSL,K=L.curriculum,{define:D,f:F,result:out,r,s,t,codeInput:code,round:q}=K;\nconst equalAddress=(a,b)=>L.ipInt(a)===L.ipInt(b);"},
+ {"path":"src/curriculum-nlp.js","old":"const tokenize=text=>String(text).toLowerCase()","new":"const mean=K.mean;\nconst tokenize=text=>String(text).toLowerCase()"}
+]
