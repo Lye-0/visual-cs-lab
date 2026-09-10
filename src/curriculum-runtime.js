@@ -60,13 +60,17 @@ function execute(source,{inputs=[],maxSteps=400,maxDepth=12,checkTypes=false}={}
  const signal=(flow,value,line)=>({flow,value,line});
  function invoke(fn,args,callEnv,line){
   if(args.length!==fn.params.length)throw Error(`関数${fn.name}は引数${fn.params.length}個です。`);
-  if(++depth>maxDepth){depth--;const e=Error(`呼出しの深さが${maxDepth}を超えました。`);e.fatal=true;throw e;}
-  const local=newEnv(fn.environment,fn.name+'()');active.push(local);
-  fn.params.forEach((name,i)=>{if(checkTypes&&!matches(args[i],fn.types[i]))throw Error(`引数${name}の型が一致しません。`);local.vars[name]=args[i];local.types[name]=fn.types[i];});
-  emit(`${fn.name}へ引数を渡す`,'値を仮引数へ渡します。配列の値は参照なので、同じ配列を共有します。',line,local);
+  // Reject bad arguments before allocating or pushing the callee.
+  if(checkTypes)fn.params.forEach((name,i)=>{if(!matches(args[i],fn.types[i]))throw Error(`引数${name}の型が一致しません。`);});
+  if(depth>=maxDepth){const e=Error(`呼出しの深さが${maxDepth}を超えました。`);e.fatal=true;throw e;}
+  const local=newEnv(fn.environment,fn.name+'()');
+  depth++;active.push(local);
   let result=null;
-  try{run(fn.body,local,false);}catch(e){if(e.flow==='return')result=e.value;else throw e;}
-  finally{active.pop();depth--;}
+  try{
+   fn.params.forEach((name,i)=>{local.vars[name]=args[i];local.types[name]=fn.types[i];});
+   emit(`${fn.name}へ引数を渡す`,'値を仮引数へ渡します。配列の値は参照なので、同じ配列を共有します。',line,local);
+   try{run(fn.body,local,false);}catch(e){if(e.flow==='return')result=e.value;else throw e;}
+  }finally{active.pop();depth--;}
   if(checkTypes&&!matches(result,fn.returnType))throw Error(`関数${fn.name}の戻り値の型が一致しません。`);
   emit(`${fn.name}から戻る`,'呼出し元の環境と実行位置へ戻ります。戻った環境を参照するクロージャがあれば、その変数は引き続き参照されます。',line,callEnv);
   return result;

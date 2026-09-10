@@ -3694,13 +3694,17 @@ function execute(source,{inputs=[],maxSteps=400,maxDepth=12,checkTypes=false}={}
  const signal=(flow,value,line)=>({flow,value,line});
  function invoke(fn,args,callEnv,line){
   if(args.length!==fn.params.length)throw Error(`関数${fn.name}は引数${fn.params.length}個です。`);
-  if(++depth>maxDepth){depth--;const e=Error(`呼出しの深さが${maxDepth}を超えました。`);e.fatal=true;throw e;}
-  const local=newEnv(fn.environment,fn.name+'()');active.push(local);
-  fn.params.forEach((name,i)=>{if(checkTypes&&!matches(args[i],fn.types[i]))throw Error(`引数${name}の型が一致しません。`);local.vars[name]=args[i];local.types[name]=fn.types[i];});
-  emit(`${fn.name}へ引数を渡す`,'値を仮引数へ渡します。配列の値は参照なので、同じ配列を共有します。',line,local);
+  // Reject bad arguments before allocating or pushing the callee.
+  if(checkTypes)fn.params.forEach((name,i)=>{if(!matches(args[i],fn.types[i]))throw Error(`引数${name}の型が一致しません。`);});
+  if(depth>=maxDepth){const e=Error(`呼出しの深さが${maxDepth}を超えました。`);e.fatal=true;throw e;}
+  const local=newEnv(fn.environment,fn.name+'()');
+  depth++;active.push(local);
   let result=null;
-  try{run(fn.body,local,false);}catch(e){if(e.flow==='return')result=e.value;else throw e;}
-  finally{active.pop();depth--;}
+  try{
+   fn.params.forEach((name,i)=>{local.vars[name]=args[i];local.types[name]=fn.types[i];});
+   emit(`${fn.name}へ引数を渡す`,'値を仮引数へ渡します。配列の値は参照なので、同じ配列を共有します。',line,local);
+   try{run(fn.body,local,false);}catch(e){if(e.flow==='return')result=e.value;else throw e;}
+  }finally{active.pop();depth--;}
   if(checkTypes&&!matches(result,fn.returnType))throw Error(`関数${fn.name}の戻り値の型が一致しません。`);
   emit(`${fn.name}から戻る`,'呼出し元の環境と実行位置へ戻ります。戻った環境を参照するクロージャがあれば、その変数は引き続き参照されます。',line,callEnv);
   return result;
@@ -4035,12 +4039,12 @@ D(42,{
 'use strict';
 const L=CSL,K=L.curriculum,{define:D,r,s,t,b,round:q,f:F,result:out,range:seq}=K;
 D(43,{
- title:'配列・連結リスト・動的配列の挿入と削除',area:'C05',question:'途中に1個入れるとき、どこを何回変更する？',scope:'最大16要素の配列と単方向リスト。挿入・削除、倍増による再確保、先行ノードまでの探索を実際に計算します。アドレスは教材内のIDです。',
+ title:'配列・連結リスト・動的配列の挿入と削除',area:'C05',question:'途中に1個入れるとき、どこを何回変更する？',scope:'最大16要素の配列と単方向リスト。挿入・削除、倍増による再確保、先行ノードまでの探索を実際に計算します。アドレスは教材内のIDです。動的配列の初期容量は初期データ数以上にしてください。',
  controls:[s('structure','データの持ち方','array',['array','linked','dynamic']),t('values','最初の値','10,20,30,40'),s('operation','行う操作','insert',['insert','delete']),r('index','操作する添字',2,0,4),r('value','挿入する値',99,0,100),r('capacity','動的配列の初期容量',4,2,16),b('previousKnown','リストの直前のノードを既に知っている',false)],alt:['連結リストで同じ操作をする',{structure:'linked'}],
  intro:['並んだデータの途中へ1個追加するとき、配列は後ろを動かします。連結リストは参照をつなぎ替えますが、その場所へたどり着く仕事も必要です。','配列の添字は連続した場所へ対応します。リストは次のノードへの参照を持ちます。動的配列は容量不足のとき別の領域へコピーします。','10,20,30,40の添字2へ99を入れます。配列では30と40を後ろへ移してから99を書き込みます。移動回数を数えてください。','リストへ切り替えて先行ノードの探索と参照の変更を分けて見ます。動的配列では初期容量4が足りず、再確保も必要になります。','リストの挿入がO(1)という説明には、挿入位置の直前を既に知っているなどの条件があります。位置を探す費用を無視しません。'],
  topics:[['配列','添字で直接アクセスできますが、途中の挿入・削除では移動が必要です。'],['連結リスト','各ノードが次のノードを参照します。'],['再確保','容量が不足したら別の大きい領域へ移します。'],['操作の費用','探索・移動・コピー・参照変更を別々に数えます。']],
  quiz:['リストの挿入が定数回の参照変更で済む条件は？','直前のノードを既に得ているなど、探索を別にしている場合','任意の添字へ常に一瞬で移動できる場合','すべての要素をコピーする場合','つなぎ替え自体と、場所を見つける処理を分けて考えます。']
-},p=>{const values=K.numbers(p.values,1,16),limit=p.operation==='insert'?values.length:values.length-1,frames=[];if(p.index>limit)return out([F('指定位置が範囲外','挿入は末尾の1つ後まで、削除は存在する要素の添字までです。',K.cells([{label:'現在の値',values}]))],{'状態':'範囲外','値':values.join(', '),'移動':0,'探索':0});let moves=0,search=0,copies=0,links=0,capacity=Math.max(p.capacity,values.length);if(p.structure==='linked'){const nodes=values.map((value,i)=>({id:'L'+i,value,next:i+1<values.length?'L'+(i+1):null}));let head=nodes[0].id;const draw=active=>K.graph([{id:'head',label:'head'},...nodes.map(n=>({id:n.id,label:n.id,value:n.value}))],[{from:'head',to:head,label:'参照'},...nodes.filter(n=>n.next).map(n=>({from:n.id,to:n.next,label:'next'}))],{directed:true,active});frames.push(F('各ノードのnextを確認する','配列のような連続した添字計算ではなく、参照を順にたどります。',draw([])));let previous=null,current=head;if(!p.previousKnown){for(let i=0;i<p.index;i++){previous=current;current=nodes.find(n=>n.id===current).next;search++;frames.push(F(`位置${i}のノードをたどる`,'次の参照を読んで進みます。ここが挿入・削除位置を探す費用です。',draw([previous])));}}else{previous=p.index?nodes[p.index-1].id:null;current=p.index<nodes.length?nodes[p.index].id:null;}if(p.operation==='insert'){const added={id:'NEW',value:p.value,next:current};nodes.push(added);links++;frames.push(F('新ノードを後続へつなぐ','先に後ろへの参照を設定し、その後に前からの参照を変更します。',draw(['NEW'])));if(previous)nodes.find(n=>n.id===previous).next='NEW';else head='NEW';links++;values.splice(p.index,0,p.value);}else{const target=nodes.find(n=>n.id===current);if(previous)nodes.find(n=>n.id===previous).next=target.next;else head=target.next;links++;nodes.splice(nodes.indexOf(target),1);values.splice(p.index,1);}frames.push(F('前の参照をつなぎ替える','到達する順序が新しい配列の並びと一致するか確認します。',draw(previous?[previous]:[])));}else{frames.push(F('最初の配列を確認する','左からの位置が添字です。動的配列では使っていない容量も区別します。',K.cells([{label:'データ',values:values.slice()},{label:'容量',values:[capacity]}])));if(p.structure==='dynamic'&&p.operation==='insert'&&values.length===capacity){const old=capacity;capacity*=2;for(let i=0;i<values.length;i++){copies++;frames.push(F(`別の領域へ${i+1}個目をコピーする`,'旧領域から新領域へ既存の値を移します。まだ途中への挿入は行っていません。',K.cells([{label:'旧領域',values:values.slice()},{label:'新領域',values:values.slice(0,i+1)}])));}frames.push(F('容量を増やした領域を使う',`${old}から${capacity}へ増やしました。`,K.cells([{label:'コピー済み',values:values.slice()}])));}if(p.operation==='insert'){values.push(0);for(let i=values.length-1;i>p.index;i--){values[i]=values[i-1];moves++;frames.push(F(`添字${i-1}を${i}へ移す`,'後ろから動かすことで、まだ使う値を上書きしないようにします。',K.cells([{label:'配列',values:values.slice(),active:i}])));}values[p.index]=p.value;}else{for(let i=p.index;i<values.length-1;i++){values[i]=values[i+1];moves++;frames.push(F(`添字${i+1}を${i}へ詰める`,'削除した位置より後ろを、前へ順に移します。',K.cells([{label:'配列',values:values.slice(),active:i}])));}values.pop();}frames.push(F('操作後の並び','同じ論理操作でも、内部で変更した場所はデータ構造によって異なります。',K.cells([{label:'結果',values}])));}return out(frames,{'状態':'完了','値':values.join(', '),'移動':moves,'探索':search,'再確保コピー':copies,'参照変更':links,'容量':p.structure==='linked'?'ノード単位':capacity,'構造':p.structure});});
+},p=>{const values=K.numbers(p.values,1,16),limit=p.operation==='insert'?values.length:values.length-1,frames=[];if(p.index>limit)return out([F('指定位置が範囲外','挿入は末尾の1つ後まで、削除は存在する要素の添字までです。',K.cells([{label:'現在の値',values}]))],{'状態':'範囲外','値':values.join(', '),'移動':0,'探索':0});if(p.structure==='dynamic'&&values.length>p.capacity)throw Error('初期データの個数が初期容量を超えています。容量をデータ数以上にするか、初期データを減らしてください。');let moves=0,search=0,copies=0,links=0,capacity=p.structure==='dynamic'?p.capacity:Math.max(p.capacity,values.length);if(p.structure==='linked'){const nodes=values.map((value,i)=>({id:'L'+i,value,next:i+1<values.length?'L'+(i+1):null}));let head=nodes[0].id;const draw=active=>K.graph([{id:'head',label:'head'},...nodes.map(n=>({id:n.id,label:n.id,value:n.value}))],[{from:'head',to:head,label:'参照'},...nodes.filter(n=>n.next).map(n=>({from:n.id,to:n.next,label:'next'}))],{directed:true,active});frames.push(F('各ノードのnextを確認する','配列のような連続した添字計算ではなく、参照を順にたどります。',draw([])));let previous=null,current=head;if(!p.previousKnown){for(let i=0;i<p.index;i++){previous=current;current=nodes.find(n=>n.id===current).next;search++;frames.push(F(`位置${i}のノードをたどる`,'次の参照を読んで進みます。ここが挿入・削除位置を探す費用です。',draw([previous])));}}else{previous=p.index?nodes[p.index-1].id:null;current=p.index<nodes.length?nodes[p.index].id:null;}if(p.operation==='insert'){const added={id:'NEW',value:p.value,next:current};nodes.push(added);links++;frames.push(F('新ノードを後続へつなぐ','先に後ろへの参照を設定し、その後に前からの参照を変更します。',draw(['NEW'])));if(previous)nodes.find(n=>n.id===previous).next='NEW';else head='NEW';links++;values.splice(p.index,0,p.value);}else{const target=nodes.find(n=>n.id===current);if(previous)nodes.find(n=>n.id===previous).next=target.next;else head=target.next;links++;nodes.splice(nodes.indexOf(target),1);values.splice(p.index,1);}frames.push(F('前の参照をつなぎ替える','到達する順序が新しい配列の並びと一致するか確認します。',draw(previous?[previous]:[])));}else{frames.push(F('最初の配列を確認する','左からの位置が添字です。動的配列では使っていない容量も区別します。',K.cells([{label:'データ',values:values.slice()},{label:'容量',values:[capacity]}])));if(p.structure==='dynamic'&&p.operation==='insert'&&values.length===capacity){const old=capacity;capacity*=2;for(let i=0;i<values.length;i++){copies++;frames.push(F(`別の領域へ${i+1}個目をコピーする`,'旧領域から新領域へ既存の値を移します。まだ途中への挿入は行っていません。',K.cells([{label:'旧領域',values:values.slice()},{label:'新領域',values:values.slice(0,i+1)}])));}frames.push(F('容量を増やした領域を使う',`${old}から${capacity}へ増やしました。`,K.cells([{label:'コピー済み',values:values.slice()}])));}if(p.operation==='insert'){values.push(0);for(let i=values.length-1;i>p.index;i--){values[i]=values[i-1];moves++;frames.push(F(`添字${i-1}を${i}へ移す`,'後ろから動かすことで、まだ使う値を上書きしないようにします。',K.cells([{label:'配列',values:values.slice(),active:i}])));}values[p.index]=p.value;}else{for(let i=p.index;i<values.length-1;i++){values[i]=values[i+1];moves++;frames.push(F(`添字${i+1}を${i}へ詰める`,'削除した位置より後ろを、前へ順に移します。',K.cells([{label:'配列',values:values.slice(),active:i}])));}values.pop();}frames.push(F('操作後の並び','同じ論理操作でも、内部で変更した場所はデータ構造によって異なります。',K.cells([{label:'結果',values}])));}return out(frames,{'状態':'完了','値':values.join(', '),'移動':moves,'探索':search,'再確保コピー':copies,'参照変更':links,'容量':p.structure==='linked'?'ノード単位':capacity,'構造':p.structure});});
 function balancedTree(kind){
  let root=null,events=[];
  const height=n=>n?n.height:0,red=n=>!!n?.red,fix=n=>{if(n)n.height=1+Math.max(height(n.left),height(n.right));return n;};
@@ -6917,7 +6921,18 @@ function fieldEvent(e){
 document.addEventListener('input',fieldEvent,true);document.addEventListener('change',fieldEvent,true);
 document.addEventListener('pointerdown',e=>{if(e.target.id==='reader-scrubber'&&A.current?.reader)A.current.player.pause();},true);
 document.addEventListener('toggle',e=>{const c=A.current;if(!c?.reader)return;if(e.target.id==='reader-compare-details')c.compareOpen=e.target.open;if(e.target.id==='reader-frame-table')c.tableOpen=e.target.open;},true);
-document.addEventListener('keydown',e=>{if(A.current?.reader&&e.key==='Enter'&&e.target.matches('[data-r-number],[data-r-param]:not(textarea)')){e.preventDefault();A.runCurrent();}},true);
+document.addEventListener('keydown',e=>{
+ const c=A.current;if(!c?.reader||e.isComposing)return;
+ const node=e.target?.matches?.('svg .cv-graph-node[role="button"][data-r-focus]')?e.target:null;
+ if(node&&(e.key==='Enter'||e.key===' ')&&!e.ctrlKey&&!e.metaKey&&!e.altKey){
+  // SVG groups have no native button activation. Consume Space before
+  // the page-level playback shortcut; selection restores the new node's focus.
+  e.preventDefault();e.stopImmediatePropagation();
+  if(!e.repeat&&ready(c))node.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true,view:window}));
+  return;
+ }
+ if(e.key==='Enter'&&e.target.matches('[data-r-number],[data-r-param]:not(textarea)')){e.preventDefault();A.runCurrent();}
+},true);
 A.labCard=lab=>`<a class="lab-card reader-unit-card" href="#/lab/${lab.id}"><div class="lab-card-top">${A.pill(lab.track)}<span>${h(lab.course.split('／')[0])}</span></div><h3>${h(lab.unit)}</h3><p>${h(lab.summary)}</p><div class="reader-card-question">${h(lab.question)}</div><div class="lab-card-bottom"><span>解説と図を開く</span>${icon('arrow',17)}</div></a>`;
 const courseCard=course=>`<a class="reader-course-card" href="#/course/${course.id}"><span class="reader-overline">授業の並びから探す</span><h2>${h(course.name)}</h2><p>${h(course.description)}</p><span>単元を選ぶ →</span></a>`;
 A.views.home=()=>{

@@ -219,7 +219,18 @@ function fieldEvent(e){
 document.addEventListener('input',fieldEvent,true);document.addEventListener('change',fieldEvent,true);
 document.addEventListener('pointerdown',e=>{if(e.target.id==='reader-scrubber'&&A.current?.reader)A.current.player.pause();},true);
 document.addEventListener('toggle',e=>{const c=A.current;if(!c?.reader)return;if(e.target.id==='reader-compare-details')c.compareOpen=e.target.open;if(e.target.id==='reader-frame-table')c.tableOpen=e.target.open;},true);
-document.addEventListener('keydown',e=>{if(A.current?.reader&&e.key==='Enter'&&e.target.matches('[data-r-number],[data-r-param]:not(textarea)')){e.preventDefault();A.runCurrent();}},true);
+document.addEventListener('keydown',e=>{
+ const c=A.current;if(!c?.reader||e.isComposing)return;
+ const node=e.target?.matches?.('svg .cv-graph-node[role="button"][data-r-focus]')?e.target:null;
+ if(node&&(e.key==='Enter'||e.key===' ')&&!e.ctrlKey&&!e.metaKey&&!e.altKey){
+  // SVG groups have no native button activation. Consume Space before
+  // the page-level playback shortcut; selection restores the new node's focus.
+  e.preventDefault();e.stopImmediatePropagation();
+  if(!e.repeat&&ready(c))node.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true,view:window}));
+  return;
+ }
+ if(e.key==='Enter'&&e.target.matches('[data-r-number],[data-r-param]:not(textarea)')){e.preventDefault();A.runCurrent();}
+},true);
 A.labCard=lab=>`<a class="lab-card reader-unit-card" href="#/lab/${lab.id}"><div class="lab-card-top">${A.pill(lab.track)}<span>${h(lab.course.split('／')[0])}</span></div><h3>${h(lab.unit)}</h3><p>${h(lab.summary)}</p><div class="reader-card-question">${h(lab.question)}</div><div class="lab-card-bottom"><span>解説と図を開く</span>${icon('arrow',17)}</div></a>`;
 const courseCard=course=>`<a class="reader-course-card" href="#/course/${course.id}"><span class="reader-overline">授業の並びから探す</span><h2>${h(course.name)}</h2><p>${h(course.description)}</p><span>単元を選ぶ →</span></a>`;
 A.views.home=()=>{
