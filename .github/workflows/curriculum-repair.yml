@@ -1,0 +1,42 @@
+name: Repair curriculum comparison expression
+on:
+  push:
+    branches: [feat/curriculum-gap-expansion]
+    paths: [.github/workflows/curriculum-repair.yml]
+permissions:
+  contents: write
+jobs:
+  repair:
+    if: github.repository == 'Lye-0/visual-cs-lab' && github.ref == 'refs/heads/feat/curriculum-gap-expansion'
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Correct the known extra parenthesis
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          p=Path('src/curriculum-information.js')
+          source=p.read_text()
+          before="['同じか',distance(sent,corrected)===0]])))];"
+          after="['同じか',distance(sent,corrected)===0]]))];"
+          assert source.count(before)==1
+          p.write_text(source.replace(before,after))
+          subprocess.run(['node','--check',str(p)],check=True)
+          PY
+      - name: Save only this repair without rewriting history
+        run: |
+          expected=$(git ls-remote origin refs/heads/feat/curriculum-gap-expansion | cut -f1)
+          test "$expected" = "$GITHUB_SHA"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/curriculum-repair.yml
+          git add src/curriculum-information.js
+          git commit -m 'fix: 符号比較の式の閉じ括弧を修正'
+          git push origin HEAD:refs/heads/feat/curriculum-gap-expansion
+      - name: Check the updated models
+        run: node scripts/curriculum-probe.mjs
