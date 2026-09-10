@@ -2,6 +2,7 @@
 (() => {
 'use strict';
 const L=CSL,K=L.curriculum,{define:D,f:F,result:out,r,s,t,codeInput:code,round:q}=K;
+const equalAddress=(a,b)=>L.ipInt(a)===L.ipInt(b);
 D(102,{
  title:'Littleの法則・M/M/1・トークンバケット',question:'処理能力に近づくと、待ち時間は比例して増える？',
  scope:'指数分布の到着・サービス時間をseed固定で発生させるFCFS単一サーバー。空から始め最後まで排出する有限標本のLittleの等式と定常理論を区別。別モードでpolicing/shapingを計算します。',

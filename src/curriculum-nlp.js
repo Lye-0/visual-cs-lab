@@ -2,6 +2,7 @@
 (() => {
 'use strict';
 const L=CSL,K=L.curriculum,{define:D,f:F,result:out,r,s,t,codeInput:code,round:q}=K;
+const mean=K.mean;
 const tokenize=text=>String(text).toLowerCase().match(/[\p{L}\p{N}_]+/gu)||[];
 K.tokenizeWords=tokenize;
 function segmentJapanese(text,source,unknown=8,context=true){
