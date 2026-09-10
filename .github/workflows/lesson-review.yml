@@ -1,7 +1,7 @@
 name: Lesson review
 on:
   push:
-    branches: [main, feat/notebook-led-learning, feat/curriculum-gap-expansion]
+    branches: [main, feat/notebook-led-learning, feat/curriculum-gap-expansion, refactor/split-static-site]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -27,6 +27,7 @@ jobs:
           mkdir -p review-output
           git rev-parse HEAD > review-output/tested-merge.txt
           node scripts/curriculum-finalize.mjs
+          node scripts/build.mjs --check
           npm run build
           npm test > review-output/node-tests.txt 2>&1 || { tail -n 160 review-output/node-tests.txt; exit 1; }
           tail -n 15 review-output/node-tests.txt
@@ -45,7 +46,7 @@ jobs:
       - name: Ensure tests did not change the source
         run: |
           test "$(git rev-parse HEAD)" = "$(cat review-output/tested-merge.txt)"
-          git diff --exit-code HEAD -- src scripts tests package.json .github
+          git diff --exit-code HEAD -- src scripts tests package.json .github index.html assets
       - uses: actions/upload-artifact@v5
         if: always()
         with:

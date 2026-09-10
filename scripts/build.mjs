@@ -1,10 +1,13 @@
+// Regenerate only the lightweight entry, never inline or copy the JS/CSS.
 import {readFile,writeFile} from 'node:fs/promises';
-import {fileURLToPath} from 'node:url';
-import path from 'node:path';
-import {browserModules as order,styles} from './modules.mjs';
-const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const css=(await Promise.all(styles.map(n=>readFile(path.join(root,`src/${n}.css`),'utf8')))).join('\n');
-const js=(await Promise.all(order.map(n=>readFile(path.join(root,`src/${n}.js`),'utf8')))).join('\n;\n').replace(/<\/script/gi,'<\\/script');
-const html=`<!doctype html>\n<html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b0e13"><meta name="description" content="小さな例を読み、図で確かめ、条件を変えて理解する。情報科学・ネットワーク・セキュリティのインタラクティブ解説。"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; font-src 'none'; base-uri 'none'; form-action 'none'"><title>Visual CS Lab</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23111a22'/%3E%3Cpath d='M12 6h8m-6 0v8l-7 11h18l-7-11V6M10 20h12' fill='none' stroke='%2391cdbf' stroke-width='1.7' stroke-linejoin='round'/%3E%3C/svg%3E"><style>${css}</style></head><body><div id="app"></div><noscript>この実験室にはJavaScriptが必要です。ブラウザのJavaScriptを有効にしてください。</noscript><script>${js}</script></body></html>`;
-await writeFile(path.join(root,'index.html'),html);
-console.log(`Built index.html (${(Buffer.byteLength(html)/1024).toFixed(1)} KB), ${order.length} modules, ${styles.length} stylesheets. No external runtime dependencies.`);
+import {publishedAssets,renderIndex} from './site-entry.mjs';
+const root=new URL('../',import.meta.url);
+for(const file of publishedAssets)await readFile(new URL(file,root));
+const html=renderIndex(),target=new URL('index.html',root);
+if(process.argv.includes('--check')){
+ if(await readFile(target,'utf8')!==html)throw Error('index.html is out of date. Run npm run build and commit the entry.');
+ console.log('Static entry matches the manifest; nothing was written.');
+}else{
+ await writeFile(target,html);
+ console.log(`Built linked index.html (${Buffer.byteLength(html)} bytes). ${publishedAssets.length} local assets remain separate. No runtime build or install is needed.`);
+}

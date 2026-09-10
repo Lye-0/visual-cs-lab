@@ -154,5 +154,6 @@ window.addEventListener('hashchange',()=>{drag=null;A.navigate();});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)A.stop();});
 window.addEventListener('pagehide',()=>A.stop());
 function start(){A.shell();A.navigate();A.ready=true;}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
+// Defer scripts run while readyState is interactive. Wait for all ordered files.
+if(document.readyState==='complete')start();else document.addEventListener('DOMContentLoaded',start,{once:true});
 })();

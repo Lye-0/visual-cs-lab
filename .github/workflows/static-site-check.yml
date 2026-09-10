@@ -1,0 +1,49 @@
+# Verification only. Pages publication is configured as main / (root).
+name: Static site compatibility
+on:
+  push:
+    branches: [main, refactor/split-static-site]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: static-site-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  browsers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Check the committed entry and all Node regressions
+        run: |
+          mkdir -p review-output
+          git rev-parse HEAD > review-output/tested-head.txt
+          npm run check > review-output/static-node.txt 2>&1 || { tail -n 100 review-output/static-node.txt; exit 1; }
+          tail -n 15 review-output/static-node.txt
+      - name: Install the browser and its system dependencies
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0
+          npx playwright install --with-deps ${{ matrix.browser }} > review-output/browser-install.txt 2>&1 || { tail -n 100 review-output/browser-install.txt; exit 1; }
+      - name: Open the external assets over real HTTP at root and project paths
+        env:
+          BROWSER: ${{ matrix.browser }}
+        run: node tests/static-site-browser.mjs
+      - name: Ensure the published files did not need any build-time repair
+        run: git diff --exit-code HEAD -- index.html src assets .nojekyll scripts tests package.json .github
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: static-site-${{ matrix.browser }}-${{ github.event_name }}-${{ github.run_attempt }}
+          path: review-output/
+          retention-days: 14
