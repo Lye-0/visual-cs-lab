@@ -1,6 +1,6 @@
 {
-  "sourceCommit": "ff4355c9c76538523594fe3a0608175a9aae1a1d",
-  "runId": "34448932193",
+  "sourceCommit": "52d4ed618c242eac1aea2aadc31876933dc2a3bd",
+  "runId": "34449670941",
   "files": [
     "curriculum-algorithms.js",
     "curriculum-architecture.js",
@@ -11,6 +11,7 @@
     "curriculum-information.js",
     "curriculum-kit.js",
     "curriculum-math.js",
+    "curriculum-network-advanced.js",
     "curriculum-network.js",
     "curriculum-programming.js",
     "curriculum-runtime.js",
@@ -23,22 +24,85 @@
   ],
   "checks": {
     "probe": {
-      "exit": 1,
-      "errors": [
-        "    ^\n\nAssertionError [ERR_ASSERTION]: /home/runner/work/visual-cs-lab/visual-cs-lab/src/curriculum-network.js:82\n},p=>{const run=tcpFlow(p),sample=run.trace.filter((_,i)=>i<10||i%2===0||i===run.trace.length-1),frames=sample.map((e,i)=>F(`${e.time}ms: ${e.flags}`,e.note+'。受信側の次の必要位置と送信側の未確認先頭は、ACKが届くまで同じとは限りません。',K.table(['時刻ms','from→to','flags','SEQ','ACK','SACK','意味'],run.trace.slice(0,run.trace.indexOf(e)+1).map(x=>[x.time,x.from+'→'+x.to,x.flags,x.seq||'—',x.ack||'—',x.sack||'—',x.note])),{'送信側UNA':e.una,'受信側NEXT':e.expected,'RTO':e.rto,'状態':e.state})));return out(frames,{'アプリへ届いたbyte':run.bytesDelivered,'全byte確認済み':run.complete,'再送回数':run.retransmissions,'終了時のclient状態':run.state,'最終RTOms':q(run.rto),'SRTTms':run.srtt===null?'標本なし':q(run.srtt)});});\n                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ^\n\nSyntaxError: Unexpected token ')'\n    at checkSyntax (node:internal/main/check_syntax:74:5)\n\nNode.js v22.23.2\n\n\n1 !== 0\n\n    at file:///home/runner/work/visual-cs-lab/visual-cs-lab/scripts/curriculum-probe.mjs:7:203 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: 1,\n  expected: 0,\n  operator: 'strictEqual',",
-        "                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ^\n\nSyntaxError: Unexpected token ')'\n    at checkSyntax (node:internal/main/check_syntax:74:5)\n\nNode.js v22.23.2\n\n\n1 !== 0\n\n    at file:///home/runner/work/visual-cs-lab/visual-cs-lab/scripts/curriculum-probe.mjs:7:203 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: 1,\n  expected: 0,\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v22.23.2"
-      ],
-      "tail": "node:internal/modules/run_main:123\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: /home/runner/work/visual-cs-lab/visual-cs-lab/src/curriculum-network.js:82\n},p=>{const run=tcpFlow(p),sample=run.trace.filter((_,i)=>i<10||i%2===0||i===run.trace.length-1),frames=sample.map((e,i)=>F(`${e.time}ms: ${e.flags}`,e.note+'。受信側の次の必要位置と送信側の未確認先頭は、ACKが届くまで同じとは限りません。',K.table(['時刻ms','from→to','flags','SEQ','ACK','SACK','意味'],run.trace.slice(0,run.trace.indexOf(e)+1).map(x=>[x.time,x.from+'→'+x.to,x.flags,x.seq||'—',x.ack||'—',x.sack||'—',x.note])),{'送信側UNA':e.una,'受信側NEXT':e.expected,'RTO':e.rto,'状態':e.state})));return out(frames,{'アプリへ届いたbyte':run.bytesDelivered,'全byte確認済み':run.complete,'再送回数':run.retransmissions,'終了時のclient状態':run.state,'最終RTOms':q(run.rto),'SRTTms':run.srtt===null?'標本なし':q(run.srtt)});});\n                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ^\n\nSyntaxError: Unexpected token ')'\n    at checkSyntax (node:internal/main/check_syntax:74:5)\n\nNode.js v22.23.2\n\n\n1 !== 0\n\n    at file:///home/runner/work/visual-cs-lab/visual-cs-lab/scripts/curriculum-probe.mjs:7:203 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: 1,\n  expected: 0,\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v22.23.2\n"
+      "exit": 0,
+      "errors": [],
+      "tail": "{\n  \"registered\": 101,\n  \"target\": 155,\n  \"passed\": 1104,\n  \"failed\": 0,\n  \"missing\": [\n    \"GAP-102\",\n    \"GAP-103\",\n    \"GAP-104\",\n    \"GAP-105\",\n    \"GAP-106\",\n    \"GAP-107\",\n    \"GAP-108\",\n    \"GAP-109\",\n    \"GAP-110\",\n    \"GAP-111\",\n    \"GAP-112\",\n    \"GAP-113\",\n    \"GAP-114\",\n    \"GAP-115\",\n    \"GAP-116\",\n    \"GAP-117\",\n    \"GAP-118\",\n    \"GAP-119\",\n    \"GAP-120\",\n    \"GAP-121\",\n    \"GAP-122\",\n    \"GAP-123\",\n    \"GAP-124\",\n    \"GAP-125\",\n    \"GAP-126\",\n    \"GAP-127\",\n    \"GAP-128\",\n    \"GAP-129\",\n    \"GAP-130\",\n    \"GAP-131\",\n    \"GAP-132\",\n    \"GAP-133\",\n    \"GAP-134\",\n    \"GAP-135\",\n    \"GAP-136\",\n    \"GAP-137\",\n    \"GAP-138\",\n    \"GAP-139\",\n    \"GAP-140\",\n    \"GAP-141\",\n    \"GAP-142\",\n    \"GAP-143\",\n    \"GAP-144\",\n    \"GAP-145\",\n    \"GAP-146\",\n    \"GAP-147\",\n    \"GAP-148\",\n    \"GAP-149\",\n    \"GAP-150\",\n    \"GAP-151\",\n    \"GAP-152\",\n    \"GAP-153\",\n    \"GAP-154\",\n    \"GAP-155\"\n  ]\n}\n"
     },
     "check": {
       "exit": 0,
       "errors": [],
-      "tail": "# skipped 0\n# todo 0\n# duration_ms 1889.028589\n\n> visual-cs-lab@3.0.0 inventory\n> node scripts/inventory.mjs\n\n{\n  \"total\": 232,\n  \"legacy\": 144,\n  \"engines\": 191,\n  \"counts\": {\n    \"core\": 152,\n    \"network\": 35,\n    \"security\": 37,\n    \"missions\": 8\n  }\n}"
+      "tail": "# skipped 0\n# todo 0\n# duration_ms 2180.663727\n\n> visual-cs-lab@3.0.0 inventory\n> node scripts/inventory.mjs\n\n{\n  \"total\": 232,\n  \"legacy\": 144,\n  \"engines\": 191,\n  \"counts\": {\n    \"core\": 152,\n    \"network\": 35,\n    \"security\": 37,\n    \"missions\": 8\n  }\n}"
     },
     "browser": {
       "exit": null,
       "errors": [],
       "tail": ""
     }
+  },
+  "curriculum-probe.json": {
+    "sourceCommit": "52d4ed618c242eac1aea2aadc31876933dc2a3bd",
+    "at": "2026-09-10T07:23:06.166Z",
+    "registered": 101,
+    "target": 155,
+    "missing": [
+      "GAP-102",
+      "GAP-103",
+      "GAP-104",
+      "GAP-105",
+      "GAP-106",
+      "GAP-107",
+      "GAP-108",
+      "GAP-109",
+      "GAP-110",
+      "GAP-111",
+      "GAP-112",
+      "GAP-113",
+      "GAP-114",
+      "GAP-115",
+      "GAP-116",
+      "GAP-117",
+      "GAP-118",
+      "GAP-119",
+      "GAP-120",
+      "GAP-121",
+      "GAP-122",
+      "GAP-123",
+      "GAP-124",
+      "GAP-125",
+      "GAP-126",
+      "GAP-127",
+      "GAP-128",
+      "GAP-129",
+      "GAP-130",
+      "GAP-131",
+      "GAP-132",
+      "GAP-133",
+      "GAP-134",
+      "GAP-135",
+      "GAP-136",
+      "GAP-137",
+      "GAP-138",
+      "GAP-139",
+      "GAP-140",
+      "GAP-141",
+      "GAP-142",
+      "GAP-143",
+      "GAP-144",
+      "GAP-145",
+      "GAP-146",
+      "GAP-147",
+      "GAP-148",
+      "GAP-149",
+      "GAP-150",
+      "GAP-151",
+      "GAP-152",
+      "GAP-153",
+      "GAP-154",
+      "GAP-155"
+    ],
+    "errors": [],
+    "passed": 1104,
+    "failed": 0,
+    "failures": []
   }
 }
