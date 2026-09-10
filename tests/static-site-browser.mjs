@@ -45,7 +45,10 @@ try{
   const url=origin+prefix;
   await check(scenario+': cold load reads all external scripts/styles in manifest order',async()=>{
    await page.goto(url);await page.waitForFunction(()=>globalThis.CSL?.app?.ready&&document.querySelector('#home-query'));
-   await page.waitForLoadState('networkidle');
+   // page.goto() already waits for the load event. `networkidle` is not a
+   // correctness signal here and can remain unsettled in Firefox even after
+   // every required local script and stylesheet has loaded. The assertions
+   // below verify the actual application resources directly instead.
    const state=await page.evaluate(()=>({scripts:[...document.scripts].map(s=>({src:s.getAttribute('src'),defer:s.defer,text:s.textContent})),css:[...document.querySelectorAll('link[rel="stylesheet"]')].map(l=>l.getAttribute('href')),loaded:[...document.styleSheets].filter(s=>s.href).length,units:CSL.labs.length,areas:CSL.areas.length,bg:getComputedStyle(document.body).backgroundColor,csp:window.__csp}));
    assert.equal(state.units,314);assert.equal(state.areas,20);
    assert.deepEqual(state.scripts.map(s=>s.src),browserModules.map(n=>`./src/${n}.js`));
