@@ -39,6 +39,10 @@ jobs:
         env:
           BROWSER: ${{ matrix.browser }}
         run: node tests/static-site-browser.mjs
+      - name: Check scrollbar finish and native scrolling
+        env:
+          BROWSER: ${{ matrix.browser }}
+        run: node tests/scrollbars-browser.mjs
       - name: Ensure the published files did not need any build-time repair
         run: git diff --exit-code HEAD -- index.html src assets .nojekyll scripts tests package.json .github
       - uses: actions/upload-artifact@v5

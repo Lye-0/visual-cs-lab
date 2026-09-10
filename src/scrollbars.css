@@ -1,0 +1,88 @@
+/* Shared native scrollbar finish. Loaded last; no replacement DOM or JS.
+ * Scope includes the actual sidebar scroller (.sidebar > nav), not just body.
+ * The application ID deliberately wins over older per-component declarations.
+ */
+:root {
+  --scrollbar-thumb: #617582;
+  --scrollbar-thumb-hover: #78938e;
+  --scrollbar-thumb-active: #91cdbf;
+  --scrollbar-size: 10px;
+}
+
+/* Touch and forced-colors users keep the platform's native control. */
+:is(html, #app, #app *, #modal-holder, #modal-holder *) {
+  scrollbar-width: auto;
+  scrollbar-color: auto;
+}
+
+@media (pointer: fine) and (forced-colors: none) {
+  /* Firefox and other engines with standard scrollbar styling. */
+  :is(html, #app, #app *, #modal-holder, #modal-holder *) {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) transparent;
+  }
+
+  .sidebar > nav,
+  .library-category-panel {
+    scrollbar-gutter: stable;
+  }
+
+  @supports selector(::-webkit-scrollbar) {
+    /* A non-auto standard value suppresses these pseudo-elements in Chromium
+     * and recent WebKit. Reset BOTH, including inherited scrollbar-color.
+     */
+    :is(html, #app, #app *, #modal-holder, #modal-holder *) {
+      scrollbar-width: auto;
+      scrollbar-color: auto;
+    }
+
+    :is(html, #app, #app *, #modal-holder, #modal-holder *)::-webkit-scrollbar {
+      width: var(--scrollbar-size);
+      height: var(--scrollbar-size);
+      background: transparent;
+    }
+
+    :is(html, #app, #app *, #modal-holder, #modal-holder *)::-webkit-scrollbar-track {
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+      margin: 3px;
+    }
+
+    :is(html, #app, #app *, #modal-holder, #modal-holder *)::-webkit-scrollbar-thumb {
+      /* Six visible pixels inside a ten-pixel native drag target. */
+      background-color: var(--scrollbar-thumb);
+      background-clip: padding-box;
+      border: 2px solid transparent;
+      border-radius: 999px;
+      min-height: 40px;
+      min-width: 40px;
+      box-shadow: none;
+    }
+
+    :is(html, #app, #app *, #modal-holder, #modal-holder *)::-webkit-scrollbar-thumb:hover {
+      background-color: var(--scrollbar-thumb-hover);
+    }
+
+    :is(html, #app, #app *, #modal-holder, #modal-holder *)::-webkit-scrollbar-thumb:active {
+      background-color: var(--scrollbar-thumb-active);
+    }
+
+    :is(html, #app, #app *, #modal-holder, #modal-holder *)::-webkit-scrollbar-button {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+
+    :is(html, #app, #app *, #modal-holder, #modal-holder *)::-webkit-scrollbar-corner {
+      background: transparent;
+    }
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --scrollbar-thumb: #a0adbd;
+    --scrollbar-thumb-hover: #c5d9d3;
+  }
+}

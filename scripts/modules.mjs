@@ -3,4 +3,4 @@ export const curriculumModules=["curriculum-math","curriculum-statistics","curri
 export const modelModules=["core","network","foundations","security","git","missions","catalog","extensions","learning","pedagogy","notes-models","lesson-enhancements","lessons-core","lessons-network","lessons-security","lessons-missions","lesson-registry","lesson-checks","curriculum-kit","curriculum-tools","curriculum-runtime",...curriculumModules,"curriculum-index","taxonomy"];
 export const visualModules=["player","visuals","notes-visuals","curriculum-visuals","curriculum-rich-visuals","curriculum-demo-visuals"];
 export const browserModules=[...modelModules,...visualModules,"app","pages","workbench","reader","boot","curriculum-navigation"];
-export const styles=["style","reader-svg-theme","reader","notes-visuals","reader-library","reader-responsive","curriculum","curriculum-rich","curriculum-dom","library"];
+export const styles=["style","reader-svg-theme","reader","notes-visuals","reader-library","reader-responsive","curriculum","curriculum-rich","curriculum-dom","library","scrollbars"];
