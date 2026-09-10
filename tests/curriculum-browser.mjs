@@ -61,9 +61,15 @@ try{
    await page.locator('[data-r-action="reset"]').first().click();await ready(page,lab.id);
    const reset=await page.evaluate(()=>({params:CSL.app.current.params,defaults:CSL.app.current.lab.defaults,index:CSL.app.current.index}));assert.deepEqual(reset.params,reset.defaults,'初期条件へ戻る');assert.equal(reset.index,0);
   });
-  await check(`${name}: GAP番号で教材を検索して直接開く`,async()=>{
-   await page.goto(base+'#/catalog');const gateway=page.locator('[data-cv-catalogue]');await gateway.waitFor();await gateway.locator(':scope > details > summary').click();
-   await page.locator('#cv-curriculum-query').fill('GAP-155');assert.equal(await gateway.locator('.cv-curriculum-link:visible').count(),1);await gateway.locator('a[href="#/lab/gap-155"]').click();await ready(page,'gap-155');
+  await check(`${name}: GAP番号で教材を共通検索して直接開く`,async()=>{
+   // GAP lessons now share the normal catalogue. Do not revive the removed
+   // duplicate gateway just to satisfy its obsolete DOM selectors.
+   await page.goto(base+'#/catalog');await page.locator('#catalog-query').waitFor();
+   await page.locator('#catalog-query').fill('GAP-155');
+   await page.waitForFunction(()=>document.querySelectorAll('#catalog-results .library-unit').length===1);
+   assert.equal(await page.locator('#catalog-results .library-unit').getAttribute('data-lab-id'),'gap-155');
+   assert.ok((await page.locator('#catalog-count').textContent()).startsWith('1 '));
+   await page.locator('#catalog-results a[href="#/lab/gap-155"]').click();await ready(page,'gap-155');
   });
   for(const id of ['n11-tcp','gap-143'])await check(`${name}: ${id} 再生・停止・巻戻し`,async()=>{
    await visit(page,id);const play=page.locator('#reader-play');await play.click();await page.waitForFunction(()=>CSL.app.current.index>0,{},{timeout:7000});await play.click();const stopped=await page.evaluate(()=>CSL.app.current.index);await sleep(400);assert.equal(await page.evaluate(()=>CSL.app.current.index),stopped);await page.locator('[data-r-action="back"]').first().click();assert.equal(await page.evaluate(()=>CSL.app.current.index),Math.max(0,stopped-1));
