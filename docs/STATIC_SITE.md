@@ -8,7 +8,7 @@ JSの依存順・CSSのカスケード順は`scripts/modules.mjs`に保ち、`sc
 
 URLはすべて`./src/...`などの相対パスです。`https://example.test/`と`https://example.test/visual-cs-lab/`の両方で動作します。単元URLは`#/lab/...`を維持し、PagesにSPAのrewriteや404ページを要求しません。
 
-分離だけで教材の総転送量が減ったり、遅延読み込みになったりするわけではありません。今回は現在の全教材を順序どおり読み込み、変更範囲を公開形式と互換性に限定しています。
+分離だけで教材の総転送量が減ったり、遅延読み込みになったりするわけではありません。現在の全教材を順序どおり読み込みます。分類と一覧画面の構成は [LIBRARY_TAXONOMY.md](LIBRARY_TAXONOMY.md) を参照してください。
 
 ## セキュリティポリシー
 
@@ -36,7 +36,7 @@ JavaScriptは`script-src 'self'`で同じ公開元からのみ読み込みます
 
 `tests/static-site.test.mjs`では外部参照・順序・全アセットの存在・相対パス・CSP・CSS宣言順・入口の再生成一致を検査します。
 
-`tests/static-site-browser.mjs`では実HTTP文書をルートと`/visual-cs-lab/`から開き、56本のJSと9本のCSSを読み込むこと、全314教材の登録、主要単元の直接アクセス・初期化・比較・巻戻し、ネットワークSVGの配色、DOMと取り消し操作、ぼかしとスクロールのフォールバックを検査します。最後のdeferスクリプトを意図的に遅らせる試験も含みます。
+`tests/static-site-browser.mjs`では実HTTP文書をルートと`/visual-cs-lab/`から開き、マニフェストにある全JS/CSS（分類整理後は57本のJSと10本のCSS）を読み込むこと、全314教材の登録、主要単元の直接アクセス・初期化・比較・巻戻し、ネットワークSVGの配色、DOMと取り消し操作、ぼかしとスクロールのフォールバックを検査します。最後のdeferスクリプトを意図的に遅らせる試験も含みます。
 
 静的互換性ActionsではChromium・Firefox・WebKitを使用します。全314単元の網羅的な既存試験はChromiumで継続します。各エンジンの主要画面の試験と、各エンジンで全教材の全操作を保証することは別です。WebKitはSafari実機の試験ではありません。実行したSHAと結果は該当ActionsのArtifactsに残します。
 
