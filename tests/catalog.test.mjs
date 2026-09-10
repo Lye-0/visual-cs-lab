@@ -2,8 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {L,run} from './helpers.mjs';
 
-test('全20分野・旧144単元・N01–N20・S01–S24・総合8演習を維持',()=>{
- assert.equal(L.areas.length,20);assert.equal(L.legacyLabIds.length,144);assert.equal(L.labs.length,159);assert.equal(new Set(L.labs.map(l=>l.id)).size,L.labs.length);
+test('全20分野・旧144単元とノート対応15単元・N01–N20・S01–S24・総合8演習を維持',()=>{
+ assert.equal(L.areas.length,20);assert.equal(L.legacyLabIds.length,144);
+ assert.equal(L.curriculum.baselineIds.length,159);
+ assert.equal(L.labs.length,159+L.curriculum.entries.length);
+ assert.ok(L.curriculum.entries.length<=155);
+ assert.equal(new Set(L.labs.map(l=>l.id)).size,L.labs.length);
+ for(const id of L.curriculum.baselineIds)assert.ok(L.labs.some(l=>l.id===id),id);
  for(const id of L.legacyLabIds)assert.ok(L.labs.some(l=>l.id===id),id);
  for(const area of L.areas)assert.ok(L.labs.some(l=>l.area===area.id),area.id);
  for(const [prefix,total]of [['N',20],['S',24]])for(let i=1;i<=total;i++)assert.ok(L.labs.some(l=>l.topic===prefix+String(i).padStart(2,'0')),prefix+i);
@@ -30,7 +35,8 @@ test('制御値の検証は範囲・ステップ・選択肢を守る',()=>{
  const lab=L.labs.find(l=>l.id==='n11-tcp'),p=L.validateParams(lab,{count:4.8,window:100,rtt:'bad',loss:-1});assert.equal(p.count,5);assert.equal(p.window,6);assert.equal(p.loss,0);assert.equal(p.rtt,lab.defaults.rtt);
  const s=L.labs.find(l=>l.id==='s08-access');assert.equal(L.validateParams(s,{role:'root'}).role,s.defaults.role);
 });
-test('文字列はHTMLとして実行されずエスケープされる',()=>{
- const html=L.visualize({type:'cells',rows:[{label:'<img onerror=alert(1)>',values:['</script><script>alert(2)</script>']}]});
- assert.ok(html.includes('&lt;img'));assert.ok(html.includes('&lt;/script&gt;'));assert.ok(!html.includes('<script>'));
+test('既存図と拡張図の文字列はHTMLとして実行されずエスケープされる',()=>{
+ for(const visual of [{type:'cells',rows:[{label:'<img onerror=alert(1)>',values:['</script><script>alert(2)</script>']}]},L.curriculum.cells([{label:'<img onerror=alert(1)>',values:['</script><script>alert(2)</script>']}]){
+  const html=L.visualize(visual);assert.ok(html.includes('&lt;img'));assert.ok(html.includes('&lt;/script&gt;'));assert.ok(!html.includes('<script>'));
+ }
 });
