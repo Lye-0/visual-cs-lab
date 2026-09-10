@@ -4,13 +4,19 @@ import {spawn} from 'node:child_process';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {setTimeout as sleep} from 'node:timers/promises';
 import {chromium} from 'playwright';
-import {captureDiagram,normalizedDiagram} from './diagram-snapshot.mjs';
+import {captureDiagram} from './diagram-snapshot.mjs';
 const report={sourceCommit:process.env.SOURCE_COMMIT||process.env.GITHUB_SHA||'local',cases:[],errors:[]};
 const server=spawn(process.execPath,['scripts/server.mjs'],{env:{...process.env,PORT:'4191'},stdio:['ignore','pipe','pipe']});
 const base='http://127.0.0.1:4191/';let browser,serverLog='';
 server.stdout.on('data',d=>serverLog+=d);server.stderr.on('data',d=>serverLog+=d);server.on('error',e=>serverLog+=e.message);
 const ready=(page,id)=>page.waitForFunction(id=>{const c=globalThis.CSL?.app?.current;return c?.reader&&c.lab.id===id&&!c.pending&&!c.dirty&&!c.error&&!!c.result;},id,{timeout:12000});
-async function open(page,id){await page.goto(base+'#/lab/'+id);await ready(page,id);}
+async function open(page,id){
+ // Some tests deliberately corrupt the DOM. A same-hash navigation may reuse
+ // that document; cross a document boundary before loading the real HTTP page.
+ await page.goto('about:blank');
+ await page.goto(base+'#/lab/'+id);
+ await ready(page,id);
+}
 async function check(name,fn){try{await fn();report.cases.push({name,passed:true});}catch(e){report.cases.push({name,passed:false,error:String(e.stack||e)});console.error('FAIL '+name+'\n'+e.stack);}}
 try{
  for(let i=0;i<100;i++){try{if((await fetch(base)).ok)break;}catch{}if(i===99)throw Error('server unavailable: '+serverLog);await sleep(100);}

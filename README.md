@@ -10,7 +10,7 @@
 既存159単元を残し、GAP-001〜155に対応する155個の範囲限定モデルを統合しています（**全314単元・20分野**）。元の144単元も保持しています。単元一覧ではGAP番号、単元名、科目名から探せます。
 
 - [対応範囲と各モデルの前提](docs/CURRICULUM.md)
-- [実際に終了した検証の記録](docs/verification/CURRICULUM_REPORT.md)
+- [検証記録と現在の合否の確認方法](docs/verification/README.md)
 
 学習履歴・ノート・前回入力は保存しません。画面内だけの比較・再生・実験状態を使います。各分野の全仕様を再現する実機エミュレーターではありません。
 
@@ -57,28 +57,35 @@ npm start
 
 | コマンド | 内容 |
 |---|---|
+| `node scripts/curriculum-finalize.mjs` | 構文・manifest・教材登録の読み取り専用検査。ソースの修正はしない |
 | `npm run build` | ソースから単体HTMLを生成 |
-| `npm test` | 既存・追加教材、数値例、保存禁止、入力、再生などのNode.jsテスト |
+| `npm test` | 既存・追加教材、数値例、保存禁止、入力、再生、PRレビューの回帰テスト |
 | `npm run inventory` | 単元一覧と機械可読データを再生成 |
 | `npm run check` | ビルド・Node.jsテスト・単元一覧の生成 |
 | `node scripts/curriculum-probe.mjs` | 追加モデルの全コントロール境界・比較条件・独立した既知例を検査 |
 
-ブラウザテストの実行時だけPlaywrightが必要です。以下はGitHub Actionsで検証している手順です。
+ブラウザテストの実行時だけPlaywrightが必要です。
 
 ```powershell
 npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0
 npx playwright install chromium
 npm run build
+node tests/reader-browser.mjs
 node tests/curriculum-browser.mjs
+node tests/pr-review-browser.mjs
 node tests/reader-regressions.mjs
 node tests/reader-svg-theme.mjs
 ```
 
-`tests/curriculum-browser.mjs` は実際のHTTP文書を使用し、全単元をPC幅・モバイル幅で開きます。入力変更、最終段階への移動、巻き戻し、初期化、画像やDOMの操作を検査します。`reader-regressions.mjs` は入力・再生の既存の回帰試験、`reader-svg-theme.mjs` は黒い図形・文字へ戻る問題の専用試験です。
+`reader-browser.mjs` は解説・図・四段階・比較・巻き戻しを検査します。DOM教材の一時IDだけを構造的に正規化し、入力の現在値・ボタン状態・ラベルの参照・図の内容は比較を残します。`curriculum-browser.mjs` は入力変更・初期化に加え、画像・DOMの操作を検査します。どちらも実際のHTTP文書で全単元をPC幅・モバイル幅で開きます。
 
-最新の完了済み結果は[カリキュラム拡張の検証記録](docs/verification/CURRICULUM_REPORT.md)を参照してください。[機械可読の記録](docs/verification/curriculum.json)には検証対象のソースコミットと、生成HTML・一覧のSHA-256を残しています。件数を足し合わせて学習効果や独立した保証の数とは扱いません。
+`pr-review-browser.mjs` はSVGノードのキーボード操作と、図の比較が値の変化・重複ID・壊れた参照を見逃さないことを検査します。`reader-regressions.mjs` は入力・再生の回帰試験、`reader-svg-theme.mjs` は黒い図形・文字へ戻る問題の専用試験です。
 
-自動試験はChromiumで行い、スマートフォン実機・Safari・Firefoxや学習者による理解度評価とは区別します。撮影したスクリーンショットも、目視レビュー済みという意味ではありません。旧版の検証記録は履歴資料として残しています。
+**現在の合否は、対象コミットのPR Checks／GitHub Actionsを確認してください。** `Curriculum integration and verification` はPRのhead SHAを、`Lesson review` はGitHubのマージ予定コミットを検証します。両方とも読み取り専用で、検証のためにソースを修復・commit・pushすることはありません。生の結果と対象SHAは各実行のArtifactsに残します。
+
+チェックイン済みの[拡張時の検証記録](docs/verification/CURRICULUM_REPORT.md)と[機械可読の記録](docs/verification/curriculum.json)は、記載された `sourceCommit` に対する過去の結果です。現在の結果として流用しません。[記録の読み方](docs/verification/README.md)と[PR #2のレビュー判断](docs/PR2_REVIEW.md)も参照してください。件数を足し合わせて学習効果や独立した保証の数とは扱いません。
+
+自動試験はChromiumで行い、スマートフォン実機・Safari・Firefoxや学習者による理解度評価とは区別します。撮影したスクリーンショットも、目視レビュー済みという意味ではありません。
 
 ## ソース構成と資料
 
@@ -89,6 +96,7 @@ node tests/reader-svg-theme.mjs
 | [全単元一覧](docs/EXPERIMENTS.md) | 単元名、問い、例、操作、モデルの前提 |
 | [単元データ](docs/experiments.json) | 生成された機械可読の一覧 |
 | [GAP対応表](docs/CURRICULUM.md) | 追加範囲と各モデルが実際に再現すること |
-| [最新の拡張検証](docs/verification/CURRICULUM_REPORT.md) | 完了済みの自動検証とその限界 |
+| [検証記録の読み方](docs/verification/README.md) | 現在のChecks／Artifactsと過去の記録を区別する方法 |
+| [PR #2レビュー対応](docs/PR2_REVIEW.md) | Copilot指摘ごとの妥当性・採否・修正内容 |
 
-マージや公開デプロイは利用者が行います。この拡張作業では、作業ブランチへの変更と検証済み生成物の更新までを扱っています。
+マージや公開デプロイは利用者が行います。作業ブランチ上のソースと生成物を更新し、そのコミットに対してCIを実行します。
