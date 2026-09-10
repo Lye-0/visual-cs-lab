@@ -1,6 +1,6 @@
 {
-  "sourceCommit": "1591664abf1e9da0993c8bf488a3b22b11efa3b9",
-  "runId": "34446379113",
+  "sourceCommit": "b736f2ffd9b999536dafa05ec4a622fbe52062f9",
+  "runId": "34446719631",
   "files": [
     "curriculum-algorithms.js",
     "curriculum-architecture.js",
@@ -26,7 +26,7 @@
     "check": {
       "exit": 0,
       "errors": [],
-      "tail": "# skipped 0\n# todo 0\n# duration_ms 1691.565468\n\n> visual-cs-lab@3.0.0 inventory\n> node scripts/inventory.mjs\n\n{\n  \"total\": 201,\n  \"legacy\": 144,\n  \"engines\": 160,\n  \"counts\": {\n    \"core\": 121,\n    \"network\": 35,\n    \"security\": 37,\n    \"missions\": 8\n  }\n}"
+      "tail": "# skipped 0\n# todo 0\n# duration_ms 1815.006042\n\n> visual-cs-lab@3.0.0 inventory\n> node scripts/inventory.mjs\n\n{\n  \"total\": 232,\n  \"legacy\": 144,\n  \"engines\": 191,\n  \"counts\": {\n    \"core\": 152,\n    \"network\": 35,\n    \"security\": 37,\n    \"missions\": 8\n  }\n}"
     },
     "browser": {
       "exit": null,
@@ -35,8 +35,8 @@
     }
   },
   "curriculum-probe.json": {
-    "sourceCommit": "1591664abf1e9da0993c8bf488a3b22b11efa3b9",
-    "at": "2026-09-10T06:42:06.675Z",
+    "sourceCommit": "b736f2ffd9b999536dafa05ec4a622fbe52062f9",
+    "at": "2026-09-10T06:46:24.259Z",
     "registered": 73,
     "target": 155,
     "missing": [
