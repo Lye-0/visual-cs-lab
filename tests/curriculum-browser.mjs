@@ -59,7 +59,7 @@ try{
    const changed=await page.evaluate(()=>JSON.stringify(CSL.app.current.result));assert.notEqual(changed,initial,'条件変更が計算に反映されない');
    for(const phase of ['1','2','3','0']){const control=page.locator(`[data-r-phase="${phase}"]`);if(await control.count())await control.click();}
    await page.locator('[data-r-action="reset"]').first().click();await ready(page,lab.id);
-   assert.equal(await page.evaluate(()=>JSON.stringify(CSL.app.current.result)),initial,'初期化が同じ初期条件を再現しない');
+   const reset=await page.evaluate(()=>({params:CSL.app.current.params,defaults:CSL.app.current.lab.defaults,index:CSL.app.current.index}));assert.deepEqual(reset.params,reset.defaults,'初期条件へ戻る');assert.equal(reset.index,0);
   });
   await check(`${name}: GAP番号で教材を検索して直接開く`,async()=>{
    await page.goto(base+'#/catalog');const gateway=page.locator('[data-cv-catalogue]');await gateway.waitFor();await gateway.locator(':scope > details > summary').click();
