@@ -1,7 +1,7 @@
 [
   {
-    "path": "src/curriculum-databases.js",
-    "old": "K.table(['id','所属名','score'],joined)))],",
-    "new": "K.table(['id','所属名','score'],joined))],"
+    "path": "src/curriculum-network.js",
+    "old": "'RTO':e.rto,'状態':e.state})));return out(frames,",
+    "new": "'RTO':e.rto,'状態':e.state}));return out(frames,"
   }
 ]
