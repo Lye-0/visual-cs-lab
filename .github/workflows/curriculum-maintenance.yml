@@ -2,7 +2,9 @@ name: Curriculum reviewed patch
 on:
   push:
     branches: [feat/curriculum-gap-expansion]
-    paths: [.github/workflows/curriculum-maintenance.yml, scripts/curriculum-patches.json]
+    paths:
+      - .github/workflows/curriculum-maintenance.yml
+      - scripts/curriculum-patches*.json
 permissions:
   contents: write
 concurrency:
@@ -28,16 +30,17 @@ jobs:
           from pathlib import Path
           allowed=('src/','tests/','scripts/')
           paths=set()
-          for patch in json.loads(Path('scripts/curriculum-patches.json').read_text()):
-              name=patch['path'];p=Path(name)
-              assert name.startswith(allowed) and '..' not in p.parts and p.is_file()
-              old,new=patch['old'],patch['new'];text=p.read_text()
-              if text.count(old)==0 and new in text: continue
-              assert old and text.count(old)==1, name+' no longer matches the reviewed fragment'
-              p.write_text(text.replace(old,new,1));paths.add(name)
+          for plan in sorted(Path('scripts').glob('curriculum-patches*.json')):
+              for patch in json.loads(plan.read_text()):
+                  name=patch['path'];p=Path(name)
+                  assert name.startswith(allowed) and '..' not in p.parts and p.is_file()
+                  old,new=patch['old'],patch['new'];text=p.read_text()
+                  if text.count(old)==0 and new in text: continue
+                  assert old and text.count(old)==1, name+' no longer matches the reviewed fragment'
+                  p.write_text(text.replace(old,new,1));paths.add(name)
           for name in paths:
               if name.endswith(('.js','.mjs')): subprocess.run(['node','--check',name],check=True)
-          Path('/tmp/curriculum-patch-paths').write_text('\n'.join(sorted(paths)))
+          Path('/tmp/curriculum-patch-paths').write_text('\n'.join(sorted(paths))+'\n')
           PY
       - name: Commit without overwriting concurrent changes
         run: |
@@ -46,7 +49,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           while IFS= read -r path; do [ -z "$path" ] || git add -- "$path"; done < /tmp/curriculum-patch-paths
-          last=$(tail -n 1 /tmp/curriculum-patch-paths); [ -z "$last" ] || git add -- "$last"
           if ! git diff --cached --quiet; then
             git commit -m 'fix: 拡張教材にレビュー済みの修正を適用'
             git push origin HEAD:refs/heads/feat/curriculum-gap-expansion
