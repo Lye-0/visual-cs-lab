@@ -1,13 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFile,stat} from 'node:fs/promises';
+import {readFile,stat,mkdtemp,mkdir,writeFile,rm} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
+import {tmpdir} from 'node:os';
+import path from 'node:path';
 import {browserModules,styles} from '../scripts/modules.mjs';
-import {renderIndex,publishedAssets,contentSecurityPolicy} from '../scripts/site-entry.mjs';
+import {renderIndex,publishedAssets,contentSecurityPolicy,indexMatches} from '../scripts/site-entry.mjs';
 const root=new URL('../',import.meta.url),read=p=>readFile(new URL(p,root),'utf8');
 const html=await read('index.html');
 test('published entry is small and contains no embedded application script or stylesheet',()=>{
- assert.equal(html,renderIndex());assert.ok(Buffer.byteLength(html)<16000);
+ assert.ok(indexMatches(html,renderIndex()));assert.ok(Buffer.byteLength(html)<16000);
  assert.doesNotMatch(html,/<style\b/i);
  const tags=[...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)];
  assert.equal(tags.length,browserModules.length);
@@ -31,11 +33,32 @@ test('CSP permits only same-origin scripts, without enabling inline scripts or e
  assert.deepEqual(directives['connect-src'],["'none'"]);
  assert.deepEqual(directives['form-action'],["'none'"]);
  assert.doesNotMatch(contentSecurityPolicy,/unsafe-eval|https?:/);
- // Inline presentation styles in the isolated lessons are still required.
  assert.ok(directives['style-src'].includes("'unsafe-inline'"));
 });
 test('entry generation is deterministic and --check cannot rewrite it',async()=>{
  const before=await read('index.html');execFileSync(process.execPath,['scripts/build.mjs','--check']);assert.equal(await read('index.html'),before);
+});
+test('entry comparison accepts Windows line endings but not changed assets or text',()=>{
+ const expected=renderIndex(),windows=expected.replace(/\n/g,'\r\n');
+ assert.ok(indexMatches(windows,expected));assert.ok(indexMatches(expected,windows));
+ assert.equal(indexMatches(windows.replace('./src/core.js','./src/missing.js'),expected),false);
+ assert.equal(indexMatches(windows.replace('Visual CS Lab','Changed title'),expected),false);
+ assert.equal(indexMatches(windows.replace('defer src','async src'),expected),false);
+});
+test('CLI checks a CRLF checkout without rewriting it and rejects stale markup',async()=>{
+ const temp=await mkdtemp(path.join(tmpdir(),'visual-cs-entry-'));
+ try{
+  await mkdir(path.join(temp,'scripts'),{recursive:true});
+  for(const name of ['build.mjs','site-entry.mjs','modules.mjs'])await writeFile(path.join(temp,'scripts',name),await read('scripts/'+name));
+  // The entry builder reads assets for existence; their contents are not bundled.
+  for(const asset of publishedAssets){const file=path.join(temp,asset);await mkdir(path.dirname(file),{recursive:true});await writeFile(file,'');}
+  const file=path.join(temp,'index.html'),windows=renderIndex().replace(/\n/g,'\r\n');
+  await writeFile(file,windows);
+  const invoke=()=>execFileSync(process.execPath,[path.join(temp,'scripts/build.mjs'),'--check'],{cwd:temp,stdio:'pipe'});
+  invoke();assert.equal(await readFile(file,'utf8'),windows);
+  const stale=windows.replace('./src/core.js','./src/missing.js');await writeFile(file,stale);
+  assert.throws(invoke,/index.html is out of date/);assert.equal(await readFile(file,'utf8'),stale);
+ }finally{await rm(temp,{recursive:true,force:true});}
 });
 test('prefixed CSS declarations precede the standard declarations in every source rule',async()=>{
  let checked=0;
@@ -60,6 +83,5 @@ test('blur has an opaque fallback and scrollbar styling remains nonessential',as
  assert.match(css,/@supports not \(\(-webkit-backdrop-filter:/);
  assert.match(css,/color-scheme:\s*dark/);
  assert.doesNotMatch(css,/scrollbar-width:\s*none/);
- // No compatibility warnings are hidden by disabling the diagnostics globally.
  assert.doesNotMatch(css,/hint-disable.*compat-api/);
 });

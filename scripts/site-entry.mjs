@@ -3,6 +3,11 @@
 import {browserModules,styles} from './modules.mjs';
 export const publishedAssets=[...styles.map(n=>`src/${n}.css`),...browserModules.map(n=>`src/${n}.js`),'assets/favicon.svg'];
 export const contentSecurityPolicy="default-src 'none'; script-src 'self'; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'";
+// Git on Windows may check text out as CRLF. Ignore only that transport-level
+// difference, not text, markup, attributes or asset order; --check never writes.
+export function indexMatches(actual,expected=renderIndex()){
+ return actual.replace(/\r\n/g,'\n')===expected.replace(/\r\n/g,'\n');
+}
 export function renderIndex(){
  for(const name of [...styles,...browserModules])if(!/^[a-z0-9-]+$/.test(name))throw Error('Invalid asset name: '+name);
  return `<!doctype html>
