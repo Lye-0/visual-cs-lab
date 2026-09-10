@@ -6,8 +6,12 @@ import {fileURLToPath} from 'node:url';
 import assert from 'node:assert/strict';
 const root=new URL('../',import.meta.url),at=path=>new URL(path,root),changes=[];
 async function replace(path,old,replacement,{optional=false}={}){
- const before=await readFile(at(path),'utf8'),count=before.split(old).length-1;
- if(count===0){if(before.includes(replacement))return;if(optional){console.log('Already changed or not applicable: '+path);return;}throw Error('Reviewed replacement no longer matches: '+path+'\n'+old.slice(0,180));}
+ const before=await readFile(at(path),'utf8');
+ // Insertions often contain the old fragment. Test the complete new fragment
+ // FIRST, so a second invocation cannot redeclare an inserted helper.
+ if(before.includes(replacement))return;
+ const count=before.split(old).length-1;
+ if(count===0){if(optional){console.log('Already changed or not applicable: '+path);return;}throw Error('Reviewed replacement no longer matches: '+path+'\n'+old.slice(0,180));}
  assert.equal(count,1,'Replacement must be unambiguous: '+path);
  await writeFile(at(path),before.replace(old,replacement));changes.push(path);
 }
