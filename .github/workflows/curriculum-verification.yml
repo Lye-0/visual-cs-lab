@@ -1,160 +1,68 @@
 name: Curriculum integration and verification
 on:
   push:
-    branches: [feat/curriculum-gap-expansion]
-    paths:
-      - src/**
-      - scripts/**
-      - tests/**
-      - package.json
-      - .github/workflows/curriculum-verification.yml
+    branches: [main, feat/notebook-led-learning, feat/curriculum-gap-expansion]
+  pull_request:
   workflow_dispatch:
 permissions:
   contents: read
 concurrency:
-  group: curriculum-final-${{ github.ref }}
+  group: curriculum-final-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  prepare:
-    if: github.repository == 'Lye-0/visual-cs-lab' && github.ref == 'refs/heads/feat/curriculum-gap-expansion'
-    runs-on: ubuntu-latest
-    timeout-minutes: 8
-    permissions:
-      contents: write
-    outputs:
-      sha: ${{ steps.source.outputs.sha }}
-      stale: ${{ steps.source.outputs.stale }}
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          ref: ${{ github.sha }}
-      - uses: actions/setup-node@v6
-        with:
-          node-version: '22'
-      - name: Integrate the reviewed modules and check all source syntax
-        run: node scripts/curriculum-finalize.mjs
-      - name: Record the exact source to test without rewriting history
-        id: source
-        shell: bash
-        run: |
-          current=$(git ls-remote origin refs/heads/feat/curriculum-gap-expansion | cut -f1)
-          if [ "$current" != "$GITHUB_SHA" ]; then
-            echo 'stale=true' >> "$GITHUB_OUTPUT"
-            echo '::notice::The branch advanced; this older attempt will not push changes.'
-            exit 0
-          fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -- src scripts/modules.mjs tests package.json
-          if ! git diff --cached --quiet; then
-            git commit -m 'feat: 追加155教材の読み込みと操作画面を統合'
-            git push origin HEAD:refs/heads/feat/curriculum-gap-expansion
-          fi
-          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
-          echo 'stale=false' >> "$GITHUB_OUTPUT"
   verify:
-    needs: prepare
-    if: needs.prepare.outputs.stale == 'false'
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
-      SOURCE_COMMIT: ${{ needs.prepare.outputs.sha }}
+      SOURCE_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: ${{ needs.prepare.outputs.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
       - uses: actions/setup-node@v6
         with:
           node-version: '22'
-      - name: Build the integrated site and run all Node tests
+      - name: Check the committed source without repairing or pushing it
         run: |
+          test "$(git rev-parse HEAD)" = "$SOURCE_COMMIT"
+          node scripts/curriculum-finalize.mjs
           mkdir -p review-output
+          git rev-parse HEAD > review-output/tested-head.txt
+      - name: Build and run all Node tests
+        run: |
           npm run build
-          npm test > review-output/curriculum-node.txt 2>&1 || { tail -n 150 review-output/curriculum-node.txt; exit 1; }
+          npm test > review-output/curriculum-node.txt 2>&1 || { tail -n 160 review-output/curriculum-node.txt; exit 1; }
           tail -n 15 review-output/curriculum-node.txt
           npm run inventory
-      - name: Audit all 155 models and their boundary and independent examples
+      - name: Audit all 155 model boundaries and independent examples
         run: |
           export GITHUB_SHA="$SOURCE_COMMIT"
-          node scripts/curriculum-probe.mjs > review-output/curriculum-probe.log 2>&1 || { tail -n 200 review-output/curriculum-probe.log; exit 1; }
-          tail -n 20 review-output/curriculum-probe.log
-      - name: Install the real browser
+          node scripts/curriculum-probe.mjs > review-output/curriculum-probe.log 2>&1 || { tail -n 160 review-output/curriculum-probe.log; exit 1; }
+          tail -n 15 review-output/curriculum-probe.log
+      - name: Install Chromium
         run: |
           npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0
-          npx playwright install chromium > review-output/browser-install.txt 2>&1 || { tail -n 80 review-output/browser-install.txt; exit 1; }
-      - name: Test every unit and the interactive raster and DOM lessons
+          npx playwright install chromium
+      - name: Test every unit and the real raster and DOM interactions
         run: |
           export GITHUB_SHA="$SOURCE_COMMIT"
-          node tests/curriculum-browser.mjs > review-output/curriculum-browser.log 2>&1 || { tail -n 200 review-output/curriculum-browser.log; exit 1; }
-          tail -n 25 review-output/curriculum-browser.log
-      - name: Keep the input, playback and SVG regressions passing
+          node tests/curriculum-browser.mjs > review-output/curriculum-browser.log 2>&1 || { tail -n 180 review-output/curriculum-browser.log; exit 1; }
+          tail -n 20 review-output/curriculum-browser.log
+      - name: Test review regressions, playback and SVG colors
         run: |
           export GITHUB_SHA="$SOURCE_COMMIT"
-          node tests/reader-regressions.mjs > review-output/reader-regressions.log 2>&1 || { tail -n 120 review-output/reader-regressions.log; exit 1; }
-          node tests/reader-svg-theme.mjs > review-output/reader-svg-theme.log 2>&1 || { cat review-output/reader-svg-theme.log; exit 1; }
-          tail -n 15 review-output/reader-regressions.log
-          cat review-output/reader-svg-theme.log
-      - name: Generate the report only from completed successful checks
-        run: node scripts/curriculum-verification-report.mjs
+          node tests/pr-review-browser.mjs
+          node tests/reader-regressions.mjs
+          node tests/reader-svg-theme.mjs
+      - name: Verify source immutability and record completed results
+        run: |
+          test "$(git rev-parse HEAD)" = "$SOURCE_COMMIT"
+          git diff --exit-code HEAD -- src scripts tests package.json .github
+          node scripts/curriculum-verification-report.mjs
       - uses: actions/upload-artifact@v5
         if: always()
         with:
-          name: curriculum-verification-evidence
+          name: curriculum-verification-evidence-${{ github.event_name }}-${{ github.run_attempt }}
           path: review-output/
           retention-days: 14
-  update-generated:
-    needs: [prepare, verify]
-    if: needs.prepare.outputs.stale == 'false' && needs.verify.result == 'success'
-    runs-on: ubuntu-latest
-    timeout-minutes: 8
-    permissions:
-      contents: write
-      actions: read
-    env:
-      SOURCE_COMMIT: ${{ needs.prepare.outputs.sha }}
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          ref: ${{ needs.prepare.outputs.sha }}
-      - uses: actions/setup-node@v6
-        with:
-          node-version: '22'
-      - uses: actions/download-artifact@v5
-        with:
-          name: curriculum-verification-evidence
-          path: review-output
-      - name: Rebuild and compare with the tested outputs
-        run: |
-          npm run build
-          npm run inventory
-          node --input-type=module <<'JS'
-          import {readFile,writeFile,copyFile,mkdir} from 'node:fs/promises';
-          import {createHash} from 'node:crypto';
-          import assert from 'node:assert/strict';
-          const report=JSON.parse(await readFile('review-output/curriculum-verification.json','utf8'));
-          assert.equal(report.sourceCommit,process.env.SOURCE_COMMIT);
-          assert.equal(report.addedModels,155);assert.equal(report.units,314);
-          for(const file of ['index.html','docs/EXPERIMENTS.md','docs/experiments.json'])assert.equal(createHash('sha256').update(await readFile(file)).digest('hex'),report.generatedFiles[file],file);
-          await mkdir('docs/verification',{recursive:true});
-          await copyFile('review-output/curriculum-verification.json','docs/verification/curriculum.json');
-          await copyFile('review-output/CURRICULUM_REPORT.md','docs/verification/CURRICULUM_REPORT.md');
-          await copyFile('review-output/CURRICULUM.md','docs/CURRICULUM.md');
-          const path='README.md',before=await readFile(path,'utf8'),marker='<!-- curriculum-expansion-summary -->';
-          const summary=`${marker}\n## カリキュラムの追加範囲\n\n既存159単元を残し、GAP-001〜155に対応する155個の範囲限定モデルを統合しています（全314単元・20分野）。単元一覧ではGAP番号、単元名、科目名から探せます。\n\n- [対応範囲と各モデルの前提](docs/CURRICULUM.md)\n- [実際に終了した検証の記録](docs/verification/CURRICULUM_REPORT.md)\n\n学習履歴・ノート・前回入力は保存しません。画面内だけの比較・再生・実験状態を使います。各分野の全仕様を再現する実機エミュレーターではありません。\n\n<!-- /curriculum-expansion-summary -->\n\n`;
-          if(before.includes(marker)){const start=before.indexOf(marker),end=before.indexOf('<!-- /curriculum-expansion-summary -->',start);assert.ok(end>=start);await writeFile(path,before.slice(0,start)+summary+before.slice(end+'<!-- /curriculum-expansion-summary -->'.length).replace(/^\n+/,''));}
-          else{const position=before.indexOf('\n')+1;await writeFile(path,before.slice(0,position)+'\n'+summary+before.slice(position));}
-          JS
-      - name: Commit tested generated files to the working branch only
-        run: |
-          current=$(git ls-remote origin refs/heads/feat/curriculum-gap-expansion | cut -f1)
-          if [ "$current" != "$SOURCE_COMMIT" ]; then
-            echo '::notice::The branch advanced. Evidence is preserved; no generated files were pushed.'
-            exit 0
-          fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -- index.html docs/EXPERIMENTS.md docs/experiments.json docs/CURRICULUM.md docs/verification/curriculum.json docs/verification/CURRICULUM_REPORT.md README.md
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'build: 全範囲の検証済み教材と対応表を更新'
-          git push origin HEAD:refs/heads/feat/curriculum-gap-expansion

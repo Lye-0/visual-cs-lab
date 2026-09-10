@@ -1,7 +1,0 @@
-[
- {"path":"src/curriculum-security-systems.js","old":"const ast=K.parseExpr(p.policy).ast,variables=K.exprVariables(ast);","new":"const ast=K.parseExpr(p.policy).ast,variables=Array.from(K.exprVariables(ast));"},
- {"path":"src/curriculum-security-systems.js","old":"K.table(['主体','入力','期待ID','実際ID','一致','エラー'],results)))],","new":"K.table(['主体','入力','期待ID','実際ID','一致','エラー'],results))],"},
- {"path":"src/curriculum-security-systems.js","old":"['ASLR後の基点',base]])))],","new":"['ASLR後の基点',base]]))],"},
- {"path":"src/curriculum-security-systems.js","old":"[[JSON.stringify(restored),restoreValid,exportAllowed]])))],","new":"[[JSON.stringify(restored),restoreValid,exportAllowed]]))],"},
- {"path":"src/curriculum-security-systems.js","old":"tests:[[{},{'反例数':1}]]","new":"tests:[[{},{'反例数':2}]]"}
-]

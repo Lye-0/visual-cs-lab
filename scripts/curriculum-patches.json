@@ -1,7 +1,0 @@
-[
-  {
-    "path": "src/curriculum-network.js",
-    "old": "'RTO':e.rto,'状態':e.state})));return out(frames,",
-    "new": "'RTO':e.rto,'状態':e.state}));return out(frames,"
-  }
-]
