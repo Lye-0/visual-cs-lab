@@ -1,8 +1,8 @@
-name: Curriculum maintenance
+name: Curriculum reviewed patch
 on:
   push:
     branches: [feat/curriculum-gap-expansion]
-    paths: [.github/workflows/curriculum-maintenance.yml]
+    paths: [.github/workflows/curriculum-maintenance.yml, scripts/curriculum-patches.json]
 permissions:
   contents: write
 concurrency:
@@ -15,38 +15,50 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: feat/curriculum-gap-expansion
       - uses: actions/setup-node@v6
         with:
           node-version: '22'
-      - name: Apply the reviewed exact replacement
+      - name: Apply exact reviewed replacements only
         run: |
+          git rev-parse HEAD > /tmp/curriculum-base
           python3 - <<'PY'
+          import json, subprocess
           from pathlib import Path
-          p=Path('src/curriculum-algorithms.js')
-          text=p.read_text()
-          old="prev[i]??'なし'])))));"
-          new="prev[i]??'なし']))));"
-          assert text.count(old)==1, 'The reviewed source no longer matches'
-          p.write_text(text.replace(old,new))
+          allowed=('src/','tests/','scripts/')
+          paths=set()
+          for patch in json.loads(Path('scripts/curriculum-patches.json').read_text()):
+              name=patch['path'];p=Path(name)
+              assert name.startswith(allowed) and '..' not in p.parts and p.is_file()
+              old,new=patch['old'],patch['new'];text=p.read_text()
+              if text.count(old)==0 and new in text: continue
+              assert old and text.count(old)==1, name+' no longer matches the reviewed fragment'
+              p.write_text(text.replace(old,new,1));paths.add(name)
+          for name in paths:
+              if name.endswith(('.js','.mjs')): subprocess.run(['node','--check',name],check=True)
+          Path('/tmp/curriculum-patch-paths').write_text('\n'.join(sorted(paths)))
           PY
-          node --check src/curriculum-algorithms.js
-      - name: Commit only the repaired source
+      - name: Commit without overwriting concurrent changes
         run: |
           expected=$(git ls-remote origin refs/heads/feat/curriculum-gap-expansion | cut -f1)
-          test "$expected" = "$GITHUB_SHA"
+          test "$expected" = "$(cat /tmp/curriculum-base)"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -- src/curriculum-algorithms.js
-          git commit -m 'fix: 硬貨DPの表生成で余分な閉じ括弧を除去'
-          git push origin HEAD:refs/heads/feat/curriculum-gap-expansion
-      - name: Check integrated models and all discovered extension modules
+          while IFS= read -r path; do [ -z "$path" ] || git add -- "$path"; done < /tmp/curriculum-patch-paths
+          last=$(tail -n 1 /tmp/curriculum-patch-paths); [ -z "$last" ] || git add -- "$last"
+          if ! git diff --cached --quiet; then
+            git commit -m 'fix: 拡張教材にレビュー済みの修正を適用'
+            git push origin HEAD:refs/heads/feat/curriculum-gap-expansion
+          fi
+      - name: Verify the patched source
         run: |
           mkdir -p review-output
-          node scripts/curriculum-probe.mjs > review-output/probe-log.txt 2>&1 || { tail -n 160 review-output/probe-log.txt; exit 1; }
-          tail -n 25 review-output/probe-log.txt
+          node scripts/curriculum-probe.mjs > review-output/probe-log.txt 2>&1 || { tail -n 100 review-output/probe-log.txt; exit 1; }
+          tail -n 20 review-output/probe-log.txt
       - uses: actions/upload-artifact@v5
         if: always()
         with:
-          name: curriculum-maintenance-diagnostics
+          name: curriculum-patch-diagnostics
           path: review-output/
           retention-days: 7
