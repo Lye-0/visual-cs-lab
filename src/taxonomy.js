@@ -1,6 +1,5 @@
-/* Navigation taxonomy, independent of teaching models and legacy track/area IDs.
- * Each unit has ONE primary home. Related themes aid discovery, not double counts.
- * Classification is editorial; it does not claim a university syllabus is covered.
+/* Primary navigation taxonomy. Preserve every lab ID, model and legacy area.
+ * Every unit has exactly one primary theme; related themes do not inflate counts.
  */
 (() => {
 'use strict';
@@ -75,7 +74,7 @@ theme('media','media-images','画像処理','画素、色、畳み込み、領�
 theme('media','media-graphics','CG・描画・アニメーション','座標、投影、奥行き、光、材質と動きの表現を学びます。',[137,138,139]);
 theme('media','media-hci','HCI・ユーザビリティ','操作の手掛かり、フィードバック、観察と使いやすさを考えます。',[148,149]);
 theme('media','media-accessibility','アクセシビリティ','配色、名前、フォーカス、キーボード操作と情報の伝え方を確かめます。',[150]);
-theme('practice','practice-missions','総合演習・ケーススタディ','複数の仕組みを使って構築・診断・設計を試します。');
+theme('practice','practice-missions','総合演習・ケーススタディ','構築、診断、修正、復旧などで複数の知識を組み合わせます。');
 theme('practice','practice-ethics','情報倫理・プライバシー','情報の扱い、権利、公平性、説明責任と社会への影響を考えます。',[151]);
 theme('practice','practice-research','実験・研究の進め方','問い、測定、比較、再現性、引用と考察のつながりを学びます。',[152,153]);
 const domainMap=new Map(domains.map(d=>[d.id,d])),categoryMap=new Map(categories.map(c=>[c.id,c]));
@@ -83,14 +82,14 @@ if(categoryMap.size!==categories.length)throw Error('分類IDが重複してい�
 const gapMap=new Map();
 for(const c of categories)for(const n of c.gaps){if(gapMap.has(n))throw Error('GAPの分類が重複: '+n);gapMap.set(n,c.id);}
 if(gapMap.size!==155||Array.from({length:155},(_,i)=>i+1).some(n=>!gapMap.has(n)))throw Error('GAPの分類が不足しています。');
-const originalOverrides={
+const overrides={
  'c01-bits':'sys-representation','c01-float':'sys-representation','c01-utf8':'sys-representation',
  'c01-information':'math-information','c01-entropy':'math-information','c01-joint':'math-information','c01-markov':'math-information','c01-channel':'math-information',
  'c01-huffman':'math-compression','c01-shannon-fano':'math-compression',
  'c01-hamming':'math-coding','c01-prefix':'math-coding','c01-kraft':'math-coding','c01-distance':'math-coding','c01-linear-code':'math-coding',
  'c02-set':'math-discrete','c03-matrix':'math-linear','c03-derivative':'math-calculus','c03-integral':'math-numerical',
  'c09-cache':'sys-memory','n02-crc':'math-coding','s04-signature':'sec-public',
- 'c18-projection':'media-graphics','c20-privacy':'practice-ethics','c20-contrast':'media-accessibility'
+ 'c18-image':'media-images','c18-projection':'media-graphics','c20-privacy':'practice-ethics','c20-contrast':'media-accessibility'
 };
 const areaMap={C02:'math-computation',C03:'math-probability',C04:'dev-programming',C05:'dev-structures',C06:'dev-algorithms',C07:'dev-languages',C08:'sys-logic',C09:'sys-cpu',C10:'sys-memory',C11:'sys-os',C12:'sys-concurrency',C14:'data-query',C16:'dev-git',C17:'data-learning',C18:'media-signals',C19:'sys-embedded',C20:'media-hci'};
 const networkMap=['net-basics','net-wireless','net-lan','net-ip','net-ip','net-ip','net-lan','net-routing','net-dns','net-transport','net-transport','net-ip','net-applications','net-operations','net-applications','net-operations','net-wireless','net-operations','net-applications','net-ip'];
@@ -99,14 +98,13 @@ const baseline=new Set(L.curriculum.baselineIds);
 function primary(lab){
  if(lab.gapId)return gapMap.get(Number(lab.id.slice(4)));
  if(!baseline.has(lab.id))throw Error('新しい単元の分類を定義してください: '+lab.id);
- if(originalOverrides[lab.id])return originalOverrides[lab.id];
+ if(overrides[lab.id])return overrides[lab.id];
  if(lab.track==='missions')return 'practice-missions';
  if(lab.track==='network')return networkMap[Number(lab.topic?.slice(1))-1];
  if(lab.track==='security')return securityMap[Number(lab.topic?.slice(1))-1];
  if(lab.engine==='eventloop')return 'dev-web';
  if(lab.engine==='replication')return 'sys-distributed';
  if(lab.engine==='transaction')return 'data-transactions';
- if(lab.engine==='convolution'||lab.id==='c18-convolution'||lab.variant==='convolution')return 'media-images';
  if(lab.area==='C16'&&lab.engine!=='git')return 'dev-engineering';
  return areaMap[lab.area];
 }
@@ -120,7 +118,7 @@ const related={
  'gap-119':['dev-engineering'],'gap-122':['math-statistics'],'gap-131':['data-neural'],
  'gap-139':['media-signals','math-compression'],'gap-141':['net-applications'],
  'gap-147':['dev-git'],'gap-150':['dev-web'],'gap-151':['sec-risk'],
- 'n02-crc':['net-lan'],'c01-huffman':['math-coding'],'c03-bayes':['sec-operations']
+ 'n02-crc':['net-lan'],'c01-huffman':['math-coding'],'c03-bayes':['sec-operations'],'c07-gc':['sys-memory']
 };
 for(const lab of L.labs){
  const id=primary(lab),category=categoryMap.get(id);
@@ -130,8 +128,10 @@ for(const lab of L.labs){
  lab.taxonomy=Object.freeze({domain:category.domain,category:id,related:Object.freeze(more)});
 }
 const normalize=value=>String(value??'').normalize('NFKC').toLocaleLowerCase().replace(/[\u30a1-\u30f6]/g,c=>String.fromCharCode(c.charCodeAt(0)-0x60)).trim();
-const glossary=new Map();for(const g of L.glossary){if(!glossary.has(g.lab))glossary.set(g.lab,[]);glossary.get(g.lab).push(g.term+' '+g.definition);}
-const documents=new Map(L.labs.map(l=>[l.id,normalize([l.id,l.gapId,l.unit,l.title,l.summary,l.question,l.course,...(l.keywords||[]),domainMap.get(l.taxonomy.domain).name,categoryMap.get(l.taxonomy.category).name,categoryMap.get(l.taxonomy.category).description,...l.taxonomy.related.map(id=>categoryMap.get(id).name),...(glossary.get(l.id)||[])].join(' '))]));
+const glossary=new Map(),courseNames=new Map();
+for(const g of L.glossary){if(!glossary.has(g.lab))glossary.set(g.lab,[]);glossary.get(g.lab).push(g.term+' '+g.definition);}
+for(const course of L.courses)for(const id of course.labs){if(!courseNames.has(id))courseNames.set(id,[]);courseNames.get(id).push(course.name);}
+const documents=new Map(L.labs.map(l=>[l.id,normalize([l.id,l.gapId,l.unit,l.title,l.summary,l.question,l.course,...(l.keywords||[]),...(courseNames.get(l.id)||[]),domainMap.get(l.taxonomy.domain).name,categoryMap.get(l.taxonomy.category).name,categoryMap.get(l.taxonomy.category).description,...l.taxonomy.related.map(id=>categoryMap.get(id).name),...(glossary.get(l.id)||[])].join(' '))]));
 function search(q=''){
  const words=normalize(q).split(/\s+/).filter(Boolean);
  return L.labs.filter(l=>words.every(w=>documents.get(l.id).includes(w))).sort((a,b)=>{
@@ -144,11 +144,16 @@ function select(params={}){
  const p=params instanceof URLSearchParams?Object.fromEntries(params):params;
  return search(p.q).filter(l=>(!p.domain||l.taxonomy.domain===p.domain)&&(!p.category||l.taxonomy.category===p.category)&&(!p.level||l.level===+p.level)&&(!p.area||l.area===p.area)&&(!p.track||l.track===p.track)&&(!p.topic||l.topic===p.topic));
 }
-function counts(labs=L.labs){const d=Object.fromEntries(domains.map(x=>[x.id,0])),c=Object.fromEntries(categories.map(x=>[x.id,0]));for(const l of new Set(labs)){d[l.taxonomy.domain]++;c[l.taxonomy.category]++;}return {total:new Set(labs).size,domains:d,categories:c};}
-const T=L.taxonomy={domains,categories,domain:id=>domainMap.get(id),category:id=>categoryMap.get(id),search,select,counts,normalize};
+function counts(labs=L.labs){const unique=new Map(labs.map(l=>[l.id,l])),d=Object.fromEntries(domains.map(x=>[x.id,0])),c=Object.fromEntries(categories.map(x=>[x.id,0]));for(const l of unique.values()){d[l.taxonomy.domain]++;c[l.taxonomy.category]++;}return {total:unique.size,domains:d,categories:c};}
+function page(labs,requested=1,size=24){
+ const pages=Math.max(1,Math.ceil(labs.length/size));
+ const index=Math.max(1,Math.min(pages,Math.floor(Number(requested))||1));
+ return {items:labs.slice((index-1)*size,index*size),number:index,pages,total:labs.length,start:labs.length?(index-1)*size+1:0,end:Math.min(index*size,labs.length)};
+}
+const T=L.taxonomy={domains,categories,domain:id=>domainMap.get(id),category:id=>categoryMap.get(id),search,select,counts,page,normalize};
 T.path=lab=>[T.domain(lab.taxonomy.domain),T.category(lab.taxonomy.category)];
 T.total=counts();
-for(const c of categories){c.count=T.total.categories[c.id];if(!c.count)throw Error('空の分類: '+c.id);Object.freeze(c);}
+for(const c of categories){c.count=T.total.categories[c.id];if(!c.count)throw Error('空の分類: '+c.id);Object.freeze(c.gaps);Object.freeze(c);}
 for(const d of domains){d.count=T.total.domains[d.id];Object.freeze(d);}
 Object.freeze(categories);Object.freeze(domains);
 })();

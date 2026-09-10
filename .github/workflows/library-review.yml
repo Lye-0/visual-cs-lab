@@ -1,0 +1,70 @@
+# Tests only. Publishing remains GitHub Pages: main / (root).
+name: Library taxonomy and navigation
+on:
+  push:
+    branches: [main, fix/library-taxonomy]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: library-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  browsers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Verify committed entry, classification and existing models
+        run: |
+          mkdir -p review-output
+          git rev-parse HEAD > review-output/library-head.txt
+          npm run check > review-output/library-node.txt 2>&1 || { tail -n 120 review-output/library-node.txt; exit 1; }
+          tail -n 15 review-output/library-node.txt
+          node --input-type=module <<'JS'
+          import {modelModules} from './scripts/modules.mjs';
+          import {writeFile} from 'node:fs/promises';
+          for(const name of modelModules) await import('./src/'+name+'.js');
+          const T=globalThis.CSL.taxonomy;
+          const report={sourceCommit:process.env.GITHUB_SHA,units:CSL.labs.length,domains:T.domains,categories:T.categories,courses:CSL.courses.map(c=>({name:c.name,ids:c.labs})),assignments:CSL.labs.map(l=>({id:l.id,title:l.unit,...l.taxonomy}))};
+          await writeFile('review-output/taxonomy.json',JSON.stringify(report,null,2));
+          console.log(JSON.stringify({units:report.units,domains:T.domains.map(d=>[d.name,d.count]),themes:T.categories.length,courses:CSL.courses.length}));
+          JS
+      - name: Install browser
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0
+          npx playwright install --with-deps ${{ matrix.browser }} > review-output/library-install.txt 2>&1 || { tail -n 60 review-output/library-install.txt; exit 1; }
+      - name: Test classification UI at five viewport sizes
+        env:
+          BROWSER: ${{ matrix.browser }}
+        run: node tests/library-browser.mjs
+      - name: Check external assets and compatibility at root and Pages subpath
+        env:
+          BROWSER: ${{ matrix.browser }}
+        run: node tests/static-site-browser.mjs
+      - name: Preserve all 314 lesson interactions and prior regressions
+        if: matrix.browser == 'chromium'
+        run: |
+          node tests/reader-browser.mjs
+          node tests/reader-regressions.mjs
+          node tests/reader-svg-theme.mjs
+          node tests/pr-review-browser.mjs
+          node tests/curriculum-browser.mjs
+      - name: Ensure tests did not rewrite application or checks
+        run: git diff --exit-code HEAD -- src scripts tests index.html assets package.json .github .nojekyll
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: library-${{ matrix.browser }}-${{ github.run_attempt }}
+          path: review-output/
+          retention-days: 14
