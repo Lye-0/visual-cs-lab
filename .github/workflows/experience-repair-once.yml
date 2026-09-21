@@ -1,5 +1,5 @@
-# Temporary, explicitly scoped authoring transaction. It removes itself from
-# the resulting commit. Permanent checks never repair or write source files.
+# One-time authoring transaction, removed by its own source commit.
+# Permanent verification is read-only and never repairs sources.
 name: Repair inspected experience sources once
 on:
   push:
@@ -24,12 +24,12 @@ jobs:
           import subprocess
           def replace(name,old,new):
               p=Path(name);s=p.read_text()
-              assert s.count(old)==1, (name,'replacement must match once')
+              assert s.count(old)==1,(name,old,'must match once')
               p.write_text(s.replace(old,new,1))
           assert subprocess.check_output(['git','hash-object','src/experiences-code.js']).decode().strip()=='02f2cf4a1968274265c4b5700b31a9827e2e2a5f'
-          replace('src/experiences-code.js',"directed:true'","directed:true")
+          replace('src/experiences-code.js',"method:'bellman-ford',directed:true'","method:'bellman-ford',directed:true")
+          replace('src/experiences-code.js',"method:'floyd-warshall',directed:true'","method:'floyd-warshall',directed:true")
           replace('src/experiences-geometry.js','v=[.6,1]','v=[.5,1]')
-          # Keep the complete source inventory in one manifest. No dummy lessons.
           replace('scripts/modules.mjs','"experiences-math","experiences-theory"]','"experiences-math","experiences-theory","experiences-code","experiences-hardware"]')
           Path('.github/workflows/experience-repair-once.yml').unlink()
           PY
@@ -37,7 +37,7 @@ jobs:
           node --check src/experiences-geometry.js
           node --check scripts/modules.mjs
           npm run build
-      - name: Commit actual corrected sources only on the working branch
+      - name: Commit corrected sources on the working branch
         run: |
           test "$(git ls-remote origin refs/heads/feat/lesson-specific-experiences | cut -f1)" = "$GITHUB_SHA"
           git config user.name 'github-actions[bot]'
@@ -45,8 +45,8 @@ jobs:
           git add -- src/experiences-code.js src/experiences-geometry.js scripts/modules.mjs index.html .github/workflows/experience-repair-once.yml
           git commit -m 'fix: 算法教材の構文と39単元の読み込みと座標初期値を修正'
           git push origin HEAD:refs/heads/feat/lesson-specific-experiences
-          echo "Verified syntax; source commit $(git rev-parse HEAD)"
-      - name: Report validation errors without mutating the sources
+          echo "SOURCE_COMMIT=$(git rev-parse HEAD)"
+      - name: Report contracts without changing sources
         run: |
           mkdir -p review-output
           node --input-type=module <<'JS' > review-output/contracts.txt
@@ -56,6 +56,8 @@ jobs:
           for(const name of modelModules.filter(n=>!n.startsWith('experiences-')))await import('./src/'+name+'.js');
           await import('./src/experiences-core.js');
           const X=CSL.experiences,original=X.define,errors=[];
+          // Isolated diagnostic only: collect all failures instead of stopping
+          // at the first bad chapter. Production keeps strict registration.
           X.define=(...args)=>{try{return original(...args);}catch(e){errors.push({id:args[0],error:e.message});}};
           for(const name of modelModules.filter(n=>n.startsWith('experiences-')&&n!=='experiences-core')){
             try{vm.runInThisContext(await readFile('./src/'+name+'.js','utf8'),{filename:name});}catch(e){errors.push({file:name,error:e.message});}
@@ -74,6 +76,7 @@ jobs:
             }
           }
           console.log('MODEL_ERRORS '+JSON.stringify(failed));
+          console.log('MISSING '+JSON.stringify(CSL.labs.filter(l=>!X.lessons.has(l.id)).map(l=>l.id)));
           JS
           cat review-output/contracts.txt
           git diff --exit-code HEAD -- src scripts tests index.html
