@@ -19,25 +19,31 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: '22'
-      - name: Inspect model contracts without changing sources
+      - name: Verify the committed entry and all Node tests
         run: |
           mkdir -p review-output
-          node --input-type=module <<'JS'
-          import {modelModules} from './scripts/modules.mjs';
-          for(const name of modelModules) await import('./src/'+name+'.js');
-          for(const l of CSL.labs) console.log(JSON.stringify({id:l.id,title:l.unit,controls:l.controls.map(c=>({key:c.key,type:c.type,label:c.label,value:c.value,options:c.options})),reading:l.reading?.focus}));
-          JS
-      - name: Verify committed entry and existing calculations
-        run: |
-          npm run check > review-output/node.txt 2>&1 || { tail -n 100 review-output/node.txt; exit 1; }
-          tail -n 20 review-output/node.txt
-      - name: Review authored experiences
-        if: hashFiles('tests/experiences-browser.mjs') != ''
+          set +e
+          npm run check > review-output/node.txt 2>&1
+          result=$?
+          set -e
+          python3 - <<'PY'
+          from pathlib import Path
+          lines=Path('review-output/node.txt').read_text().splitlines()
+          keep=set(range(max(0,len(lines)-18),len(lines)))
+          for i,line in enumerate(lines):
+              if 'not ok ' in line or 'Error:' in line or 'SyntaxError' in line:
+                  keep.update(range(max(0,i-2), min(len(lines),i+36)))
+          for i in sorted(keep):print(lines[i])
+          PY
+          exit "$result"
+      - name: Browser checks on committed files
+        if: ${{ !cancelled() && hashFiles('tests/experiences-browser.mjs') != '' }}
         run: |
           npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0
-          npx playwright install --with-deps chromium > review-output/install.txt 2>&1 || { tail -n 40 review-output/install.txt; exit 1; }
+          npx playwright install chromium > review-output/install.txt 2>&1 || { tail -n 40 review-output/install.txt; exit 1; }
           node tests/experiences-browser.mjs
       - name: No test-time source mutations
+        if: ${{ !cancelled() }}
         run: git diff --exit-code HEAD -- src scripts tests index.html package.json .github
       - uses: actions/upload-artifact@v5
         if: always()
