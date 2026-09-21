@@ -17,6 +17,8 @@ N.http=(input,a)=>{
  }else if(method==='POST'){
   if(path!=='/items')status=405;
   else if(Object.keys(s.resources).length>=10)throw Error('この小例は10資源までです。削除するか最初から試してください。');
+  // Never return a Location that the bounded path reader cannot open.
+  else if(s.next>99)throw Error('この小例の自動採番は99までです。既存の資源は読めます。新しい作成を試す場合は実験を最初からに戻してください。');
   else{const key='/items/'+s.next++;s.resources[key]={text,version:++s.revision};status=201;headers.Location=key;headers.ETag='"v'+s.revision+'"';body={text};}
  }else if(method==='PUT'){
   if(path==='/items')status=405;

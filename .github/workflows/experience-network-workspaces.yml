@@ -28,7 +28,7 @@ jobs:
           mkdir -p review-output
           node scripts/build.mjs --check
           for file in src/experiences-network*.js tests/network-workspaces*.mjs; do node --check "$file"; done
-          node --test tests/network-workspaces.test.mjs > review-output/network-models.txt 2>&1 || { cat review-output/network-models.txt; exit 1; }
+          node --test tests/network-workspaces*.test.mjs > review-output/network-models.txt 2>&1 || { cat review-output/network-models.txt; exit 1; }
           tail -n 14 review-output/network-models.txt
       - name: Install only the testing tools
         run: |
@@ -37,7 +37,9 @@ jobs:
       - name: Operate every authored network chapter
         env:
           BROWSER: ${{ matrix.browser }}
-        run: node tests/network-workspaces-browser.mjs
+        run: |
+          node tests/network-workspaces-browser.mjs
+          node tests/network-workspaces-edges-browser.mjs
       - name: Tests must not rewrite the source under review
         if: ${{ !cancelled() }}
         run: git diff --exit-code HEAD -- src scripts tests index.html assets package.json .github
