@@ -13,7 +13,10 @@ const base='http://127.0.0.1:4197/';
 const ids=Array.from({length:21},(_,i)=>'gap-'+String(i+74).padStart(3,'0'));
 async function check(title,action){try{await action();report.cases.push({title,passed:true});}catch(e){report.cases.push({title,passed:false,error:String(e.stack||e)});console.error('FAIL '+title+'\n'+e.stack);}}
 async function open(page,id,chapter=''){
- await page.goto(base+'#/lab/'+id+(chapter?'?chapter='+chapter:''));
+ const url=base+'#/lab/'+id+(chapter?'?chapter='+chapter:'');
+ // Navigating to the same fragment need not reload a document. Independent
+ // trials explicitly reload it, rather than silently reusing the previous state.
+ if(page.url()===url)await page.reload();else await page.goto(url);
  await page.waitForFunction(({id,chapter})=>{const c=globalThis.CSL?.app?.current;return c?.experience&&c.lab.id===id&&(!chapter||c.chapter===chapter)&&!document.querySelector('.experience [aria-busy="true"]');},{id,chapter});
  assert.deepEqual(await page.evaluate(()=>CSL.app.current.errors),[]);
 }
@@ -108,6 +111,24 @@ try{
   });
   await check(size+': crash discards memory; REDO and UNDO use different evidence',async()=>{
    await open(page,'gap-093');await store(page,'set').click();await store(page,'commit:T1').click();const f=page.locator('[data-wal-set]');await f.locator('[name="tx"]').selectOption('T2');await f.locator('[name="key"]').selectOption('y');await f.locator('[name="value"]').fill('9');await store(page,'set').click();await store(page,'flush:y').click();await store(page,'crash').click();let s=await storeState(page);assert.equal(s.memory,null);assert.equal(s.disk.x.value,1);assert.equal(s.disk.y.value,9);await store(page,'redo').click();s=await storeState(page);assert.equal(s.disk.x.value,7);await store(page,'undo-records').click();s=await storeState(page);assert.equal(s.disk.y.value,2);assert.equal(s.phase,'recovered');await shot(page,'wal-recovery',size);
+  });
+  await check(size+': repaint preserves input drafts and an explicit reset clears them',async()=>{
+   await open(page,'gap-085');
+   const quantity=page.locator('[data-rpc-send] [name="value"]');
+   await quantity.fill('3');await os(page,'rpc-send').click();
+   assert.equal(await quantity.inputValue(),'3');
+   await os(page,'deliver-request').click();await os(page,'drop-response').click();await os(page,'timeout').click();
+   assert.equal(await quantity.inputValue(),'3');
+   await os(page,'rpc-send').click();await os(page,'deliver-request').click();
+   assert.equal((await osState(page)).orders.length,1);
+   assert.equal((await osState(page)).orders[0].quantity,3);
+   await os(page,'reset').click();assert.equal(await quantity.inputValue(),'1');
+   await open(page,'gap-079');
+   const target=page.locator('[data-file-link] [name="target"]');
+   await target.fill('/saved');await store(page,'new-link').click();
+   assert.equal(await target.inputValue(),'/saved');
+   assert.ok((await storeState(page)).entries['/saved']);
+   await store(page,'reset').click();assert.equal(await target.inputValue(),'/copy');
   });
   await check(size+': navigating away removes old handlers and returning starts a fresh experiment',async()=>{
    await open(page,'gap-085');await os(page,'rpc-send').click();await os(page,'deliver-request').click();const old=await page.locator('[data-os-id="rpc-send"]').elementHandle();

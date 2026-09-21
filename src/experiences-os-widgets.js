@@ -6,13 +6,26 @@ const X=CSL.experiences,M=X.os,h=CSL.h,B=X.html.button,T=X.html.table;
 if(typeof document==='undefined')return;
 const button=(id,text,disabled=false,extra='')=>B(text,`data-os-id="${id}"${disabled?' disabled':''} ${extra}`);
 const field=(id,label,value,min=0,max=99)=>`<label for="${id}">${h(label)}<input id="${id}" name="value" type="number" value="${value}" min="${min}" max="${max}" step="1" required></label>`;
+// Input drafts belong to this mounted experiment, not to persistent storage.
+// A state transition must not silently replace a quantity or selected ID.
+X.captureWorkspaceFields=host=>[...host.querySelectorAll('input[id],select[id],textarea[id]')].map(el=>({id:el.id,tag:el.tagName,type:el.type,value:el.value,checked:el.checked}));
+X.restoreWorkspaceFields=(host,drafts)=>{
+ for(const draft of drafts){
+  const el=host.querySelector('#'+CSS.escape(draft.id));
+  if(!el||el.tagName!==draft.tag||el.type!==draft.type)continue;
+  if(el.tagName==='SELECT'&&![...el.options].some(o=>o.value===draft.value))continue;
+  if(el.type==='checkbox'||el.type==='radio')el.checked=draft.checked;
+  else if(el.type!=='file')el.value=draft.value;
+ }
+};
 function workspace(root,current,initial,reducer){
  const scope=X.scope(root,current);let state=initial(),history=[],render=()=>{};
  root.classList.add('ex-os-workspace');
  root.innerHTML='<div data-os-board></div><div class="ex-actions">'+button('undo','この実験の直前の状態へ戻す',true)+button('reset','この実験を最初から')+'</div><p class="ex-caption">戻す操作は学習用の巻き戻しです。実サービスの確定済み更新を取り消す機能ではありません。操作履歴はページを離れると消えます。</p><p data-ex-status role="status" aria-live="polite"></p><details class="ex-os-history"><summary>何を操作し、何が変わったか</summary><ol data-os-log></ol></details>';
  const board=root.querySelector('[data-os-board]'),status=root.querySelector('[data-ex-status]');
- function paint(focus){
-  render(state,board);root.dataset.osState=JSON.stringify(state);
+ function paint(focus,keepDrafts=true){
+  const drafts=keepDrafts?X.captureWorkspaceFields(board):[];
+  render(state,board);X.restoreWorkspaceFields(board,drafts);root.dataset.osState=JSON.stringify(state);
   root.querySelector('[data-os-log]').innerHTML=state.log.map(text=>'<li>'+h(text)+'</li>').join('');
   root.querySelector('[data-os-id="undo"]').disabled=!history.length;
   if(focus){const el=root.querySelector(`[data-os-id="${CSS.escape(focus)}"]`);if(el&&!el.disabled)el.focus({preventScroll:true});else{board.tabIndex=-1;board.focus({preventScroll:true});}}
@@ -20,7 +33,7 @@ function workspace(root,current,initial,reducer){
  }
  const api={scope,board,id:scope.id,get:()=>state,message(text,error=false){status.textContent=text;status.className=error?'ex-os-notice':'';},
   act(action,focus){try{const after=reducer(state,action);history.push(state);state=after;paint(focus);api.message(state.log.at(-1)||'状態を更新しました。');return true;}catch(e){api.message(e.message,true);return false;}},
-  restart(make=initial,focus='reset'){state=make();history=[];paint(focus);api.message('新しい初期状態です。以前の操作と混ぜずに比較してください。');},
+  restart(make=initial,focus='reset'){state=make();history=[];paint(focus,false);api.message('新しい初期状態です。以前の操作と混ぜずに比較してください。');},
   view(fn){render=fn;paint();},refresh:paint};
  scope.on(root,'click',e=>{const b=e.target.closest('[data-os-id]');if(!b)return;if(b.dataset.osId==='undo'&&history.length){state=history.pop();paint(history.length?'undo':'reset');api.message('直前の実験状態へ戻しました。');}if(b.dataset.osId==='reset')api.restart();});
  return api;
