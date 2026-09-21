@@ -1,0 +1,61 @@
+# One-time scoped authoring operation, deleted before the source commit.
+# Verification workflows never apply patches or commit sources.
+name: Integrate reviewed direct coding lessons once
+on:
+  push:
+    branches: [feat/lesson-specific-experiences]
+    paths: [.github/workflows/coding-authoring-once.yml]
+permissions:
+  contents: write
+jobs:
+  integrate:
+    if: github.repository == 'Lye-0/visual-cs-lab' && github.ref == 'refs/heads/feat/lesson-specific-experiences'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Apply the reviewed entry and individual lesson definitions
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          def replace(file,old,new):
+              p=Path(file);s=p.read_text();assert s.count(old)==1,(file,old)
+              p.write_text(s.replace(old,new,1))
+          def lesson(id,replacement):
+              p=Path('src/experiences-foundations.js');lines=p.read_text().splitlines(keepends=True)
+              matches=[i for i,line in enumerate(lines) if line.startswith("d('"+id+"',")]
+              assert len(matches)==1,id
+              assert lines[matches[0]].rstrip().endswith(');'),id
+              lines[matches[0]]=replacement+'\n';p.write_text(''.join(lines))
+          lesson('c01-prefix',"""d('c01-prefix','どこで記号を区切れるか','同じビット列から二つの読み方を作り、区切りが決まる条件を考えます。','最初の例はA=0、B=01、C=10です。受信した010の、1桁目の後で区切ってみてください。次は区切りを外して、2桁目の後へ置きます。異なる記号列になっても、送られたビットは同じです。',[A('prefix-cut','ビットの間へ自分で区切りを置く')],['瞬時に区切れないことと、最後まで読んでも一意に決まらないことは別です。例を切り替え、短い符号語が長い符号語の先頭にあるかと、復号の曖昧さを別々に確認してください。']);""")
+          lesson('c01-kraft',"""d('c01-kraft','符号木の場所を自分で使う','短い符号語を一つ置くと、その下の道は別の符号語に使えなくなります。','まず木の0を選びます。下の16区画の半分が使われました。次に10、110、111を選ぶと、長さ1・2・3・3を重ならずに置けます。0を置いたまま00を選ぶと、なぜ使えないかを確認できます。',[A('kraft-tree','木へ葉を置き、使った割合を確かめる')],['長さの組を置けることと、具体的に選んだ符号語の配置が正しいことは別です。配置に衝突がない場合、使う割合の和がクラフトの和と一致します。']);""")
+          lesson('c01-huffman',"""d('c01-huffman','小さい二つを、自分で選んで結ぶ','出来上がった木を眺めるのではなく、次に結ぶ二つを選びます。','Aの頻度は4、Bは2、CとDは1です。まず候補からCとDを選んで結合してください。できた部分木の頻度は2になり、次の候補へ戻ります。大きい候補を選んだ場合は木を変えず、選び直す理由を示します。',[A('huffman-build','候補の選択・結合・符号の読取り')],['左右に付ける0と1は逆でも構いません。同じ頻度の候補に複数の選び方がある場合も、二つの最小頻度を守れば結合できます。履歴と完成した符号長の両方から平均長を確かめます。']);""")
+          lesson('c02-set',"""d('c02-set','要素を選んで集合の意味を読む','和・共通部分・差では、要素を残す条件が違います。','Aの札は1・2・3・4、Bの札は3・4・5から始まります。両方にいる札を確かめた後、A−Bへ切り替えてください。左右を交換し、差集合が同じ答えになるかを比べます。',[A('sets','札を押して所属と演算を変える')],['要素を追加・削除する操作と、残す条件を変える操作を分けます。この小例では1〜6を使い、どの札も条件を満たさなければ空集合として表示します。']);""")
+          lesson('c01-joint',"""d('c01-joint','片方を知ると、どこで分母が変わるか','同時分布の表から事例を選び、条件を知った後の分布を読みます。','表の数は事例の個数です。X=0の行を選ぶと、その行の事例だけに絞られます。全体の8個ではなく、残った4個を分母にしてYの割合を読み直してください。次にXとYが必ず一致する例へ切り替えます。',[A('conditional','同時分布の行と条件付き分布を対応させる')],['一つの行を知った後の不確かさと、各行になる確率で平均した条件付きエントロピーは別です。起こらない条件の行では、分母が0なので条件付き確率を定められません。']);""")
+          replace('scripts/modules.mjs','"experiences-core","experiences-foundations"','"experiences-core","experiences-coding-models","experiences-foundations"')
+          replace('scripts/modules.mjs','"experiences-data-widgets"]','"experiences-data-widgets","experiences-coding-widgets"]')
+          replace('scripts/modules.mjs','"library","experiences","scrollbars"]','"library","experiences","experiences-coding","scrollbars"]')
+          replace('src/experiences-coding-widgets.js','class="ex-cut" data-prefix-cut=','data-prefix-cut=')
+          replace('src/experiences-geometry.js','v=u.map(x=>2*x)','v=u.slice()')
+          replace('src/experiences-security.js','\n})();',"""
+          X.find('s05-dh').scope='小さな整数によるDH鍵共有の教材です。各自の秘密の指数、公開する値、最後に一致する値を区別し、剰余のべき乗の式を追います。相手の身元の検証や、実用上必要な数の大きさ・乱数の生成はこの小例の計算に含めません。';
+          X.find('s05-rsa').scope='小さな固定鍵を使う教科書的なRSAの整数演算です。メッセージを整数として暗号化・復号し、二つの指数による往復を追います。安全なメッセージ符号化やパディング、実用の鍵生成、サイドチャネル対策は再現していません。';
+          })();""")
+          Path('.github/workflows/coding-authoring-once.yml').unlink()
+          PY
+          for f in src/experiences-*.js; do node --check "$f"; done
+          npm run build
+          node scripts/build.mjs --check
+          node --test tests/coding-workspaces.test.mjs
+      - name: Commit only the reviewed changes without touching main
+        run: |
+          test "$(git ls-remote origin refs/heads/feat/lesson-specific-experiences | cut -f1)" = "$GITHUB_SHA"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- src/experiences-foundations.js src/experiences-coding-widgets.js src/experiences-geometry.js src/experiences-security.js scripts/modules.mjs index.html .github/workflows/coding-authoring-once.yml
+          git commit -m 'feat: 符号の三つの直接操作と集合と条件付き分布を単元へ接続'
+          git push origin HEAD:refs/heads/feat/lesson-specific-experiences
+          echo "SOURCE_COMMIT=$(git rev-parse HEAD)"
