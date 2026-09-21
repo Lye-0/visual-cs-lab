@@ -11,7 +11,7 @@ function arrow(p,cls,label,handle){const [x,y]=P(p);return `<g class="${cls}"><p
 function gridTransform(u,v){let text='';for(let n=-4;n<=4;n++){const f=(a,b)=>[a*u[0]+b*v[0],a*u[1]+b*v[1]];text+=`<path class="ex-transformed-line" d="M${pt(f(n,-4))}L${pt(f(n,4))}M${pt(f(-4,n))}L${pt(f(4,n))}"/>`;}return text;}
 X.registerWidget('vectors',(root,a,current)=>{
  const s=X.scope(root,current),variant=a.variant||'basis';let u=[1,0],v=[1,1],w=[2,3],theta=45,history=[];
- if(variant==='matrix'){u=[1,0];v=[.6,1];w=[1,1];}
+ if(variant==='matrix'){u=[1,0];v=[.5,1];w=[1,1];}
  if(variant==='eigen'){u=[3,1];v=[1,3];w=[1,0];}
  if(variant==='complex'){u=[1,0];v=[0,1];w=[2,1];}
  const original={u:u.slice(),v:v.slice(),w:w.slice(),theta};
