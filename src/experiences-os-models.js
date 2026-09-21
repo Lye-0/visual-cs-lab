@@ -21,7 +21,7 @@ M.process=(input,action)=>{
   const shared=action.mode==='thread',mem=shared?t.mem:'M'+(++s.serial);
   if(!shared)s.memory[mem]=copy(s.memory[t.mem]);
   s.tasks.C={pid:shared?t.pid:2,mem,pc:0,status:'ready',lastRead:null};
-  return record(s,shared?'thread：子Cは親Pと同じM1を参照します。実行位置は別です。':'fork：子Cへ別のアドレス空間M2を用意します。値は5から始まります。物理コピーの方法はここでは扱いません。');
+  return record(s,shared?'thread：子Cは親Pと同じ'+mem+'を参照します。実行位置は別です。':'fork：子Cへ別のアドレス空間'+mem+'を用意します。値は'+s.memory[mem].x+'から始まります。物理コピーの方法はここでは扱いません。');
  }
  if(kind==='switch'){s.current=actor;return record(s,actor+'へCPUの実行を切り替えました。もう一方のPCと値は保持します。');}
  if(actor!==s.current)throw Error('先にこの主体へCPUを切り替えてください。');
