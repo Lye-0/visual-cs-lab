@@ -1,0 +1,49 @@
+name: Network learning workspaces
+on:
+  push:
+    branches: [feat/lesson-specific-experiences]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: experience-network-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  browsers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Validate the committed entry and state transitions
+        run: |
+          mkdir -p review-output
+          node scripts/build.mjs --check
+          for file in src/experiences-network*.js tests/network-workspaces*.mjs; do node --check "$file"; done
+          node --test tests/network-workspaces.test.mjs > review-output/network-models.txt 2>&1 || { cat review-output/network-models.txt; exit 1; }
+          tail -n 14 review-output/network-models.txt
+      - name: Install only the testing tools
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0
+          npx playwright install --with-deps ${{ matrix.browser }} > review-output/network-install.txt 2>&1 || { tail -n 40 review-output/network-install.txt; exit 1; }
+      - name: Operate every authored network chapter
+        env:
+          BROWSER: ${{ matrix.browser }}
+        run: node tests/network-workspaces-browser.mjs
+      - name: Tests must not rewrite the source under review
+        if: ${{ !cancelled() }}
+        run: git diff --exit-code HEAD -- src scripts tests index.html assets package.json .github
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: network-workspaces-${{ matrix.browser }}
+          path: review-output/
+          retention-days: 7
