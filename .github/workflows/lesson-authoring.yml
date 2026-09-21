@@ -1,0 +1,47 @@
+name: Lesson-specific experience review
+on:
+  push:
+    branches: [feat/lesson-specific-experiences]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: lesson-specific-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Inspect model contracts without changing sources
+        run: |
+          mkdir -p review-output
+          node --input-type=module <<'JS'
+          import {modelModules} from './scripts/modules.mjs';
+          for(const name of modelModules) await import('./src/'+name+'.js');
+          for(const l of CSL.labs) console.log(JSON.stringify({id:l.id,title:l.unit,controls:l.controls.map(c=>({key:c.key,type:c.type,label:c.label,value:c.value,options:c.options})),reading:l.reading?.focus}));
+          JS
+      - name: Verify committed entry and existing calculations
+        run: |
+          npm run check > review-output/node.txt 2>&1 || { tail -n 100 review-output/node.txt; exit 1; }
+          tail -n 20 review-output/node.txt
+      - name: Review authored experiences
+        if: hashFiles('tests/experiences-browser.mjs') != ''
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0
+          npx playwright install --with-deps chromium > review-output/install.txt 2>&1 || { tail -n 40 review-output/install.txt; exit 1; }
+          node tests/experiences-browser.mjs
+      - name: No test-time source mutations
+        run: git diff --exit-code HEAD -- src scripts tests index.html package.json .github
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: lesson-specific-review
+          path: review-output/
+          retention-days: 14
