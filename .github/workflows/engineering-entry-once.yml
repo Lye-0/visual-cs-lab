@@ -1,0 +1,81 @@
+# Authoring transaction only: exact inspected replacements, then self-removal.
+# Permanent validation jobs have contents:read and never rewrite the site.
+name: Connect the final authored subject entries once
+on:
+  push:
+    branches: [feat/lesson-specific-experiences]
+    paths: [.github/workflows/engineering-entry-once.yml]
+permissions:
+  contents: write
+jobs:
+  integrate:
+    if: github.repository == 'Lye-0/visual-cs-lab' && github.ref == 'refs/heads/feat/lesson-specific-experiences'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Integrate already-authored sources and the reviewed media corrections
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          def replace(path,old,new):
+              p=Path(path);s=p.read_text()
+              assert s.count(old)==1,(path,'expected exactly one match',old)
+              p.write_text(s.replace(old,new,1))
+          replace('scripts/modules.mjs','"experiences-media-lessons"];','"experiences-media-lessons","experiences-engineering-models","experiences-engineering-lessons"];')
+          replace('scripts/modules.mjs','"experiences-media-embedded-widgets"];','"experiences-media-embedded-widgets","experiences-engineering-widgets","experiences-engineering-dom"];')
+          replace('scripts/modules.mjs','"experiences-media","scrollbars"];','"experiences-media","experiences-engineering","scrollbars"];')
+          replace('src/experiences-media-widgets.js',"selected=-1,label='横軸：標本番号", "selected=-1,xStart=0,xStep=1,label='横軸：標本番号")
+          replace('src/experiences-media-widgets.js','<text x="38" y="180">0</text><text x="465" y="180">${n-1}</text>','<text x="38" y="180">${h(f(xStart,3))}</text><text x="465" y="180">${h(f(xStart+(n-1)*xStep,3))}</text>')
+          replace('src/experiences-media-widgets.js',"{label:'横軸：0〜1秒を160分割、縦軸：振幅'}", "{xStep:1/160,label:'横軸：時刻（秒）、縦軸：振幅'}")
+          replace('src/experiences-media-embedded-widgets.js',"{label:'横軸：刻み番号（1刻み0.05秒）、縦軸：位置'}", "{xStart:.05,xStep:.05,label:'横軸：時刻（秒）、縦軸：位置'}")
+          p=Path('src/experiences-media-lessons.js');s=p.read_text();lines=s.splitlines()
+          matches=[i for i,line in enumerate(lines) if line.startswith(" C('noise-power',")]
+          assert len(matches)==1
+          lines[matches[0]]=""" C('noise-power','ばらつきと系統的なずれを分ける','平均する回数を増やすと、センサーのずれも消えるでしょうか。',['測る温度を固定し、平均の回数だけを増やします。個々の値のばらつきと、繰り返しても残る系統的なずれを区別します。校正と平均は、異なる原因に対応する操作です。'],[A('inspect','同じセンサーで平均と校正を比べる',['temperature','bias','gain','noise','average','calibrate'],{mode:'sensor'},{showDerivation:true})]),
+           C('power','短い送信と長い待機の電流を足す','大きな電流を使う時間と、長く続く時間はどちらでしょうか。',['一周期を測定・送信・待機へ分けます。それぞれの電流と時間の積が、その状態で使う電荷です。積を足して周期で割った平均と、ピークの電流を区別します。','この周期や電池は架空です。理想容量を平均電流で割った値を、実際の電池寿命の保証には使いません。'],[A('compare','同じ周期の待機だけを比べる',[],{mode:'power',period:10},{examples:[P('待機中も通常動作',{sleep:false},'長い待ち時間も5mAを使う想定です。'),P('待機時にsleep',{sleep:true},'待ち時間だけ0.05mAへ下げる想定です。')],showDerivation:true})]),"""
+          p.write_text('\n'.join(lines)+'\n')
+          replace('tests/media-workspaces.test.mjs','明示的な32章','明示的な33章')
+          replace('tests/media-workspaces.test.mjs','n+d.chapters.length,0),32);','n+d.chapters.length,0),33);')
+          Path('.github/workflows/engineering-entry-once.yml').unlink()
+          PY
+          npm run build
+      - name: Match the locally tested file bytes exactly
+        run: |
+          python3 - <<'PY'
+          import subprocess
+          expected='''97cc8facf8580de8b63f5b6e2b59316e48c3e0a2 .github/workflows/experience-engineering-workspaces.yml
+          fa98638a04af7b1dea1907ecbb9a88ac1c593a56 index.html
+          9c92efbd4811168b016b19b5678a180d7d4148f6 scripts/modules.mjs
+          162a18324952ed06bf0faf32d5a037cdb1bee84f src/experiences-engineering-dom.js
+          08f4838943aaacbc7085ea107b3866a30143afbc src/experiences-engineering-lessons.js
+          bc4b7d13562965c9ffab4c8a909ceb1a760d30f4 src/experiences-engineering-models.js
+          9bf5536b720e6292b89ab93c715671379448b9ce src/experiences-engineering-widgets.js
+          e33aa9addd5aff75e0f7e5de08ee70c765417c64 src/experiences-engineering.css
+          f2fdb8e02c7a4b52e5a01a06112f8462b435a7ba src/experiences-media-embedded-widgets.js
+          0cf2ddf127b9668aac486204ee13b4c5b82bbdd8 src/experiences-media-lessons.js
+          7222a6a9807741e87bcd677c98106dd0e34853bb src/experiences-media-widgets.js
+          d3f1c633942818881d20e5c884bb46856ef8e8b7 tests/engineering-workspaces-browser.mjs
+          ff8171d32f62d1330b6c13c8da5f02c6e0803a9e tests/engineering-workspaces.test.mjs
+          d493bacf28af3be79ce4d7b60a11826339367a18 tests/media-workspaces.test.mjs'''
+          mismatches=[]
+          for row in expected.splitlines():
+              sha,path=row.split();actual=subprocess.check_output(['git','hash-object',path],text=True).strip()
+              if sha!=actual:mismatches.append((path,sha,actual))
+          assert not mismatches,mismatches
+          print('All 14 files match the reviewed local bytes.')
+          PY
+          node --test tests/*.test.mjs > /tmp/all-tests.txt 2>&1 || { grep -A35 -B2 'not ok' /tmp/all-tests.txt; tail -n 14 /tmp/all-tests.txt; exit 1; }
+          tail -n 14 /tmp/all-tests.txt
+      - name: Commit only to the unchanged working branch
+        run: |
+          test "$(git ls-remote origin refs/heads/feat/lesson-specific-experiences | cut -f1)" = "$GITHUB_SHA"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- scripts/modules.mjs index.html src/experiences-media-widgets.js src/experiences-media-embedded-widgets.js src/experiences-media-lessons.js tests/media-workspaces.test.mjs .github/workflows/engineering-entry-once.yml
+          git commit -m 'feat: 最後の12単元を接続し全314単元の個別教材登録を完了'
+          git push origin HEAD:refs/heads/feat/lesson-specific-experiences
+          echo "Integrated source commit $(git rev-parse HEAD)"

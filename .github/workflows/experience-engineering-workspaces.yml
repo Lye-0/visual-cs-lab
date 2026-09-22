@@ -1,0 +1,49 @@
+name: Engineering and native DOM learning workspaces
+on:
+  push:
+    branches: [feat/lesson-specific-experiences]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: engineering-workspaces-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  browsers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Check the committed entry and independent expectations
+        run: |
+          mkdir -p review-output
+          node scripts/build.mjs --check
+          for file in src/experiences-engineering*.js tests/engineering-workspaces*.mjs; do node --check "$file"; done
+          node --test tests/engineering-workspaces.test.mjs > review-output/engineering-models.txt 2>&1 || { cat review-output/engineering-models.txt; exit 1; }
+          tail -n 12 review-output/engineering-models.txt
+      - name: Install the actual browser test tooling
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0
+          npx playwright install --with-deps ${{ matrix.browser }} > review-output/engineering-install.txt 2>&1 || { tail -n 60 review-output/engineering-install.txt; exit 1; }
+      - name: Check all authored chapters and real user operations
+        env:
+          BROWSER: ${{ matrix.browser }}
+        run: node tests/engineering-workspaces-browser.mjs
+      - name: Tests never rewrite reviewed source files
+        if: ${{ !cancelled() }}
+        run: git diff --exit-code HEAD -- src scripts tests index.html package.json assets .github
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: engineering-workspaces-${{ matrix.browser }}
+          path: review-output/
+          retention-days: 7
