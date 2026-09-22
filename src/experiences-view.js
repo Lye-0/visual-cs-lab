@@ -18,7 +18,7 @@ X.scope=(root,current)=>{
 };
 X.draw=(root,frame,focus=null)=>{
  if(!frame)throw Error('この例の状態がありません。');
- root.innerHTML=`<div class="reader-diagram ex-model-diagram">${L.visualize(frame.visual,{focus})}</div><div class="ex-frame-copy"><h4>${h(frame.title)}</h4><p>${h(frame.explain)}</p>${frame.table?L.table(frame.table):''}</div>`;
+ root.innerHTML=`<div class="reader-diagram ex-model-diagram">${L.visualize(frame.visual,{focus})}</div><div class="ex-frame-copy"><h4>${h(frame.title)}</h4><p>${h(frame.explain)}</p>${frame.table?L.table(frame.table):''}${X.valuesMarkup(frame.stats)}</div>`;
 };
 X.fields=(lab,keys,p,uid)=>keys.map(spec=>{
  const key=typeof spec==='string'?spec:spec.key,ctrl=lab.controls.find(c=>c.key===key);if(!ctrl)throw Error('入力が存在しません: '+lab.id+'/'+key);
@@ -63,7 +63,7 @@ X.modelActivity=(root,activity,current)=>{
   if(!scope.alive()||!result)return;const frames=result.frames;
   preserveDetails(output,()=>{
    if(kind==='ledger'){
-    output.innerHTML=`<div class="ex-ledger">${frames.slice(0,limit).map((f,i)=>`<section class="ex-ledger-line" data-ex-record="${i}"><span class="ex-line-number">${i+1}</span><div><h4>${h(f.title)}</h4><p>${h(f.explain)}</p>${f.table?L.table(f.table):''}<details><summary>この式・判断に対応する図</summary><div class="reader-diagram ex-model-diagram">${L.visualize(f.visual,{})}</div></details></div></section>`).join('')}</div>${limit<frames.length?X.html.button('前の計算を残して続きへ（残り'+(frames.length-limit)+'件）','data-ex-more'):''}<p class="ex-conclusion">${h(result.conclusion)}</p>`;
+    output.innerHTML=`<div class="ex-ledger">${frames.slice(0,limit).map((f,i)=>`<section class="ex-ledger-line" data-ex-record="${i}"><span class="ex-line-number">${i+1}</span><div><h4>${h(f.title)}</h4><p>${h(f.explain)}</p>${f.table?L.table(f.table):''}${X.valuesMarkup(f.stats)}<details><summary>この式・判断に対応する図</summary><div class="reader-diagram ex-model-diagram">${L.visualize(f.visual,{})}</div></details></div></section>`).join('')}</div>${limit<frames.length?X.html.button('前の計算を残して続きへ（残り'+(frames.length-limit)+'件）','data-ex-more'):''}<p class="ex-conclusion">${h(result.conclusion)}</p>`;
    }else if(kind==='timeline'||kind==='editor'){
     index=Math.min(index,frames.length-1);
     output.innerHTML=`<div class="ex-trace-layout"><ol class="ex-event-list" aria-label="状態の記録">${frames.map((f,i)=>`<li><button type="button" data-ex-event="${i}"${i===index?' aria-current="step"':''}><span>${i+1}</span>${h(f.title)}</button></li>`).join('')}</ol><div class="ex-selected-state"><div data-ex-frame></div><div class="ex-actions">${X.html.button('一つ前の状態','data-ex-previous'+(index===0?' disabled':''))}${X.html.button(activity.advance||'次の処理を確かめる','data-ex-next'+(index===frames.length-1?' disabled':''))}</div></div>`;
@@ -73,6 +73,7 @@ X.modelActivity=(root,activity,current)=>{
     X.draw(output.querySelector('[data-ex-frame]'),frames[resolvedIndex()],selected);
    }
   });
+  output.insertAdjacentHTML('beforeend',X.valuesMarkup(X.finalValues(result,kind,resolvedIndex(),limit),'result'));
  }
  async function run(){
   const own=++token;result=null;selected=null;output.replaceChildren();status.textContent='この入力から計算しています…';status.className='';root.setAttribute('aria-busy','true');
@@ -106,7 +107,7 @@ for(const name of ['inspect','ledger','timeline','editor'])X.registerWidget(name
 X.registerWidget('compare',(root,a,c)=>{
  const scope=X.scope(root,c),lab=A.lab(a.model||c.lab.id);
  root.innerHTML=`<p class="ex-operation-hint">${h(a.hint||'どちらの結果も残して、変えた条件と理由を比べます。')}</p><div class="ex-side-by-side">${a.examples.map((p,i)=>`<section><h4>${h(p.label)}</h4><p>${h(p.reason)}</p><div data-ex-comparison="${i}" aria-busy="true"></div></section>`).join('')}</div>`;
- a.examples.forEach(async(p,i)=>{const box=root.querySelector(`[data-ex-comparison="${i}"]`);try{const result=await L.run(lab,X.modelParams(lab.id,{...a.patch,...p.patch}));if(!scope.alive())return;X.draw(box,result.frames.at(-1));box.insertAdjacentHTML('beforeend',`<details><summary>この結果に至る判断</summary>${result.frames.map(f=>'<h5>'+h(f.title)+'</h5><p>'+h(f.explain)+'</p>').join('')}</details>`);c.completed.add(scope.id+'-'+i);}catch(e){if(scope.alive()){box.classList.add('ex-error');box.textContent=e.message;c.errors.push({activity:a.title,message:e.message});}}finally{if(scope.alive())box.setAttribute('aria-busy','false');}});
+ a.examples.forEach(async(p,i)=>{const box=root.querySelector(`[data-ex-comparison="${i}"]`);try{const result=await L.run(lab,X.modelParams(lab.id,{...a.patch,...p.patch}));if(!scope.alive())return;X.draw(box,result.frames.at(-1));box.insertAdjacentHTML('beforeend',X.valuesMarkup(result.metrics,'result')+`<details><summary>この結果に至る判断</summary>${result.frames.map(f=>'<h5>'+h(f.title)+'</h5><p>'+h(f.explain)+'</p>').join('')}</details>`);c.completed.add(scope.id+'-'+i);}catch(e){if(scope.alive()){box.classList.add('ex-error');box.textContent=e.message;c.errors.push({activity:a.title,message:e.message});}}finally{if(scope.alive())box.setAttribute('aria-busy','false');}});
 });
 X.registerWidget('cases',(root,a,c)=>{
  const scope=X.scope(root,c);let selected=0;

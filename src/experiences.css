@@ -125,3 +125,11 @@
 @media(max-width:650px){.experience{font-size:15px}.ex-title{margin-bottom:20px}.ex-lead{font-size:17px}.ex-chapters{grid-template-columns:minmax(0,1fr);gap:7px;margin-bottom:25px}.ex-chapters a{padding:11px 14px}.ex-chapters a span{font-size:12px}.ex-question{font-size:17px}.ex-activity{padding:14px;border-radius:12px}.ex-side-by-side,.ex-probe-grid{grid-template-columns:minmax(0,1fr)}.ex-frequency-boxes{grid-template-columns:repeat(2,minmax(0,1fr))}.ex-contribution-list button{grid-template-columns:25px minmax(0,1fr);gap:5px 10px}.ex-contribution-list button span:last-child{grid-column:2}.ex-network-topology{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.ex-bit-row{gap:3px}.ex-bit strong{font-size:19px}.ex-bit small{font-size:10px}.ex-bit{padding:8px 0}.ex-ledger-line{grid-template-columns:24px minmax(0,1fr);gap:8px}.ex-line-number{width:24px;height:24px}.experience :where(th,td){padding:9px 10px}.ex-plane,.ex-ode-plot,.ex-regression-plot{min-width:0}.ex-equation{padding:12px;font-size:14px}.ex-why,.ex-counterexample{padding:14px}.ex-inflight .ex-button{font-size:12px}}
 @media(prefers-reduced-motion:reduce){.experience *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 @media(forced-colors:active){.ex-activity,.ex-button,.ex-bit,.ex-chapters a,.ex-model-diagram{border:1px solid CanvasText}.ex-plane *{forced-color-adjust:auto}.ex-plane path,.ex-ode-plot polyline{stroke:CanvasText}.experience :focus-visible{outline:2px solid Highlight}}
+
+/* Model values omitted by the former wrapper are kept beside their reason. */
+.experience .ex-calculated-values{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:8px 18px;margin:12px 0 18px;padding:12px 0;border-block:1px solid #344453;min-width:0}
+.experience .ex-calculated-values>div{min-width:0}
+.experience .ex-calculated-values dt{font-size:.8rem;color:#a9bdce;line-height:1.5;overflow-wrap:anywhere}
+.experience .ex-calculated-values dd{margin:4px 0 0;color:#e1eceb;font-variant-numeric:tabular-nums;line-height:1.6;overflow-wrap:anywhere}
+.experience [data-ex-values=result]{border-inline-start:3px solid #7fcab7;padding-inline-start:12px}
+@media(forced-colors:active){.experience .ex-calculated-values{border-color:CanvasText}.experience .ex-calculated-values :is(dt,dd){color:CanvasText}}
