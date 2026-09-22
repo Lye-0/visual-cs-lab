@@ -4,6 +4,8 @@ on:
     branches: [feat/lesson-specific-experiences]
     paths:
       - tests/full-learning-audit.mjs
+      - tests/audit-geometry.mjs
+      - tests/authored-result-values-browser.mjs
       - scripts/package-learning-audit.mjs
       - scripts/review-audit-packets.mjs
       - .github/workflows/full-learning-audit.yml
@@ -42,6 +44,11 @@ jobs:
         env:
           BROWSER: ${{ matrix.browser }}
         run: node tests/full-learning-audit.mjs
+      - name: Verify actual calculated values and their disclosure timing
+        if: ${{ !cancelled() }}
+        env:
+          BROWSER: ${{ matrix.browser }}
+        run: node tests/authored-result-values-browser.mjs
       - name: Package readable review evidence
         if: ${{ !cancelled() && matrix.browser == 'chromium' }}
         run: |
@@ -89,8 +96,12 @@ jobs:
           for browser in ['chromium','firefox','webkit']:
               root=Path('/tmp/full-audit')/browser
               r=json.loads((root/'full-audit'/f'{browser}.json').read_text())
-              summary={k:r.get(k) for k in ['sourceCommit','engine','version','summary','failures','runtime']}
+              summary={k:r.get(k) for k in ['sourceCommit','engine','version','summary','failures','runtime','geometrySelfTest']}
               summary['nodeTestTotals']=[line for line in (root/'all-node-tests.txt').read_text().splitlines() if line.startswith(('# tests ','# pass ','# fail ','# skipped ','# cancelled '))]
+              values=root/f'authored-values-{browser}.json'
+              if values.exists():
+                  v=json.loads(values.read_text())
+                  summary['calculatedValues']={k:v.get(k) for k in ['passed','failed','errors']}
               Path(f'/tmp/audit-publish/browsers/{browser}.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2))
               summaries.append(summary)
           Path('/tmp/audit-publish/results.json').write_text(json.dumps(summaries,ensure_ascii=False,indent=2))
