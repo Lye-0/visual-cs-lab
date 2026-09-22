@@ -1,4 +1,5 @@
 # Read-only snapshot for inspecting the exact working source in review tools.
+# Capture point: after media/embedded integration; never repair reviewed sources.
 # This is not a build, deployment, or a source-repair job.
 name: Lesson source snapshot
 on:
