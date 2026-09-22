@@ -1,0 +1,44 @@
+name: Authored input diagnostics
+on:
+  push:
+    branches: [feat/lesson-specific-experiences]
+    paths: [.github/workflows/authored-input-diagnostics.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Compare declared examples against the actual normalizer
+        run: |
+          node --input-type=module <<'JS'
+          import {modelModules} from './scripts/modules.mjs';
+          for(const name of modelModules)await import('./src/'+name+'.js');
+          const X=CSL.experiences,issues=[],totals={units:X.lessons.size,examples:0,framesWithStats:0,modelsWithMetrics:0};
+          for(const [id,d]of X.lessons)for(const ch of d.chapters)for(const a of ch.activities){
+            if(!['inspect','ledger','timeline','editor','compare'].includes(a.kind))continue;
+            const lab=CSL.labs.find(l=>l.id===(a.model||id));
+            const examples=a.kind==='compare'?a.examples:[{label:'initial',patch:{}},...(a.examples||[])];
+            for(const e of examples){
+              totals.examples++;
+              const patch={...a.patch,...e.patch},input=X.modelParams(lab.id,patch),effective=CSL.validateParams(lab,input);
+              const drift=Object.keys(patch).filter(k=>typeof input[k]==='number'&&typeof effective[k]==='number'?Math.abs(input[k]-effective[k])>1e-8:JSON.stringify(input[k])!==JSON.stringify(effective[k])).map(k=>({key:k,declared:input[k],effective:effective[k],control:lab.controls.find(c=>c.key===k)}));
+              if(drift.length)issues.push({id,chapter:ch.id,activity:a.title,example:e.label,drift});
+              const result=await CSL.run(lab,input);
+              totals.framesWithStats+=result.frames.filter(f=>Object.keys(f.stats||{}).length).length;
+              if(Object.keys(result.metrics||{}).length)totals.modelsWithMetrics++;
+            }
+          }
+          console.log('CONTRACT_SUMMARY '+JSON.stringify(totals));
+          for(const issue of issues)console.log('PRESET_DRIFT '+JSON.stringify(issue));
+          console.log('DRIFT_COUNT '+issues.length);
+          JS
+          git diff --exit-code HEAD -- src scripts tests index.html package.json .github docs
