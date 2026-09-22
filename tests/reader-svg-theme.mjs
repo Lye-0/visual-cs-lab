@@ -1,3 +1,4 @@
+import {classicUrl,readyAuthored} from './legacy-routes.mjs';
 // Regression for shared SVG colors in the lesson reader.
 import assert from 'node:assert/strict';
 import {spawn} from 'node:child_process';
@@ -22,7 +23,7 @@ try{
   const page=await context.newPage();page.setDefaultTimeout(6000);
   page.on('pageerror',error=>report.errors.push({viewport:label,url:page.url(),message:error.message}));
   await check(`${label}: ネットワーク図の機器・文字・配線が黒既定色に落ちない`,async()=>{
-   await page.goto(`${base}#/lab/n03-switch`);await ready(page,'n03-switch');
+   await page.goto(classicUrl(`${base}#/lab/n03-switch`));await ready(page,'n03-switch');
    const styles=await page.evaluate(()=>{
     const node=document.querySelector('#reader-diagram .network-node');
     if(!node)throw new Error('network node not found');

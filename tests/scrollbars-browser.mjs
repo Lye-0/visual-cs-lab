@@ -1,3 +1,4 @@
+import {classicUrl,readyAuthored} from './legacy-routes.mjs';
 // Inspect the real native scroll containers without replacing page markup.
 // Firefox's Playwright headless agent installs scrollbar-width:none!important.
 // This appearance test therefore uses a headed Firefox (xvfb-run on Linux),
@@ -15,7 +16,7 @@ let browser,serverLog='';server.stdout.on('data',b=>serverLog+=b);server.stderr.
 const base='http://127.0.0.1:4193/';
 async function check(title,fn){try{await fn();report.cases.push({name:title,passed:true});}catch(error){report.cases.push({name:title,passed:false,error:String(error.stack||error)});console.error('FAIL '+title+'\n'+error.stack);}}
 async function open(page,route=''){
- await page.goto(base+route);
+ await page.goto(classicUrl(base+route));
  await page.waitForFunction(()=>globalThis.CSL?.app?.ready&&document.querySelector('.sidebar>nav'));
  if(route.includes('/lab/'))await page.waitForFunction(()=>{const c=CSL.app.current;return c?.reader&&c.result&&!c.pending&&!c.error;});
 }

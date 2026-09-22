@@ -1,3 +1,4 @@
+import {classicUrl,readyAuthored} from './legacy-routes.mjs';
 // Actual HTTP documents only: do not use page.setContent or mocked Web Crypto.
 import assert from 'node:assert/strict';
 import {spawn} from 'node:child_process';
@@ -24,7 +25,7 @@ const ready = (page, id, reader=true) => page.waitForFunction(({id, reader}) => 
  return c?.lab.id===id && Boolean(c.reader)===reader && !c.pending && !c.dirty && Boolean(c.result) && !c.error;
 }, {id, reader}, {timeout:12000});
 async function open(page, id, suffix='') {
- await page.goto(`${base}#/lab/${id}${suffix}`);
+ await page.goto(classicUrl(`${base}#/lab/${id}${suffix}`));
  await ready(page, id, !suffix.includes('experiment'));
 }
 const state = page => page.evaluate(() => {const c=CSL.app.current;return {id:c.lab.id,index:c.index,playing:c.playing,count:c.result.frames.length,params:c.params,metrics:c.result.metrics,phase:c.phase};});
@@ -47,6 +48,8 @@ try {
    await page.locator('#home-query').fill('エントロピー');
    await page.locator('#home-results a[href="#/lab/c01-entropy"]').waitFor();
    await page.locator('#home-results a[href="#/lab/c01-entropy"]').click();
+   await readyAuthored(page,'c01-entropy');
+   await page.locator('.ex-secondary a[href="#/lab/c01-entropy?view=classic"]').click();
    await ready(page,'c01-entropy');
   });
   for (const lab of labs) {
@@ -142,7 +145,7 @@ try {
   for(const id of ['c16-git','n11-tcp','x01-build']) await check(`${label}: ${id}: 自由実験の既存画面も維持`,async()=>{
    await open(page,id,'?view=experiment');
    assert.equal(Boolean(await page.evaluate(()=>CSL.app.current.reader)),false);
-   await page.locator('.reader-advanced-banner a').click();await ready(page,id);
+   await page.locator('.reader-advanced-banner a').click();await readyAuthored(page,id);
   });
   await context.close();
  }

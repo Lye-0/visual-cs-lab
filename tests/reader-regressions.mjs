@@ -1,3 +1,4 @@
+import {classicUrl,readyAuthored} from './legacy-routes.mjs';
 // Interaction regressions on real HTTP documents. Delayed-model tests are
 // explicitly synthetic; Web Crypto is exercised without mocks by reader-browser.
 import assert from 'node:assert/strict';
@@ -16,7 +17,7 @@ server.on('error',e=>serverLog+=e.message);
 const base='http://127.0.0.1:4176/';
 async function check(name,fn){try{await fn();report.cases.push({name,passed:true});}catch(e){report.cases.push({name,passed:false,error:String(e.stack||e)});console.error(`FAIL ${name}\n${e.message}`);}}
 const ready=(page,id)=>page.waitForFunction(id=>{const c=globalThis.CSL?.app.current;return c?.reader&&c.lab.id===id&&!c.pending&&!c.dirty&&!c.error&&!!c.result;},id,{timeout:12000});
-async function open(page,id){await page.goto(`${base}?regression=${++visit}#/lab/${id}`);await ready(page,id);}
+async function open(page,id){await page.goto(classicUrl(`${base}?regression=${++visit}#/lab/${id}`));await ready(page,id);}
 async function options(page){const more=page.locator('.reader-more-controls');if(await more.count()&&!(await more.evaluate(el=>el.open)))await more.locator('summary').click();}
 const current=page=>page.evaluate(()=>{const c=CSL.app.current;return {params:c.params,index:c.index,playing:c.playing,dirty:c.dirty,pending:c.pending,error:c.error,hasResult:!!c.result,invalid:c.invalidInputs,answer:c.answer,codeDirty:c.codeDirty,noteFocus:c.noteFocus,metrics:c.result?.metrics};});
 try{
@@ -117,7 +118,7 @@ try{
    await open(page,'c01-entropy');await page.locator('[data-r-param="weights"]').fill('1,1,1,1');
    await page.locator('.reader-title-links a[href="#/catalog"]').click();await sleep(600);
    assert.equal(await page.evaluate(()=>CSL.app.current),null);
-   await page.goto(`${base}#/lab/c01-entropy`);await ready(page,'c01-entropy');
+   await page.goto(classicUrl(`${base}#/lab/c01-entropy`));await ready(page,'c01-entropy');
    assert.equal((await current(page)).params.weights,'4,2,1,1');
   });
   await check(`${label}: 進行バーのマウス・タッチで段階を移動し、再生を止める`,async()=>{
