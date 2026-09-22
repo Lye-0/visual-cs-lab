@@ -36,7 +36,9 @@ E.directionSections=s=>{
  });
 };
 if(typeof document==='undefined')return;
-const h=CSL.h,F=X.format;
+// Model modules load before the browser's HTML helpers. Resolve the escaping
+// function at render time, rather than capturing undefined during evaluation.
+const h=text=>CSL.h(text),F=X.format;
 E.renderRowGeometry=g=>{
  if(!g)return '';
  const position=([x,y])=>[170+x*33,160-y*33];
@@ -44,7 +46,7 @@ E.renderRowGeometry=g=>{
   const axes=Array.from({length:9},(_,i)=>i-4).map(n=>{const x=170+n*33,y=160-n*33;return `<path class="ex-me-grid" d="M${x} 28V292M38 ${y}H302"/>${n?`<text x="${x-3}" y="177">${n}</text>`:''}`;}).join('');
   const graphics=lines.map((line,i)=>line.kind==='line'&&line.points.length===2?`<path data-row-line="${i}" class="ex-me-row-line row-${i}${g.selected===i?' selected':''}" d="M${position(line.points[0]).join(' ')}L${position(line.points[1]).join(' ')}"/>`:'').join('');
   const point=g.solution&&g.solution.every(x=>Math.abs(x)<=4)?`<circle data-row-intersection class="ex-me-intersection" cx="${position(g.solution)[0]}" cy="${position(g.solution)[1]}" r="6"/><text x="${position(g.solution)[0]+9}" y="${position(g.solution)[1]-10}">(${g.solution.map(x=>F(x)).join(', ')})</text>`:'';
-  const exceptional=lines.map((line,i)=>line.kind==='plane'?`<p data-row-line-kind="plane">式${i+1}は0=0。平面上の全ての点を満たすため、一本の直線は描きません。</p>`:line.kind==='empty'?`<p data-row-line-kind="empty">式${i+1}は0=${h(F(line.coefficients[2]))}。これを満たす点はないため、直線は描きません。</p>`:line.points.length<2?`<p>式${i+1}の直線は、この表示範囲の外にあります。</p>`:'').join('');
+  const exceptional=lines.map((line,i)=>line.kind==='plane'?`<p data-row-line-kind="plane">式${i+1}は0=0。平面上の全ての点がこの式を満たすため、一本の直線は描きません。</p>`:line.kind==='empty'?`<p data-row-line-kind="empty">式${i+1}は0=${h(F(line.coefficients[2]))}。これを満たす点はないため、直線は描きません。</p>`:line.points.length<2?`<p>式${i+1}の直線は、この表示範囲の外にあります。</p>`:'').join('');
   return `<section class="ex-sec-box"><h4>${label}</h4><svg class="ex-me-equation-plot" viewBox="0 0 340 325" role="img" aria-label="${label}。x,yそれぞれ−4から4。式1は実線、式2は破線"><title>${label}：連立方程式を同時に満たす点</title><rect x="38" y="28" width="264" height="264" class="ex-me-plot-bg"/>${axes}<path class="ex-me-axis" d="M38 160H302M170 28V292"/>${graphics}${point}<text x="309" y="159">x</text><text x="176" y="20">y</text></svg>${exceptional}</section>`;
  };
  return `<section class="ex-me-geometric-equations"><h4>式を変えても、両方を満たす点は変わりません</h4><div class="ex-actions"><button type="button" class="ex-button" data-row-select="0" aria-pressed="${g.selected===0}">式1を強調（実線）</button><button type="button" class="ex-button" data-row-select="1" aria-pressed="${g.selected===1}">式2を強調（破線）</button></div><div class="ex-me-two">${plane(g.initial,'出発点の二つの式')}${plane(g.current,'現在の二つの式')}</div><p>${g.classification==='one'?'白い点は二つの式を同時に満たす('+g.solution.map(x=>F(x)).join(', ')+')です。行操作で一本の直線の向きが変わっても、共通するこの点は残ります。':g.classification==='many'?'最初の二つの直線は重なっています。一方が0=0になっても、残った直線上の全ての点が解です。0=0の行を消すことは、残った条件まで消すことではありません。':'最初の二つの直線は平行で、共通する点がありません。0=1のような式は「見えない直線」ではなく、どの点も満たさない矛盾です。'}</p><p>図は分数を座標に読み替えた表示です。行基本変形の計算と解の照合は、上の有理数計算で行います。</p></section>`;

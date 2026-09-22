@@ -1,5 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {runInNewContext} from 'node:vm';
 import {modelModules} from '../scripts/modules.mjs';
 for(const name of modelModules)await import('../src/'+name+'.js');
 const E=CSL.experiences.mathEvidence,R=E.rational;
@@ -47,4 +49,20 @@ test('changing the viewing direction leaves the two coordinate sections untouche
 test('the saddle is visibly convex on one section and concave on the other',()=>{
  const s={...E.gradientStart(),shape:'saddle',point:[0,0]},sections=E.directionSections(s);
  assert.ok(sections[0].samples[0].height>0);assert.ok(sections[1].samples[0].height<0);for(const section of sections)close(section.slope,0);
+});
+async function earlyRenderers(){
+ const source=await readFile(new URL('../src/experiences-math-correspondence.js',import.meta.url),'utf8');
+ const early={experiences:{mathEvidence:{...E},format:CSL.experiences.format}};
+ // Match the publishing order: model code evaluates before CSL.h is installed.
+ runInNewContext(source,{CSL:early,document:{}},{filename:'math-correspondence-early.js',timeout:1000});
+ const calls=[];early.h=text=>{calls.push(text);return String(text).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');};
+ return {render:early.experiences.mathEvidence,calls};
+}
+test('section renderer resolves the HTML helper after browser initialization',async()=>{
+ const {render,calls}=await earlyRenderers();const html=render.renderDirectionSections(E.gradientStart());
+ assert.equal((html.match(/data-gradient-section=/g)||[]).length,3);assert.ok(calls.includes('選んだ単位方向uへ動かす'));
+});
+test('contradiction caption also works when its renderer evaluated before HTML helpers',async()=>{
+ const {render,calls}=await earlyRenderers(),s=E.row(E.rowStart('inconsistent'),{kind:'operate',operation:'add',row:1,other:0,factor:'-2'});
+ const html=render.renderRowGeometry(render.rowGeometry(s));assert.match(html,/data-row-line-kind="empty"/);assert.match(html,/式2は0=1/);assert.ok(calls.length>0);
 });
