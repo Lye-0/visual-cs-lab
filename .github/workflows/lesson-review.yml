@@ -14,29 +14,27 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      # For pull_request, the default checkout is GitHub's prospective merge.
-      # The curriculum workflow separately verifies the exact PR head.
+      # For pull_request, verify GitHub's prospective merge without repairing it.
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
       - uses: actions/setup-node@v6
         with:
           node-version: '22'
-      - name: Check and build the committed revision
+      - name: Check the committed revision without rebuilding it
         run: |
           mkdir -p review-output
           git rev-parse HEAD > review-output/tested-merge.txt
           node scripts/curriculum-finalize.mjs
           node scripts/build.mjs --check
-          npm run build
           npm test > review-output/node-tests.txt 2>&1 || { tail -n 160 review-output/node-tests.txt; exit 1; }
           tail -n 15 review-output/node-tests.txt
-          npm run inventory
+          npm run inventory -- --check
       - name: Install Chromium
         run: |
           npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0
           npx playwright install chromium
-      - name: Test restored diagrams and all reader units
+      - name: Test restored diagrams and every retained detail-view unit
         run: node tests/reader-browser.mjs
       - name: Test input, keyboard and SVG regressions
         run: |
@@ -46,7 +44,7 @@ jobs:
       - name: Ensure tests did not change the source
         run: |
           test "$(git rev-parse HEAD)" = "$(cat review-output/tested-merge.txt)"
-          git diff --exit-code HEAD -- src scripts tests package.json .github index.html assets
+          git diff --exit-code HEAD -- src scripts tests package.json .github index.html assets docs
       - uses: actions/upload-artifact@v5
         if: always()
         with:

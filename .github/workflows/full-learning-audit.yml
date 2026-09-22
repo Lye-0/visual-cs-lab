@@ -6,6 +6,7 @@ on:
       - tests/full-learning-audit.mjs
       - tests/audit-geometry.mjs
       - tests/authored-result-values-browser.mjs
+      - tests/legacy-routes.mjs
       - scripts/package-learning-audit.mjs
       - scripts/review-audit-packets.mjs
       - .github/workflows/full-learning-audit.yml
@@ -44,7 +45,7 @@ jobs:
         env:
           BROWSER: ${{ matrix.browser }}
         run: node tests/full-learning-audit.mjs
-      - name: Verify actual calculated values and their disclosure timing
+      - name: Verify calculated values and disclosure timing
         if: ${{ !cancelled() }}
         env:
           BROWSER: ${{ matrix.browser }}
