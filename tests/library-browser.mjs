@@ -1,3 +1,4 @@
+import {classicUrl,readyAuthored} from './legacy-routes.mjs';
 // Actual committed site, with mouse/keyboard controls and measured layouts.
 import assert from 'node:assert/strict';
 import http from 'node:http';
@@ -15,7 +16,7 @@ server.listen(0,'127.0.0.1');await once(server,'listening');
 const origin=`http://127.0.0.1:${server.address().port}`;
 let browser;
 async function check(name,fn){try{await fn();report.cases.push({name,passed:true});}catch(e){report.cases.push({name,passed:false,error:String(e.stack||e)});console.error('FAIL '+name+'\n'+e.stack);}}
-async function visit(page,base,hash){await page.goto(base+hash);await page.waitForFunction(()=>CSL.app.ready&&!!document.querySelector('.library,.reader'));}
+async function visit(page,base,hash){await page.goto(base+hash);await page.waitForFunction(()=>CSL.app.ready&&!!document.querySelector('.library,.reader,.experience'));}
 async function catalogue(page){await page.waitForFunction(()=>CSL.app.page==='catalog'&&!!document.getElementById('catalog-results'));}
 async function layout(page){
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2),false,'horizontal page overflow');
@@ -39,8 +40,8 @@ try{
    await page.locator('#home-results a[href="#/lab/c01-entropy"]').waitFor();
    assert.ok(await page.locator('#home-results .library-unit').count()<=24);
    await page.locator('#home-results a[href="#/lab/c01-entropy"]').click();
-   await page.locator('.reader-title h1').waitFor();assert.equal(await page.locator('.reader-title .library-breadcrumb a').count(),3);
-   await page.locator('.reader-title-links a').filter({hasText:'このテーマの単元一覧'}).click();await catalogue(page);
+   await readyAuthored(page,'c01-entropy');assert.equal(await page.locator('.ex-title .library-breadcrumb a').count(),3);
+   await page.locator('.ex-secondary a').filter({hasText:'同じテーマの単元へ'}).click();await catalogue(page);
    assert.ok(page.url().includes('category=math-information'));await layout(page);
   });
   await check(label+': classification controls preserve query, update counts and support zero results',async()=>{

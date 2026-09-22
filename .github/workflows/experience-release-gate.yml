@@ -1,0 +1,105 @@
+# Verify deployment paths, catalogue and the explicitly retained detail views.
+# No publishing, source repair, or merging. Existing coverage is not discarded.
+name: Authored and retained views release checks
+on:
+  push:
+    branches: [feat/lesson-specific-experiences]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: authored-release-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  site:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Verify the actual published entry and models
+        run: |
+          mkdir -p review-output
+          npm run check > review-output/release-node.txt 2>&1 || { tail -n 100 review-output/release-node.txt; exit 1; }
+          grep -E '^# (tests|pass|fail)' review-output/release-node.txt
+      - name: Install browser tooling
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0
+          npx playwright install --with-deps ${{ matrix.browser }} > review-output/release-install.txt 2>&1 || { tail -n 60 review-output/release-install.txt; exit 1; }
+      - name: New default pages and retained reader at root and Pages subpath
+        env:
+          BROWSER: ${{ matrix.browser }}
+        run: node tests/static-site-browser.mjs
+      - name: Test the real catalogue, breadcrumbs and search
+        if: ${{ !cancelled() }}
+        env:
+          BROWSER: ${{ matrix.browser }}
+        run: node tests/library-browser.mjs
+      - name: Verify native scrollbars without headless Firefox hiding them
+        if: ${{ !cancelled() }}
+        env:
+          BROWSER: ${{ matrix.browser }}
+        run: |
+          if [ "$BROWSER" = firefox ]; then xvfb-run -a node tests/scrollbars-browser.mjs; else node tests/scrollbars-browser.mjs; fi
+      - name: Tests must not edit the source
+        if: ${{ !cancelled() }}
+        run: git diff --exit-code HEAD -- src scripts tests index.html assets .nojekyll package.json .github docs
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: authored-release-${{ matrix.browser }}
+          path: review-output/
+          retention-days: 7
+  retained:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Read-only source and model-boundary verification
+        run: |
+          mkdir -p review-output
+          node scripts/curriculum-finalize.mjs
+          node scripts/build.mjs --check
+          node scripts/curriculum-probe.mjs > review-output/curriculum-probe.log 2>&1 || { tail -n 100 review-output/curriculum-probe.log; exit 1; }
+          tail -n 15 review-output/curriculum-probe.log
+      - name: Install Chromium
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0
+          npx playwright install --with-deps chromium > review-output/install.txt 2>&1 || { tail -n 40 review-output/install.txt; exit 1; }
+      - name: Every retained unit, playback and rewind
+        run: node tests/reader-browser.mjs
+      - name: Every retained curriculum unit and raster/native DOM interactions
+        if: ${{ !cancelled() }}
+        run: node tests/curriculum-browser.mjs
+      - name: Input and keyboard regressions
+        if: ${{ !cancelled() }}
+        run: node tests/reader-regressions.mjs
+      - name: SVG colors
+        if: ${{ !cancelled() }}
+        run: node tests/reader-svg-theme.mjs
+      - name: Focus, snapshot identity and invalid labels
+        if: ${{ !cancelled() }}
+        run: node tests/pr-review-browser.mjs
+      - name: Read-only postcondition
+        if: ${{ !cancelled() }}
+        run: git diff --exit-code HEAD -- src scripts tests index.html assets .nojekyll package.json .github docs
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: authored-release-retained
+          path: review-output/
+          retention-days: 7

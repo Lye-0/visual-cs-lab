@@ -56,7 +56,13 @@ const icons={
 };
 icons.server=icons.database;icons.radar=icons.search;icons.circuit=icons.logic;icons.compiler=icons.code;icons.branch=icons.git;
 function icon(name,size=20){return `<svg class="icon" width="${n(size)}" height="${n(size)}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${icons[name]||icons.flask}"/></svg>`;}
-function svg(body,w=760,height=370,label='実験の内部状態'){return `<svg viewBox="0 0 ${n(w)} ${n(height)}" role="img" aria-label="${h(label)}" xmlns="http://www.w3.org/2000/svg"><defs><marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="context-stroke"/></marker><pattern id="dotgrid" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".65" fill="#2a3442"/></pattern></defs><rect width="100%" height="100%" fill="url(#dotgrid)" opacity=".5"/>${body}</svg>`;}
+let svgInstance=0;
+function svg(body,w=760,height=370,label='実験の内部状態'){
+ const prefix='vcl-svg-'+(++svgInstance)+'-',arrow=prefix+'arrowhead',grid=prefix+'dotgrid';
+ // Only local reference attributes are rewritten. Literal labels remain intact.
+ const content=String(body).replace(/\b(marker-(?:start|mid|end)|fill|stroke)=(['"])url\(#(arrowhead|dotgrid)\)\2/g,(_,attr,quote,id)=>attr+'='+quote+'url(#'+prefix+id+')'+quote);
+ return `<svg viewBox="0 0 ${n(w)} ${n(height)}" role="img" aria-label="${h(label)}" xmlns="http://www.w3.org/2000/svg"><defs><marker id="${arrow}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="context-stroke"/></marker><pattern id="${grid}" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".65" fill="#2a3442"/></pattern></defs><rect width="100%" height="100%" fill="url(#${grid})" opacity=".5"/>${content}</svg>`;
+}
 const text=(x,y,s,cls='',anchor='start')=>`<text x="${n(x)}" y="${n(y)}" class="${h(cls)}" text-anchor="${anchor}">${h(s)}</text>`;
 const line=(x1,y1,x2,y2,cls='',extra='')=>`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(x2)}" y2="${n(y2)}" class="${h(cls)}" ${extra}/>`;
 const rect=(x,y,w,ht,fill='#192330',stroke='#374457',r=7)=>`<rect x="${n(x)}" y="${n(y)}" width="${Math.max(0,n(w))}" height="${Math.max(0,n(ht))}" rx="${r}" fill="${fill}" stroke="${stroke}"/>`;

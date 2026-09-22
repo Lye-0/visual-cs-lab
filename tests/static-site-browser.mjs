@@ -1,3 +1,4 @@
+import {classicUrl,readyAuthored} from './legacy-routes.mjs';
 // Exercise the committed multi-file site over HTTP, including a Pages subpath.
 // No page.setContent, no asset bundling, and no build performed by this test.
 import assert from 'node:assert/strict';
@@ -60,8 +61,15 @@ try{
    for(const asset of external)assert.ok(asset.startsWith(url),asset+' escaped the publishing subpath');
    const icon=await context.request.get(url+'assets/favicon.svg');assert.equal(icon.status(),200);assert.match(icon.headers()['content-type'],/image\/svg\+xml/);
   });
+  for(const id of ['c01-entropy','n03-switch','n11-tcp','gap-002','gap-037','s03-aes','gap-148','gap-150','gap-154','gap-155'])await check(scenario+': '+id+' authored default and public detail link',async()=>{
+   await page.goto(url+'#/lab/'+id);await readyAuthored(page,id);
+   assert.equal(await page.locator('.experience h1').textContent(),await page.evaluate(()=>CSL.app.current.lab.unit));
+   assert.equal(await page.locator('.ex-secondary a[href="#/lab/'+id+'?view=classic"]').count(),1);
+   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2),false);
+   assert.deepEqual(await page.evaluate(()=>window.__csp),[]);
+  });
   for(const id of ['c01-entropy','n03-switch','n11-tcp','gap-002','gap-037','s03-aes','gap-148','gap-150','gap-154','gap-155'])await check(scenario+': '+id+' direct link, rewind, variant and reset',async()=>{
-   await page.goto(url+'#/lab/'+id);await ready(page,id);
+   await page.goto(classicUrl(url+'#/lab/'+id));await ready(page,id);
    assert.equal(await page.locator('[data-r-phase]').count(),4);
    assert.ok((await page.locator('#reader-guidance').textContent()).length>50);
    const count=await page.evaluate(()=>CSL.app.current.result.frames.length);
@@ -82,7 +90,7 @@ try{
    assert.deepEqual(await page.evaluate(()=>window.__csp),[]);
   });
   await check(scenario+': browser-native DOM, labels and undo work under the external-script CSP',async()=>{
-   await page.goto(url+'#/lab/gap-148');await ready(page,'gap-148');
+   await page.goto(classicUrl(url+'#/lab/gap-148'));await ready(page,'gap-148');
    const items=page.locator('#reader-diagram [data-cv-items] li');const initial=await items.allTextContents();
    assert.deepEqual(initial,['項目A','項目B','項目C']);
    await page.locator('#reader-diagram [data-cv-action="delete"]').click();
@@ -92,17 +100,17 @@ try{
    await page.waitForFunction(count=>document.querySelectorAll('#reader-diagram [data-cv-items] li').length===count,initial.length-1,{timeout:5000});
    assert.deepEqual(await items.allTextContents(),initial.slice(0,-1));
    await page.locator('#reader-diagram [data-cv-action="undo"]').click();assert.deepEqual(await items.allTextContents(),initial);
-   await page.goto(url+'#/lab/gap-150');await ready(page,'gap-150');
+   await page.goto(classicUrl(url+'#/lab/gap-150'));await ready(page,'gap-150');
    await page.locator('#reader-diagram .cv-demo input').fill('TCP');
    await page.locator('#reader-diagram [data-cv-action="access"]').click();
    assert.ok((await page.locator('#reader-diagram [data-cv-output]').textContent()).includes('TCP'));
-   await page.goto(url+'#/lab/gap-154');await ready(page,'gap-154');
+   await page.goto(classicUrl(url+'#/lab/gap-154'));await ready(page,'gap-154');
    await page.locator('#reader-diagram [data-cv-output] tbody tr').first().waitFor();
    assert.equal(await page.locator('#reader-diagram [data-cv-output] tbody tr').count(),4);
    assert.deepEqual(await page.evaluate(()=>window.__csp),[]);
   });
   await check(scenario+': prefix-compatible controls, blur fallback and native scrolling',async()=>{
-   await page.goto(url+'#/lab/n11-tcp');await ready(page,'n11-tcp');
+   await page.goto(classicUrl(url+'#/lab/n11-tcp'));await ready(page,'n11-tcp');
    const appearance=await page.locator('#reader-scrubber').evaluate(el=>{const s=getComputedStyle(el);return s.getPropertyValue('appearance')||s.getPropertyValue('-webkit-appearance');});assert.equal(appearance,'none');
    await page.locator('[data-action="search"]').first().click();await page.locator('.modal-backdrop').waitFor();
    const blur=await page.locator('.modal-backdrop').evaluate(el=>{const s=getComputedStyle(el);return {supported:CSS.supports('backdrop-filter','blur(1px)')||CSS.supports('-webkit-backdrop-filter','blur(1px)'),value:s.getPropertyValue('backdrop-filter')||s.getPropertyValue('-webkit-backdrop-filter'),background:s.backgroundColor};});
@@ -119,16 +127,17 @@ try{
   });
   await check(scenario+': all normal requests and script policies stayed valid',async()=>{assert.deepEqual(statuses,[]);assert.deepEqual(await page.evaluate(()=>window.__csp),[]);});
   await mkdir('review-output/static-screenshots',{recursive:true});
-  await page.goto(url+'#/lab/n03-switch');await ready(page,'n03-switch');
+  await page.goto(classicUrl(url+'#/lab/n03-switch'));await ready(page,'n03-switch');
   await page.screenshot({path:`review-output/static-screenshots/${name}-${prefix==='/'?'root':'project'}-${label}.png`,fullPage:true});
   await context.close();
  }
  await check('delaying the final deferred file cannot break startup or the curriculum catalogue',async()=>{
   const context=await browser.newContext();const page=await context.newPage();
-  await page.route('**/src/curriculum-navigation.js',async route=>{await new Promise(resolve=>setTimeout(resolve,400));await route.continue();});
+  await page.route('**/src/'+browserModules.at(-1)+'.js',async route=>{await new Promise(resolve=>setTimeout(resolve,400));await route.continue();});
   page.on('pageerror',e=>report.errors.push({scenario:'delayed-defer',message:e.message}));
   await page.goto(origin+'/visual-cs-lab/#/catalog');
-  await page.locator('[data-cv-catalogue]').waitFor({timeout:20000});
+  await page.locator('#catalog-query').waitFor({timeout:20000});
+  assert.equal(await page.locator('#catalog-results .library-unit').count(),24);
   assert.equal(await page.evaluate(()=>CSL.labs.length),314);assert.equal(await page.evaluate(()=>CSL.app.ready),true);
   await context.close();
  });

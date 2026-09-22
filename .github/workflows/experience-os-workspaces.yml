@@ -1,0 +1,49 @@
+name: OS and data learning workspaces
+on:
+  push:
+    branches: [main, feat/lesson-specific-experiences]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: os-workspaces-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  browsers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Validate the committed entry and independent state models
+        run: |
+          mkdir -p review-output
+          node scripts/build.mjs --check
+          node --test tests/os-workspaces.test.mjs > review-output/os-models.txt 2>&1 || { cat review-output/os-models.txt; exit 1; }
+          tail -n 14 review-output/os-models.txt
+      - name: Install browser tools
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0
+          npx playwright install --with-deps ${{ matrix.browser }} > review-output/browser-install.txt 2>&1 || { tail -n 50 review-output/browser-install.txt; exit 1; }
+      - name: Exercise all 21 units and individual learning actions
+        env:
+          BROWSER: ${{ matrix.browser }}
+        run: node tests/os-workspaces-browser.mjs
+      - name: No source mutations during verification
+        if: ${{ !cancelled() }}
+        run: git diff --exit-code HEAD -- src scripts tests index.html assets package.json .github
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: os-workspaces-${{ matrix.browser }}
+          path: review-output/
+          retention-days: 14

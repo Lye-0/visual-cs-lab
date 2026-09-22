@@ -1,3 +1,4 @@
+import {classicUrl,readyAuthored} from './legacy-routes.mjs';
 // Real HTTP regression checks for the reviewed behavior, not screenshot guesses.
 import assert from 'node:assert/strict';
 import {spawn} from 'node:child_process';
@@ -14,7 +15,7 @@ async function open(page,id){
  // Some tests deliberately corrupt the DOM. A same-hash navigation may reuse
  // that document; cross a document boundary before loading the real HTTP page.
  await page.goto('about:blank');
- await page.goto(base+'#/lab/'+id);
+ await page.goto(classicUrl(base+'#/lab/'+id));
  await ready(page,id);
 }
 async function check(name,fn){try{await fn();report.cases.push({name,passed:true});}catch(e){report.cases.push({name,passed:false,error:String(e.stack||e)});console.error('FAIL '+name+'\n'+e.stack);}}

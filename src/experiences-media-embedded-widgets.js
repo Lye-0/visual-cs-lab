@@ -1,0 +1,29 @@
+(() => {
+'use strict';
+if(typeof document==='undefined')return;
+const X=CSL.experiences,M=X.mediaDesk,f=X.format,{b,p,box,table}=M.ui;
+X.registerWidget('gpio-pwm',(root,a,c)=>M.mount(root,c,{
+ start:M.pinsStart,reduce:M.pins,
+ instruction:'方向が入力のbitでは、出力レジスタを変えてもPINは変わりません。各bitを押して参照元を確認し、PWMでは高い時間の数を直接数えます。',
+ action:code=>{const [kind,key,v]=code.split(':');return kind==='bit'?{kind,key,bit:+v}:kind==='compare'?{kind,value:+key}:{kind};},
+ render:s=>{const v=M.pinsView(s);const row=(key,label)=>box(label,`<div class="ex-md-bitrow">${M.range(8,j=>{const bit=7-j,on=Boolean(s[key]&(1<<bit));return b('b'+bit+' '+Number(on),'bit:'+key+':'+bit,`aria-pressed="${on}"`);}).join('')}</div>`);return `<div class="ex-md-two">${row('direction','方向：1は出力、0は入力')}${row('output','出力レジスタ')}${row('external','外側から入る信号')}${box('実際に読むPIN',table(['bit','読む側','値'],M.range(8,j=>{const bit=7-j;return [bit,s.direction&(1<<bit)?'出力レジスタ':'外部入力',(v.pin>>bit)&1];}))+p('PIN='+v.pin))}</div>${box('PWM：0〜9の周期を直接見る',`<div class="ex-actions">${M.range(11,i=>b('比較値 '+i,'compare:'+i,`aria-pressed="${s.compare===i}"`)).join('')}</div><div class="ex-md-schedule">${v.wave.map((on,i)=>'<span>'+i+'：'+(on?'High':'Low')+(i===s.counter?' ←今':'')+'</span>').join('')}</div>`+b('カウンタを1tick進める','tick')+p('高い時間 '+v.wave.reduce((a,b)=>a+b,0)+' / 10 = '+f(v.duty)))}${p('方向選択とPWMは別の周辺機能の小例です。実機の配線やpin mux、電圧、レジスタ更新タイミング全体は扱いません。')}`;}
+}));
+X.registerWidget('sensor-calibration',(root,a,c)=>M.mount(root,c,{
+ start:M.sensorStart,reduce:M.sensor,
+ instruction:'まず校正せずに25℃を測ります。次に既知の0℃と50℃を測って基準点を取得し、その二点から温度を読み替えてください。',
+ action:(code,fields)=>{const [kind,v]=code.split(':');return kind==='reference'?{kind,temperature:+v}:kind==='temperature'?{kind,value:fields.get('temperature')}:kind==='hardware'?{kind,bias:fields.get('bias'),gain:fields.get('gain'),bits:fields.get('bits')}:{kind};},
+ render:(s,{field})=>{const v=M.sensorView(s);return `<div class="ex-md-flow"><div><small>教材が知る真の温度</small>${f(s.temperature)} ℃</div><div><small>センサー電圧</small>${f(v.voltage)} V</div><div><small>ADCの整数</small>${v.code}</div><div><small>温度計の推定</small>${f(v.estimate)} ℃</div></div><div class="ex-md-two">${box('何を測るか',`<form class="ex-md-form">${field('temperature','真の温度 ℃',s.temperature,{min:-10,max:80,step:'any'})}${b('この温度を測る','temperature')}</form>`+p('推定値−真値 = '+f(v.error)+'℃。温度計が直接受け取るのはADCコードであり、真値ではありません。'))}${box('基準点を取得してから適用',`<div class="ex-actions">${b('既知の0℃で測る','reference:0')}${b('既知の50℃で測る','reference:50')}${b('二点校正を適用','calibrate')}</div>`+table(['既知の温度','保存したコード'],[[0,s.references[0]??'未取得'],[50,s.references[50]??'未取得']])+p(s.calibrated?'推定温度 = 50 × (今回のコード − 0℃のコード) / (50℃のコード − 0℃のコード)':'校正前は、公称の電圧式0.5+0.01×温度を逆に使っています。'))}</div><details><summary>測定器の特性を変更する（再校正が必要）</summary><form class="ex-md-form">${field('bias','電圧のずれ V',s.bias,{min:-.1,max:.1,step:'any'})}${field('gain','感度倍率',s.gain,{min:.8,max:1.2,step:'any'})}${field('bits','ADC bit数',s.bits,{min:4,max:12})}${b('特性を変更','hardware')}</form></details>${p('架空の線形センサー、基準電圧3.3V、端点を含む丸めです。この直接操作には雑音を加えていません。平均でばらつきを減らすことと、系統的なずれの校正は別章で比べます。')}`;}
+}));
+X.registerWidget('control-state-pair',(root,a,c)=>M.mount(root,c,{
+ start:M.controlStart,reduce:M.control,
+ instruction:'同じ対象を二台並べ、一方だけ飽和を悪化させる積分を止めます。少し進めてから目標を−0.5へ変更し、積分が残ることを観察してください。',
+ action:(code,fields)=>{const [kind,v]=code.split(':');return kind==='advance'?{kind,count:+v}:kind==='target'?{kind,value:fields.get('target')}:{kind:'kick',delta:.5};},
+ render:(s,{field})=>{const plots=s.history.length?M.chart([{name:'常に積分：位置',values:s.history.map(r=>r.plants[0].x)},{name:'条件付き積分：位置',values:s.history.map(r=>r.plants[1].x)},{name:'目標',values:s.history.map(r=>r.target)}],{xStart:.05,xStep:.05,label:'横軸：時刻（秒）、縦軸：位置'}):p('まだ時間を進めていません。両方とも位置0・速度0・積分0です。');return `<form class="ex-md-form">${field('target','目標位置',s.target,{min:-1,max:1,step:'any'})}${b('目標だけを変更','target')}</form><div class="ex-actions">${b('0.05秒進める','advance:1')}${b('0.5秒進める','advance:10')}${b('両方の速度へ0.5を加える','kick')}</div><p class="ex-md-value">時刻 ${f(s.time)} 秒</p>${plots}<div class="ex-md-two">${s.plants.map((plant,i)=>box(i?'飽和を悪化させる積分を止める':'誤差を常に積分する',table(['状態','値'],[['位置',f(plant.x)],['速度',f(plant.v)],['積分',f(plant.I)]])+ (plant.last?table(['最後の計算','値'],[['計算前の誤差',f(plant.last.error)],['候補の積分で要求するu',f(plant.last.trial)],['積分を止めた',plant.last.blocked?'はい':'いいえ'],['P',f(plant.last.P)],['I',f(plant.last.I)],['D',f(plant.last.D)],['P+I+D',f(plant.last.raw)],['実際のu（±0.6）',f(plant.last.u)],['計算前の加速度',f(plant.last.acceleration)]]):''))).join('')}</div>${p('ẋ=v、v̇=u−0.5v−0.25x。対象の位置・速度と、制御器の積分は別の状態です。RK4で対象を一歩進め、次の刻みで再測定します。有限時間の比較を一般の安定性の証明にしません。')}`;}
+}));
+X.registerWidget('deadline-choice',(root,a,c)=>M.mount(root,c,{
+ start:M.deadlineStart,reduce:M.deadline,
+ instruction:'時刻・到着・締切を見て次の仕事を選んでください。RMとEDFを同じタスクで試すと、利用率だけでは分からない違いが見えます。',
+ action:code=>{const [kind,v]=code.split(':');return kind==='method'?{kind,value:v}:{kind:'run',id:v};},
+ render:s=>{const v=M.deadlineView(s);return `<div class="ex-actions">${['RM','EDF'].map(m=>b(m+'で最初から','method:'+m,`aria-pressed="${s.method===m}"`)).join('')}</div>${table(['タスク','必要tick','周期＝相対締切'],[['A',2,5],['B',4,7]])}<p class="ex-md-value">現在 t=${s.time}、方式 ${s.method}</p><div class="ex-md-two">${box('待機している候補から選ぶ',table(['job','到着','絶対締切','残り'],v.ready.map(j=>[j.id,j.release,j.deadline,j.left]))+`<div class="ex-actions">${s.time>=20?p('20tickの観察終了'):v.ready.length?v.ready.map(j=>b(j.id+'を1tick実行','run:'+j.id)).join(''):b('idleを1tick進める','run:idle')}</div>`)}${box('これまでの割当',`<div class="ex-md-schedule">${s.timeline.map((j,i)=>'<span>'+i+'：'+j+'</span>').join('')}</div>`+p('期限違反：'+(v.missed.map(j=>j.id).join(', ')||'現在なし')))}</div>${box('到着と完了を照合する',table(['job','締切','残り','終了'],v.jobs.map(j=>[j.id,j.deadline,j.left,j.finish??'まだ']))) }${p('独立・整数時間・1CPU・切替コスト0の20tickだけです。RMは周期の短い順、EDFは現在の絶対締切の早い順。同値は到着・名前で決めます。有限観察で違反がないことと全期間の保証は別です。')}`;}
+}));
+})();

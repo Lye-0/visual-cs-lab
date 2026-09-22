@@ -1,3 +1,4 @@
+import {classicUrl,readyAuthored} from './legacy-routes.mjs';
 // Real HTTP browser checks. These tests do not represent a learner study.
 import assert from 'node:assert/strict';
 import {spawn} from 'node:child_process';
@@ -10,7 +11,7 @@ const base='http://127.0.0.1:4182/';
 const server=spawn(process.execPath,['scripts/server.mjs'],{env:{...process.env,PORT:'4182'},stdio:['ignore','pipe','pipe']});
 let log='',browser;server.stdout.on('data',d=>log+=d);server.stderr.on('data',d=>log+=d);server.on('error',e=>log+=e.stack);
 const ready=(page,id)=>page.waitForFunction(id=>{const c=globalThis.CSL?.app?.current;return c?.reader&&c.lab.id===id&&!c.pending&&!c.dirty&&!c.error&&!!c.result;},id,{timeout:15000});
-async function visit(page,id){await page.goto(base+'#/lab/'+id);await ready(page,id);await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));}
+async function visit(page,id){await page.goto(classicUrl(base+'#/lab/'+id));await ready(page,id);await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));}
 async function check(name,fn){try{await fn();report.cases.push({name,passed:true});}catch(e){report.cases.push({name,passed:false,error:String(e.stack||e)});console.error('FAIL '+name+'\n'+e.stack);}}
 async function expand(page){for(const details of await page.locator('.reader-more-controls').all())if(!await details.evaluate(el=>el.open))await details.locator('summary').click();}
 async function setParam(page,key,value){
@@ -69,7 +70,7 @@ try{
    await page.waitForFunction(()=>document.querySelectorAll('#catalog-results .library-unit').length===1);
    assert.equal(await page.locator('#catalog-results .library-unit').getAttribute('data-lab-id'),'gap-155');
    assert.ok((await page.locator('#catalog-count').textContent()).startsWith('1 '));
-   await page.locator('#catalog-results a[href="#/lab/gap-155"]').click();await ready(page,'gap-155');
+   await page.locator('#catalog-results a[href="#/lab/gap-155"]').click();await readyAuthored(page,'gap-155');
   });
   for(const id of ['n11-tcp','gap-143'])await check(`${name}: ${id} 再生・停止・巻戻し`,async()=>{
    await visit(page,id);const play=page.locator('#reader-play');await play.click();await page.waitForFunction(()=>CSL.app.current.index>0,{},{timeout:7000});await play.click();const stopped=await page.evaluate(()=>CSL.app.current.index);await sleep(400);assert.equal(await page.evaluate(()=>CSL.app.current.index),stopped);await page.locator('[data-r-action="back"]').first().click();assert.equal(await page.evaluate(()=>CSL.app.current.index),Math.max(0,stopped-1));

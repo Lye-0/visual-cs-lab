@@ -1,0 +1,119 @@
+name: Full 314-unit verification
+on:
+  push:
+    branches: [feat/lesson-specific-experiences]
+    paths:
+      - tests/full-learning-audit.mjs
+      - tests/audit-geometry.mjs
+      - tests/authored-result-values-browser.mjs
+      - tests/legacy-routes.mjs
+      - scripts/package-learning-audit.mjs
+      - scripts/review-audit-packets.mjs
+      - .github/workflows/full-learning-audit.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: full-learning-audit-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Check committed source and all calculation tests
+        run: |
+          mkdir -p review-output
+          npm run check > review-output/all-node-tests.txt 2>&1 || { tail -n 100 review-output/all-node-tests.txt; exit 1; }
+          grep -E '^# (tests|pass|fail|skipped|cancelled)' review-output/all-node-tests.txt
+          git diff --exit-code HEAD -- src scripts tests index.html package.json .github docs
+      - name: Install actual browser
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0
+          npx playwright install --with-deps ${{ matrix.browser }} > review-output/install.txt 2>&1 || { tail -n 40 review-output/install.txt; exit 1; }
+      - name: Visit every chapter at all three widths
+        env:
+          BROWSER: ${{ matrix.browser }}
+        run: node tests/full-learning-audit.mjs
+      - name: Verify calculated values and disclosure timing
+        if: ${{ !cancelled() }}
+        env:
+          BROWSER: ${{ matrix.browser }}
+        run: node tests/authored-result-values-browser.mjs
+      - name: Package readable review evidence
+        if: ${{ !cancelled() && matrix.browser == 'chromium' }}
+        run: |
+          node scripts/package-learning-audit.mjs
+          node scripts/review-audit-packets.mjs
+      - name: Assert tests have not edited source
+        if: ${{ !cancelled() }}
+        run: git diff --exit-code HEAD -- src scripts tests index.html package.json .github docs
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: full-learning-audit-${{ matrix.browser }}
+          path: review-output/
+          retention-days: 7
+  evidence:
+    needs: audit
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Download this run's evidence from every browser
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for browser in chromium firefox webkit; do
+            gh run download "$GITHUB_RUN_ID" --repo "$GITHUB_REPOSITORY" --name "full-learning-audit-$browser" --dir "/tmp/full-audit/$browser"
+          done
+      - name: Store only generated evidence on an isolated branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          test -f /tmp/full-audit/chromium/public-audit/index.json
+          mkdir -p /tmp/audit-publish/browsers
+          cp -R /tmp/full-audit/chromium/public-audit/. /tmp/audit-publish/
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          summaries=[]
+          for browser in ['chromium','firefox','webkit']:
+              root=Path('/tmp/full-audit')/browser
+              r=json.loads((root/'full-audit'/f'{browser}.json').read_text())
+              summary={k:r.get(k) for k in ['sourceCommit','engine','version','summary','failures','runtime','geometrySelfTest']}
+              summary['nodeTestTotals']=[line for line in (root/'all-node-tests.txt').read_text().splitlines() if line.startswith(('# tests ','# pass ','# fail ','# skipped ','# cancelled '))]
+              values=root/f'authored-values-{browser}.json'
+              if values.exists():
+                  v=json.loads(values.read_text())
+                  summary['calculatedValues']={k:v.get(k) for k in ['passed','failed','errors']}
+              Path(f'/tmp/audit-publish/browsers/{browser}.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2))
+              summaries.append(summary)
+          Path('/tmp/audit-publish/results.json').write_text(json.dumps(summaries,ensure_ascii=False,indent=2))
+          PY
+          cd /tmp/audit-publish
+          git init -q
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git checkout -b "review/full-audit-$GITHUB_RUN_ID"
+          git add -- .
+          git commit -m "docs: 全314単元の画面検証の証跡を保存 $GITHUB_SHA"
+          gh auth setup-git
+          git remote add origin "https://github.com/$GITHUB_REPOSITORY.git"
+          git push origin HEAD:"refs/heads/review/full-audit-$GITHUB_RUN_ID"

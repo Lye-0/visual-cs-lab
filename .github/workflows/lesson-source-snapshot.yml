@@ -1,0 +1,30 @@
+# Read-only snapshot of the exact work-branch revision for local verification.
+# No source repairs, credentials, untracked files, or publishing changes.
+name: Lesson source snapshot
+on:
+  push:
+    branches: [feat/lesson-specific-experiences]
+    paths: [.github/workflows/lesson-source-snapshot.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - run: |
+          mkdir -p review-output
+          git rev-parse HEAD > review-output/source-sha.txt
+          git rev-parse HEAD^{tree} > review-output/tree-sha.txt
+          git ls-tree -r HEAD > review-output/tracked-files.txt
+          git archive --format=zip --prefix=visual-cs-lab/ HEAD > review-output/source.zip
+          git diff --exit-code HEAD
+      - uses: actions/upload-artifact@v5
+        with:
+          name: lesson-source-snapshot
+          path: review-output/
+          retention-days: 3

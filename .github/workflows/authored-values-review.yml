@@ -1,0 +1,48 @@
+name: Authored result and preset verification
+on:
+  push:
+    branches: [feat/lesson-specific-experiences]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: authored-values-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Verify all declared examples and displayed-value rules
+        run: |
+          mkdir -p review-output
+          node scripts/build.mjs --check
+          node --test tests/authored-result-values.test.mjs > review-output/authored-values-models.txt 2>&1 || { cat review-output/authored-values-models.txt; exit 1; }
+          tail -n 12 review-output/authored-values-models.txt
+      - name: Install the test browser
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0
+          npx playwright install --with-deps ${{ matrix.browser }} > review-output/install.txt 2>&1 || { tail -n 40 review-output/install.txt; exit 1; }
+      - name: Check actual values, input editing and delayed disclosure
+        env:
+          BROWSER: ${{ matrix.browser }}
+        run: node tests/authored-result-values-browser.mjs
+      - name: Source verification stays read-only
+        if: ${{ !cancelled() }}
+        run: git diff --exit-code HEAD -- src scripts tests index.html package.json .github docs
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: authored-values-${{ matrix.browser }}
+          path: review-output/
+          retention-days: 7

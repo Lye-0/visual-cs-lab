@@ -29,13 +29,12 @@ jobs:
           node scripts/curriculum-finalize.mjs
           mkdir -p review-output
           git rev-parse HEAD > review-output/tested-head.txt
-      - name: Build and run all Node tests
+      - name: Verify the actual entry and run all Node tests
         run: |
           node scripts/build.mjs --check
-          npm run build
           npm test > review-output/curriculum-node.txt 2>&1 || { tail -n 160 review-output/curriculum-node.txt; exit 1; }
           tail -n 15 review-output/curriculum-node.txt
-          npm run inventory
+          npm run inventory -- --check
       - name: Audit all 155 model boundaries and independent examples
         run: |
           export GITHUB_SHA="$SOURCE_COMMIT"
@@ -45,7 +44,7 @@ jobs:
         run: |
           npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0
           npx playwright install chromium
-      - name: Test every unit and the real raster and DOM interactions
+      - name: Test every retained detail-view unit and raster and DOM interactions
         run: |
           export GITHUB_SHA="$SOURCE_COMMIT"
           node tests/curriculum-browser.mjs > review-output/curriculum-browser.log 2>&1 || { tail -n 180 review-output/curriculum-browser.log; exit 1; }
@@ -56,10 +55,10 @@ jobs:
           node tests/pr-review-browser.mjs
           node tests/reader-regressions.mjs
           node tests/reader-svg-theme.mjs
-      - name: Verify source immutability and record completed results
+      - name: Verify source immutability and record results
         run: |
           test "$(git rev-parse HEAD)" = "$SOURCE_COMMIT"
-          git diff --exit-code HEAD -- src scripts tests package.json .github index.html assets
+          git diff --exit-code HEAD -- src scripts tests package.json .github index.html assets docs
           node scripts/curriculum-verification-report.mjs
       - uses: actions/upload-artifact@v5
         if: always()
