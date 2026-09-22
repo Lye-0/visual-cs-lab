@@ -5,7 +5,7 @@
 const X=CSL.experiences,K=CSL.curriculum,M=X.mediaDesk;
 const {integer:int,number:num,choice,begin,note,range}=M;
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x)),mix=(a,b,t)=>a.map((v,i)=>(1-t)*v+t*b[i]);
-M.rasterStart=()=>({cell:36,vertex:0,depth:true,reverse:false,near:.5,log:[]});
+M.rasterStart=()=>({cell:27,vertex:0,depth:true,reverse:false,near:.5,log:[]});
 M.rasterView=s=>{
  const world=[[-.9,-.8,1],[.9,-.8,1],[0,.9,2],[-.9,-.8,0],[.9,-.8,0],[0,.9,0]],view=world.map(([x,y,z])=>[x,y,z-4]);
  const clip=view.map(([x,y,z])=>[2*x,2*y,(12+s.near)/(s.near-12)*z+24*s.near/(s.near-12),-z]);

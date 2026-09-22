@@ -60,7 +60,7 @@ try{
    await click(page,'bin:7');assert.equal((await state(page)).bin,7);await click(page,'reset');assert.equal((await state(page)).pixels[0],40);
   });
   await check(width+': depth and order are separate operations on the same vertices',async()=>{
-   await open(page,'gap-137');await click(page,'cell:36');assert.match(await page.locator('[data-sec-board]').textContent(),/残る色は 手前/);
+   await open(page,'gap-137');await click(page,'cell:27');assert.match(await page.locator('[data-sec-board]').textContent(),/残る色は 手前/);
    await click(page,'depth');assert.match(await page.locator('[data-sec-board]').textContent(),/残る色は 奥/);
    await click(page,'reverse');assert.match(await page.locator('[data-sec-board]').textContent(),/残る色は 手前/);
    await click(page,'near:4.5');assert.match(await page.locator('[data-sec-board]').textContent(),/残る色は 背景/);
@@ -104,9 +104,9 @@ try{
    await click(page,'run:A@0');assert.equal((await state(page)).time,1);await click(page,'method:EDF');assert.equal((await state(page)).time,0);assert.equal((await state(page)).method,'EDF');
    await click(page,'run:A@0');await click(page,'run:A@0');await click(page,'run:B@0');assert.equal((await state(page)).time,3);
   });
-  await check(width+': a unit without the new renderer is not silently marked authored',async()=>{
-   assert.equal(await page.evaluate(()=>CSL.experiences.find('gap-144')===undefined),true);
-   // Keep this batch test scoped. The independent full-314 assertion remains unchanged.
+  await check(width+': all original units remain alongside the authored media batch',async()=>{
+   assert.equal(await page.evaluate(ids=>ids.every(id=>!!CSL.experiences.find(id)),ids),true);
+   // Do not require a future lesson to remain absent. Full-314 coverage is checked independently.
    assert.equal(await page.evaluate(()=>CSL.labs.length),314);
   });
   await check(width+': route disposal, storage and request policies remain intact',async()=>{
