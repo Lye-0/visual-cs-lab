@@ -37,7 +37,7 @@ jobs:
           assert len(matches)==1
           lines[matches[0]]=""" C('noise-power','ばらつきと系統的なずれを分ける','平均する回数を増やすと、センサーのずれも消えるでしょうか。',['測る温度を固定し、平均の回数だけを増やします。個々の値のばらつきと、繰り返しても残る系統的なずれを区別します。校正と平均は、異なる原因に対応する操作です。'],[A('inspect','同じセンサーで平均と校正を比べる',['temperature','bias','gain','noise','average','calibrate'],{mode:'sensor'},{showDerivation:true})]),
            C('power','短い送信と長い待機の電流を足す','大きな電流を使う時間と、長く続く時間はどちらでしょうか。',['一周期を測定・送信・待機へ分けます。それぞれの電流と時間の積が、その状態で使う電荷です。積を足して周期で割った平均と、ピークの電流を区別します。','この周期や電池は架空です。理想容量を平均電流で割った値を、実際の電池寿命の保証には使いません。'],[A('compare','同じ周期の待機だけを比べる',[],{mode:'power',period:10},{examples:[P('待機中も通常動作',{sleep:false},'長い待ち時間も5mAを使う想定です。'),P('待機時にsleep',{sleep:true},'待ち時間だけ0.05mAへ下げる想定です。')],showDerivation:true})]),"""
-          p.write_text('\n'.join(lines)+'\n')
+          p.write_text('\n'.join(lines)+ ('\n' if s.endswith('\n') else ''))
           replace('tests/media-workspaces.test.mjs','明示的な32章','明示的な33章')
           replace('tests/media-workspaces.test.mjs','n+d.chapters.length,0),32);','n+d.chapters.length,0),33);')
           Path('.github/workflows/engineering-entry-once.yml').unlink()
