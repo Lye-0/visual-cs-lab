@@ -5,6 +5,7 @@ on:
     paths:
       - tests/full-learning-audit.mjs
       - scripts/package-learning-audit.mjs
+      - scripts/review-audit-packets.mjs
       - .github/workflows/full-learning-audit.yml
   workflow_dispatch:
 permissions:
@@ -31,7 +32,8 @@ jobs:
         run: |
           mkdir -p review-output
           npm run check > review-output/all-node-tests.txt 2>&1 || { tail -n 100 review-output/all-node-tests.txt; exit 1; }
-          tail -n 16 review-output/all-node-tests.txt
+          grep -E '^# (tests|pass|fail|skipped|cancelled)' review-output/all-node-tests.txt
+          git diff --exit-code HEAD -- src scripts tests index.html package.json .github docs
       - name: Install actual browser
         run: |
           npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0
@@ -42,7 +44,9 @@ jobs:
         run: node tests/full-learning-audit.mjs
       - name: Package readable review evidence
         if: ${{ !cancelled() && matrix.browser == 'chromium' }}
-        run: node scripts/package-learning-audit.mjs
+        run: |
+          node scripts/package-learning-audit.mjs
+          node scripts/review-audit-packets.mjs
       - name: Assert tests have not edited source
         if: ${{ !cancelled() }}
         run: git diff --exit-code HEAD -- src scripts tests index.html package.json .github docs
@@ -63,18 +67,34 @@ jobs:
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
-      - name: Download only this run's Chromium evidence
+      - name: Download this run's evidence from every browser
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh run download "$GITHUB_RUN_ID" --repo "$GITHUB_REPOSITORY" --name full-learning-audit-chromium --dir /tmp/full-audit
-      - name: Store only generated review evidence on an isolated branch
+        run: |
+          for browser in chromium firefox webkit; do
+            gh run download "$GITHUB_RUN_ID" --repo "$GITHUB_REPOSITORY" --name "full-learning-audit-$browser" --dir "/tmp/full-audit/$browser"
+          done
+      - name: Store only generated evidence on an isolated branch
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -eu
-          test -f /tmp/full-audit/public-audit/index.json
-          mkdir -p /tmp/audit-publish
-          cp -R /tmp/full-audit/public-audit/. /tmp/audit-publish/
+          test -f /tmp/full-audit/chromium/public-audit/index.json
+          mkdir -p /tmp/audit-publish/browsers
+          cp -R /tmp/full-audit/chromium/public-audit/. /tmp/audit-publish/
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          summaries=[]
+          for browser in ['chromium','firefox','webkit']:
+              root=Path('/tmp/full-audit')/browser
+              r=json.loads((root/'full-audit'/f'{browser}.json').read_text())
+              summary={k:r.get(k) for k in ['sourceCommit','engine','version','summary','failures','runtime']}
+              summary['nodeTestTotals']=[line for line in (root/'all-node-tests.txt').read_text().splitlines() if line.startswith(('# tests ','# pass ','# fail ','# skipped ','# cancelled '))]
+              Path(f'/tmp/audit-publish/browsers/{browser}.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2))
+              summaries.append(summary)
+          Path('/tmp/audit-publish/results.json').write_text(json.dumps(summaries,ensure_ascii=False,indent=2))
+          PY
           cd /tmp/audit-publish
           git init -q
           git config user.name 'github-actions[bot]'
