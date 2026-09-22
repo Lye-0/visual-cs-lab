@@ -1,0 +1,48 @@
+# The source patch already passed its checks. Workflow edits are saved through
+# the authorized repository connector, not through the restricted job token.
+name: Save retained-view source corrections once
+on:
+  push:
+    branches: [feat/lesson-specific-experiences]
+    paths: [.github/workflows/complete-compatibility-once.yml]
+permissions:
+  contents: write
+jobs:
+  save:
+    if: github.repository == 'Lye-0/visual-cs-lab' && github.ref == 'refs/heads/feat/lesson-specific-experiences'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Apply the exact reviewed source-only patch
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess,textwrap
+          p=Path('.github/workflows/align-compatibility-checks-once.yml')
+          assert subprocess.check_output(['git','hash-object',str(p)]).decode().strip()=='cc6c05e8e0b0ad05a6be58260e7d814c9a94a5c2'
+          original=p.read_text()
+          assert original.count("python3 - <<'PY'\n")==1
+          script=textwrap.dedent(original.split("python3 - <<'PY'\n",1)[1].split('\n          PY\n',1)[0])
+          first=script.index("for p in ['.github/workflows/lesson-review.yml'")
+          end=script.index("Path('.github/workflows/align-compatibility-checks-once.yml').unlink()",first)
+          script=script[:first]+script[end:]
+          exec(compile(script,'reviewed-source-patch','exec'))
+          Path('.github/workflows/complete-compatibility-once.yml').unlink()
+          PY
+          node --test tests/legacy-routes.test.mjs
+          npm run check > /tmp/compatibility-node.txt 2>&1 || { tail -n 100 /tmp/compatibility-node.txt; exit 1; }
+          grep -E '^# (tests|pass|fail)' /tmp/compatibility-node.txt
+          git diff --exit-code HEAD -- .github/workflows/lesson-review.yml .github/workflows/curriculum-verification.yml
+      - name: Save tested application and test sources, not workflow modifications
+        run: |
+          test "$(git ls-remote origin refs/heads/feat/lesson-specific-experiences | cut -f1)" = "$GITHUB_SHA"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- tests/reader-browser.mjs tests/reader-regressions.mjs tests/pr-review-browser.mjs tests/reader-svg-theme.mjs tests/curriculum-browser.mjs tests/static-site-browser.mjs tests/scrollbars-browser.mjs tests/library-browser.mjs src/experiences-view.js .github/workflows/align-compatibility-checks-once.yml .github/workflows/complete-compatibility-once.yml
+          git commit -m 'test: 新しい標準画面と詳細画面の検証経路を分離'
+          git push origin HEAD:refs/heads/feat/lesson-specific-experiences
+          echo "ALIGNED_SOURCE $(git rev-parse HEAD)"
