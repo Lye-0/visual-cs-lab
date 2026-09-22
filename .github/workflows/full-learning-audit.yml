@@ -1,0 +1,87 @@
+name: Full 314-unit verification
+on:
+  push:
+    branches: [feat/lesson-specific-experiences]
+    paths:
+      - tests/full-learning-audit.mjs
+      - scripts/package-learning-audit.mjs
+      - .github/workflows/full-learning-audit.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: full-learning-audit-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Check committed source and all calculation tests
+        run: |
+          mkdir -p review-output
+          npm run check > review-output/all-node-tests.txt 2>&1 || { tail -n 100 review-output/all-node-tests.txt; exit 1; }
+          tail -n 16 review-output/all-node-tests.txt
+      - name: Install actual browser
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0
+          npx playwright install --with-deps ${{ matrix.browser }} > review-output/install.txt 2>&1 || { tail -n 40 review-output/install.txt; exit 1; }
+      - name: Visit every chapter at all three widths
+        env:
+          BROWSER: ${{ matrix.browser }}
+        run: node tests/full-learning-audit.mjs
+      - name: Package readable review evidence
+        if: ${{ !cancelled() && matrix.browser == 'chromium' }}
+        run: node scripts/package-learning-audit.mjs
+      - name: Assert tests have not edited source
+        if: ${{ !cancelled() }}
+        run: git diff --exit-code HEAD -- src scripts tests index.html package.json .github docs
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: full-learning-audit-${{ matrix.browser }}
+          path: review-output/
+          retention-days: 7
+  evidence:
+    needs: audit
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Download only this run's Chromium evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh run download "$GITHUB_RUN_ID" --repo "$GITHUB_REPOSITORY" --name full-learning-audit-chromium --dir /tmp/full-audit
+      - name: Store only generated review evidence on an isolated branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          test -f /tmp/full-audit/public-audit/index.json
+          mkdir -p /tmp/audit-publish
+          cp -R /tmp/full-audit/public-audit/. /tmp/audit-publish/
+          cd /tmp/audit-publish
+          git init -q
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git checkout -b "review/full-audit-$GITHUB_RUN_ID"
+          git add -- .
+          git commit -m "docs: 全314単元の画面検証の証跡を保存 $GITHUB_SHA"
+          gh auth setup-git
+          git remote add origin "https://github.com/$GITHUB_REPOSITORY.git"
+          git push origin HEAD:"refs/heads/review/full-audit-$GITHUB_RUN_ID"
