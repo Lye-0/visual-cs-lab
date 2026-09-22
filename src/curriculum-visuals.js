@@ -27,11 +27,12 @@ function cells(v,focus,bits=false){
  const selected=focus?.match(/^cv:position:(\d+)$/),index=selected?Number(selected[1]):-1;
  return `<div class="cv-cells ${bits?'cv-bit-rows':''}">${(v.rows||[]).map((row,i)=>`<section class="cv-cell-row"><h3>${h(row.label||'行'+(i+1))}</h3><div class="cv-cell-values">${(row.values||[]).map((x,j)=>`<button type="button" class="cv-cell${j===index||j===row.active||j===v.active?' is-linked':''}" data-r-focus="cv:position:${j}" aria-label="${h(row.label||'行'+(i+1))}、位置${j+1}、${h(value(x))}" aria-pressed="${j===index}"><small>${bits?j+1:j}</small><span>${fmt(x)}</span></button>`).join('')||'<span class="cv-empty">空</span>'}</div></section>`).join('')}</div><p class="cv-caption">${bits?'位置は左から1始まりです。':'添字は0始まりです。'}同じ位置を選ぶと、複数の行の値を縦に比較できます。</p>`;
 }
+let graphInstance=0;
 function graph(v,focus){
  const nodes=v.nodes||[],edges=v.edges||[],count=nodes.length;if(!count)return '<p class="cv-empty">頂点がありません。</p>';
  const columns=count<=4?2:count<=12?4:6,rows=Math.ceil(count/columns),w=Math.max(650,columns*160),height=Math.max(250,rows*140+60),positions=new Map();
  nodes.forEach((node,i)=>positions.set(String(node.id),{x:85+(i%columns)*(w-170)/Math.max(1,columns-1),y:75+Math.floor(i/columns)*140,node}));
- const marker='cv-arrow-'+String(count)+'-'+String(edges.length),active=new Set((Array.isArray(v.active)?v.active:[v.active]).filter(x=>x!==undefined).map(String));
+ const marker='vcl-cv-arrow-'+(++graphInstance),active=new Set((Array.isArray(v.active)?v.active:[v.active]).filter(x=>x!==undefined).map(String));
  let drawing=`<defs><marker id="${marker}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#7995ad"/></marker></defs>`;
  edges.forEach((edge,i)=>{
   const a=positions.get(String(edge.from)),b=positions.get(String(edge.to));if(!a||!b)return;
