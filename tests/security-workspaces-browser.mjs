@@ -1,4 +1,5 @@
-// Only committed files over HTTP. No repairs, generated HTML or fake click handlers.
+// Only committed files over HTTP. Cryptographic cancellation uses a controlled
+// completion gate around the actual HMAC, never a replacement signature/result.
 import assert from 'node:assert/strict';
 import {spawn} from 'node:child_process';
 import {mkdir,writeFile} from 'node:fs/promises';
@@ -89,11 +90,16 @@ try{
    await open(page,'gap-121');await click(page,'toggle:2');await click(page,'toggle:5');assert.match(await page.locator('[data-sec-verdict]').textContent(),/17個/);
    await click(page,'toggle:1');assert.equal(await page.locator('[data-sec-verdict]').textContent(),'一意に決まる：7');await click(page,'undo');assert.match(await page.locator('[data-sec-verdict]').textContent(),/17個/);
   });
-  await check(width+': reset and navigation discard delayed cryptography, without stale DOM writes',async()=>{
+  await check(width+': reset and navigation discard pending genuine HMAC completion',async()=>{
    await open(page,'gap-114');
-   await page.evaluate(()=>{const S=CSL.experiences.securityDesk,original=S.jwt;S.jwt=async(...args)=>{await new Promise(r=>setTimeout(r,120));return original(...args);};});
-   await page.locator('[data-sec-action="issue"]').click();await click(page,'reset');await sleep(170);assert.equal((await state(page)).token,'');
-   const retired=await page.locator('[data-sec-state]').elementHandle();await page.locator('[data-sec-action="issue"]').click();await page.evaluate(()=>{location.hash='#/catalog';});await page.locator('#catalog-results').waitFor();await sleep(170);
+   await page.evaluate(()=>{
+    const C=CSL.curriculum.cryptoTools,original=C.hmac;
+    C.hmac=(...args)=>new Promise((resolve,reject)=>{window.__secPending=true;window.__secRelease=async()=>{try{resolve(await original(...args));}catch(e){reject(e);}finally{window.__secPending=false;}};});
+   });
+   const finish=()=>page.evaluate(async()=>{await window.__secRelease();await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));});
+   await page.locator('[data-sec-action="issue"]').click();await page.waitForFunction(()=>window.__secPending===true);await click(page,'reset');await finish();assert.equal((await state(page)).token,'');
+   const retired=await page.locator('[data-sec-state]').elementHandle();await page.locator('[data-sec-action="issue"]').click();await page.waitForFunction(()=>window.__secPending===true);
+   await page.evaluate(()=>{location.hash='#/catalog';});await page.locator('#catalog-results').waitFor();await finish();
    assert.equal(await retired.evaluate(el=>JSON.parse(el.dataset.secState).token),'');assert.equal(await page.locator('[data-sec-state]').count(),0);
   });
   await check(width+': no failed requests or CSP violations',async()=>{assert.deepEqual(httpErrors,[]);assert.deepEqual(await page.evaluate(()=>window.__csp),[]);});
