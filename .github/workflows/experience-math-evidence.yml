@@ -1,0 +1,48 @@
+name: Mathematical explanation and correspondence review
+on:
+  push:
+    branches: [feat/lesson-specific-experiences]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: math-evidence-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  browsers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Check actual entry and independent expectations
+        run: |
+          mkdir -p review-output
+          node scripts/build.mjs --check
+          node --test tests/math-evidence.test.mjs > review-output/math-models.txt 2>&1 || { cat review-output/math-models.txt; exit 1; }
+          tail -n 12 review-output/math-models.txt
+      - name: Install browser tooling
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0
+          npx playwright install --with-deps ${{ matrix.browser }} > review-output/math-install.txt 2>&1 || { tail -n 40 review-output/math-install.txt; exit 1; }
+      - name: Operate the committed mathematical workbooks
+        env:
+          BROWSER: ${{ matrix.browser }}
+        run: node tests/math-evidence-browser.mjs
+      - name: Verification does not rewrite sources
+        if: ${{ !cancelled() }}
+        run: git diff --exit-code HEAD -- src scripts tests index.html package.json .github docs
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: math-evidence-${{ matrix.browser }}
+          path: review-output/
+          retention-days: 14

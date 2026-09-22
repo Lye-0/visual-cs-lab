@@ -1,0 +1,39 @@
+/* Mathematical workbooks keep operands, intermediate values and outcomes visible. */
+.ex-me-product{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr);gap:12px;align-items:center;margin:18px 0}
+.ex-me-product>.ex-sec-box,.ex-me-two>*{min-width:0}
+.ex-me-symbol{font-size:1.65rem;text-align:center;color:#91a5b6}
+.ex-me-matrix{display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));gap:6px;border-inline:2px solid #5c748a;border-radius:8px;padding:8px}
+.ex-me-matrix>div,.ex-me-matrix>button{min-width:0;min-height:54px;padding:7px 3px;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow-wrap:anywhere;font-variant-numeric:tabular-nums;background:#121c27;border:1px solid #2a394b;color:#e1eaf1;border-radius:6px}
+.ex-me-matrix small{font-size:.68rem;line-height:1.2;color:#9eafbf;margin-bottom:5px}
+.ex-me-matrix .is-operand{background:#213d3a;border:2px solid #80ceba}
+.ex-me-matrix>[aria-pressed=true]{background:#403526;border:2px solid #edbd77}
+.ex-me-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:16px 0}
+.ex-me-plane{width:100%;height:auto;display:block;overflow:hidden;color:#d7e3ed;touch-action:pan-y;background:#101923;border-radius:12px}
+.ex-me-plane text{fill:#bed0df;font-size:12px;font-family:inherit}
+.ex-me-plane:focus-visible{outline:3px solid #80ceba;outline-offset:3px}
+.ex-me-plot-bg{fill:#131f2b;stroke:#314353}
+.ex-me-axis{fill:none;stroke:#698498;stroke-width:1}
+.ex-me-contour{fill:none;stroke:#385568;stroke-width:1.2}
+.ex-me-gradient{stroke:#8fdfc4;stroke-width:3;fill:none}
+.ex-me-direction{stroke:#f2bc72;stroke-width:2.5;stroke-dasharray:5 3;fill:none}
+.ex-me-gradient-tip{fill:#8fdfc4}.ex-me-direction-tip{fill:#f2bc72}
+.ex-me-point{fill:#ecf5fb;stroke:#101923;stroke-width:2}
+.ex-me-next{fill:#101923;stroke:#ecf5fb;stroke-width:2}
+.ex-me-equation-row{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:baseline;gap:10px}
+.ex-me-equation-row>span{color:#9badbd;font-size:.8rem}
+.ex-me-equation-row .ex-equation{margin:6px 0;min-width:0}
+.ex-row-step details{margin-top:12px;padding:10px;border-left:3px solid #79cdb8;background:#13222b}
+.ex-row-step details>summary{cursor:pointer;color:#cce8e1}
+.ex-me-ode .ex-family-line{stroke:#4f5d70;stroke-width:1;fill:none}
+.ex-me-ode .ex-exact{stroke:#86d7bc;stroke-width:2;fill:none}
+.ex-me-ode .ex-euler{stroke:#e8b27b;stroke-width:2;stroke-dasharray:7 4;fill:none}
+.ex-me-ode .ex-rk{stroke:#8dbafb;stroke-width:2;stroke-dasharray:2 4;fill:none}
+.ex-me-ode .ex-euler-dot{fill:#e8b27b}
+.ex-me-ode .ex-me-selected{fill:none;stroke:#f2efe2;stroke-width:2}
+.ex-me-ode text{fill:#afc3d4;font:11px sans-serif}
+.ex-me-ode .ex-grid-line{stroke:#273545;fill:none;stroke-width:.6}
+.ex-me-ode{display:block;max-width:720px;width:100%;height:auto;margin:auto}
+.ex-kind-rowlab input[name=factor]{font-variant-numeric:tabular-nums;max-width:100%}
+@media(max-width:980px){.ex-me-product{grid-template-columns:minmax(0,1fr)}.ex-me-symbol{line-height:1}}
+@media(max-width:720px){.ex-me-two{grid-template-columns:minmax(0,1fr)}.ex-me-product{gap:8px}.ex-me-matrix{padding:6px}.ex-me-equation-row{display:block}.ex-me-matrix>button,.ex-me-matrix>div{font-size:.85rem}}
+@media(forced-colors:active){.ex-me-matrix .is-operand{border:3px dashed Highlight}.ex-me-matrix>[aria-pressed=true]{border:3px solid Highlight}.ex-me-gradient,.ex-me-direction,.ex-me-axis,.ex-me-contour{stroke:CanvasText}.ex-me-gradient-tip,.ex-me-direction-tip,.ex-me-point{fill:CanvasText}}
