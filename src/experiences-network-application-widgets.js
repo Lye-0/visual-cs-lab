@@ -14,11 +14,14 @@ X.registerWidget('signal-decision',(root,a,c)=>{
    return `<div class="ex-actions">${['BPSK','QPSK','16QAM'].map(mode=>b(mode+'で最初から','mode:'+mode,`aria-pressed="${s.mode===mode}"`)).join('')}</div><div class="ex-net-two">${box('候補点・判定境界・受信点',plane)}${box('送ったものと、受信側が選ぶもの',text('送信bit：'+s.sent)+`<div class="ex-actions">${points.map(p=>b(p.bits+'を送信','send:'+p.bits,`aria-pressed="${s.sent===p.bits}"`)).join('')}</div>`+`<p class="ex-net-value" data-net-decision>${v.nearest.length>1?'同じ距離の候補が複数あります':h(v.nearest[0].bits)}</p>`+text(v.nearest.length>1?'境界上の同距離です。勝手に一方が正解と決めません。':v.error?'受信側は別のbitを選びました。教材側は送信bitを知るため比較できます。':'この受信点からは送ったbitと同じ候補を選びます。')+`<form class="ex-net-form">${field('I','受信点 I',s.received[0],{min:-2,max:2,step:'any'})}${field('Q','受信点 Q',s.received[1],{min:-2,max:2,step:'any'})}${b('数値で受信点を動かす','move')}</form>`)}</div>${box('各候補との距離の二乗',table(['候補bit','I','Q','距離²'],v.distances.map(p=>[p.bits,X.format(p.z[0]),X.format(p.z[1]),X.format(p.d2)])))}${text('平均symbol energyを1にそろえた配置です。手で動かした一例から理論BERや全方式の性能順位を決めません。OFDMの合成・分離は次の章で扱います。')}`;
   }
  });
- ui.scope.on(root,'pointerdown',e=>{
+ // Complete the pointer's native focusing sequence before replacing its SVG.
+ // Re-rendering during pointerdown let the following mousedown move focus back
+ // to a detached target/body, so the next arrow key never reached the graph.
+ ui.scope.on(root,'click',e=>{
   const svg=e.target.closest('[data-net-signal]');if(!svg||e.button!==0)return;
   const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;const matrix=svg.getScreenCTM();if(!matrix)return;const local=p.matrixTransform(matrix.inverse());
   if(local.x<30||local.x>390||local.y<30||local.y>390)return;
-  svg.focus({preventScroll:true});ui.apply({kind:'move',z:[(local.x-210)/90,(210-local.y)/90]},{fresh:true});root.querySelector('[data-net-signal]')?.focus({preventScroll:true});
+  e.preventDefault();ui.apply({kind:'move',z:[(local.x-210)/90,(210-local.y)/90]},{fresh:true});root.querySelector('[data-net-signal]')?.focus({preventScroll:true});
  });
  ui.scope.on(root,'keydown',e=>{
   if(!e.target.matches('[data-net-signal]')||!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;
