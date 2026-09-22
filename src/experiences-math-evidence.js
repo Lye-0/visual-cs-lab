@@ -73,6 +73,7 @@ E.rowView=s=>{
 E.productStart=()=>({A:[[1,2,3],[4,5,6]],B:[[1,0],[0,1],[1,1]],order:'AB',row:0,col:0,log:[]});
 const matrix=text=>{
  if(typeof text!=='string'||text.length>256)throw Error('行列は256文字以内です。');
+ if(!text.trim()||/(^|[;\n,])\s*([;\n,]|$)/.test(text))throw Error('空の行や成分は使えません。');
  const rows=text.trim().split(/[;\n]+/).map(row=>row.trim().split(/[ ,]+/).map(Number));
  if(rows.length<1||rows.length>4||rows.some(row=>row.length!==rows[0].length||row.length<1||row.length>4||row.some(x=>!Number.isFinite(x)||Math.abs(x)>20)))throw Error('1〜4行・1〜4列の矩形で、各成分は−20〜20です。空の行や式は使いません。');
  if(!text.trim()||/[;,]\s*[,;]/.test(text))throw Error('空の成分を入れないでください。');return rows;

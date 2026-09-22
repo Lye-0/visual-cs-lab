@@ -53,37 +53,4 @@ X.registerWidget('vectors',(root,a,current)=>{
  s.on(root,'click',e=>{if(e.target.closest('[data-ex-origin]')){u=original.u.slice();v=original.v.slice();w=original.w.slice();theta=original.theta;paintFields();paint();}if(e.target.closest('[data-ex-parallel]')){v=u.slice();paintFields();paint();}if(e.target.closest('[data-ex-transform]')){const y=[3*w[0]+w[1],w[0]+3*w[1]],m=Math.max(1,Math.max(...y.map(Math.abs))/3);w=y.map(x=>Math.round(x/m*4)/4);paintFields();paint();root.querySelector('[data-ex-status]').textContent='画面に収まるよう長さを共通倍率で縮め、向きを追っています。';}});
  paintFields();paint();
 });
-X.registerWidget('rowlab',(root,a,current)=>{
- const s=X.scope(root,current),inverse=!!a.inverse,initial=inverse?[[2,1,1,0],[1,-1,0,1]]:[[2,1,5],[1,-1,1]];let history=[{matrix:X.clone(initial),reason:'初期の式。各列の位置は途中で変えません。'}];
- root.innerHTML=`<p class="ex-operation-hint">${inverse?'左のAをIへ変える同じ操作を右のIへ行うと、右にA⁻¹が残ります。':'二つの式を同時に満たす点を探します。どの行操作も、同じ解を保つ必要があります。'}</p><form class="ex-row-controls"><label>対象の行<select name="row"><option value="0">行1</option><option value="1">行2</option></select></label><label>行う操作<select name="kind"><option value="add">別の行の倍を足す</option><option value="scale">この行を定数倍</option><option value="swap">別の行と交換</option></select></label><label>別の行<select name="other"><option value="1">行2</option><option value="0">行1</option></select></label><label>倍率<input type="number" name="factor" value="1" min="-100" max="100" step="any" required></label><button type="submit" class="ex-button ex-primary">この行操作を行う</button></form><div class="ex-actions">${B('ひとつ前の行列へ戻す','data-row-undo')}${B('最初の式へ戻す','data-row-reset')}</div><p data-ex-status role="status"></p><div data-row-history></div>`;
- const paint=()=>{
-  root.querySelector('[data-row-history]').innerHTML=history.map((entry,i)=>{
-   const a=entry.matrix,heads=inverse?['xの係数','yの係数','右側・列1','右側・列2']:['xの係数','yの係数','右辺'];
-   const eq=a.map(r=>`${F(r[0])}x ${r[1]<0?'−':'＋'} ${F(Math.abs(r[1]))}y = ${F(r[2])}`);
-   return `<section class="ex-row-step" data-row-step="${i}"><span>${i===0?'出発点':'操作 '+i}</span><p>${h(entry.reason)}</p>${inverse?'':X.html.formula(eq.join('　／　'))}${X.html.table(heads,a.map(r=>r.map(v=>F(v))))}</section>`;
-  }).join('');
-  root.querySelector('[data-row-undo]').disabled=history.length===1;
-  const last=history.at(-1).matrix,unit=last.every((r,i)=>r.slice(0,2).every((v,j)=>Math.abs(v-+(i===j))<1e-8));
-  const status=root.querySelector('[data-ex-status]');status.className='';status.textContent=unit?(inverse?'左側が単位行列になりました。右側が逆行列です。':'x = '+F(last[0][2])+'、y = '+F(last[1][2])+'。元の式へ戻して代入しても両方を満たします。'):'行をどう変えたかと、変えてよい理由を下に残しています。';
-  current.completed.add(s.id);
- };
- s.on(root.querySelector('form'),'submit',e=>{e.preventDefault();try{if(history.length>30)throw Error('この小例では30操作までです。戻すか初期化してください。');const f=e.target.elements,op={kind:f.kind.value,row:Number(f.row.value),other:Number(f.other.value),factor:Number(f.factor.value)};if(f.factor.value==='')throw Error('倍率を入力してください。');const matrix=X.models.rowOperation(history.at(-1).matrix,op),r=op.row+1,o=op.other+1;const reason=op.kind==='add'?`行${r} ← 行${r} + (${F(op.factor)}) × 行${o}。同じ解は二つの式を満たすため、この和も満たします。逆の倍率を足せば元に戻せます。`:op.kind==='scale'?`行${r}を${F(op.factor)}倍。0以外なので逆数を掛けて戻せます。`:`行${r}と行${o}を交換。条件の並び順だけを変えています。`;history.push({matrix,reason});paint();}catch(err){s.error(err);}});
- s.on(root,'click',e=>{if(e.target.closest('[data-row-undo]')){if(history.length>1)history.pop();paint();}if(e.target.closest('[data-row-reset]')){history=history.slice(0,1);paint();}});paint();
-});
-X.registerWidget('ode',(root,a,current)=>{
- const s=X.scope(root,current);let initial=2,k=1,hstep=.25,rows=[];
- root.innerHTML=`<p>この小例で未知なのは曲線y(t)です。方程式 y′=−ky は、各点での傾きを指定します。初期条件y(0)が、その中の1本を選びます。</p><form class="ex-inputs"><label>最初の値 y(0)<input name="initial" type="number" min="-3" max="3" step="0.5" value="2" required></label><label>減衰係数 k<input name="k" type="number" min="0" max="3" step="0.25" value="1" required></label><label>一歩の時間 h<input name="h" type="number" min="0.05" max="1" step="0.05" value="0.25" required></label><button type="submit" class="ex-button">この初期条件からやり直す</button></form><div data-ode-plot></div><div class="ex-actions">${B('今の傾きから一歩だけ進める','data-ode-step')}${B('一歩戻す','data-ode-back')}</div><p data-ex-status role="status"></p><div data-ode-table></div><p class="ex-counterexample">曲線全体を求める解析解と、刻みごとに値を近似する数値解は別の方法です。ここでは減衰の方程式だけを実計算し、任意の微分方程式の自動解法とはしません。</p>`;
- function reset(){rows=[{t:0,euler:initial,rk4:initial,exact:initial,slope:-k*initial,stages:[]}];paint();}
- function paint(){
-  const transform=([t,y])=>[35+t*105,160-y*45];let curves='';
-  for(const y0 of [-3,-2,-1,0,1,2,3])curves+=`<polyline class="ex-family-line" points="${Array.from({length:61},(_,i)=>transform([i/15,y0*Math.exp(-k*i/15)]).join(',')).join(' ')}"/>`;
-  const selected=Array.from({length:61},(_,i)=>transform([i/15,initial*Math.exp(-k*i/15)]).join(',')).join(' '),euler=rows.map(r=>transform([r.t,r.euler]).join(',')).join(' '),rk=rows.map(r=>transform([r.t,r.rk4]).join(',')).join(' ');
-  root.querySelector('[data-ode-plot]').innerHTML=`<svg viewBox="0 0 500 340" class="ex-ode-plot" role="img" aria-label="灰色は別の初期条件、ミントは解析解、橙はEuler法、青はRK4"><path class="ex-axis" d="M35 15V320M20 160H480"/>${curves}<polyline class="ex-exact" points="${selected}"/><polyline class="ex-euler" points="${euler}"/><polyline class="ex-rk" points="${rk}"/>${rows.map(r=>{const [x,y]=transform([r.t,r.euler]);return `<circle class="ex-euler-dot" cx="${x}" cy="${y}" r="4"/>`;}).join('')}<text class="ex-tick" x="466" y="180">t</text><text class="ex-tick" x="46" y="22">y</text></svg><p class="ex-legend">灰：別の初期値　／　ミント：y(0)e⁻ᵏᵗ　／　橙：Euler　／　青：RK4</p>`;
-  root.querySelector('[data-ode-table]').innerHTML=X.html.table(['時刻t','その点の傾き','Euler','RK4','解析解','Eulerの誤差'],rows.map(r=>[r.t,r.slope,r.euler,r.rk4,r.exact,r.euler-r.exact].map(x=>F(x,6))));
-  const last=rows.at(-1);root.querySelector('[data-ex-status]').textContent=rows.length===1?'初期条件を選びました。一歩進めると近似計算が始まります。':`直前のEulerの値に h×傾き を足しました。RK4は4つの傾き ${last.stages.map(x=>F(x,3)).join(', ')} を重み付きで使います。`;
-  root.querySelector('[data-ode-step]').disabled=last.t+hstep>4.000001;root.querySelector('[data-ode-back]').disabled=rows.length===1;current.completed.add(s.id);
- }
- s.on(root.querySelector('form'),'submit',e=>{e.preventDefault();if(!e.target.reportValidity())return;initial=Number(e.target.elements.initial.value);k=Number(e.target.elements.k.value);hstep=Number(e.target.elements.h.value);reset();});
- s.on(root,'click',e=>{if(e.target.closest('[data-ode-step]')){const old=rows.at(-1);if(old.t+hstep>4.00001)return;const eu=X.models.odeStep(old.euler,k,hstep),rk=X.models.odeStep(old.rk4,k,hstep),t=Number((old.t+hstep).toFixed(8));rows.push({t,euler:eu.euler,rk4:rk.rk4,exact:initial*Math.exp(-k*t),slope:eu.slope,stages:rk.stages});paint();}if(e.target.closest('[data-ode-back]')){if(rows.length>1)rows.pop();paint();}});reset();
-});
 })();
