@@ -34,6 +34,7 @@ E.directionSections=s=>{
   const at=t=>({t,height:E.surface(s.shape,s.point[0]+t*section.direction[0],s.point[1]+t*section.direction[1]),tangent:v.value+t*slope});
   return {...section,slope,origin:v.value,selected:at(s.step),samples:Array.from({length:61},(_,i)=>at((i-30)/40))};
  });
+};
 if(typeof document==='undefined')return;
 const h=CSL.h,F=X.format;
 E.renderRowGeometry=g=>{

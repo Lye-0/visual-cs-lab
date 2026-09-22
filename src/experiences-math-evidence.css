@@ -37,3 +37,20 @@
 @media(max-width:980px){.ex-me-product{grid-template-columns:minmax(0,1fr)}.ex-me-symbol{line-height:1}}
 @media(max-width:720px){.ex-me-two{grid-template-columns:minmax(0,1fr)}.ex-me-product{gap:8px}.ex-me-matrix{padding:6px}.ex-me-equation-row{display:block}.ex-me-matrix>button,.ex-me-matrix>div{font-size:.85rem}}
 @media(forced-colors:active){.ex-me-matrix .is-operand{border:3px dashed Highlight}.ex-me-matrix>[aria-pressed=true]{border:3px solid Highlight}.ex-me-gradient,.ex-me-direction,.ex-me-axis,.ex-me-contour{stroke:CanvasText}.ex-me-gradient-tip,.ex-me-direction-tip,.ex-me-point{fill:CanvasText}}
+
+/* Same equations and point across the correspondence panels. */
+.ex-me-equation-plot,.ex-me-section-plot{width:100%;height:auto;display:block;max-width:440px;margin:auto}
+.ex-me-equation-plot text,.ex-me-section-plot text{fill:#bfcedb;font:12px sans-serif}
+.ex-me-grid{stroke:#293c4e;stroke-width:1;fill:none}
+.ex-me-row-line{stroke-width:2;fill:none;opacity:.75}
+.ex-me-row-line.row-0{stroke:#88d6bc}
+.ex-me-row-line.row-1{stroke:#eebf7b;stroke-dasharray:8 5}
+.ex-me-row-line.selected{stroke-width:3.5;opacity:1}
+.ex-me-intersection{fill:#eef4f7;stroke:#111b26;stroke-width:2}
+.ex-me-section-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.ex-me-section-grid>section{min-width:0}
+.ex-me-section-grid h5{font-size:.94rem;line-height:1.65}
+.ex-me-section-curve{stroke:#8dd8c0;stroke-width:2.5;fill:none}
+.ex-me-section-tangent{stroke:#eebf7b;stroke-width:2;stroke-dasharray:6 4;fill:none}
+@media(max-width:1000px){.ex-me-section-grid{grid-template-columns:minmax(0,1fr)}}
+@media(forced-colors:active){.ex-me-row-line.row-0,.ex-me-row-line.row-1,.ex-me-section-curve,.ex-me-section-tangent{stroke:CanvasText}.ex-me-intersection{fill:CanvasText;stroke:Canvas}}
