@@ -1,0 +1,70 @@
+# One bounded authoring change. This workflow removes itself; tests never write.
+name: Connect equation and section correspondence once
+on:
+  push:
+    branches: [feat/lesson-specific-experiences]
+    paths: [.github/workflows/connect-math-correspondence-once.yml]
+permissions:
+  contents: write
+jobs:
+  integrate:
+    if: github.repository == 'Lye-0/visual-cs-lab' && github.ref == 'refs/heads/feat/lesson-specific-experiences'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Apply inspected source changes with exact guards
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          hashes={'scripts/modules.mjs':'b90d543b3a064e183a3c9e387b61b9ff4f23d960','src/experiences-math-workbooks.js':'04361b43d07fb2842e628e933ab1592cf6249117','src/experiences-math-evidence.css':'b5ad5fb4d76d8bea493217ba0a5797aa3e7c2e21'}
+          for p,sha in hashes.items():
+              assert subprocess.check_output(['git','hash-object',p]).decode().strip()==sha,('changed',p)
+          def replace(path,old,new):
+              p=Path(path);s=p.read_text();assert s.count(old)==1,(path,old);p.write_text(s.replace(old,new,1))
+          replace('scripts/modules.mjs','"experiences-ode-evidence"];','"experiences-ode-evidence","experiences-math-correspondence"];')
+          p='src/experiences-math-workbooks.js'
+          replace(p,"box('偏微分 → 勾配 → 方向微分'","E.renderDirectionSections(s)+box('偏微分 → 勾配 → 方向微分'")
+          replace(p,'<div data-row-result></div><div data-row-history></div>','<div data-row-geometry></div><div data-row-result></div><div data-row-history></div>')
+          replace(p,'const view=E.rowView(state);root.dataset.rowState=JSON.stringify(state);',"const view=E.rowView(state);root.dataset.rowState=JSON.stringify(state);root.querySelector('[data-row-geometry]').innerHTML=E.renderRowGeometry(E.rowGeometry(state));")
+          replace(p,"  const preset=event.target.closest('[data-row-preset]');", "  const selected=event.target.closest('[data-row-select]');if(selected){state=E.row(state,{kind:'select',index:Number(selected.dataset.rowSelect)});paint();root.querySelector('[data-row-select=\"'+state.selected+'\"]')?.focus({preventScroll:true});return;}\n  const preset=event.target.closest('[data-row-preset]');")
+          p=Path('src/experiences-math-evidence.css')
+          with p.open('a') as f:
+              f.write('''
+          /* Same equations and point across the correspondence panels. */
+          .ex-me-equation-plot,.ex-me-section-plot{width:100%;height:auto;display:block;max-width:440px;margin:auto}
+          .ex-me-equation-plot text,.ex-me-section-plot text{fill:#bfcedb;font:12px sans-serif}
+          .ex-me-grid{stroke:#293c4e;stroke-width:1;fill:none}
+          .ex-me-row-line{stroke-width:2;fill:none;opacity:.75}
+          .ex-me-row-line.row-0{stroke:#88d6bc}
+          .ex-me-row-line.row-1{stroke:#eebf7b;stroke-dasharray:8 5}
+          .ex-me-row-line.selected{stroke-width:3.5;opacity:1}
+          .ex-me-intersection{fill:#eef4f7;stroke:#111b26;stroke-width:2}
+          .ex-me-section-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+          .ex-me-section-grid>section{min-width:0}
+          .ex-me-section-grid h5{font-size:.94rem;line-height:1.65}
+          .ex-me-section-curve{stroke:#8dd8c0;stroke-width:2.5;fill:none}
+          .ex-me-section-tangent{stroke:#eebf7b;stroke-width:2;stroke-dasharray:6 4;fill:none}
+          @media(max-width:1000px){.ex-me-section-grid{grid-template-columns:minmax(0,1fr)}}
+          @media(forced-colors:active){.ex-me-row-line.row-0,.ex-me-row-line.row-1,.ex-me-section-curve,.ex-me-section-tangent{stroke:CanvasText}.ex-me-intersection{fill:CanvasText;stroke:Canvas}}
+          ''')
+          Path('.github/workflows/connect-math-correspondence-once.yml').unlink()
+          PY
+          node --check src/experiences-math-workbooks.js
+          node --check src/experiences-math-correspondence.js
+          npm run build
+          node --test tests/math-evidence.test.mjs tests/math-correspondence.test.mjs
+          node scripts/audit-learning-experiences.mjs
+      - name: Commit actual integrated source on the existing work branch only
+        run: |
+          test "$(git ls-remote origin refs/heads/feat/lesson-specific-experiences | cut -f1)" = "$GITHUB_SHA"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- scripts/modules.mjs src/experiences-math-workbooks.js src/experiences-math-evidence.css index.html .github/workflows/connect-math-correspondence-once.yml
+          git commit -m 'feat: 行操作の交点と勾配の断面を同じ対象へ連動'
+          git push origin HEAD:refs/heads/feat/lesson-specific-experiences
+          echo "Integrated $(git rev-parse HEAD)"

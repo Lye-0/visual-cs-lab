@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "baseline": "645bd529b805687cd0d36b9b4912809aafcb8183",
+  "reviewPurpose": "全314単元を登録した後の、単元ごとの教え方の見直し。自動検査を目視や計画達成の代わりにしない。",
+  "reviews": [
+    {
+      "id": "c03-matrix",
+      "originalPlan": "基底の行き先を直接動かし、行列の各列と入力の線形結合を対応させる。",
+      "codeReview": "revised",
+      "planReview": "partial",
+      "visualReview": "pending",
+      "changes": ["既存の基底操作とmeaningのURLを維持", "積の結果セルから左の行と右の列と和へ戻るproduct章を追加", "ABとBAの寸法と結果を比較"],
+      "remaining": ["基底図の許容入力全域での見やすさを目視確認", "本文と図の語の対応を学習者の視点で最終確認"],
+      "sourcePaths": ["src/experiences-foundations.js", "src/experiences-geometry.js", "src/experiences-math-evidence.js", "src/experiences-math-workbooks.js"]
+    },
+    {
+      "id": "gap-002",
+      "originalPlan": "方程式・拡大係数行列・交点を対応させ、行操作の意味と履歴を残し、逆行列を別章で扱う。",
+      "codeReview": "revised",
+      "planReview": "partial",
+      "visualReview": "pending",
+      "changes": ["分数の入力と有理数のままの行操作", "各成分の倍率・参照元・加算結果と可逆性の理由を残す", "元と現在の二つの式を直線と不変の共通点で並べる", "0=0と0=1は直線ではなく全平面・空集合として区別", "元の方程式への代入と逆行列の積を検算"],
+      "remaining": ["説明量と図・途中式の配置をPCと狭い画面で目視確認", "解が無数になる場合の自由変数への説明を関連章と照合"],
+      "sourcePaths": ["src/experiences-math.js", "src/experiences-math-evidence.js", "src/experiences-math-workbooks.js", "src/experiences-math-correspondence.js"]
+    },
+    {
+      "id": "gap-006",
+      "originalPlan": "偏微分は断面、勾配は等高線と方向、ヤコビ行列は小さな変形、重積分は領域として目的別に見せる。同じ点と記号を対応させる。",
+      "codeReview": "revised",
+      "planReview": "partial",
+      "visualReview": "pending",
+      "changes": ["点と方向を独立したクリック・キー・数値操作にする", "等高線・勾配・単位方向・内積・接平面の予測を対応", "同じ点のx断面・y断面・選択方向の断面を共通スケールで表示", "零勾配を極小と断定しない", "従来の一般係数の計算を別章に保持"],
+      "remaining": ["ヤコビ行列の局所変形と重積分の領域操作を個別に仕上げる", "立体表示が理解を助けるか、現在の断面と比較して判断", "全体の説明と狭い画面の目視確認"],
+      "sourcePaths": ["src/experiences-math.js", "src/experiences-math-evidence.js", "src/experiences-math-workbooks.js", "src/experiences-math-correspondence.js"]
+    },
+    {
+      "id": "gap-008",
+      "originalPlan": "未知が関数であることと初期条件の役割から始め、固定例の解析解を読んだ後、Eulerの一歩とRK4の複数の傾きを比較する。",
+      "codeReview": "revised",
+      "planReview": "partial",
+      "visualReview": "pending",
+      "changes": ["出発時刻の傾きを到着時刻の傾きと読めた表記を修正", "出発値・傾き・刻み・到着値を一つの計算として残す", "RK4の仮評価値・評価時刻・傾き・重みを表示", "大きい数値誤差も軸を広げて表示し、過去の一歩を選べる"],
+      "remaining": ["解の族・数値計算・解析解の章間の導線を目視確認", "図の自動縮尺が比較時に誤解を生まないか最終確認"],
+      "sourcePaths": ["src/experiences-math.js", "src/experiences-ode-evidence.js"]
+    }
+  ]
+}
