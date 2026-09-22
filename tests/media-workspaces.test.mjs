@@ -9,9 +9,9 @@ const near=(actual,expected,tolerance=1e-9)=>assert.ok(Math.abs(actual-expected)
 const atomic=(fn,s,a)=>{const before=structuredClone(s);assert.throws(()=>fn(s,a));assert.deepEqual(s,before);};
 const all=Array.from({length:11},(_,i)=>'gap-'+(133+i));
 const direct=['fourier-components','filter-contributions','sample-value-axes','image-neighborhood','raster-evidence','surface-light','bezier-construction','dct-coefficients','gpio-pwm','sensor-calibration','control-state-pair','deadline-choice'];
-test('11単元を明示的な32章と12種類の操作へ接続する',()=>{
+test('11単元を明示的な33章と12種類の操作へ接続する',()=>{
  assert.ok(M);const defs=all.map(id=>X.find(id));assert.ok(defs.every(Boolean));
- assert.equal(defs.reduce((n,d)=>n+d.chapters.length,0),32);
+ assert.equal(defs.reduce((n,d)=>n+d.chapters.length,0),33);
  const kinds=defs.flatMap(d=>d.chapters.flatMap(c=>c.activities.map(a=>a.kind)));
  for(const name of direct)assert.equal(kinds.filter(k=>k===name).length,1,name);
  assert.ok(kinds.includes('compare'));assert.ok(kinds.includes('ledger'));
