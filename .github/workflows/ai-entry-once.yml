@@ -37,16 +37,17 @@ jobs:
           replace('src/experiences-ai-widgets.js',"field('impute','補完する値','mean'","field('impute','補完する値',s.stats?.impute||'mean'")
           replace('src/experiences-ai-widgets.js',"field('scale','尺度','standard'","field('scale','尺度',s.stats?.scale||'standard'")
           replace('src/experiences-ai-language-widgets.js','class="ai-cut" aria-label','data-ai-cut aria-label')
+          replace('src/experiences-ai-decision-widgets.js',"f(s.last.value)):'')","f(s.last.value))):'')")
           Path('.github/workflows/ai-entry-once.yml').unlink()
           PY
-          for file in src/experiences-ai*.js tests/ai-workspaces*.mjs; do node --check "$file"; done
+          for file in src/experiences-ai*.js tests/ai-workspaces*.mjs; do echo "Syntax: $file"; node --check "$file"; done
           node scripts/build.mjs
       - name: Commit only this authoring transaction on the working branch
         run: |
           test "$(git ls-remote origin refs/heads/feat/lesson-specific-experiences | cut -f1)" = "$GITHUB_SHA"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -- scripts/modules.mjs index.html src/experiences-ai-widgets.js src/experiences-ai-language-widgets.js .github/workflows/ai-entry-once.yml
+          git add -- scripts/modules.mjs index.html src/experiences-ai-widgets.js src/experiences-ai-language-widgets.js src/experiences-ai-decision-widgets.js .github/workflows/ai-entry-once.yml
           git commit -m 'feat: AIと言語処理の11単元を公開用ファイルへ接続'
           git push origin HEAD:refs/heads/feat/lesson-specific-experiences
           echo "Reviewed source commit: $(git rev-parse HEAD)"
