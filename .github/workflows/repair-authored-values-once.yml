@@ -1,0 +1,61 @@
+# Bounded authoring edit for two confirmed defects. Deletes itself on success.
+name: Repair authored value display once
+on:
+  push:
+    branches: [feat/lesson-specific-experiences]
+    paths: [.github/workflows/repair-authored-values-once.yml]
+permissions:
+  contents: write
+jobs:
+  repair:
+    if: github.repository == 'Lye-0/visual-cs-lab' && github.ref == 'refs/heads/feat/lesson-specific-experiences'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Retain computed values and allow the documented ten-trial example
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          expected={'src/experiences-view.js':'87ae81dd8542cf92a94e73ce23e92d9dd220e97d','scripts/modules.mjs':'49d7560b0c462e821d57201b079b5906953180b0'}
+          for p,sha in expected.items():
+              assert subprocess.check_output(['git','hash-object',p]).decode().strip()==sha,('source changed',p)
+          def replace(p,old,new):
+              path=Path(p);s=path.read_text();assert s.count(old)==1,(p,'expected exactly once',old);path.write_text(s.replace(old,new,1))
+          replace('scripts/modules.mjs','"experiences-math-correspondence"];','"experiences-math-correspondence","experiences-results"];')
+          replace('src/catalog.js',"N('n','試行回数',200,20,1000,20)","N('n','試行回数',200,1,1000,1)")
+          replace('src/experiences-view.js','${frame.table?L.table(frame.table):\'\'}</div>`;','${frame.table?L.table(frame.table):\'\'}${X.valuesMarkup(frame.stats)}</div>`;')
+          replace('src/experiences-view.js',"${f.table?L.table(f.table):''}<details><summary>","${f.table?L.table(f.table):''}${X.valuesMarkup(f.stats)}<details><summary>")
+          replace('src/experiences-view.js',"  });\n }\n async function run(){","  });\n  output.insertAdjacentHTML('beforeend',X.valuesMarkup(X.finalValues(result,kind,resolvedIndex(),limit),'result'));\n }\n async function run(){")
+          replace('src/experiences-view.js',"box.insertAdjacentHTML('beforeend',`<details>","box.insertAdjacentHTML('beforeend',X.valuesMarkup(result.metrics,'result')+`<details>")
+          p=Path('src/experiences.css');s=p.read_text();assert 'data-ex-values' not in s
+          p.write_text(s+'''\n/* Model values omitted by the former wrapper are kept beside their reason. */
+          .experience .ex-calculated-values{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:8px 18px;margin:12px 0 18px;padding:12px 0;border-block:1px solid #344453;min-width:0}
+          .experience .ex-calculated-values>div{min-width:0}
+          .experience .ex-calculated-values dt{font-size:.8rem;color:#a9bdce;line-height:1.5;overflow-wrap:anywhere}
+          .experience .ex-calculated-values dd{margin:4px 0 0;color:#e1eceb;font-variant-numeric:tabular-nums;line-height:1.6;overflow-wrap:anywhere}
+          .experience [data-ex-values=result]{border-inline-start:3px solid #7fcab7;padding-inline-start:12px}
+          @media(forced-colors:active){.experience .ex-calculated-values{border-color:CanvasText}.experience .ex-calculated-values :is(dt,dd){color:CanvasText}}
+          ''')
+          Path('.github/workflows/repair-authored-values-once.yml').unlink()
+          PY
+          node --check src/experiences-view.js
+          npm run build
+          npm run inventory
+          node --test tests/authored-result-values.test.mjs
+          npm run check > /tmp/author-check.txt 2>&1 || { tail -n 100 /tmp/author-check.txt; exit 1; }
+          grep -E '^# (tests|pass|fail)' /tmp/author-check.txt
+      - name: Save the actual corrected sources on the existing work branch
+        run: |
+          test "$(git ls-remote origin refs/heads/feat/lesson-specific-experiences | cut -f1)" = "$GITHUB_SHA"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- scripts/modules.mjs src/catalog.js src/experiences-view.js src/experiences.css index.html docs/experiments.json docs/EXPERIMENTS.md .github/workflows/repair-authored-values-once.yml
+          git commit -m 'fix: 教材の途中の値と最終結果を復元し10回の試行を正しく実行'
+          git push origin HEAD:refs/heads/feat/lesson-specific-experiences
+          echo "REPAIRED_SOURCE $(git rev-parse HEAD)"
+          git diff --exit-code HEAD
