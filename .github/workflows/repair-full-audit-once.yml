@@ -1,0 +1,78 @@
+# Explicit source-authoring transaction for two defects found by the full audit.
+# It deletes itself. Normal checks remain read-only and never repair sources.
+name: Repair full-audit defects once
+on:
+  push:
+    branches: [feat/lesson-specific-experiences]
+    paths: [.github/workflows/repair-full-audit-once.yml]
+permissions:
+  contents: write
+jobs:
+  repair:
+    if: github.repository == 'Lye-0/visual-cs-lab' && github.ref == 'refs/heads/feat/lesson-specific-experiences'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Establish which tracked documents the old check rewrites
+        run: |
+          node scripts/inventory.mjs > /tmp/inventory-before.txt
+          echo 'OLD_INVENTORY_CHANGED_FILES'
+          git diff --name-only HEAD -- docs
+          git diff --stat HEAD -- docs
+          git restore --source=HEAD -- docs/EXPERIMENTS.md docs/experiments.json
+      - name: Scope SVG definitions and separate checking from generation
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          expected={'src/visuals.js':'1e93457e51356c592bf2beb730cf6c20ef0b3e9b','src/curriculum-visuals.js':'77e017bf007ca1343cf3b701369dc0ea7a25f1da','scripts/inventory.mjs':'44fa7e46d9f9625a90dfc424cab280fcf8ee06b0','package.json':'446fbd5c52984dbc91f50501d19de30ea938ddcb'}
+          for path,sha in expected.items():
+              assert subprocess.check_output(['git','hash-object',path]).decode().strip()==sha,('changed source',path)
+          def replace(path,old,new):
+              p=Path(path);s=p.read_text();assert s.count(old)==1,(path,'expected one occurrence',old);p.write_text(s.replace(old,new,1))
+          p=Path('src/visuals.js');s=p.read_text();old=[line for line in s.splitlines() if line.startswith('function svg(body,')];assert len(old)==1
+          new=r'''let svgInstance=0;
+          function svg(body,w=760,height=370,label='実験の内部状態'){
+           const prefix='vcl-svg-'+(++svgInstance)+'-',arrow=prefix+'arrowhead',grid=prefix+'dotgrid';
+           // Only local reference attributes are rewritten. Literal labels remain intact.
+           const content=String(body).replace(/\b(marker-(?:start|mid|end)|fill|stroke)=(['"])url\(#(arrowhead|dotgrid)\)\2/g,(_,attr,quote,id)=>attr+'='+quote+'url(#'+prefix+id+')'+quote);
+           return `<svg viewBox="0 0 ${n(w)} ${n(height)}" role="img" aria-label="${h(label)}" xmlns="http://www.w3.org/2000/svg"><defs><marker id="${arrow}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="context-stroke"/></marker><pattern id="${grid}" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".65" fill="#2a3442"/></pattern></defs><rect width="100%" height="100%" fill="url(#${grid})" opacity=".5"/>${content}</svg>`;
+          }'''
+          p.write_text(s.replace(old[0],new,1))
+          replace('src/curriculum-visuals.js','function graph(v,focus){','let graphInstance=0;\nfunction graph(v,focus){')
+          replace('src/curriculum-visuals.js',"const marker='cv-arrow-'+String(count)+'-'+String(edges.length)","const marker='vcl-cv-arrow-'+(++graphInstance)")
+          replace('scripts/inventory.mjs',"import {writeFile,mkdir}","import {writeFile,mkdir,readFile}")
+          replace('scripts/inventory.mjs',"await mkdir(path.join(root,'docs'),{recursive:true});",'''const checkOnly=process.argv.includes('--check');
+          const emit=async(file,content)=>{
+           if(checkOnly){
+            const current=await readFile(file,'utf8');
+            if(current!==content)throw Error(path.relative(root,file)+' is stale; run npm run inventory and commit the generated documents. No file was changed.');
+           }else await writeFile(file,content);
+          };
+          if(!checkOnly)await mkdir(path.join(root,'docs'),{recursive:true});''')
+          replace('scripts/inventory.mjs',"await writeFile(path.join(root,'docs/experiments.json')","await emit(path.join(root,'docs/experiments.json')")
+          replace('scripts/inventory.mjs',"await writeFile(path.join(root,'docs/EXPERIMENTS.md')","await emit(path.join(root,'docs/EXPERIMENTS.md')")
+          replace('package.json','&& npm run inventory"','&& npm run inventory -- --check"')
+          Path('.github/workflows/repair-full-audit-once.yml').unlink()
+          PY
+          node --check src/visuals.js
+          node --check src/curriculum-visuals.js
+          node scripts/inventory.mjs
+          node --test tests/audit-regressions.test.mjs
+          npm run check > /tmp/full-check.txt 2>&1 || { tail -n 100 /tmp/full-check.txt; exit 1; }
+          tail -n 20 /tmp/full-check.txt
+      - name: Commit corrected sources and generated documentation on the work branch
+        run: |
+          test "$(git ls-remote origin refs/heads/feat/lesson-specific-experiences | cut -f1)" = "$GITHUB_SHA"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- src/visuals.js src/curriculum-visuals.js scripts/inventory.mjs package.json docs/experiments.json docs/EXPERIMENTS.md .github/workflows/repair-full-audit-once.yml
+          git commit -m 'fix: 比較図のSVG参照を分離し検証時の一覧書き換えを防止'
+          git push origin HEAD:refs/heads/feat/lesson-specific-experiences
+          echo "REPAIRED_SOURCE $(git rev-parse HEAD)"
+          npm run check > /tmp/final-readonly-check.txt 2>&1 || { tail -n 100 /tmp/final-readonly-check.txt; exit 1; }
+          git diff --exit-code HEAD -- src scripts tests index.html package.json .github docs
