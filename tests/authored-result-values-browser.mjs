@@ -40,7 +40,7 @@ try{
    await open(page,'c03-derivative');const root=page.locator('.ex-kind-ledger');await root.locator('[name=x]').fill('');assert.equal(await root.locator('[data-ex-values]').count(),0);await root.locator('[data-ex-reset]').click();await ready(page,'c03-derivative');assert.ok(await root.locator('[data-ex-values="frame"]').count()>0);
   });
   await check(width+': inspect values are tied to the currently computed input',async()=>{
-   await open(page,'c12-quorum');const root=page.locator('.ex-kind-inspect');assert.ok(await root.locator('[data-ex-values="result"]').count()>0);
+   await open(page,'c12-quorum','calculation');const root=page.locator('.ex-kind-inspect');assert.ok(await root.locator('[data-ex-values="result"]').count()>0);
    const before=await pairs(root.locator('[data-ex-values="result"]'));await root.locator('[name=failed]').fill('0');await root.locator('button[type=submit]').click();await ready(page,'c12-quorum');assert.notDeepEqual(await pairs(root.locator('[data-ex-values="result"]')),before);
   });
   await check(width+': calculated values are escaped and wrap without making the page wider',async()=>{

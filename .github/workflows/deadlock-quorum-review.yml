@@ -1,0 +1,33 @@
+name: Deadlock and quorum review
+on:
+  push:
+    branches:
+      - review/deadlock-quorum
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Node tests
+        run: npm run check
+      - name: Install browsers
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0
+          npx playwright install --with-deps chromium firefox webkit
+      - name: Direct workspaces and retained calculation
+        run: |
+          for browser in chromium firefox webkit; do
+            BROWSER="$browser" node tests/concurrency-review-workspaces-browser.mjs
+            BROWSER="$browser" node tests/authored-result-values-browser.mjs
+          done
+      - name: Sources remain unchanged
+        run: git diff --exit-code HEAD -- src scripts tests index.html package.json .github docs
