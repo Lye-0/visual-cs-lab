@@ -16,4 +16,3 @@ Node.js 20以上で `npm start` を実行し、`http://127.0.0.1:4173` を開き
 
 https://lye-0.github.io/visual-cs-lab/
 
-GitHub Pagesの公開元は **Deploy from a branch → main → /(root)** です。HTML・JS・CSSを分離した静的サイトとして配信し、独自のデプロイ用Actionsは使用しません。Actionsは分類・モデル・ブラウザ操作の検証用です。
