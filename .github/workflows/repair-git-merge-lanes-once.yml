@@ -1,0 +1,110 @@
+# Candidate-only authoring; compare actual before/after screens and never push main.
+name: Verify Git merge parent lanes
+on:
+  push:
+    branches: [review/git-correspondence]
+    paths: [.github/workflows/repair-git-merge-lanes-once.yml]
+permissions:
+  contents: write
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Install browser tooling
+        run: |
+          mkdir -p review-output
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0 > review-output/install.txt 2>&1
+          npx playwright install --with-deps chromium firefox webkit >> review-output/install.txt 2>&1
+      - name: Reproduce two parents drawn in the same lane on the existing page
+        run: |
+          node --input-type=module <<'JS'
+          import {spawn} from 'node:child_process';
+          import {setTimeout as sleep} from 'node:timers/promises';
+          import {writeFile} from 'node:fs/promises';
+          import assert from 'node:assert/strict';
+          import {chromium} from 'playwright';
+          const server=spawn(process.execPath,['scripts/server.mjs'],{env:{...process.env,PORT:'4238'},stdio:'ignore'});let browser;
+          try{
+           for(let i=0;i<100;i++){try{if((await fetch('http://127.0.0.1:4238/')).ok)break;}catch{}await sleep(100);}
+           browser=await chromium.launch();const page=await browser.newPage({viewport:{width:1440,height:1000}});
+           await page.goto('http://127.0.0.1:4238/#/lab/c16-branches?chapter=objects');await page.waitForSelector('[data-sec-action="merge"]');
+           await page.locator('[data-sec-action="merge"]').click();await page.waitForFunction(()=>{const e=document.querySelector('[data-sec-state]');return e&&JSON.parse(e.dataset.secState).repo.refs.main==='C3';});
+           const positions={};for(const id of ['C2','C1'])positions[id]=await page.locator('g[data-sec-action="select:'+id+'"] circle').getAttribute('cx');
+           assert.equal(positions.C2,positions.C1,'expected the reviewed shared-ancestry lane collapse');
+           await writeFile('review-output/merge-before.json',JSON.stringify({sourceCommit:process.env.GITHUB_SHA,positions,observation:'Different merge parents occupy the same lane'},null,2));
+           await page.locator('.experience').screenshot({path:'review-output/merge-before.png'});
+          }finally{await browser?.close();server.kill();}
+          JS
+      - name: Keep the first-parent line separate from the merged history
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          p=Path('src/experiences-git-review-widgets.js')
+          assert subprocess.check_output(['git','hash-object',str(p)],text=True).strip()=='ac5897388fb34d69a410643eac5bc2328e1ed57f'
+          s=p.read_text()
+          old='main=G.ancestors(r,r.refs.main),active=G.ancestors(r,G.oid(r));'
+          new='main=new Set(),active=G.ancestors(r,G.oid(r));\n for(let id=r.refs.main;id;id=r.objects[id]?.parents[0])main.add(id);\n const referenced=new Set([...Object.values(r.refs),...Object.values(r.tracking)].flatMap(id=>[...G.ancestors(r,id)]));'
+          assert s.count(old)==1;s=s.replace(old,new,1)
+          old='main.has(id)?0:active.has(id)?1:2';new='main.has(id)?0:active.has(id)||referenced.has(id)?1:2'
+          assert s.count(old)==1;s=s.replace(old,new,1);p.write_text(s)
+          p=Path('src/experiences-git-review.css');p.write_text(p.read_text()+'\n.ex-git-paired pre{padding:8px}\n')
+          p=Path('tests/git-review-workspaces-browser.mjs');s=p.read_text()
+          old="assert.deepEqual((await state(page)).repo.objects.C3.parents,['C2','C1']);"
+          new=old+"const px={};for(const id of ['C2','C1'])px[id]=await page.locator('g[data-sec-action=\"select:'+id+'\"] circle').getAttribute('cx');assert.notEqual(px.C2,px.C1);await capture(page,width,'merge-two-parent-lanes');"
+          assert s.count(old)==1;s=s.replace(old,new,1)
+          old='assert.match(await page.locator(\'[data-sec-board]\').textContent(),/参照をC0へ戻した場合でも/);'
+          new=old+"const broken=await panel.locator('pre').evaluateAll(els=>els.filter(el=>{if(el.textContent!=='committed')return false;const r=document.createRange();r.selectNodeContents(el);return new Set([...r.getClientRects()].map(x=>Math.round(x.y))).size>1;}).map(el=>el.textContent));assert.deepEqual(broken,[]);"
+          assert s.count(old)==1;s=s.replace(old,new,1);p.write_text(s)
+          PY
+          node --check src/experiences-git-review-widgets.js
+          node --check tests/git-review-workspaces-browser.mjs
+          node scripts/build.mjs --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- src/experiences-git-review-widgets.js src/experiences-git-review.css tests/git-review-workspaces-browser.mjs
+          git commit -m 'fix: マージの親を別の列で描き操作前後の値の折返しを改善'
+          git rev-parse HEAD > review-output/candidate-sha.txt
+          git ls-tree -r HEAD > review-output/tracked-files.txt
+      - name: All model tests and three browser suites
+        run: |
+          npm run check > review-output/node.txt 2>&1 || { tail -n 100 review-output/node.txt; exit 1; }
+          failed=0
+          for browser in chromium firefox webkit; do
+            code=0
+            BROWSER="$browser" GITHUB_SHA="$(git rev-parse HEAD)" node tests/git-review-workspaces-browser.mjs > "review-output/$browser.txt" 2>&1 || code=$?
+            grep '^GIT_REVIEW_SUMMARY ' "review-output/$browser.txt" || true
+            if [ "$code" -ne 0 ]; then failed=1; fi
+          done
+          test "$failed" = 0
+          git diff --exit-code HEAD -- src scripts tests index.html .github docs
+      - name: Save unchanged tested source on the candidate only
+        run: |
+          test "$(git ls-remote origin refs/heads/review/git-correspondence | cut -f1)" = "$GITHUB_SHA"
+          git push origin HEAD:refs/heads/review/git-correspondence
+      - name: Recoverable source and evidence
+        if: always()
+        run: |
+          git archive --format=zip HEAD -o review-output/source.zip
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          p=Path('review-output');r={'candidate':(p/'candidate-sha.txt').read_text().strip() if (p/'candidate-sha.txt').exists() else None,'browsers':{}}
+          for b in ['chromium','firefox','webkit']:
+              f=p/'git-review'/(b+'.json')
+              if f.exists():
+                  d=json.loads(f.read_text());r['browsers'][b]={k:d[k] for k in ['sourceCommit','passed','failed','errors']}
+          if (p/'node.txt').exists():r['node']=[s for s in (p/'node.txt').read_text().splitlines() if s.startswith(('# tests ','# pass ','# fail ','# skipped ','# cancelled '))]
+          (p/'summary.json').write_text(json.dumps(r,ensure_ascii=False,indent=2));print(json.dumps(r,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: git-review-final-candidate
+          path: review-output/
+          retention-days: 7
