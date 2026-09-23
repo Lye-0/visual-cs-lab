@@ -26,3 +26,9 @@
 @media(max-width:1050px){.ex-git-three,.ex-git-remote-actions{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:760px){.ex-git-two{grid-template-columns:minmax(0,1fr)}}
 @media(forced-colors:active){.ex-git-edge{stroke:CanvasText}.ex-git-graph marker path{fill:CanvasText}.ex-git-node text{fill:CanvasText}.ex-git-node circle{fill:Canvas;stroke:CanvasText}.ex-git-node.is-selected circle,.ex-git-node:focus circle{stroke:Highlight}}
+
+/* The whole visible commit row is a target; blank space inside g must work. */
+.ex-git-node .ex-git-hit{fill:transparent;stroke:none;pointer-events:all}
+.ex-git-node:hover .ex-git-hit,.ex-git-node:focus .ex-git-hit{fill:#20333f;fill-opacity:.6}
+.ex-git-scroll-help{display:none}
+@media(max-width:760px){.ex-git-scroll-help{display:block;color:#b7cbd9;font-size:.8rem;line-height:1.7}}
