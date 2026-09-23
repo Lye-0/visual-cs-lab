@@ -26,17 +26,28 @@ S.mount=(root,current,config)=>{
   return `<label class="ex-sec-field" for="${id}"><span>${h(label)}</span>${input}</label>`;
  };
  const fields=()=>({get:key=>{const el=board.querySelector('[data-sec-field="'+key+'"]');if(!el)throw Error('入力がありません：'+key);if(!el.checkValidity()||el.type==='number'&&el.value==='')throw Error('「'+(el.labels?.[0]?.textContent||key)+'」の入力範囲を確認してください。');return el.type==='checkbox'?el.checked:el.type==='number'?Number(el.value):el.value;}});
- function paint(preserve=true){
+ function paint(preserve=true,preserveView=true){
   if(!scope.alive())return;
   const focus=document.activeElement,identity=focus&&root.contains(focus)?focus.getAttribute('data-sec-action'):null,fieldId=focus&&root.contains(focus)?focus.getAttribute('data-sec-field'):null;
+  // Multiple controls may select the same object (for example, an area and
+  // its term in a sum). Keep the originating control, not the first match.
+  const sameAction=identity===null?[]:[...root.querySelectorAll('[data-sec-action]')].filter(el=>el.dataset.secAction===identity);
+  const focusOccurrence=sameAction.indexOf(focus);
+  // Opt-in, local view state only. It never enters the learning model, history
+  // storage, or another visit. Fresh numeric values need not close the view.
+  const views=preserveView?[...board.querySelectorAll('[data-sec-view]')].map(el=>({key:el.dataset.secView,tag:el.tagName,open:el.tagName==='DETAILS'?el.open:null,left:el.scrollLeft,top:el.scrollTop})):[];
   const retained=preserve?[...board.querySelectorAll('[data-sec-field]')].map(el=>({key:el.dataset.secField,value:el.value,checked:el.checked})):[];
   board.innerHTML=config.render(state,{field});
+  const restoredViews=views.map(old=>({old,el:[...board.querySelectorAll('[data-sec-view]')].find(el=>el.dataset.secView===old.key&&el.tagName===old.tag)})).filter(pair=>pair.el);
+  // Open disclosures before restoring descendants' scroll offsets.
+  for(const {old,el} of restoredViews)if(old.open!==null)el.open=old.open;
+  for(const {old,el} of restoredViews){el.scrollLeft=old.left;el.scrollTop=old.top;}
   for(const old of retained){const el=board.querySelector('[data-sec-field="'+old.key+'"]');if(el){el.value=old.value;if(el.type==='checkbox')el.checked=old.checked;}}
   root.dataset.secState=JSON.stringify(state);root.setAttribute('aria-busy','false');
   root.querySelector('[data-sec-action="undo"]').disabled=history.length===0;
   root.querySelector('[data-sec-log]').innerHTML=state.log.map(line=>'<li>'+h(line)+'</li>').join('');
   status.textContent=state.log.at(-1)||'対象を選んで試してください。';status.classList.remove('ex-error');
-  const target=fieldId?[...root.querySelectorAll('[data-sec-field]')].find(el=>el.dataset.secField===fieldId):identity?[...root.querySelectorAll('[data-sec-action]')].find(el=>el.dataset.secAction===identity):null;
+  const target=fieldId?[...root.querySelectorAll('[data-sec-field]')].find(el=>el.dataset.secField===fieldId):identity?[...root.querySelectorAll('[data-sec-action]')].filter(el=>el.dataset.secAction===identity)[Math.max(0,focusOccurrence)]:null;
   if(target&&!target.disabled)target.focus({preventScroll:true});
   current.completed.add(scope.id);
  }
@@ -49,7 +60,7 @@ S.mount=(root,current,config)=>{
  }
  scope.on(root,'click',event=>{
   const button=event.target.closest('[data-sec-action]');if(!button||!root.contains(button))return;event.preventDefault();const code=button.dataset.secAction;
-  if(code==='reset'){generation++;busy=false;history=[];state=config.start();paint(false);return;}
+  if(code==='reset'){generation++;busy=false;history=[];state=config.start();paint(false,false);return;}
   if(code==='undo'){if(busy||!history.length)return;state=history.pop();paint(false);return;}
   if(busy)return;
   try{const action=config.action(code,fields(),state);if(action)void apply(action);}catch(error){fail(error);}
