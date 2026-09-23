@@ -15,7 +15,7 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: '22'
-      - name: Connect only the inspected six lessons
+      - name: Connect inspected lessons and fix the reproduced pointer issue
         run: |
           mkdir -p review-output
           python3 - <<'PY'
@@ -38,11 +38,13 @@ jobs:
           """
           p.write_text(s.replace(old,new))
           PY
+          python3 scripts/repair-git-review-visual-once.py
+          node --check src/experiences-git-review-widgets.js
           npm run build
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -- scripts/modules.mjs src/experiences-systems.js index.html
-          git commit -m 'feat: Git6単元を対象別の直接操作教材へ接続'
+          git add -- scripts/modules.mjs src/experiences-systems.js src/experiences-git-review-widgets.js src/experiences-git-review.css index.html
+          git commit -m 'feat: Git6単元を直接操作へ接続し図のクリックと狭幅表示を改善'
           git rev-parse HEAD > review-output/candidate-sha.txt
           git ls-tree -r HEAD > review-output/tracked-files.txt
       - name: All model tests including independent real Git checks
@@ -53,7 +55,7 @@ jobs:
         run: |
           npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0 > review-output/install.txt 2>&1
           npx playwright install --with-deps chromium firefox webkit >> review-output/install.txt 2>&1
-      - name: Operate the actual committed page and capture the result
+      - name: Repeat the unchanged browser assertions and recapture the page
         run: |
           failed=0
           for browser in chromium firefox webkit; do
