@@ -67,10 +67,12 @@ X.registerWidget('bplus-routing',(root,a,c)=>S.mount(root,c,{
  action:(code,f)=>{const [kind,value]=code.split(':');return kind==='insert'?{kind,value:f.get('insert'),fresh:true}:kind==='query'?{kind:'key',value:f.get('query')}:kind==='key'?{kind,value:Number(value),fresh:true}:kind==='step'?{kind,index:Number(value)}:{kind,fresh:true};},
  render:(s,{field})=>{
   const v=D.bplusView(s);
+  const treeNode=(n,path)=>'<li><div class="ex-db-tree-node" data-leaf="'+n.leaf+'" data-on-route="'+v.route.some(r=>r.path===path)+'"><small>'+h(n.leaf?'葉：データ':'内部：案内')+'</small>'+n.label.split('|').map(t=>Number(t.trim())).map(k=>b(String(k),'key:'+k,'aria-label="'+h(nodeName(path))+'のキー'+k+'" aria-pressed="'+(s.key===k)+'"')).join('')+'</div>'+(n.children?'<ul>'+n.children.map((child,i)=>treeNode(child,path+'-'+i)).join('')+'</ul>':'')+'</li>';
+  const tree=v.root?'<div class="ex-db-tree" data-sec-view="bplus-tree" role="region" tabindex="0" aria-label="B+木の階層図。内部の案内と葉のデータ"><ul>'+treeNode(v.root,'root')+'</ul></div>':p('まだ木は空です。');
   const nodes=grid(['ノードの位置','役割','そこに表示されるキー'],v.nodes.map(n=>row([h(nodeName(n.path)),n.leaf?'葉のデータ':'内部の案内',n.keys.map(k=>b(String(k),'key:'+k,`aria-label="${h(nodeName(n.path))}の${n.leaf?'データ':'案内キー'}${k}を調べる" aria-pressed="${s.key===k}"`)).join(' ')],`data-db-leaf="${n.leaf}" data-active="${v.route.some(r=>r.path===n.path)}"`)),'木の位置と、葉／内部ノードの役割','bplus-nodes');
   return `<div class="ex-actions">${b('葉が分割される例へ戻す','example')}</div><div class="ex-db-fields">${field('insert','追加するキー',s.key,{min:-1000,max:1000})}${b('このキーを一つ追加する','insert')}${field('query','調べるキー',s.key,{min:-1000,max:1000})}${b('このキーの案内と葉を読む','query')}</div>`+
    box('挿入の記録を選ぶ',`<div class="ex-actions">${s.values.map((key,i)=>b((i+1)+'：'+key+'を追加','step:'+i,`aria-pressed="${s.selectedStep===i}"`)).join('')}</div>`+p(s.selectedStep<0?'まだキーはありません。例を使うか、一つ追加してください。':'表示中は'+(s.selectedStep+1)+'回目の挿入後です。過去の記録を見ているときも、新規の追加は最新の木の続きに行います。'))+
-   nodes+box('キー'+s.key+'を探す道',table(['通るノード','ここでの判断'],v.route.map(n=>[nodeName(n.path),n.leaf?(n.found?'この葉にデータがある':'この葉にデータがない'):'区切り ['+n.keys.join(', ')+'] と比べ、子'+(n.child+1)+'へ進む。境界と同じキーは右へ進む。'])))+
+   box('木を選んで、同じ数字の役割を比べる',tree)+nodes+box('キー'+s.key+'を探す道',table(['通るノード','ここでの判断'],v.route.map(n=>[nodeName(n.path),n.leaf?(n.found?'この葉にデータがある':'この葉にデータがない'):'区切り ['+n.keys.join(', ')+'] と比べ、子'+(n.child+1)+'へ進む。境界と同じキーは右へ進む。'])))+
    box('同じ数字でも役割が違う',table(['キー'+s.key+'が現れる場所','意味'],v.occurrences.map(n=>[nodeName(n.path),n.leaf?'保存するデータキー':'子へ進むための境界']))+p('葉を分割したときは右の葉の最小値を親の案内にも使います。案内へ同じ数字を載せても、元のデータは葉に残ります。内部ノード自身の分割は、案内キーの分配であり、葉データの複製とは別です。'))+
    p('元の挿入エンジンをそのまま使用しています。上限3キー、重複は1個にまとめる挿入専用の小例です。削除・実ディスク・並行更新は対象外です。既存の木の図は「挿入の計算記録」の章にも残しています。');
  }

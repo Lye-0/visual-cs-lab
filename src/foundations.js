@@ -189,9 +189,17 @@ R('database',(p,lab)=>{
  const sorted=users.slice().sort((a,b)=>a.age-b.age),examined=p.index?sorted.filter(u=>u.age>=p.age):users,matched=users.filter(u=>u.age>=p.age),frames=examined.map((u,i)=>F(`${u.name} / age=${u.age} を確認`,p.index?'索引で範囲の開始位置へ到達した後、条件に合う索引エントリを走査します。索引の探索コストは別途あります。':'各行のageを順番に確認します。',{type:'bars',values:users.map(x=>x.age),labels:users.map(x=>x.name),active:[users.indexOf(u)]},{'走査した行':i+1},{headers:['id','name','age'],rows:matched.map(x=>[x.id,x.name,x.age])}));if(!frames.length)frames.push(F('条件を満たす行がない','索引の範囲探索で、該当データがないと分かりました。',{type:'cells',rows:[{label:'result',values:['0 rows']}]}));return out(frames,{'結果行数':matched.length,'走査した行':examined.length,'索引探索の目安':p.index?`${Math.ceil(Math.log2(users.length+1))}比較以下`:'なし'});
 });
 R('transaction',(p)=>{
- let balance=100,readA=100,readB=p.serial?120:100,final=p.serial?110:90;
- let events=p.serial?[['A reads',100],['A deposits +20',120],['A commits',120],['B reads',120],['B withdraws -10',110],['B commits',110]]:[['A reads',100],['B reads',100],['A writes 120',120],['B writes 90',90]];
- return out(events.map(([name,v],i)=>F(name,p.serial?'ロックによってこの例ではトランザクションを直列化します。':'それぞれが読み取った値を元に書き戻すため、Aの更新が失われます。',{type:'cells',rows:[{label:'balance',values:[v]},{label:'Aの読取り',values:[readA]},{label:'Bの読取り',values:[readB]}]},{'balance':v})),{'最終残高':final,'意図した残高':110,'更新消失':p.serial?'なし':'あり'});
+ const actors={A:{read:null,local:null,pending:null},B:{read:null,local:null,pending:null}},frames=[];let committed=100;
+ const events=p.serial?[['A','read'],['A','calculate'],['A','update'],['A','commit'],['B','read'],['B','calculate'],['B','update'],['B','commit']]:[['A','read'],['B','read'],['A','calculate'],['B','calculate'],['A','update'],['A','commit'],['B','update'],['B','commit']];
+ for(const [id,kind] of events){const actor=actors[id],delta=id==='A'?20:-10;let explanation;
+  if(kind==='read'){actor.read=committed;explanation=id+'が確定済みの'+committed+'を読みました。まだ読んでいない側は未読です。';}
+  if(kind==='calculate'){actor.local=actor.read+delta;explanation='アプリ側で'+actor.read+' + ('+delta+') = '+actor.local+'を計算。確定残高は変わりません。';}
+  if(kind==='update'){actor.pending=actor.local;explanation='UPDATEは未確定の値'+actor.pending+'を作ります。この固定例では書込み同士を重ねていません。';}
+  if(kind==='commit'){committed=actor.pending;actor.pending=null;explanation=id+'がCOMMITし、確定残高を'+committed+'へ変えました。';}
+  const fields=[{label:'balance',values:[committed]},{label:'Aの読取り',values:[actors.A.read===null?'未読':actors.A.read]},{label:'Bの読取り',values:[actors.B.read===null?'未読':actors.B.read]},{label:'Aの未確定書込み',values:[actors.A.pending===null?'なし':actors.A.pending]},{label:'Bの未確定書込み',values:[actors.B.pending===null?'なし':actors.B.pending]}];
+  frames.push(F(id+' '+({read:'reads',calculate:'calculates',update:'updates (uncommitted)',commit:'commits'}[kind]),explanation,{type:'cells',rows:fields},{balance:committed}));
+ }
+ return out(frames,{'最終残高':committed,'意図した残高':110,'更新消失':committed===110?'なし':'あり'},'アプリで読んだ値から計算した定数を書き戻す例です。未読・計算結果・未確定書込み・確定残高を区別します。');
 });
 R('btree',(p)=>{
  // B+ tree of order 4: at most 3 keys / 4 children; leaf split promotes the right minimum.

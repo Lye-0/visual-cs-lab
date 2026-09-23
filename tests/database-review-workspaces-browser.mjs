@@ -41,7 +41,7 @@ try{
   });
   await check(`${width}/index/row-reference-empty-query-and-undo`,async()=>{
    await open(page,'c14-index');await click(page,'entry:0');assert.equal((await state(page)).selected,4);await click(page,'source:1');assert.match(await page.locator('[data-sec-board]').textContent(),/索引の位置5（age=22）/);
-   await field(page,'age').fill('99');await click(page,'query');for(let i=0;i<3;i++)await click(page,'next');assert.equal((await state(page)).phase,'done');assert.deepEqual((await state(page)).found,[]);
+   await field(page,'age').fill('99');await click(page,'query');for(let i=0;i<2;i++)await click(page,'next');assert.equal((await state(page)).phase,'done');assert.deepEqual((await state(page)).found,[]);
    await click(page,'undo');assert.equal((await state(page)).phase,'seek');const before=await state(page);await field(page,'age').fill('100');await click(page,'query');assert.deepEqual(await state(page),before);await click(page,'reset');assert.equal((await state(page)).age,21);
   });
   await check(`${width}/join/multiple-partners-and-no-partner`,async()=>{

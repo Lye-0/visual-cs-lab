@@ -95,7 +95,7 @@ D.tx=(input,a)=>{
   if(actor.pc===0){if(s.mode==='locked')s.owner=id;actor.read=s.committed;name=id+'がSELECT';explain='確定済みの'+s.committed+'をアプリの読取値へ保存。相手の未確定書込みは読んでいません。';}
   if(actor.pc===1){actor.local=actor.read+actor.delta;name=id+'がアプリ側で計算';explain=actor.read+' + ('+actor.delta+') = '+actor.local+'。確定残高はまだ'+s.committed+'です。';}
   if(actor.pc===2){s.owner=id;actor.pending=actor.local;name=id+'がUPDATE（未確定）';explain='アプリで計算した値'+actor.pending+'を未確定の書込値として保持。行ロックはCOMMITまで解放しません。';}
-  if(actor.pc===3){const old=s.committed;s.committed=actor.pending;s.owner=null;name=id+'がCOMMIT';explain='確定残高を'+old+'から'+s.committed+'へ更新し、行ロックを解放しました。';}
+  if(actor.pc===3){const old=s.committed;s.committed=actor.pending;actor.pending=null;s.owner=null;name=id+'がCOMMIT';explain='確定残高を'+old+'から'+s.committed+'へ更新し、行ロックを解放しました。';}
   actor.pc++;
  }
  s.events.push({name,explain,snapshot:txSnapshot(s)});s.selectedEvent=s.events.length-1;return note(s,explain);
