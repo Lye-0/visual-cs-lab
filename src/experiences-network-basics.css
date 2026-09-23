@@ -1,0 +1,15 @@
+/* Network basics: bit alignment, next-hop identity and lease state. */
+.ex-nb-fields{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin:14px 0}.ex-nb-fields>.ex-sec-field{flex:1 1 160px;min-width:130px}
+.ex-nb-bitline{display:grid;grid-template-columns:minmax(110px,150px) minmax(0,1fr);gap:10px;align-items:center;margin:7px 0}.ex-nb-bitline>strong{color:#c7d8e4;font-size:.84rem}
+.ex-nb-bitrow{display:grid;grid-template-columns:repeat(32,minmax(20px,1fr));gap:2px;min-width:760px;overflow:visible;font-variant-numeric:tabular-nums}
+.ex-nb-bitrow>span{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px 1px;border:1px solid #314353;border-radius:4px;background:#15232e;color:#e2edf4;min-height:42px}
+.ex-nb-bitrow>span[data-part=network]{background:#203d39;border-color:#4f8576}.ex-nb-bitrow>span[data-selected=true]{outline:3px solid #f0bb79;outline-offset:-1px}
+.ex-nb-bitrow small{font-size:.55rem;color:#9fb1bf;line-height:1.1}
+.ex-sec-box:has(.ex-nb-bitrow){overflow-x:auto}
+.ex-nb-ipv6-groups{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:12px 0}.ex-nb-ipv6-groups .ex-button{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.82rem;min-width:0;overflow-wrap:anywhere}
+.ex-nb-16{display:grid;grid-template-columns:repeat(16,minmax(28px,1fr));gap:4px;overflow-x:auto;padding:5px 0}.ex-nb-16 .ex-button{min-width:28px;padding:7px 2px;font-variant-numeric:tabular-nums}
+.ex-nb-16 [data-part=prefix]{background:#214039;border-color:#559480}.ex-nb-16 [data-part=interface]{background:#1b2732}
+.ex-nb-details{border:1px solid #344858;border-radius:10px;padding:13px;margin:14px 0}.ex-nb-details summary{cursor:pointer;color:#cadbe6}.ex-nb-details ol{padding-left:24px;line-height:1.8}
+@media(max-width:720px){.ex-nb-bitline{grid-template-columns:1fr}.ex-nb-bitrow{min-width:720px}.ex-nb-ipv6-groups{grid-template-columns:repeat(2,minmax(0,1fr))}.ex-nb-fields>.ex-sec-field{flex-basis:140px}}
+@media(max-width:390px){.ex-nb-ipv6-groups{grid-template-columns:1fr}.ex-nb-fields>.ex-sec-field{flex-basis:100%}}
+@media(forced-colors:active){.ex-nb-bitrow>span[data-part=network],.ex-nb-16 [data-part=prefix]{border:2px solid Highlight}.ex-nb-bitrow>span[data-selected=true]{outline:3px solid Highlight}}
