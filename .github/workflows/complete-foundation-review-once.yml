@@ -23,12 +23,24 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: '22'
-      - name: Restore only the already inspected sources
+      - name: Restore and correct inspected sources before any verification
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p review-output
           python3 scripts/complete-foundation-review-once.py
+          python3 - <<'PY'
+          from pathlib import Path
+          # The renderer says "追加", whereas the button correctly says
+          # "挿入結果". Test the actual frame title and its record position,
+          # rather than requiring identical wording on both controls.
+          p=Path('tests/foundation-review-browser.mjs')
+          s=p.read_text()
+          old="assert.match(await page.locator('[data-ex-frame]').textContent(),/挿入/);"
+          new="assert.match(await page.locator('[data-ex-frame] h4').textContent(),/を最小ヒープに追加$/);assert.equal(await page.locator('[data-ex-event][aria-current=step]').getAttribute('data-ex-event'),'1');"
+          assert s.count(old)==1
+          p.write_text(s.replace(old,new,1))
+          PY
           for f in src/experiences-foundation-review*.js src/experiences-foundations.js src/experiences-systems.js src/experiences-objects.js tests/foundation-review*.mjs; do node --check "$f"; done
           npm run build
           git config user.name 'github-actions[bot]'
@@ -51,10 +63,10 @@ jobs:
         run: |
           failed=0
           for browser in chromium firefox webkit; do
-            BROWSER="$browser" SOURCE_COMMIT="$(git rev-parse HEAD)" node tests/foundation-review-browser.mjs > "review-output/foundation-$browser.log" 2>&1 || failed=1
-            BROWSER="$browser" node tests/authored-result-values-browser.mjs > "review-output/values-$browser.log" 2>&1 || failed=1
-            tail -n 45 "review-output/foundation-$browser.log"
-            tail -n 30 "review-output/values-$browser.log"
+            BROWSER="$browser" GITHUB_SHA="$(git rev-parse HEAD)" node tests/foundation-review-browser.mjs > "review-output/foundation-$browser.log" 2>&1 || failed=1
+            BROWSER="$browser" GITHUB_SHA="$(git rev-parse HEAD)" node tests/authored-result-values-browser.mjs > "review-output/values-$browser.log" 2>&1 || failed=1
+            tail -n 35 "review-output/foundation-$browser.log"
+            tail -n 20 "review-output/values-$browser.log"
           done
           test "$failed" = 0
       - name: Verify no test altered the local source commit
@@ -81,7 +93,7 @@ jobs:
                   path=p/file
                   if path.exists():
                       report=json.loads(path.read_text())
-                      result['browsers'][engine][label]={key:report.get(key) for key in ['passed','failed','errors']}
+                      result['browsers'][engine][label]={key:report.get(key) for key in ['sourceCommit','passed','failed','errors']}
                       result['browsers'][engine][label]['failedCases']=[case for case in report.get('cases',[]) if not case.get('passed')]
           for name in ['all-node-tests.txt','foundation-models.txt']:
               if (p/name).exists():result[name]=[line for line in (p/name).read_text().splitlines() if line.startswith(('# tests ','# pass ','# fail ','# skipped ','# cancelled '))]
