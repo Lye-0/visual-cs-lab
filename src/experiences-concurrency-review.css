@@ -1,0 +1,9 @@
+/* Deadlock ownership and quorum membership are different visual objects. */
+.ex-con-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:16px 0}.ex-con-two>*{min-width:0}
+.ex-con-nodes{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:16px 0}
+.ex-con-node{min-width:0;border:1px solid #3a4b59;border-radius:10px;background:#111d27;padding:12px;display:flex;flex-direction:column;gap:7px}
+.ex-con-node strong{font-size:1rem}.ex-con-node span,.ex-con-node small{color:#bdceda;line-height:1.5}.ex-con-node>div{display:grid;gap:6px;margin-top:auto}
+.ex-con-node.in-a{border-left:4px solid #80d4bb}.ex-con-node.in-b{border-right:4px solid #efb56f}.ex-con-node.in-both{background:#273b38}.ex-con-node.is-failed{opacity:.62;background:repeating-linear-gradient(135deg,#15212a,#15212a 7px,#26323b 7px,#26323b 8px)}
+@media(max-width:800px){.ex-con-nodes{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.ex-con-two{grid-template-columns:minmax(0,1fr)}.ex-con-nodes{grid-template-columns:minmax(0,1fr)}.ex-con-node{padding:10px}}
+@media(forced-colors:active){.ex-con-node.in-a,.ex-con-node.in-b{border:3px solid Highlight}.ex-con-node.is-failed{border-style:dashed}}
