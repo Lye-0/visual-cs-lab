@@ -1,0 +1,219 @@
+# Read-only regression, split into bounded jobs. No source repair or publishing.
+name: Staged main regression verification
+on:
+  push:
+    branches: [main]
+    paths:
+      - src/**
+      - tests/**
+      - scripts/modules.mjs
+      - index.html
+      - .github/workflows/staged-main-verification.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: staged-main-verification-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  models:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: All calculations and the committed publishing entry
+        run: |
+          mkdir -p review-output
+          npm run check > review-output/all-node-tests.txt 2>&1 || { tail -n 100 review-output/all-node-tests.txt; exit 1; }
+          grep -E '^# (tests|pass|fail|skipped|cancelled)' review-output/all-node-tests.txt
+          git diff --exit-code HEAD -- src scripts tests index.html package.json .github docs
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: staged-models
+          path: review-output/
+          retention-days: 7
+  chapters:
+    needs: models
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Install selected browser
+        run: |
+          mkdir -p review-output
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0 > review-output/install.txt 2>&1
+          npx playwright install --with-deps ${{ matrix.browser }} >> review-output/install.txt 2>&1 || { tail -n 40 review-output/install.txt; exit 1; }
+      - name: Every authored chapter at 1440, 390 and 320px
+        env:
+          BROWSER: ${{ matrix.browser }}
+        run: |
+          node tests/full-learning-audit.mjs > review-output/chapters.log 2>&1 || { tail -n 60 review-output/chapters.log; exit 1; }
+          grep '^AUDIT_SUMMARY ' review-output/chapters.log
+      - name: Summarize and reject unresolved geometry candidates
+        if: ${{ !cancelled() }}
+        env:
+          BROWSER: ${{ matrix.browser }}
+        run: |
+          python3 - <<'PY'
+          import json,os
+          from pathlib import Path
+          root=Path('review-output')
+          report=json.loads((root/'full-audit'/(os.environ['BROWSER']+'.json')).read_text())
+          result={k:report.get(k) for k in ['sourceCommit','engine','version','summary','failures','runtime','geometrySelfTest']}
+          result['candidates']=[{'id':r['id'],'chapter':r['chapter'],'width':r['width'],'candidates':r.get('observed',{}).get('candidates',[])} for r in report['chapters'] if r.get('observed',{}).get('candidates')]
+          (root/'chapter-summary.json').write_text(json.dumps(result,ensure_ascii=False,indent=2))
+          print(json.dumps(result,ensure_ascii=False,indent=2))
+          assert report['summary']['units']==314
+          assert report['summary']['visited']==report['summary']['uniqueChapters']*3
+          assert not result['failures'] and not result['runtime'] and not result['candidates']
+          PY
+      - name: Verification did not rewrite sources
+        if: ${{ !cancelled() }}
+        run: git diff --exit-code HEAD -- src scripts tests index.html package.json .github docs
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: staged-chapters-${{ matrix.browser }}
+          path: review-output/
+          retention-days: 7
+  operations:
+    needs: models
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Install selected browser
+        run: |
+          mkdir -p review-output
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0 > review-output/install.txt 2>&1
+          npx playwright install --with-deps ${{ matrix.browser }} >> review-output/install.txt 2>&1 || { tail -n 40 review-output/install.txt; exit 1; }
+      - name: Dedicated operations, values, catalogue and published paths
+        env:
+          BROWSER: ${{ matrix.browser }}
+        run: |
+          failed=0
+          for file in tests/*workspaces*browser.mjs tests/math-evidence-browser.mjs tests/math-correspondence-browser.mjs tests/foundation-review-browser.mjs tests/authored-result-values-browser.mjs tests/static-site-browser.mjs tests/library-browser.mjs; do
+            name=$(basename "$file" .mjs)
+            code=0
+            node "$file" > "review-output/$name.log" 2>&1 || code=$?
+            printf '%s\t%s\n' "$file" "$code" | tee -a review-output/script-exits.tsv
+            if [ "$code" -ne 0 ]; then tail -n 50 "review-output/$name.log"; failed=1; fi
+          done
+          code=0
+          if [ "$BROWSER" = firefox ]; then
+            xvfb-run -a node tests/scrollbars-browser.mjs > review-output/scrollbars.log 2>&1 || code=$?
+          else
+            node tests/scrollbars-browser.mjs > review-output/scrollbars.log 2>&1 || code=$?
+          fi
+          printf 'tests/scrollbars-browser.mjs\t%s\n' "$code" | tee -a review-output/script-exits.tsv
+          if [ "$code" -ne 0 ]; then tail -n 50 review-output/scrollbars.log; failed=1; fi
+          test "$failed" = 0
+      - name: Verification did not rewrite sources
+        if: ${{ !cancelled() }}
+        run: git diff --exit-code HEAD -- src scripts tests index.html package.json .github docs
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: staged-operations-${{ matrix.browser }}
+          path: review-output/
+          retention-days: 7
+  retained:
+    needs: models
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Install Chromium
+        run: |
+          mkdir -p review-output
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0 > review-output/install.txt 2>&1
+          npx playwright install --with-deps chromium >> review-output/install.txt 2>&1 || { tail -n 40 review-output/install.txt; exit 1; }
+      - name: Retained readers and regression-specific interactions
+        run: |
+          failed=0
+          for file in tests/reader-browser.mjs tests/curriculum-browser.mjs tests/reader-regressions.mjs tests/reader-svg-theme.mjs tests/pr-review-browser.mjs; do
+            code=0
+            node "$file" > "review-output/$(basename "$file").log" 2>&1 || code=$?
+            printf '%s\t%s\n' "$file" "$code" | tee -a review-output/script-exits.tsv
+            if [ "$code" -ne 0 ]; then tail -n 50 "review-output/$(basename "$file").log"; failed=1; fi
+          done
+          test "$failed" = 0
+      - name: Verification did not rewrite sources
+        if: ${{ !cancelled() }}
+        run: git diff --exit-code HEAD -- src scripts tests index.html package.json .github docs
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: staged-retained
+          path: review-output/
+          retention-days: 7
+  summary:
+    needs: [models, chapters, operations, retained]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - name: Read this run's artifacts and print only decision-relevant results
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NEEDS: ${{ toJSON(needs) }}
+        run: |
+          gh run download "$GITHUB_RUN_ID" --repo "$GITHUB_REPOSITORY" --dir /tmp/staged-results
+          mkdir -p review-output
+          python3 - <<'PY'
+          import json,os
+          from pathlib import Path
+          root=Path('/tmp/staged-results')
+          result={'sourceCommit':os.environ['GITHUB_SHA'],'runId':os.environ['GITHUB_RUN_ID'],'jobs':{k:v['result'] for k,v in json.loads(os.environ['NEEDS']).items()},'chapters':{},'scripts':{},'visualReview':'Screenshots captured, not visually approved by this automation.','pedagogicalPlanReconciliation':'Not certified by automated regression.'}
+          for browser in ['chromium','firefox','webkit']:
+              path=root/('staged-chapters-'+browser)/'chapter-summary.json'
+              if path.exists():result['chapters'][browser]=json.loads(path.read_text())
+          for path in root.glob('*/script-exits.tsv'):
+              result['scripts'][path.parent.name]=[{'script':line.split('\t')[0],'exit':int(line.split('\t')[1])} for line in path.read_text().splitlines()]
+          path=root/'staged-models'/'all-node-tests.txt'
+          if path.exists():result['node']=[line for line in path.read_text().splitlines() if line.startswith(('# tests ','# pass ','# fail ','# cancelled ','# skipped '))]
+          Path('review-output/summary.json').write_text(json.dumps(result,ensure_ascii=False,indent=2))
+          print(json.dumps(result,ensure_ascii=False,indent=2))
+          assert all(v=='success' for v in result['jobs'].values())
+          assert len(result['chapters'])==3
+          assert len(result['scripts'])==4
+          assert all(all(s['exit']==0 for s in scripts) for scripts in result['scripts'].values())
+          PY
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: staged-summary
+          path: review-output/
+          retention-days: 7
