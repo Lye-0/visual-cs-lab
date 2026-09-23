@@ -80,6 +80,19 @@ try{
    await field(page,'insert').fill('12');await click(page,'insert');assert.equal((await state(page)).values.length,5);assert.match(await page.locator('[data-sec-status]').textContent(),/追加していません/);
    await click(page,'step:4');const key=page.locator('.ex-db-tree-node [data-sec-action="key:12"]').first();await key.focus();await page.keyboard.press('Enter');await idle(page);assert.equal((await state(page)).key,12);assert.equal(await page.evaluate(()=>document.activeElement?.dataset.secAction),'key:12');
   });
+  await check(`${width}/mobile-reading/horizontal-button-labels`,async()=>{
+   await open(page,'c14-join');
+   const result=await page.locator('.ex-db-table button').evaluateAll(buttons=>buttons.map(el=>{const r=document.createRange();r.selectNodeContents(el);const boxes=[...r.getClientRects()].filter(b=>b.width>0&&b.height>0);return {text:el.textContent,lines:new Set(boxes.map(b=>Math.round(b.y))).size,overflows:el.scrollWidth>el.clientWidth+1};}));
+   assert.ok(result.length>0);assert.deepEqual(result.filter(r=>r.lines!==1||r.overflows),[]);
+   if(width<=600)assert.equal(await page.locator('.ex-db-table-help').first().isVisible(),true);
+   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2),false);
+  });
+  await check(`${width}/mobile-reading/current-values-remain-visible`,async()=>{
+   await open(page,'c14-transaction');for(let i=0;i<3;i++)await click(page,'step:A');
+   assert.deepEqual((await page.locator('.ex-db-state-values dd').allTextContents()).slice(0,3),['100','120','120']);
+   const bad=await page.locator('.ex-db-state-values dd').evaluateAll(els=>els.filter(el=>{const b=el.getBoundingClientRect(),p=el.closest('.ex-db-state-values').getBoundingClientRect();return b.left<p.left-1||b.right>p.right+1||el.scrollWidth>el.clientWidth+1;}).map(el=>el.textContent));assert.deepEqual(bad,[]);
+   await capture(page,width,'transaction-readable-values');
+  });
   await check(`${width}/route-return-is-a-new-experiment`,async()=>{
    await open(page,'c14-join');await click(page,'preset:nulls');await page.goto(base+'#/catalog');await page.waitForSelector('#catalog-query');await open(page,'c14-join');assert.equal((await state(page)).preset,'original');assert.deepEqual(await page.evaluate(()=>__dbCsp),[]);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2),false);
   });

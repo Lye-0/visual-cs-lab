@@ -6,7 +6,8 @@ if(typeof document==='undefined')return;
 const L=CSL,X=L.experiences,D=X.databaseReview,S=X.securityDesk,h=L.h;
 const {b,p,box,table}=S.ui,formula=X.html.formula;
 const dash=value=>value===null?'—':String(value);
-const grid=(heads,rows,label,view='')=>`<div class="ex-db-scroll" ${view?'data-sec-view="'+view+'"':''} role="region" aria-label="${h(label)}" tabindex="0"><table class="ex-db-table"><caption>${h(label)}</caption><thead><tr>${heads.map(x=>'<th scope="col">'+h(x)+'</th>').join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>`;
+const stateValues=rows=>'<dl class="ex-db-state-values">'+rows.map(([label,value])=>'<div><dt>'+h(label)+'</dt><dd>'+h(String(value))+'</dd></div>').join('')+'</dl>';
+const grid=(heads,rows,label,view='')=>`<div class="ex-db-scroll" ${view?'data-sec-view="'+view+'"':''} role="region" aria-label="${h(label)}" tabindex="0"><table class="ex-db-table"><caption>${h(label)}</caption><thead><tr>${heads.map(x=>'<th scope="col">'+h(x)+'</th>').join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div><p class="ex-db-table-help">入りきらない列は、表を横へスクロールして確認できます。</p>`;
 const row=(cells,attrs='')=>'<tr '+attrs+'>'+cells.map(x=>'<td>'+x+'</td>').join('')+'</tr>';
 const val=(x)=>x===null?'<code class="ex-db-null">NULL</code>':x===''?'""（空文字列）':x==='NULL'?'"NULL"（文字列）':h(String(x));
 X.registerWidget('index-correspondence',(root,a,c)=>S.mount(root,c,{
@@ -51,7 +52,7 @@ X.registerWidget('transaction-order',(root,a,c)=>S.mount(root,c,{
  action:code=>{const [kind,value]=code.split(':');return kind==='mode'?{kind,value,fresh:true}:kind==='step'?{kind,actor:value}:{kind:'event',index:Number(value)};},
  render:s=>{
   const v=D.txView(s),selected=v.selected;
-  const actors=Object.entries(s.actors).map(([id,actor])=>box(id+'：'+(actor.delta>0?'入金 +20':'出金 −10'),table(['何の値か','現在'],[['読取済みの値',dash(actor.read)],['アプリ側の計算結果',dash(actor.local)],['未確定の書込値',actor.pc>=4?'—（COMMIT済み）':dash(actor.pending)],['次の処理',txWords[actor.pc]]])+b(id+'：'+txWords[actor.pc],'step:'+id,actor.pc>=4?'disabled':''))).join('');
+  const actors=Object.entries(s.actors).map(([id,actor])=>box(id+'：'+(actor.delta>0?'入金 +20':'出金 −10'),stateValues([['読取済みの値',dash(actor.read)],['アプリ側の計算結果',dash(actor.local)],['未確定の書込値',actor.pc>=4?'—（COMMIT済み）':dash(actor.pending)],['次の処理',txWords[actor.pc]]])+b(id+'：'+txWords[actor.pc],'step:'+id,actor.pc>=4?'disabled':''))).join('');
   return `<div class="ex-actions">${b('通常のSELECT → アプリで計算','mode:plain',`aria-pressed="${s.mode==='plain'}"`)}${b('読む前から行ロック','mode:locked',`aria-pressed="${s.mode==='locked'}"`)}</div>`+
    box('現在の確定済み残高',formula(String(s.committed))+p('行ロックの保持者：'+(s.owner||'なし')+'。UPDATEの未確定値と、他の通常SELECTが読む確定値は分けて表示しています。'))+
    `<div class="ex-db-two">${actors}</div>`+p(s.mode==='plain'?'通常SELECTは他者の未確定書込みを読まず、その時点の確定値を読みます。UPDATE同士は行ロックで待ちますが、先にアプリへ読んだ古い値まで自動で計算し直すわけではありません。':'この例ではSELECT FOR UPDATEからCOMMITまで同じ行をロックします。相手は読む前に待つので、先行処理がCOMMITした後の値を読んで計算します。')+
@@ -72,7 +73,7 @@ X.registerWidget('bplus-routing',(root,a,c)=>S.mount(root,c,{
   const nodes=grid(['ノードの位置','役割','そこに表示されるキー'],v.nodes.map(n=>row([h(nodeName(n.path)),n.leaf?'葉のデータ':'内部の案内',n.keys.map(k=>b(String(k),'key:'+k,`aria-label="${h(nodeName(n.path))}の${n.leaf?'データ':'案内キー'}${k}を調べる" aria-pressed="${s.key===k}"`)).join(' ')],`data-db-leaf="${n.leaf}" data-active="${v.route.some(r=>r.path===n.path)}"`)),'木の位置と、葉／内部ノードの役割','bplus-nodes');
   return `<div class="ex-actions">${b('葉が分割される例へ戻す','example')}</div><div class="ex-db-fields">${field('insert','追加するキー',s.key,{min:-1000,max:1000})}${b('このキーを一つ追加する','insert')}${field('query','調べるキー',s.key,{min:-1000,max:1000})}${b('このキーの案内と葉を読む','query')}</div>`+
    box('挿入の記録を選ぶ',`<div class="ex-actions">${s.values.map((key,i)=>b((i+1)+'：'+key+'を追加','step:'+i,`aria-pressed="${s.selectedStep===i}"`)).join('')}</div>`+p(s.selectedStep<0?'まだキーはありません。例を使うか、一つ追加してください。':'表示中は'+(s.selectedStep+1)+'回目の挿入後です。過去の記録を見ているときも、新規の追加は最新の木の続きに行います。'))+
-   box('木を選んで、同じ数字の役割を比べる',tree)+nodes+box('キー'+s.key+'を探す道',table(['通るノード','ここでの判断'],v.route.map(n=>[nodeName(n.path),n.leaf?(n.found?'この葉にデータがある':'この葉にデータがない'):'区切り ['+n.keys.join(', ')+'] と比べ、子'+(n.child+1)+'へ進む。境界と同じキーは右へ進む。'])))+
+   box('木を選んで、同じ数字の役割を比べる',tree+p('図が入りきらない場合は、木の枠の中を横へスクロールできます。'))+nodes+box('キー'+s.key+'を探す道',table(['通るノード','ここでの判断'],v.route.map(n=>[nodeName(n.path),n.leaf?(n.found?'この葉にデータがある':'この葉にデータがない'):'区切り ['+n.keys.join(', ')+'] と比べ、子'+(n.child+1)+'へ進む。境界と同じキーは右へ進む。'])))+
    box('同じ数字でも役割が違う',table(['キー'+s.key+'が現れる場所','意味'],v.occurrences.map(n=>[nodeName(n.path),n.leaf?'保存するデータキー':'子へ進むための境界']))+p('葉を分割したときは右の葉の最小値を親の案内にも使います。案内へ同じ数字を載せても、元のデータは葉に残ります。内部ノード自身の分割は、案内キーの分配であり、葉データの複製とは別です。'))+
    p('元の挿入エンジンをそのまま使用しています。上限3キー、重複は1個にまとめる挿入専用の小例です。削除・実ディスク・並行更新は対象外です。既存の木の図は「挿入の計算記録」の章にも残しています。');
  }
