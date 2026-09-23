@@ -71,6 +71,17 @@ try{
   await check(`${width}/keyboard/graph-selection-and-draft-retention`,async()=>{
    await open(page,'c16-undo');await field(page,'amended').fill('draft');const node=page.locator('g[data-sec-action="select:C0"]');await node.focus();await page.keyboard.press('Enter');await idle(page);assert.equal((await state(page)).selected,'C0');assert.equal(await field(page,'amended').inputValue(),'draft');assert.equal(await page.evaluate(()=>document.activeElement?.getAttribute('data-sec-action')),'select:C0');
   });
+  await check(`${width}/reading/before-after-values-stay-visible`,async()=>{
+   await open(page,'c16-reset');await click(page,'compare:hard');
+   // Only the operation comparison, not the separate collapsed commit diff.
+   const panel=page.locator('.ex-git-paired').first();
+   const rows=await panel.locator(':scope>div').evaluateAll(els=>els.map(el=>({label:el.querySelector('dt').textContent,values:[...el.querySelectorAll('pre')].map(p=>p.textContent)})));
+   assert.equal(rows.length,5);assert.deepEqual(rows.find(r=>r.label==='notes.txt / worktree').values,['working','start']);
+   assert.deepEqual(rows.find(r=>r.label==='notes.txt / index').values,['staged','start']);
+   const unreadable=await panel.locator('pre').evaluateAll(els=>els.filter(el=>{const r=el.getBoundingClientRect();return r.width<=0||el.scrollWidth>el.clientWidth+1;}).map(el=>el.textContent));assert.deepEqual(unreadable,[]);
+   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2),false);await capture(page,width,'reset-visible-comparison');
+   await click(page,'target:C1');await click(page,'compare:hard');assert.equal(repoHead(await state(page)),'C1');assert.match(await page.locator('[data-sec-board]').textContent(),/参照をC0へ戻した場合でも/);
+  });
   await check(`${width}/lifecycle/revisit-does-not-save-study-history`,async()=>{
    await open(page,'c16-git');await field(page,'content').fill('unsaved');await click(page,'edit');await page.goto(base+'#/catalog');await page.waitForSelector('#catalog-query');await open(page,'c16-git');assert.equal((await state(page)).repo.work['notes.txt'],'start');assert.deepEqual(await page.evaluate(()=>__gitCsp),[]);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2),false);
   });
