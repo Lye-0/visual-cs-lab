@@ -1,4 +1,5 @@
 # Read-only regression, split into bounded jobs. No source repair or publishing.
+# Workspace-view evidence is checked separately from initial chapter rendering.
 name: Staged main regression verification
 on:
   push:
@@ -196,10 +197,14 @@ jobs:
           import json,os
           from pathlib import Path
           root=Path('/tmp/staged-results')
-          result={'sourceCommit':os.environ['GITHUB_SHA'],'runId':os.environ['GITHUB_RUN_ID'],'jobs':{k:v['result'] for k,v in json.loads(os.environ['NEEDS']).items()},'chapters':{},'scripts':{},'visualReview':'Screenshots captured, not visually approved by this automation.','pedagogicalPlanReconciliation':'Not certified by automated regression.'}
+          result={'sourceCommit':os.environ['GITHUB_SHA'],'runId':os.environ['GITHUB_RUN_ID'],'jobs':{k:v['result'] for k,v in json.loads(os.environ['NEEDS']).items()},'chapters':{},'scripts':{},'viewState':{},'visualReview':'Screenshots captured, not visually approved by this automation.','pedagogicalPlanReconciliation':'Not certified by automated regression.'}
           for browser in ['chromium','firefox','webkit']:
               path=root/('staged-chapters-'+browser)/'chapter-summary.json'
               if path.exists():result['chapters'][browser]=json.loads(path.read_text())
+              path=root/('staged-operations-'+browser)/'view-state'/(browser+'.json')
+              if path.exists():
+                  review=json.loads(path.read_text())
+                  result['viewState'][browser]={key:review[key] for key in ['sourceCommit','passed','failed','runtime']}
           for path in root.glob('*/script-exits.tsv'):
               result['scripts'][path.parent.name]=[{'script':line.split('\t')[0],'exit':int(line.split('\t')[1])} for line in path.read_text().splitlines()]
           path=root/'staged-models'/'all-node-tests.txt'
@@ -210,6 +215,13 @@ jobs:
           assert len(result['chapters'])==3
           assert len(result['scripts'])==4
           assert all(all(s['exit']==0 for s in scripts) for scripts in result['scripts'].values())
+          assert len(result['viewState'])==3, 'Missing workspace-view evidence'
+          for browser,review in result['viewState'].items():
+              assert review['sourceCommit']==result['sourceCommit'], 'Stale workspace-view report'
+              assert review['passed']>0 and review['failed']==0 and not review['runtime']
+              scripts=result['scripts']['staged-operations-'+browser]
+              assert sum(s['script']=='tests/workspace-view-state-browser.mjs' for s in scripts)==1
+          assert all(ch['sourceCommit']==result['sourceCommit'] for ch in result['chapters'].values())
           PY
       - uses: actions/upload-artifact@v5
         if: always()
