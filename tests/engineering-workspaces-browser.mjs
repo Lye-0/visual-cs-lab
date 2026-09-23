@@ -96,7 +96,21 @@ try{
    await configure(page,async()=>{await page.locator('[data-native-field="stopAt"]').selectOption('outer-capture');});await page.locator('[data-cv-event-target]').click();assert.equal(await page.locator('[data-cv-output] li').count(),3);assert.doesNotMatch(await page.locator('[data-cv-output]').textContent(),/target capture/);
   });
   await check(width+': native form validates before submit and never sends to a server',async()=>{
-   await open(page,'gap-154','form');await page.locator('[data-cv-native-form] button').click();assert.match(await page.locator('[data-cv-output]').textContent(),/制約検証/);await page.locator('[data-cv-native-form] input').fill('DNS');await page.locator('[data-cv-native-form] button').click();assert.match(await page.locator('[data-cv-output]').textContent(),/DNS/);
+   await open(page,'gap-154','form');
+   const form=page.locator('[data-cv-native-form]'),input=form.locator('input'),button=form.locator('button'),output=page.locator('[data-cv-output]'),url=page.url();
+   await button.click();
+   // Observe the native constraint result instead of reading a possibly older
+   // status immediately after the pointer action. No fixed sleep or retry click.
+   await page.waitForFunction(()=>document.querySelector('[data-cv-output]')?.textContent.includes('制約検証'),null,{timeout:10000});
+   assert.equal(await input.evaluate(el=>el.validity.valueMissing),true);
+   assert.match(await output.textContent(),/制約検証/);
+   await input.fill('DNS');
+   assert.equal(await input.inputValue(),'DNS');
+   assert.equal(await input.evaluate(el=>el.validity.valid),true);
+   await button.click();
+   await page.waitForFunction(()=>document.querySelector('[data-cv-output]')?.textContent==='検証を通過。模擬送信した単元名：DNS（外部送信はしていません）',null,{timeout:10000});
+   assert.match(await output.textContent(),/DNS/);
+   assert.equal(page.url(),url);
   });
   await check(width+': server pipeline persists successful data but rolls back a failed write',async()=>{
    await open(page,'gap-155');await field(page,'method').selectOption('PATCH');await field(page,'body').fill('{"name":"edited"}');await field(page,'failure').selectOption('after');await click(page,'request');let s=await state(page);assert.equal(s.last.status,500);assert.equal(s.rows[0].name,'利用者1の資料');
