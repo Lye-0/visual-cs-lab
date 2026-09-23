@@ -7,13 +7,13 @@ import {chromium,firefox,webkit} from 'playwright';
 const name=process.env.BROWSER||'chromium',engine={chromium,firefox,webkit}[name];if(!engine)throw Error('Unknown browser');
 const out='review-output/multivariable',base='http://127.0.0.1:4229/';
 const report={sourceCommit:process.env.GITHUB_SHA||'local',engine:name,cases:[],errors:[],screenshots:[],visualReview:'not-performed-by-test'};
-const server=spawn(process.execPath,['scripts/server.mjs'],{env:{...process.env,PORT:'4229'},stdio:['ignore','ignore','pipe']});let browser,logs='';server.stderr.on('data',v=>logs+=v);server.on('error',e=>logs+=e.message);
+const server=spawn(process.execPath,['scripts/server.mjs'],{env:{...process.env,PORT:'4229'},stdio:['ignore','ignore','pipe']});let browser,logs='',serial=0;server.stderr.on('data',v=>logs+=v);server.on('error',e=>logs+=e.message);
 const state=page=>page.locator('[data-sec-state]').evaluate(e=>JSON.parse(e.dataset.secState));
 const field=(page,key)=>page.locator('[data-sec-field="'+key+'"]');
 const idle=page=>page.waitForFunction(()=>!document.querySelector('.experience [aria-busy="true"]'));
 const click=async(page,code)=>{await page.locator('[data-sec-action="'+code+'"]').first().click();await idle(page);};
 const value=(page,kind)=>page.evaluate(kind=>CSL.experiences.multivariable[kind+'View'](JSON.parse(document.querySelector('[data-sec-state]').dataset.secState)),kind);
-async function open(page,chapter){await page.goto(base+'#/lab/gap-006?chapter='+chapter);await page.waitForFunction(ch=>{const c=CSL?.app?.current,d=CSL.experiences.find('gap-006').chapters.find(x=>x.id===ch);return c?.experience&&c.lab.id==='gap-006'&&c.chapter===ch&&c.completed.size>=d.activities.length&&!document.querySelector('.experience [aria-busy="true"]');},chapter,{timeout:18000});}
+async function open(page,chapter){await page.goto(base+'?case='+ ++serial+'#/lab/gap-006?chapter='+chapter);await page.waitForFunction(ch=>{const c=CSL?.app?.current,d=CSL.experiences.find('gap-006').chapters.find(x=>x.id===ch);return c?.experience&&c.lab.id==='gap-006'&&c.chapter===ch&&c.completed.size>=d.activities.length&&!document.querySelector('.experience [aria-busy="true"]');},chapter,{timeout:18000});}
 async function check(id,fn){try{await fn();report.cases.push({id,passed:true});}catch(error){report.cases.push({id,passed:false,error:String(error.stack||error)});console.error('MULTI_FAIL '+id+' '+error.message);}}
 async function capture(page,width,slug){const file=`${out}/${name}-${width}-${slug}.png`;await page.locator('.experience').screenshot({path:file});report.screenshots.push(file);}
 try{
