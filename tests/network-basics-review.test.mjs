@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {modelModules} from '../scripts/modules.mjs';
 for(const name of modelModules)await import('../src/'+name+'.js');
-const X=CSL.experiences,N=X.networkBasics,copy=structuredClone;
+const L=CSL,X=L.experiences,N=X.networkBasics,copy=structuredClone;
 test('subnet applies the same mask to both addresses and /25 can change the decision',()=>{
  let s=N.subnetStart(),v=N.subnetView(s);assert.equal(v.same,true);assert.equal(L.intIp(v.networkA),'192.168.1.0');assert.equal(v.nextHop,s.peer);
  s=N.subnet(s,{kind:'configure',ip:'192.168.1.130',peer:'192.168.1.20',prefix:25});v=N.subnetView(s);assert.equal(v.same,false);assert.equal(L.intIp(v.networkA),'192.168.1.128');assert.equal(L.intIp(v.networkB),'192.168.1.0');assert.equal(v.nextHop,'192.168.1.1');
