@@ -15,7 +15,7 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: '22'
-      - name: Fix hidden before-after columns found by screen review
+      - name: Fix the reviewed comparison layout and scope the new assertion correctly
         run: |
           mkdir -p review-output
           python3 - <<'PY'
@@ -28,7 +28,7 @@ jobs:
           helper='''const paired=(heads,rows)=>'<dl class="ex-git-paired">'+rows.map(row=>'<div><dt>'+h(String(row[0]))+'</dt><dd><span>'+h(heads[1])+'</span><pre>'+h(String(row[1]))+'</pre></dd><dd><span>'+h(heads[2])+'</span><pre>'+h(String(row[2]))+'</pre></dd></div>').join('')+'</dl>';
           '''
           assert s.count(old)==1;s=s.replace(old,helper+old,1)
-          for old,new in [("table(['ファイル','変更前','変更後'],rows.map", "paired(['ファイル','変更前','変更後'],rows.map"),("table(['領域','出発点','今回'],[[", "paired(['領域','出発点','今回'],[[")]:
+          for old,new in [("table(['ファイル','変更前','変更後'],rows.map", "paired(['ファイル','変更前','変更後'],rows.map"),("table(['領域','出発点','今回'],[[", "paired(['領域','出発点','今回'],[["),('参照から外れたC1が、この教材のオブジェクト一覧には残ることも確認してください。','参照をC0へ戻した場合でも、C1がこの教材のオブジェクト一覧に残ることを確認してください。')]:
               assert s.count(old)==1;s=s.replace(old,new,1)
           p.write_text(s)
           p=Path('src/experiences-git-review.css');s=p.read_text();assert '.ex-git-paired' not in s
@@ -46,11 +46,14 @@ jobs:
           marker='  await check(`${width}/lifecycle/revisit-does-not-save-study-history`,async()=>{'
           test='''  await check(`${width}/reading/before-after-values-stay-visible`,async()=>{
              await open(page,'c16-reset');await click(page,'compare:hard');
-             const rows=await page.locator('.ex-git-paired>div').evaluateAll(els=>els.map(el=>({label:el.querySelector('dt').textContent,values:[...el.querySelectorAll('pre')].map(p=>p.textContent)})));
+             // Only the operation comparison, not the separate collapsed commit diff.
+             const panel=page.locator('.ex-git-paired').first();
+             const rows=await panel.locator(':scope>div').evaluateAll(els=>els.map(el=>({label:el.querySelector('dt').textContent,values:[...el.querySelectorAll('pre')].map(p=>p.textContent)})));
              assert.equal(rows.length,5);assert.deepEqual(rows.find(r=>r.label==='notes.txt / worktree').values,['working','start']);
              assert.deepEqual(rows.find(r=>r.label==='notes.txt / index').values,['staged','start']);
-             const unreadable=await page.locator('.ex-git-paired pre').evaluateAll(els=>els.filter(el=>{const r=el.getBoundingClientRect();return r.width<=0||el.scrollWidth>el.clientWidth+1;}).map(el=>el.textContent));assert.deepEqual(unreadable,[]);
+             const unreadable=await panel.locator('pre').evaluateAll(els=>els.filter(el=>{const r=el.getBoundingClientRect();return r.width<=0||el.scrollWidth>el.clientWidth+1;}).map(el=>el.textContent));assert.deepEqual(unreadable,[]);
              assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2),false);await capture(page,width,'reset-visible-comparison');
+             await click(page,'target:C1');await click(page,'compare:hard');assert.equal(repoHead(await state(page)),'C1');assert.match(await page.locator('[data-sec-board]').textContent(),/参照をC0へ戻した場合でも/);
             });
           '''+marker
           assert s.count(marker)==1;p.write_text(s.replace(marker,test,1))
