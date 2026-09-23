@@ -29,9 +29,10 @@
       "codeReview": "revised",
       "planReview": "partial",
       "visualReview": "pending",
-      "changes": ["点と方向を独立したクリック・キー・数値操作にする", "等高線・勾配・単位方向・内積・接平面の予測を対応", "同じ点のx断面・y断面・選択方向の断面を共通スケールで表示", "零勾配を極小と断定しない", "従来の一般係数の計算を別章に保持"],
-      "remaining": ["ヤコビ行列の局所変形と重積分の領域操作を個別に仕上げる", "立体表示が理解を助けるか、現在の断面と比較して判断", "全体の説明と狭い画面の目視確認"],
-      "sourcePaths": ["src/experiences-math.js", "src/experiences-math-evidence.js", "src/experiences-math-workbooks.js", "src/experiences-math-correspondence.js"]
+      "changes": ["点と方向を独立したクリック・キー・数値操作にする", "等高線・勾配・単位方向・内積・接平面の予測を対応", "同じ点のx断面・y断面・選択方向の断面を共通スケールで表示", "零勾配を極小と断定しない", "従来の一般係数の計算を別章に保持", "ヤコビ行列：同じPの入力正方形と正確な出力変位・局所線形予測を並べ、選択頂点・偏微分・積の項へ戻る", "hだけを変えると図の目盛りを維持。零ヤコビ行列でも二次の変化が残る例を明示", "重積分：区画を選ぶ操作と領域を編集する操作を分離。所属・中点の高さ・面積要素・寄与を対応", "領域の形を保つ4×4→8×8→16×16の細分化、同じ領域の解析値、負の寄与を比較", "jacobianとareaの既存URLを維持し、従来の計算記録はjacobian-calculationとarea-calculationへ残す"],
+      "remaining": ["立体表示が理解を助けるか、現在の断面・局所変位図・領域図と比較して判断", "全体の説明と狭い画面の目視確認", "細分化後を含めて、操作中に選択箇所と式を追いやすいか目視評価"],
+      "sourcePaths": ["src/experiences-math.js", "src/experiences-math-evidence.js", "src/experiences-math-workbooks.js", "src/experiences-math-correspondence.js", "src/experiences-multivariable-models.js", "src/experiences-multivariable-widgets.js", "src/experiences-multivariable.css"],
+      "verificationRecord": "docs/verification/MULTIVARIABLE_REVIEW.md"
     },
     {
       "id": "gap-008",
