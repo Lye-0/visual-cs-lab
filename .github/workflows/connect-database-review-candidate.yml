@@ -15,14 +15,22 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: '22'
-      - name: Connect only reviewed sources and create a local candidate
+      - name: Connect reviewed sources and correct the independently counted probe sequence
         run: |
           mkdir -p review-output
           python3 scripts/connect-database-review-candidate.py
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('tests/database-review-workspaces-browser.mjs');s=p.read_text()
+          old="await field(page,'age').fill('99');await click(page,'query');for(let i=0;i<3;i++)await click(page,'next');"
+          new="await field(page,'age').fill('99');await click(page,'query');for(let i=0;i<2;i++)await click(page,'next');"
+          assert s.count(old)==1
+          p.write_text(s.replace(old,new))
+          PY
           npm run build
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -- src scripts/modules.mjs index.html
+          git add -- src scripts/modules.mjs index.html tests/database-review-workspaces-browser.mjs
           git commit -m 'feat: データベース4単元の元データと処理結果を対応させる'
           git rev-parse HEAD > review-output/candidate-sha.txt
           git ls-tree -r HEAD > review-output/tracked-files.txt
