@@ -9,7 +9,7 @@ const report={sourceCommit:process.env.GITHUB_SHA||'local',engine,cases:[],error
 const server=spawn(process.execPath,['scripts/server.mjs'],{env:{...process.env,PORT:'4219'},stdio:['ignore','ignore','pipe']});let browser,serverError='';server.stderr.on('data',d=>serverError+=d);server.on('error',e=>serverError+=e.message);
 async function check(name,fn){try{await fn();report.cases.push({name,passed:true});}catch(e){report.cases.push({name,passed:false,error:String(e.stack||e)});console.error('FAIL '+name+'\n'+e.stack);}}
 async function ready(page,id){await page.waitForFunction(id=>{const c=globalThis.CSL?.app?.current;return c?.experience&&c.lab.id===id&&!document.querySelector('.experience [aria-busy="true"]')&&c.completed.size>0;},id);assert.deepEqual(await page.evaluate(()=>CSL.app.current.errors),[]);}
-async function open(page,id){await page.goto(base+'#/lab/'+id);await ready(page,id);}
+async function open(page,id,chapter=''){await page.goto(base+'#/lab/'+id+(chapter?'?chapter='+chapter:''));await ready(page,id);}
 const pairs=loc=>loc.evaluateAll(nodes=>nodes.flatMap(dl=>[...dl.children].map(row=>[row.querySelector('dt').textContent,row.querySelector('dd').textContent])));
 try{
  for(let i=0;i<100;i++){try{if((await fetch(base)).ok)break;}catch{}if(i===99)throw Error(serverError||'server timeout');await sleep(100);}
@@ -27,12 +27,12 @@ try{
    assert.equal(await ledger.locator('details[open]').count(),0);assert.equal(await ledger.locator('[data-ex-values="frame"]').isVisible(),true);
   });
   await check(width+': final values are shown only after all ledger records are available',async()=>{
-   await open(page,'c03-integral');const ledger=page.locator('.ex-kind-ledger');await ledger.locator('[name=n]').fill('8');await ledger.locator('button[type=submit]').click();await ready(page,'c03-integral');
+   await open(page,'c03-integral','calculation');const ledger=page.locator('.ex-kind-ledger');await ledger.locator('[name=n]').fill('8');await ledger.locator('button[type=submit]').click();await ready(page,'c03-integral');
    assert.equal(await ledger.locator('[data-ex-values="frame"]').count(),6);assert.equal(await ledger.locator('[data-ex-values="result"]').count(),0);
    await ledger.locator('[data-ex-more]').click();assert.equal(await ledger.locator('[data-ex-values="frame"]').count(),8);assert.equal(await ledger.locator('[data-ex-values="result"]').count(),1);
   });
   await check(width+': timeline result disappears when returning to an earlier state',async()=>{
-   await open(page,'c01-hamming');const root=page.locator('.ex-kind-timeline');assert.equal(await root.locator('[data-ex-values="result"]').count(),0);
+   await open(page,'c01-hamming','calculation');const root=page.locator('.ex-kind-timeline');assert.equal(await root.locator('[data-ex-values="result"]').count(),0);
    await root.locator('[data-ex-event]').last().click();assert.equal(await root.locator('[data-ex-values="result"]').count(),1);
    await root.locator('[data-ex-previous]').click();assert.equal(await root.locator('[data-ex-values="result"]').count(),0);
   });
