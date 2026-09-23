@@ -1,0 +1,110 @@
+# One-off authoring on the candidate branch. It never updates main.
+name: Verify Git mobile comparison repair
+on:
+  push:
+    branches: [review/git-correspondence]
+    paths: [.github/workflows/repair-git-mobile-once.yml]
+permissions:
+  contents: write
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Fix hidden before-after columns found by screen review
+        run: |
+          mkdir -p review-output
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          p=Path('src/experiences-git-review-widgets.js')
+          assert subprocess.check_output(['git','hash-object',str(p)],text=True).strip()=='a7d885b3c6b7b0eb0f33c8ac4029954465d0187f'
+          s=p.read_text()
+          old='const changes=rows=>'
+          helper='''const paired=(heads,rows)=>'<dl class="ex-git-paired">'+rows.map(row=>'<div><dt>'+h(String(row[0]))+'</dt><dd><span>'+h(heads[1])+'</span><pre>'+h(String(row[1]))+'</pre></dd><dd><span>'+h(heads[2])+'</span><pre>'+h(String(row[2]))+'</pre></dd></div>').join('')+'</dl>';
+          '''
+          assert s.count(old)==1;s=s.replace(old,helper+old,1)
+          for old,new in [("table(['ファイル','変更前','変更後'],rows.map", "paired(['ファイル','変更前','変更後'],rows.map"),("table(['領域','出発点','今回'],[[", "paired(['領域','出発点','今回'],[[")]:
+              assert s.count(old)==1;s=s.replace(old,new,1)
+          p.write_text(s)
+          p=Path('src/experiences-git-review.css');s=p.read_text();assert '.ex-git-paired' not in s
+          p.write_text(s+'''
+          /* Before/after values stay visible without chasing a hidden column. */
+          .ex-git-paired{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0}
+          .ex-git-paired>div{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;min-width:0;border:1px solid #3c5465;border-radius:9px;background:#10212c;padding:12px}
+          .ex-git-paired dt{grid-column:1/-1;min-width:0;color:#d3e4ee;font-weight:600;font-size:.84rem;overflow-wrap:anywhere}
+          .ex-git-paired dd{margin:0;min-width:0}
+          .ex-git-paired dd>span{display:block;color:#aebfcf;font-size:.76rem;margin:5px 0}
+          .ex-git-paired pre{margin:0;color:#f0f4f7;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;font:.85rem/1.7 ui-monospace,monospace}
+          @media(max-width:1000px){.ex-git-paired{grid-template-columns:minmax(0,1fr)}}
+          ''')
+          p=Path('tests/git-review-workspaces-browser.mjs');s=p.read_text()
+          marker='  await check(`${width}/lifecycle/revisit-does-not-save-study-history`,async()=>{'
+          test='''  await check(`${width}/reading/before-after-values-stay-visible`,async()=>{
+             await open(page,'c16-reset');await click(page,'compare:hard');
+             const rows=await page.locator('.ex-git-paired>div').evaluateAll(els=>els.map(el=>({label:el.querySelector('dt').textContent,values:[...el.querySelectorAll('pre')].map(p=>p.textContent)})));
+             assert.equal(rows.length,5);assert.deepEqual(rows.find(r=>r.label==='notes.txt / worktree').values,['working','start']);
+             assert.deepEqual(rows.find(r=>r.label==='notes.txt / index').values,['staged','start']);
+             const unreadable=await page.locator('.ex-git-paired pre').evaluateAll(els=>els.filter(el=>{const r=el.getBoundingClientRect();return r.width<=0||el.scrollWidth>el.clientWidth+1;}).map(el=>el.textContent));assert.deepEqual(unreadable,[]);
+             assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2),false);await capture(page,width,'reset-visible-comparison');
+            });
+          '''+marker
+          assert s.count(marker)==1;p.write_text(s.replace(marker,test,1))
+          PY
+          node --check src/experiences-git-review-widgets.js
+          node --check tests/git-review-workspaces-browser.mjs
+          node scripts/build.mjs --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- src/experiences-git-review-widgets.js src/experiences-git-review.css tests/git-review-workspaces-browser.mjs
+          git commit -m 'fix: Gitの差分と操作前後の内容を狭幅でも隠さず表示'
+          git rev-parse HEAD > review-output/candidate-sha.txt
+          git ls-tree -r HEAD > review-output/tracked-files.txt
+      - name: All Node tests and independent real Git expectations
+        run: |
+          npm run check > review-output/node.txt 2>&1 || { tail -n 100 review-output/node.txt; exit 1; }
+          grep -E '^# (tests|pass|fail|skipped|cancelled)' review-output/node.txt
+      - name: Install browsers
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0 > review-output/install.txt 2>&1
+          npx playwright install --with-deps chromium firefox webkit >> review-output/install.txt 2>&1
+      - name: Verify the same actual page on three browsers
+        run: |
+          failed=0
+          for browser in chromium firefox webkit; do
+            code=0
+            BROWSER="$browser" GITHUB_SHA="$(git rev-parse HEAD)" node tests/git-review-workspaces-browser.mjs > "review-output/$browser.txt" 2>&1 || code=$?
+            grep '^GIT_REVIEW_SUMMARY ' "review-output/$browser.txt" || true
+            if [ "$code" -ne 0 ]; then failed=1; fi
+          done
+          test "$failed" = 0
+          git diff --exit-code HEAD -- src scripts tests index.html .github docs
+      - name: Save the unchanged tested candidate
+        run: |
+          test "$(git ls-remote origin refs/heads/review/git-correspondence | cut -f1)" = "$GITHUB_SHA"
+          git push origin HEAD:refs/heads/review/git-correspondence
+      - name: Keep recoverable evidence
+        if: always()
+        run: |
+          git archive --format=zip HEAD -o review-output/source.zip
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          p=Path('review-output');r={'candidate':(p/'candidate-sha.txt').read_text().strip() if (p/'candidate-sha.txt').exists() else None,'browsers':{}}
+          for b in ['chromium','firefox','webkit']:
+              f=p/'git-review'/(b+'.json')
+              if f.exists():
+                  d=json.loads(f.read_text());r['browsers'][b]={k:d[k] for k in ['sourceCommit','passed','failed','errors']}
+          if (p/'node.txt').exists():r['node']=[s for s in (p/'node.txt').read_text().splitlines() if s.startswith(('# tests ','# pass ','# fail ','# skipped ','# cancelled '))]
+          (p/'summary.json').write_text(json.dumps(r,ensure_ascii=False,indent=2));print(json.dumps(r,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: git-review-mobile
+          path: review-output/
+          retention-days: 7
