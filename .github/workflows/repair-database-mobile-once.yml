@@ -1,0 +1,117 @@
+# Bounded authoring after an actual screenshot review. Never modifies main.
+name: Verify database mobile readability repair
+on:
+  push:
+    branches: [review/database-correspondence]
+    paths: [.github/workflows/repair-database-mobile-once.yml]
+permissions:
+  contents: write
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Apply the inspected mobile reading changes before testing
+        run: |
+          mkdir -p review-output
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          path='src/experiences-database-review-widgets.js'
+          assert subprocess.check_output(['git','hash-object',path],text=True).strip()=='2c8b9b6b6374d811bb272d47cb433872088af4aa'
+          def replace(path,old,new):
+              p=Path(path);s=p.read_text();assert s.count(old)==1,(path,old);p.write_text(s.replace(old,new,1))
+          replace(path,'</tbody></table></div>`;','</tbody></table></div><p class="ex-db-table-help">入りきらない列は、表を横へスクロールして確認できます。</p>`;')
+          anchor="const dash=value=>value===null?'—':String(value);"
+          replace(path,anchor,anchor+"\nconst stateValues=rows=>'<dl class=\"ex-db-state-values\">'+rows.map(([label,value])=>'<div><dt>'+h(label)+'</dt><dd>'+h(String(value))+'</dd></div>').join('')+'</dl>';")
+          old="table(['何の値か','現在'],[['読取済みの値',dash(actor.read)],['アプリ側の計算結果',dash(actor.local)],['未確定の書込値',actor.pc>=4?'—（COMMIT済み）':dash(actor.pending)],['次の処理',txWords[actor.pc]]])"
+          new="stateValues([['読取済みの値',dash(actor.read)],['アプリ側の計算結果',dash(actor.local)],['未確定の書込値',actor.pc>=4?'—（COMMIT済み）':dash(actor.pending)],['次の処理',txWords[actor.pc]]])"
+          replace(path,old,new)
+          replace(path,"box('木を選んで、同じ数字の役割を比べる',tree)","box('木を選んで、同じ数字の役割を比べる',tree+p('図が入りきらない場合は、木の枠の中を横へスクロールできます。'))")
+          p=Path('src/experiences-database-review.css');s=p.read_text();s+='''
+          /* Verified narrow-screen reading: labels stay horizontal; key transaction
+           * values never require scrolling to another column. */
+          .ex-db-table button{min-width:max-content;white-space:nowrap;word-break:normal;overflow-wrap:normal}
+          .ex-db-state-values{margin:14px 0;border:1px solid #3a4e5f;border-radius:9px;overflow:hidden}
+          .ex-db-state-values>div{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:12px;padding:12px;border-bottom:1px solid #2d4050;align-items:start}
+          .ex-db-state-values>div:last-child{border-bottom:0}
+          .ex-db-state-values dt{color:#bdd0dd;line-height:1.7;font-size:.86rem}
+          .ex-db-state-values dd{margin:0;color:#e7f0f5;font-size:.96rem;line-height:1.7;font-variant-numeric:tabular-nums;font-weight:600;overflow-wrap:anywhere;min-width:0}
+          .ex-db-table-help{display:none}
+          @media(max-width:600px){.ex-db-table-help{display:block;color:#adbfcb;font-size:.8rem;line-height:1.6;margin:4px 0 14px}.ex-db-state-values>div{padding:10px;gap:10px}.ex-db-state-values dt{font-size:.84rem}.ex-db-state-values dd{font-size:.9rem}}
+          ''';p.write_text(s)
+          # These tests inspect the real rendered source; no CSS injection.
+          p=Path('tests/database-review-workspaces-browser.mjs');s=p.read_text()
+          marker='  await check(`${width}/route-return-is-a-new-experiment`,async()=>{'
+          new='''  await check(`${width}/mobile-reading/horizontal-button-labels`,async()=>{
+             await open(page,'c14-join');
+             const result=await page.locator('.ex-db-table button').evaluateAll(buttons=>buttons.map(el=>{const r=document.createRange();r.selectNodeContents(el);const boxes=[...r.getClientRects()].filter(b=>b.width>0&&b.height>0);return {text:el.textContent,lines:new Set(boxes.map(b=>Math.round(b.y))).size,overflows:el.scrollWidth>el.clientWidth+1};}));
+             assert.ok(result.length>0);assert.deepEqual(result.filter(r=>r.lines!==1||r.overflows),[]);
+             if(width<=600)assert.equal(await page.locator('.ex-db-table-help').first().isVisible(),true);
+             assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2),false);
+            });
+            await check(`${width}/mobile-reading/current-values-remain-visible`,async()=>{
+             await open(page,'c14-transaction');for(let i=0;i<3;i++)await click(page,'step:A');
+             assert.deepEqual((await page.locator('.ex-db-state-values dd').allTextContents()).slice(0,3),['100','120','120']);
+             const bad=await page.locator('.ex-db-state-values dd').evaluateAll(els=>els.filter(el=>{const b=el.getBoundingClientRect(),p=el.closest('.ex-db-state-values').getBoundingClientRect();return b.left<p.left-1||b.right>p.right+1||el.scrollWidth>el.clientWidth+1;}).map(el=>el.textContent));assert.deepEqual(bad,[]);
+             await capture(page,width,'transaction-readable-values');
+            });
+          '''+marker
+          assert s.count(marker)==1;s=s.replace(marker,new,1);p.write_text(s)
+          PY
+          node --check src/experiences-database-review-widgets.js
+          node scripts/build.mjs --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- src/experiences-database-review-widgets.js src/experiences-database-review.css tests/database-review-workspaces-browser.mjs
+          git commit -m 'fix: スマホで表の操作名とトランザクションの値を読めるようにする'
+          git rev-parse HEAD > review-output/candidate-sha.txt
+          git ls-tree -r HEAD > review-output/tracked-files.txt
+      - name: All Node calculations and registration checks
+        run: |
+          npm run check > review-output/node.txt 2>&1 || { tail -n 120 review-output/node.txt; exit 1; }
+          grep -E '^# (tests|pass|fail|skipped|cancelled)' review-output/node.txt
+      - name: Install the three browsers
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0 > review-output/install.txt 2>&1
+          npx playwright install --with-deps chromium firefox webkit >> review-output/install.txt 2>&1
+      - name: Execute the committed tests and recapture the real screen
+        run: |
+          failed=0
+          for browser in chromium firefox webkit; do
+            code=0
+            BROWSER="$browser" GITHUB_SHA="$(git rev-parse HEAD)" node tests/database-review-workspaces-browser.mjs > "review-output/$browser.txt" 2>&1 || code=$?
+            grep '^DB_SUMMARY ' "review-output/$browser.txt" || true
+            if [ "$code" -ne 0 ]; then failed=1; fi
+          done
+          test "$failed" = 0
+          git diff --exit-code HEAD -- src scripts tests index.html .github docs
+      - name: Save only unchanged tested sources on the candidate branch
+        run: |
+          test "$(git ls-remote origin refs/heads/review/database-correspondence | cut -f1)" = "$GITHUB_SHA"
+          git push origin HEAD:refs/heads/review/database-correspondence
+      - name: Save evidence without declaring a visual approval
+        if: always()
+        run: |
+          git archive --format=zip HEAD -o review-output/source.zip
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          p=Path('review-output');r={'candidate':(p/'candidate-sha.txt').read_text().strip() if (p/'candidate-sha.txt').exists() else None,'browsers':{}}
+          for b in ['chromium','firefox','webkit']:
+              f=p/'database'/(b+'.json')
+              if f.exists():
+                  d=json.loads(f.read_text());r['browsers'][b]={k:d[k] for k in ['sourceCommit','passed','failed','errors']}
+          if (p/'node.txt').exists():r['node']=[line for line in (p/'node.txt').read_text().splitlines() if line.startswith(('# tests ','# pass ','# fail ','# skipped ','# cancelled '))]
+          (p/'summary.json').write_text(json.dumps(r,ensure_ascii=False,indent=2));print(json.dumps(r,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: database-mobile-candidate
+          path: review-output/
+          retention-days: 7
