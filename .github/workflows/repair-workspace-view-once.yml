@@ -1,0 +1,111 @@
+# Bounded authoring transaction. Reproduce first; publish only a tested commit.
+# This workflow and its repair script remove themselves from the candidate.
+name: Review and repair workspace reading position
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/repair-workspace-view-once.yml
+      - scripts/repair-workspace-view-once.py
+      - scripts/staged-workspace-view-browser.mjs
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: repair-workspace-view-once
+  cancel-in-progress: false
+jobs:
+  reproduce-repair-verify:
+    if: github.repository == 'Lye-0/visual-cs-lab' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Install the three browser engines
+        run: |
+          mkdir -p review-output
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0 > review-output/install.txt 2>&1
+          npx playwright install --with-deps chromium firefox webkit >> review-output/install.txt 2>&1 || { tail -n 50 review-output/install.txt; exit 1; }
+      - name: Reproduce named reading-context defects without changing the app
+        run: |
+          code=0
+          BROWSER=chromium VIEW_REVIEW_OUTPUT=review-output/baseline node scripts/staged-workspace-view-browser.mjs > review-output/baseline.log 2>&1 || code=$?
+          test "$code" = 1
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('review-output/baseline/chromium.json').read_text())
+          failed=[c for c in r['cases'] if not c['passed']]
+          allowed={'details-remain-open-after-item-edit','undo-keeps-reading-context-reset-clears-it','unsubmitted-input-survives-cell-selection','dp-horizontal-reading-position-survives-redraw','sum-button-keeps-focus-in-the-sum','channel-positions-are-visible-not-only-accessible-labels','reverse-integral-does-not-call-its-first-endpoint-left'}
+          result={'sourceCommit':r['sourceCommit'],'passed':r['passed'],'failed':r['failed'],'runtime':r['runtime'],'failedCases':[{'id':c['id'],'error':c['error']} for c in failed]}
+          Path('review-output/baseline-summary.json').write_text(json.dumps(result,ensure_ascii=False,indent=2))
+          print(json.dumps(result,ensure_ascii=False,indent=2))
+          assert not r['runtime'] and failed
+          assert all(c['id'].split('/',1)[1] in allowed for c in failed)
+          PY
+          git diff --exit-code HEAD -- src scripts tests index.html package.json .github docs
+      - name: Apply only reviewed edits and create a local candidate commit
+        run: |
+          python3 scripts/repair-workspace-view-once.py
+          mv scripts/staged-workspace-view-browser.mjs tests/workspace-view-state-browser.mjs
+          node --check src/experiences-security-widgets.js
+          node --check src/experiences-foundation-review-widgets.js
+          node --check tests/workspace-view-state-browser.mjs
+          npm run build
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- src/experiences-security-widgets.js src/experiences-foundation-review-widgets.js tests/workspace-view-state-browser.mjs scripts/staged-workspace-view-browser.mjs scripts/repair-workspace-view-once.py .github/workflows/repair-workspace-view-once.yml .github/workflows/staged-main-verification.yml index.html
+          git commit -m 'fix: 教材操作後も設定欄と表の位置とフォーカスを保持'
+          git rev-parse HEAD > review-output/candidate-sha.txt
+          git show --stat --oneline HEAD > review-output/changes.txt
+      - name: Verify the committed candidate in all three browsers
+        run: |
+          npm run check > review-output/node.txt 2>&1 || { tail -n 100 review-output/node.txt; exit 1; }
+          grep -E '^# (tests|pass|fail|skipped|cancelled)' review-output/node.txt
+          failed=0
+          for browser in chromium firefox webkit; do
+            code=0
+            BROWSER="$browser" GITHUB_SHA="$(git rev-parse HEAD)" node tests/workspace-view-state-browser.mjs > "review-output/view-$browser.log" 2>&1 || code=$?
+            printf 'view-%s\t%s\n' "$browser" "$code" | tee -a review-output/script-exits.tsv
+            grep '^VIEW_SUMMARY ' "review-output/view-$browser.log" || true
+            if [ "$code" -ne 0 ]; then failed=1; fi
+            for file in tests/foundation-review-browser.mjs tests/math-evidence-browser.mjs tests/math-correspondence-browser.mjs; do
+              code=0
+              BROWSER="$browser" GITHUB_SHA="$(git rev-parse HEAD)" node "$file" > "review-output/$(basename "$file")-$browser.log" 2>&1 || code=$?
+              printf '%s-%s\t%s\n' "$file" "$browser" "$code" | tee -a review-output/script-exits.tsv
+              if [ "$code" -ne 0 ]; then tail -n 40 "review-output/$(basename "$file")-$browser.log"; failed=1; fi
+            done
+          done
+          test "$failed" = 0
+          git diff --exit-code HEAD -- src scripts tests index.html package.json .github docs
+      - name: Publish only the unchanged tested candidate
+        run: |
+          test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$GITHUB_SHA"
+          git push origin HEAD:refs/heads/main
+          git rev-parse HEAD | tee review-output/published-sha.txt
+      - name: Compact evidence for recovery and final reporting
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json,os
+          from pathlib import Path
+          p=Path('review-output')
+          r={'triggerCommit':os.environ['GITHUB_SHA'],'runId':os.environ['GITHUB_RUN_ID'],'candidate':(p/'candidate-sha.txt').read_text().strip() if (p/'candidate-sha.txt').exists() else None,'published':(p/'published-sha.txt').read_text().strip() if (p/'published-sha.txt').exists() else None,'browsers':{},'visualReview':'Not performed by this automation.'}
+          for browser in ['chromium','firefox','webkit']:
+            f=p/'view-state'/(browser+'.json')
+            if f.exists():
+              data=json.loads(f.read_text());r['browsers'][browser]={k:data[k] for k in ['sourceCommit','passed','failed','runtime']};r['browsers'][browser]['failedCases']=[c for c in data['cases'] if not c['passed']]
+          if (p/'node.txt').exists():r['node']=[s for s in (p/'node.txt').read_text().splitlines() if s.startswith(('# tests ','# pass ','# fail ','# skipped ','# cancelled '))]
+          if (p/'script-exits.tsv').exists():r['scripts']=[s.split('\t') for s in (p/'script-exits.tsv').read_text().splitlines()]
+          (p/'summary.json').write_text(json.dumps(r,ensure_ascii=False,indent=2));print(json.dumps(r,ensure_ascii=False,indent=2))
+          PY
+          git archive --format=zip HEAD -o review-output/candidate-source.zip
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: workspace-view-review
+          path: review-output/
+          retention-days: 7
