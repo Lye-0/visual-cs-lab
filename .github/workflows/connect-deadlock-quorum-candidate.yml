@@ -1,0 +1,103 @@
+# Temporary candidate integration. Main is never modified here.
+name: Verify deadlock and quorum candidate
+on:
+  push:
+    branches: [review/deadlock-quorum]
+    paths: [.github/workflows/connect-deadlock-quorum-candidate.yml]
+permissions:
+  contents: write
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Connect only the reviewed sources and create a local candidate
+        run: |
+          mkdir -p review-output
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          expected={
+            'scripts/modules.mjs':'48d3bc683967da92a813fd17c400ed52b205dccb',
+            'src/experiences-systems.js':'d27a7b1daea19c1a02d2bea83cc8b4ae84b91e18',
+            'tests/authored-result-values-browser.mjs':'7d9c91c8935d3ab5b71877057903962d0282ef34',
+          }
+          for path,sha in expected.items():
+              actual=subprocess.check_output(['git','hash-object',path],text=True).strip()
+              assert actual==sha,(path,actual)
+          def replace(path,old,new):
+              p=Path(path);s=p.read_text();assert s.count(old)==1,(path,old);p.write_text(s.replace(old,new,1))
+          replace('scripts/modules.mjs','"experiences-git-review"];','"experiences-git-review","experiences-concurrency-review"];')
+          replace('scripts/modules.mjs','"experiences-git-review-widgets"];','"experiences-git-review-widgets","experiences-concurrency-review-widgets"];')
+          replace('scripts/modules.mjs','"experiences-git-review","scrollbars"];','"experiences-git-review","experiences-concurrency-review","scrollbars"];')
+          old="""d('c12-deadlock','資源を持ったまま、相手を待つ','止まっている理由を、誰が何を保持し何を要求しているかで考えます。','二つの処理が違う資源を先に取ると、互いが持つもう一つを待つ輪を作れます。順序をそろえた場合と同じ出発点から比較します。',[A('compare','獲得順序を変える',[],{},{examples:[P('違う順序で取る',{order:false},'互いの持つ資源を待つ場合を追います。'),P('同じ順序で取る',{order:true},'最初の資源を待つ側は、他の資源を握りません。')]})]);"""
+          new="""X.define('c12-deadlock','保持している資源と待っている相手を同時に読み、循環待ちができる瞬間を自分で作ります。',[
+ C('objects','誰が何を保持し、誰を待つか','互いに待ち続ける状態を、どう防ぐ？','P1とP2を一段階ずつ進めます。逆順ではP1がA、P2がBを保持したまま相手の資源を待つ輪を作れます。同じ順序では、待つ側が別資源を先に握らないことを確認してください。',[A('deadlock-ownership','保持・要求・待ちの辺を直接操作する')],['「中断して解放」は発生後の回復操作です。順序統一による予防と区別します。']),
+ C('calculation','固定した順序の計算記録','二つの固定例を並べると、どの条件が違うでしょうか。','直接操作で待ちの輪を作った後、従来の固定例でも取得順序の違いを確認します。',[A('compare','獲得順序を変える',[],{},{examples:[P('違う順序で取る',{order:false},'互いの持つ資源を待つ場合を追います。'),P('同じ順序で取る',{order:true},'最初の資源を待つ側は、他の資源を握りません。')]})])
+]);"""
+          replace('src/experiences-systems.js',old,new)
+          old="""d('c12-quorum','過半数同士は重なる','何台生きているかという計算は、合意形成全体とは別の入口です。','5台の過半数は3台です。どちらも3台選ぶ二つの集合は必ず少なくとも一台で重なります。この重なりを利用する仕組みには、版や投票の規則も必要です。',[A('inspect','停止数と必要な票数',['nodes','failed'])],['この小例の台数判定だけで、障害中の全ての読み書きが正しいと保証しているわけではありません。']);"""
+          new="""X.define('c12-quorum','集合の交差と、停止中に必要数を集められるかを別々に操作します。',[
+ C('objects','二つの集合の重なりと応答可能数','5台のうち、なぜ過半数を選ぶ二集合は必ず重なるのでしょうか。','集合A・Bの所属を自分で切り替え、q=3とq=2を比較します。停止ノードは集合の数学的な交差ではなく、今応答できる台数を変える操作として分けてください。',[A('quorum-sets','集合・交差・停止ノードを直接選ぶ')],['この集合論と台数判定だけでRaft/Paxos等の合意プロトコル全体の安全性を保証しません。']),
+ C('calculation','停止数と必要票数の計算記録','ノード数と停止数から、必要票数をどう計算するでしょうか。','直接操作の後、従来の可用性計算でノード数と停止数を変えて確認します。',[A('inspect','停止数と必要な票数',['nodes','failed'])],['この小例の台数判定だけで、障害中の全ての読み書きが正しいと保証しているわけではありません。'])
+]);"""
+          replace('src/experiences-systems.js',old,new)
+          replace("tests/authored-result-values-browser.mjs","await open(page,'c12-quorum');const root=page.locator('.ex-kind-inspect');","await open(page,'c12-quorum','calculation');const root=page.locator('.ex-kind-inspect');")
+          PY
+          npm run build
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- scripts/modules.mjs src/experiences-systems.js tests/authored-result-values-browser.mjs index.html
+          git commit -m 'feat: デッドロックとクォーラムを直接操作へ接続'
+          git rev-parse HEAD > review-output/candidate-sha.txt
+          git ls-tree -r HEAD > review-output/tracked-files.txt
+      - name: All Node calculations and registrations
+        run: |
+          npm run check > review-output/node.txt 2>&1 || { tail -n 140 review-output/node.txt; exit 1; }
+          grep -E '^# (tests|pass|fail|skipped|cancelled)' review-output/node.txt
+      - name: Install three browsers
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0 > review-output/install.txt 2>&1
+          npx playwright install --with-deps chromium firefox webkit >> review-output/install.txt 2>&1
+      - name: Operate the two direct workspaces and retained calculation chapter
+        run: |
+          failed=0
+          for browser in chromium firefox webkit; do
+            for file in tests/concurrency-review-workspaces-browser.mjs tests/authored-result-values-browser.mjs; do
+              code=0
+              BROWSER="$browser" GITHUB_SHA="$(git rev-parse HEAD)" node "$file" > "review-output/$browser-$(basename "$file").txt" 2>&1 || code=$?
+              if [ "$file" = tests/concurrency-review-workspaces-browser.mjs ]; then grep '^CONC_SUMMARY ' "review-output/$browser-$(basename "$file").txt" || true; fi
+              if [ "$code" -ne 0 ]; then tail -n 70 "review-output/$browser-$(basename "$file").txt"; failed=1; fi
+            done
+          done
+          test "$failed" = 0
+          git diff --exit-code HEAD -- src scripts tests index.html .github docs
+      - name: Save the unchanged tested candidate on its temporary branch
+        run: |
+          test "$(git ls-remote origin refs/heads/review/deadlock-quorum | cut -f1)" = "$GITHUB_SHA"
+          git push origin HEAD:refs/heads/review/deadlock-quorum
+      - name: Save compact evidence
+        if: always()
+        run: |
+          git archive --format=zip HEAD -o review-output/source.zip
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('review-output'); result={'candidate':(p/'candidate-sha.txt').read_text().strip() if (p/'candidate-sha.txt').exists() else None,'browsers':{},'node':[]}
+          for browser in ['chromium','firefox','webkit']:
+              f=p/'concurrency'/(browser+'.json')
+              if f.exists():
+                  d=json.loads(f.read_text());result['browsers'][browser]={k:d[k] for k in ['sourceCommit','passed','failed','errors']}
+          if (p/'node.txt').exists():result['node']=[line for line in (p/'node.txt').read_text().splitlines() if line.startswith(('# tests ','# pass ','# fail ','# skipped ','# cancelled '))]
+          (p/'summary.json').write_text(json.dumps(result,ensure_ascii=False,indent=2));print(json.dumps(result,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: deadlock-quorum-candidate
+          path: review-output/
+          retention-days: 7
