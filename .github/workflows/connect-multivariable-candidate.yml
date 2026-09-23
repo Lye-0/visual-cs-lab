@@ -17,13 +17,13 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: '22'
-      - name: Connect the inspected sources on the candidate only
+      - name: Connect sources and isolate independent browser cases before committing
         run: |
           mkdir -p review-output
           python3 - <<'PY'
           from pathlib import Path
           import subprocess
-          expected={'scripts/modules.mjs':'1cc89b75f63d20413a87d194eb57bdfbe500316d','src/experiences-math.js':'9c4e7df4e0856316491494f3801190aa4946b2ab'}
+          expected={'scripts/modules.mjs':'1cc89b75f63d20413a87d194eb57bdfbe500316d','src/experiences-math.js':'9c4e7df4e0856316491494f3801190aa4946b2ab','tests/multivariable-browser.mjs':'a9b6c1038c6dbdddbe70fdf2c858ea2fc9c41680'}
           for path,sha in expected.items():
               actual=subprocess.check_output(['git','hash-object',path],text=True).strip()
               assert actual==sha,(path,actual)
@@ -38,12 +38,16 @@ jobs:
               lines=[line for line in s.splitlines() if line.startswith(" m('"+id+"',")];assert len(lines)==1
               old=lines[0];calc=old.replace("m('"+id+"',","m('"+id+"-calculation',",1);s=s.replace(old,new+'\n'+calc,1)
           p.write_text(s)
+          # Same-URL navigation is not a fresh visit in every engine. Each
+          # independent case must start a new document, not inherit prior h/D.
+          replace('tests/multivariable-browser.mjs',"let browser,logs='';","let browser,logs='',serial=0;")
+          replace('tests/multivariable-browser.mjs',"page.goto(base+'#/lab/gap-006?chapter='+chapter)","page.goto(base+'?case='+ ++serial+'#/lab/gap-006?chapter='+chapter)")
           PY
           npm run build
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -- scripts/modules.mjs src/experiences-math.js index.html
-          git commit -m 'feat: ヤコビ行列の局所変形と重積分の領域操作を接続'
+          git add -- scripts/modules.mjs src/experiences-math.js index.html tests/multivariable-browser.mjs
+          git commit -m 'feat: ヤコビ行列と重積分の個別操作を接続し独立に検証'
           git rev-parse HEAD > review-output/candidate-sha.txt
           git ls-tree -r HEAD > review-output/tracked-files.txt
       - name: All calculation and registration tests
