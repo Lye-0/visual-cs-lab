@@ -1,0 +1,45 @@
+name: Verify network basics candidate
+on:
+  push:
+    branches: [review/network-basics-correspondence]
+    paths: [.github/workflows/verify-network-basics-candidate.yml]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Node tests
+        run: |
+          mkdir -p review-output
+          npm run check > review-output/node.txt 2>&1
+          grep -E '^# (tests|pass|fail|skipped|cancelled)' review-output/node.txt
+      - name: Install browsers
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0 > review-output/install.txt 2>&1
+          npx playwright install --with-deps chromium firefox webkit >> review-output/install.txt 2>&1
+      - name: Network basics and existing network workspaces
+        run: |
+          failed=0
+          for browser in chromium firefox webkit; do
+            for file in tests/network-basics-review-browser.mjs tests/network-workspaces-browser.mjs tests/network-workspaces-edges-browser.mjs; do
+              code=0
+              BROWSER="$browser" GITHUB_SHA="$GITHUB_SHA" node "$file" > "review-output/$browser-$(basename "$file").txt" 2>&1 || code=$?
+              if [ "$code" -ne 0 ]; then tail -n 80 "review-output/$browser-$(basename "$file").txt"; failed=1; fi
+            done
+          done
+          test "$failed" = 0
+          git diff --exit-code HEAD -- src scripts tests index.html package.json .github docs
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: network-basics-candidate
+          path: review-output/
+          retention-days: 7
