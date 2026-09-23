@@ -1,0 +1,72 @@
+# Isolated authoring transaction. Does not change main. Removed before integration.
+name: Verify database correspondence candidate
+on:
+  push:
+    branches: [review/database-correspondence]
+    paths: [.github/workflows/connect-database-review-candidate.yml]
+permissions:
+  contents: write
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Connect only reviewed sources and create a local candidate
+        run: |
+          mkdir -p review-output
+          python3 scripts/connect-database-review-candidate.py
+          npm run build
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- src scripts/modules.mjs index.html
+          git commit -m 'feat: データベース4単元の元データと処理結果を対応させる'
+          git rev-parse HEAD > review-output/candidate-sha.txt
+          git ls-tree -r HEAD > review-output/tracked-files.txt
+      - name: All calculation and registration tests
+        run: |
+          npm run check > review-output/node.txt 2>&1 || { tail -n 140 review-output/node.txt; exit 1; }
+          grep -E '^# (tests|pass|fail|cancelled|skipped)' review-output/node.txt
+      - name: Install three browsers
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0 > review-output/install.txt 2>&1
+          npx playwright install --with-deps chromium firefox webkit >> review-output/install.txt 2>&1
+      - name: Operate real controls and capture full readable views
+        run: |
+          failed=0
+          for browser in chromium firefox webkit; do
+            code=0
+            BROWSER="$browser" GITHUB_SHA="$(git rev-parse HEAD)" node tests/database-review-workspaces-browser.mjs > "review-output/$browser.txt" 2>&1 || code=$?
+            grep '^DB_SUMMARY ' "review-output/$browser.txt" || true
+            if [ "$code" -ne 0 ]; then failed=1; fi
+          done
+          test "$failed" = 0
+          git diff --exit-code HEAD -- src scripts tests index.html .github docs
+      - name: Save unchanged tested candidate on its temporary branch only
+        run: |
+          test "$(git ls-remote origin refs/heads/review/database-correspondence | cut -f1)" = "$GITHUB_SHA"
+          git push origin HEAD:refs/heads/review/database-correspondence
+      - name: Recoverable source and compact evidence
+        if: always()
+        run: |
+          git archive --format=zip HEAD -o review-output/source.zip
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('review-output');r={'candidate':(p/'candidate-sha.txt').read_text().strip() if (p/'candidate-sha.txt').exists() else None,'browsers':{}}
+          for name in ['chromium','firefox','webkit']:
+              f=p/'database'/(name+'.json')
+              if f.exists():
+                  d=json.loads(f.read_text());r['browsers'][name]={k:d[k] for k in ['sourceCommit','passed','failed','errors']}
+          if (p/'node.txt').exists():r['node']=[line for line in (p/'node.txt').read_text().splitlines() if line.startswith(('# tests ','# pass ','# fail ','# cancelled ','# skipped '))]
+          (p/'summary.json').write_text(json.dumps(r,ensure_ascii=False,indent=2));print(json.dumps(r,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: database-review-candidate
+          path: review-output/
+          retention-days: 7
