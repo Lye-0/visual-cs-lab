@@ -2,14 +2,21 @@
 
 記録日：2026-09-23。
 
-## 今回の対象
+## 結論と対象コミット
 
-既存の見直し台帳で未実装として残っていた、GAP-006の「ヤコビ行列を小さな変形として操作する」「重積分を領域として操作する」の二つを追加した。既存の勾配・断面表示や一般係数の計算は維持する。全314単元の目視レビューを終えたという記録ではない。
+既存の見直し台帳で未実装として残っていた、GAP-006の「ヤコビ行列を小さな変形として操作する」「重積分を領域として操作する」の二つを追加した。mainへの反映、対象検証、変更を含む全314単元の自動回帰検証まで完了した。最終回帰runは集計を含む9ジョブ全て成功。
 
-実装前のmain：`98696bf129c353f0813547e0364e081925daa552`。
-検証済みの候補：`e7851a0f054ddc6f27b407754d58fd56d75a93cf`。
-対象検証run：`35817881002`、job：`107043241645`。
-artifact：`multivariable-candidate`、ID `10732326730`（7日保存）。集計は `summary.json`、詳細は `multivariable/*.json`、画像も同じ成果物に保存した。
+既存の勾配・断面表示や一般係数の計算は維持する。この記録は、全314単元の目視レビューや当初の個別計画の全件照合を終えたという意味ではない。
+
+- 実装前のmain：`98696bf129c353f0813547e0364e081925daa552`
+- 対象検証を通した候補：`e7851a0f054ddc6f27b407754d58fd56d75a93cf`
+- mainへ反映したアプリのコミット：`a77a23286c69e5d6e61bf8e6e81e3316ee96c795`
+- 最終の全体回帰対象：`c44cf99ae389b283d0e93f553a239e7a4183a740`
+- 最終回帰run：`35819433374`（Staged main regression verification）
+- 最終集計job：`107050671646`。2026-09-23 04:56 UTCに成功。
+- 最終集計artifact：`staged-summary`、ID `10733355626`、内容 `summary.json`、7日保存。
+
+`c44cf99` は `a77a232` に対して、既存のネイティブフォームのブラウザ検査だけを更新したコミットである。アプリのファイルは変更していない。この成功記録を保存するコミットも、この文書だけの更新である。
 
 ## 既存教材・ノートとの関係
 
@@ -19,7 +26,7 @@ artifact：`multivariable-candidate`、ID `10732326730`（7日保存）。集計
 
 ## ヤコビ行列：点と変位を混ぜない
 
-- 章URLは従来の `#/lab/gap-006?chapter=jacobian` を維持。
+- 章URLは従来の `#/lab/gap-006?chapter=jacobian` を維持。章名は「小さな変位をどう写すか」。
 - P、T(P)、入力変位δ、正確な出力変位T(P+δ)−T(P)、一次予測J(P)δを区別する。
 - 二つの図はそれぞれPとT(P)を原点とした変位図である。絶対座標の位置の図ではないと明記。
 - 頂点を選択し、δx・δyから出力u・vへの二つの寄与を足す表へ戻る。行列の各成分も選択して偏微分の意味を読める。
@@ -29,7 +36,7 @@ artifact：`multivariable-candidate`、ID `10732326730`（7日保存）。集計
 
 ## 重積分：領域・高さ・分割を分ける
 
-- 章URLは従来の `#/lab/gap-006?chapter=area` を維持。
+- 章URLは従来の `#/lab/gap-006?chapter=area` を維持。章名は「領域を小さな区画へ分ける」。
 - 「区画を調べる」と「領域を編集」を分けた。矢印キーでの移動は編集モードでも所属を変更せず、クリック・Enterが明示的な操作になる。
 - 区画の所属、中点、そこでの高さ、ΔxΔy、積分の和へ加える一項を対応させる。
 - 区画を外すことと、そこでの関数値が0であることは区別する。空の領域と高さ0の面も別状態である。
@@ -38,9 +45,12 @@ artifact：`multivariable-candidate`、ID `10732326730`（7日保存）。集計
 - 中点近似の値と、同じ選択領域を多項式の原始関数で積分した値を比較する。負の高さ・打ち消し合いを排除せず、符号付きの量として扱う。
 - 係数変更の詳細欄は既存の一時的な表示状態保持を利用。学習履歴・ノート・永続保存は追加していない。
 
-従来の詳しい計算記録は `jacobian-calculation` と `area-calculation` に残す。GAP-006は4章から6章となり、全体は314単元・576章になる。
+従来の詳しい計算記録は `jacobian-calculation` と `area-calculation` に残す。GAP-006は4章から6章となり、全体は314単元・576章になった。
 
 ## 対象検証：成功
+
+対象検証run：`35817881002`、job：`107043241645`。
+artifact：`multivariable-candidate`、ID `10732326730`（7日保存）。集計は `summary.json`、詳細は `multivariable/*.json`、画像も同じ成果物に保存した。
 
 | 検証 | 成功 | 失敗 |
 |---|---:|---:|
@@ -56,14 +66,82 @@ artifact：`multivariable-candidate`、ID `10732326730`（7日保存）。集計
 
 最初の候補run `35817576833` は、独立した試験ケースが同じURLへ移動しただけで初期状態に戻ったと仮定していたため、Chromium/Firefoxで前のhや領域を引き継いで失敗した。試験ごとに別の文書として開くようテストの訪問方法を修正し、アプリの計算式や期待値を変えず、上記の再検証が成功した。
 
-mainへの反映では、テスト本体の内容は変えずに `tests/multivariable-workspaces-browser.mjs` へ名前を変更する。既存の全体回帰の `tests/*workspaces*browser.mjs` に含めるためであり、新しい書込み権限や別の常設ワークフローは追加しない。候補接続用の一時ワークフローは削除する。
+mainへの反映では、テスト本体の内容は変えずに `tests/multivariable-workspaces-browser.mjs` へ名前を変更した。既存の全体回帰の `tests/*workspaces*browser.mjs` に含めるためであり、新しい書込み権限や別の常設ワークフローは追加していない。候補接続用の一時ワークフローはmainには含めていない。ユーザーによる追加のマージは不要。
 
-## 全体回帰
+## 全体回帰：完了
 
-この文書を最初に保存する時点では、今回の変更を含むmainの全体回帰は未完了。main反映後、同じソースに対する全章・専用操作・従来画面の結果を確認してここへ追記する。
+最終の対象は `c44cf99ae389b283d0e93f553a239e7a4183a740`、run `35819433374`。モデル・全章表示・専用操作・従来画面を分けて実行し、同じコミットの結果を最終集計で確認した。
+
+| 検証 | 成功 | 失敗 |
+|---|---:|---:|
+| Node.js全テスト | 3874 | 0 |
+| 全章初期表示・Chromium | 1728 | 0 |
+| 全章初期表示・Firefox | 1728 | 0 |
+| 全章初期表示・WebKit | 1728 | 0 |
+| 表示位置・説明の対応・Chromium | 98 | 0 |
+| 表示位置・説明の対応・Firefox | 98 | 0 |
+| 表示位置・説明の対応・WebKit | 98 | 0 |
+
+- 全章初期表示は314単元・576章を、1440・390・320pxの3画面幅で確認。3ブラウザ合計5184通り。
+- 各ブラウザの初期表示検査は、実行時エラー0件、検出した表示問題候補0件、SVG位置判定の自己検査5件成功。
+- 表示位置の検査は、GAP-006の追加2章も訪問するため以前の92件から98件へ増えた。実行時エラー0件。
+- Nodeテストのskipped/cancelledはともに0件。
+- 初期表示の検査は全入力・全操作後の状態の総当たりではない。自動検出候補0件も、目視や教育上の評価が完了したという意味ではない。
+
+### 専用操作・従来画面
+
+以下の17スクリプトをChromium・Firefox・WebKitでそれぞれ実行し、51実行全て終了コード0。
+
+| スクリプト | 対象 |
+|---|---|
+| tests/ai-workspaces-browser.mjs | AI・自然言語処理 |
+| tests/coding-workspaces-browser.mjs | 符号・集合等の直接操作 |
+| tests/engineering-workspaces-browser.mjs | 開発・HCI・研究・Web |
+| tests/media-workspaces-browser.mjs | メディア・組み込み |
+| tests/multivariable-workspaces-browser.mjs | 今回の局所変形と領域操作 |
+| tests/network-workspaces-browser.mjs | ネットワーク |
+| tests/network-workspaces-edges-browser.mjs | ネットワークの追加境界・操作 |
+| tests/os-workspaces-browser.mjs | OS・分散処理・データベース |
+| tests/security-workspaces-browser.mjs | セキュリティ |
+| tests/math-evidence-browser.mjs | 行列・行操作・勾配・数値解法 |
+| tests/math-correspondence-browser.mjs | 数学の図と式の対応 |
+| tests/foundation-review-browser.mjs | 基礎教材の直接操作 |
+| tests/workspace-view-state-browser.mjs | 設定欄・表の位置・フォーカス |
+| tests/authored-result-values-browser.mjs | 計算結果と表示の時点 |
+| tests/static-site-browser.mjs | 静的サイト・公開パス |
+| tests/library-browser.mjs | 分類・検索・ナビゲーション |
+| tests/scrollbars-browser.mjs | スクロールバー |
+
+51はスクリプト実行数であり、内部の個別検査件数ではない。上の表示位置98件の検査も、この一覧の実行に含まれる。
+
+Chromiumでは従来の詳細画面を確認する `reader-browser.mjs`、`curriculum-browser.mjs`、`reader-regressions.mjs`、`reader-svg-theme.mjs`、`pr-review-browser.mjs` の5スクリプトも実行し、全て終了コード0。各検証ジョブで追跡ソースに差分がないことも確認した。
+
+### 回帰中に見つかった既存のフォーム検査
+
+最初のmain回帰run `35818352085` では、Firefoxの390px幅における既存のネイティブフォーム検査1件が、送信ボタン操作後に直前の制約検証メッセージを読み、期待するDNSの送信結果に一致しなかった。他の専用スクリプトでは今回追加した多変数教材も成功していた。
+
+`c44cf99` では `tests/engineering-workspaces-browser.mjs` だけを修正した。クリック直後に一度だけtextContentを読む方法から、実際の制約検証メッセージ・送信完了メッセージを条件として待つ方法へ変更した。空欄時のvalueMissing、DNS入力後のvalidity、外部へのページ遷移がないことも確認する。固定秒数の待機やクリックの繰り返しで成功させる変更ではなく、期待する文字列やアプリの挙動は変えていない。最終runではこの検査を含め3ブラウザの全専用スクリプトが成功した。
+
+### 最終ジョブと公開
+
+| ジョブ | ID | 結果 |
+|---|---|---|
+| models | 107047918436 | success |
+| chapters (chromium) | 107047983978 | success |
+| chapters (firefox) | 107047984053 | success |
+| chapters (webkit) | 107047983979 | success |
+| operations (chromium) | 107047983971 | success |
+| operations (firefox) | 107047983993 | success |
+| operations (webkit) | 107047984095 | success |
+| retained | 107047984079 | success |
+| summary | 107050671646 | success |
+
+最終run `35819433374` の `staged-models`、`staged-chapters-*`、`staged-operations-*`、`staged-retained`、`staged-summary` に詳細・画面画像を保存した。artifactは7日保存のため、対象コミット・実行番号・集計をこの文書にも残す。
+
+GitHub Pagesのrun `35819433133` も、同じ `c44cf99` のデプロイが成功した。公開先の全状態を手動で確認したという意味ではない。
 
 ## 残る確認
 
-この回でもcontainerとPythonの実行がClientErrorとなり、サイト画像を開いて読む目視レビューは完了していない。撮影や自動のはみ出し検査を、人による読みやすさの承認として扱わない。
+この回でもcontainerとPythonの実行がClientErrorとなり、取得したサイト画像を開いて読む目視レビューは完了していない。撮影や自動のはみ出し検査を、読みやすさの目視承認として扱わない。WebKitの検証とSafari・スマートフォン実機の検証も区別する。
 
-GAP-006の操作不足だった二点の実装は今回の完了範囲に含めるが、章間の説明量・狭い画面での追いやすさ・立体表示との比較の判断は未確認として台帳に残す。ほかの単元の目視や当初314件の原文計画との逐条照合も解除しない。
+GAP-006の操作不足だった二点の実装と自動検証は今回の完了範囲に含めるが、章間の説明量・狭い画面での追いやすさ・立体表示との比較の判断は未確認として台帳に残す。ほかの単元の目視や当初314件の原文計画との逐条照合も解除しない。
