@@ -50,7 +50,7 @@ try{
   });
   await check(`${width}/merge/ff-merge-and-explicit-conflict-resolution`,async()=>{
    await open(page,'c16-branches');await click(page,'scenario:ff');await click(page,'merge');assert.equal(Object.keys((await state(page)).repo.objects).length,2);
-   await click(page,'scenario:default');await click(page,'merge');assert.deepEqual((await state(page)).repo.objects.C3.parents,['C2','C1']);
+   await click(page,'scenario:default');await click(page,'merge');assert.deepEqual((await state(page)).repo.objects.C3.parents,['C2','C1']);const px={};for(const id of ['C2','C1'])px[id]=await page.locator('g[data-sec-action="select:'+id+'"] circle').getAttribute('cx');assert.notEqual(px.C2,px.C1);await capture(page,width,'merge-two-parent-lanes');
    await click(page,'scenario:conflict');await click(page,'merge');assert.equal(await page.locator('[data-sec-action=finish]').isDisabled(),true);await capture(page,width,'merge-conflict');
    await field(page,'resolved').fill('decided');await click(page,'resolve');await click(page,'finish');const s=await state(page);assert.equal(s.repo.objects.C3.tree['notes.txt'],'decided');assert.deepEqual(s.repo.objects.C3.parents,['C2','C1']);assert.equal(s.repo.pending,null);
   });
@@ -80,7 +80,7 @@ try{
    assert.deepEqual(rows.find(r=>r.label==='notes.txt / index').values,['staged','start']);
    const unreadable=await panel.locator('pre').evaluateAll(els=>els.filter(el=>{const r=el.getBoundingClientRect();return r.width<=0||el.scrollWidth>el.clientWidth+1;}).map(el=>el.textContent));assert.deepEqual(unreadable,[]);
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2),false);await capture(page,width,'reset-visible-comparison');
-   await click(page,'target:C1');await click(page,'compare:hard');assert.equal(repoHead(await state(page)),'C1');assert.match(await page.locator('[data-sec-board]').textContent(),/参照をC0へ戻した場合でも/);
+   await click(page,'target:C1');await click(page,'compare:hard');assert.equal(repoHead(await state(page)),'C1');assert.match(await page.locator('[data-sec-board]').textContent(),/参照をC0へ戻した場合でも/);const broken=await panel.locator('pre').evaluateAll(els=>els.filter(el=>{if(el.textContent!=='committed')return false;const r=document.createRange();r.selectNodeContents(el);return new Set([...r.getClientRects()].map(x=>Math.round(x.y))).size>1;}).map(el=>el.textContent));assert.deepEqual(broken,[]);
   });
   await check(`${width}/lifecycle/revisit-does-not-save-study-history`,async()=>{
    await open(page,'c16-git');await field(page,'content').fill('unsaved');await click(page,'edit');await page.goto(base+'#/catalog');await page.waitForSelector('#catalog-query');await open(page,'c16-git');assert.equal((await state(page)).repo.work['notes.txt'],'start');assert.deepEqual(await page.evaluate(()=>__gitCsp),[]);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2),false);
