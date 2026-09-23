@@ -34,6 +34,10 @@ const gitLessons=[
  ['c16-remote','リモートの実態と手元の記録','origin/mainは、リモートを常時監視する窓ではありません。','remote-editの後、fetchするまでは手元の追跡参照は更新されません。fetch・統合・pushでどの領域が変わるかを一つずつ確認します。'],
  ['c16-undo','打ち消す変更と履歴の作り直し','revertとamendは、最終ファイルが似ていても履歴の意味が違います。','revertは打ち消す新しいコミット、amendは先頭コミットの作り直しです。前後の親・内容・IDを読み比べ、どの履歴を共有済みかも考えてください。']
 ];
-for(const [id,title,lead,body]of gitLessons)d(id,title,lead,body,[A('editor','仮想リポジトリのコマンドと結果',['script'],{},{submit:'この操作列を仮想リポジトリで実行する',advance:'次のGit操作を確認する'})],['この枠のコマンドは教材内の仮想リポジトリへ適用されます。利用者の実ファイルやGitHubを書き換えません。']);
+const gitKinds={'c16-git':'stage','c16-reset':'reset','c16-branches':'merge','c16-rebase':'rebase','c16-remote':'remote','c16-undo':'undo'};
+for(const [id,title,lead,body]of gitLessons){
+ const prose=id==='c16-branches'?'共通祖先と両側のファイル内容を並べます。mainが進んでいない場合、別ファイルを変更した場合、同じファイルが競合する場合を比較してください。判定はファイル単位で、実Gitの行単位マージを再現したものではありません。':body;
+ X.define(id,lead,[C('objects',title,L.labs.find(l=>l.id===id).question,prose,[A('git-'+gitKinds[id]+'-desk',title+'を直接操作する')]),C('commands','コマンド列の計算記録','自由にコマンドを並べた場合の各状態を確認するには？','最初の章で対応関係を確認した後、この仮想リポジトリが扱うコマンドを組み合わせて試せます。一行ずつの記録を読み返します。',[A('editor','仮想リポジトリのコマンドと結果',['script'],{},{submit:'この操作列を仮想リポジトリで実行する',advance:'次のGit操作を確認する'})],['コマンドは実Gitではなく教材の簡略モデルです。pullはfetch＋merge、merge競合はファイル単位、rebaseは線形履歴に限定します。実ファイルやGitHubは変更しません。'])]);
+}
 d('c16-testing','仕様の境目をまたいで試す','通った例を増やすだけでは、境界の不具合を見つけられないことがあります。','0と10の範囲に制限する関数を考えます。ちょうど10、10より上、0より下を試し、仕様から先に期待値を決めます。',[A('inspect','入力と期待値と実際の値',['implementation','suite','custom','customValue'],{},{showDerivation:true})],['成功したテストは、今回調べた入力についての証拠です。全ての入力が正しいという証明とは区別します。']);
 })();

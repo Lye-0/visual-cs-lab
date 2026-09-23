@@ -1,0 +1,45 @@
+/* Git objects stay readable rather than shrinking whole diagrams on phones. */
+.ex-git-three,.ex-git-remote-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:18px 0}
+.ex-git-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:18px 0}
+.ex-git-three>*,.ex-git-two>*,.ex-git-remote-actions>*{min-width:0}
+.ex-git-fields{display:flex;align-items:end;gap:12px;flex-wrap:wrap;margin:16px 0}
+.ex-git-fields label{min-width:140px;flex:1}
+.ex-git-file{border:1px solid #344c5b;background:#101e28;border-radius:9px;margin:10px 0;overflow:hidden}
+.ex-git-file>code{display:block;background:#1e303d;padding:9px 12px;color:#b9d4e1;overflow-wrap:anywhere;font-size:.84rem}
+.ex-git-file>pre{margin:0;padding:12px;color:#e4eef5;white-space:pre-wrap;overflow-wrap:anywhere;font: .91rem/1.75 ui-monospace,monospace;min-height:52px;max-height:220px;overflow:auto}
+.ex-git-details{border:1px solid #344b5b;border-radius:9px;padding:14px;margin:16px 0}
+.ex-git-details>summary{color:#cce0ec;cursor:pointer;line-height:1.8}
+.ex-git-graph-wrap{border:1px solid #364b5a;border-radius:12px;background:#0f1d27;max-width:100%;max-height:550px;overflow:auto;scrollbar-width:thin;margin:16px 0}
+.ex-git-graph{display:block;width:100%;min-width:480px;height:auto}
+.ex-git-edge{stroke:#6a9aac;stroke-width:2;fill:none}
+.ex-git-graph marker path{fill:#6a9aac}
+.ex-git-node{cursor:pointer}
+.ex-git-node circle{fill:#8cd5bf;stroke:#203b40;stroke-width:2}
+.ex-git-node text{fill:#c4dbe7;font:16px ui-monospace,monospace}
+.ex-git-node.is-old circle{fill:#16232d;stroke:#92a7b9;stroke-dasharray:3 2}
+.ex-git-node.is-selected circle{stroke:#ffdb9b;stroke-width:4}
+.ex-git-node:focus{outline:none}
+.ex-git-node:focus circle{stroke:#ffdb9b;stroke-width:4}
+.ex-git-node:focus text{text-decoration:underline}
+.ex-git-three .ex-sec-field,.ex-git-two .ex-sec-field{display:block;max-width:100%;margin:10px 0}
+.ex-git-three .ex-button,.ex-git-two .ex-button{max-width:100%;white-space:normal;margin:4px 4px 4px 0;line-height:1.5}
+@media(max-width:1050px){.ex-git-three,.ex-git-remote-actions{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:760px){.ex-git-two{grid-template-columns:minmax(0,1fr)}}
+@media(forced-colors:active){.ex-git-edge{stroke:CanvasText}.ex-git-graph marker path{fill:CanvasText}.ex-git-node text{fill:CanvasText}.ex-git-node circle{fill:Canvas;stroke:CanvasText}.ex-git-node.is-selected circle,.ex-git-node:focus circle{stroke:Highlight}}
+
+/* The whole visible commit row is a target; blank space inside g must work. */
+.ex-git-node .ex-git-hit{fill:transparent;stroke:none;pointer-events:all}
+.ex-git-node:hover .ex-git-hit,.ex-git-node:focus .ex-git-hit{fill:#20333f;fill-opacity:.6}
+.ex-git-scroll-help{display:none}
+@media(max-width:760px){.ex-git-scroll-help{display:block;color:#b7cbd9;font-size:.8rem;line-height:1.7}}
+
+/* Before/after values stay visible without chasing a hidden column. */
+.ex-git-paired{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0}
+.ex-git-paired>div{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;min-width:0;border:1px solid #3c5465;border-radius:9px;background:#10212c;padding:12px}
+.ex-git-paired dt{grid-column:1/-1;min-width:0;color:#d3e4ee;font-weight:600;font-size:.84rem;overflow-wrap:anywhere}
+.ex-git-paired dd{margin:0;min-width:0}
+.ex-git-paired dd>span{display:block;color:#aebfcf;font-size:.76rem;margin:5px 0}
+.ex-git-paired pre{margin:0;color:#f0f4f7;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;font:.85rem/1.7 ui-monospace,monospace}
+@media(max-width:1000px){.ex-git-paired{grid-template-columns:minmax(0,1fr)}}
+
+.ex-git-paired pre{padding:8px}
