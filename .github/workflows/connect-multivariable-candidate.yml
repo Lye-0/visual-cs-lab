@@ -1,0 +1,94 @@
+# Bounded authoring transaction on a temporary branch. Never writes main.
+name: Complete and verify multivariable candidate
+on:
+  push:
+    branches: [review/multivariable-completion]
+    paths: [.github/workflows/connect-multivariable-candidate.yml]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  candidate:
+    if: github.repository == 'Lye-0/visual-cs-lab' && github.ref == 'refs/heads/review/multivariable-completion'
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Connect the inspected sources on the candidate only
+        run: |
+          mkdir -p review-output
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          expected={'scripts/modules.mjs':'1cc89b75f63d20413a87d194eb57bdfbe500316d','src/experiences-math.js':'9c4e7df4e0856316491494f3801190aa4946b2ab'}
+          for path,sha in expected.items():
+              actual=subprocess.check_output(['git','hash-object',path],text=True).strip()
+              assert actual==sha,(path,actual)
+          def replace(path,old,new):
+              p=Path(path);s=p.read_text();assert s.count(old)==1,(path,old);p.write_text(s.replace(old,new,1))
+          replace('scripts/modules.mjs','"experiences-foundation-review"];','"experiences-foundation-review","experiences-multivariable-models"];')
+          replace('scripts/modules.mjs','"experiences-foundation-review-widgets"];','"experiences-foundation-review-widgets","experiences-multivariable-widgets"];')
+          replace('scripts/modules.mjs','"experiences-foundation-review","scrollbars"];','"experiences-foundation-review","experiences-multivariable","scrollbars"];')
+          p=Path('src/experiences-math.js');s=p.read_text()
+          chapters=[('jacobian'," C('jacobian','小さな変位をどう写すか','実際の変形とヤコビ行列の予測は、どこまで一致するのでしょうか。','T(x,y)=(x²−y²,2xy)の同じ点Pに注目します。小さな正方形の頂点を選び、正確な出力変位とJ(P)の予測を並べます。hを半分にして、差がどう変わるかを調べてください。',[A('jacobian-local','正確な変形と局所線形近似を比較する')]),"),('area'," C('area','領域を小さな区画へ分ける','足す範囲を変えることと、同じ範囲を細かく分けることは、どう違うでしょうか。','区画を一つ選び、中点の高さ・面積要素・和の一項を対応させます。領域から外す操作と、領域を変えない細分化を別々に試してください。',[A('double-integral-region','領域を編集して一つの寄与へ戻る')]),")]
+          for id,new in chapters:
+              lines=[line for line in s.splitlines() if line.startswith(" m('"+id+"',")];assert len(lines)==1
+              old=lines[0];calc=old.replace("m('"+id+"',","m('"+id+"-calculation',",1);s=s.replace(old,new+'\n'+calc,1)
+          p.write_text(s)
+          PY
+          npm run build
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- scripts/modules.mjs src/experiences-math.js index.html
+          git commit -m 'feat: ヤコビ行列の局所変形と重積分の領域操作を接続'
+          git rev-parse HEAD > review-output/candidate-sha.txt
+          git ls-tree -r HEAD > review-output/tracked-files.txt
+      - name: All calculation and registration tests
+        run: |
+          npm run check > review-output/node.txt 2>&1 || { tail -n 90 review-output/node.txt; exit 1; }
+          grep -E '^# (tests|pass|fail|skipped|cancelled)' review-output/node.txt
+      - name: Install browsers
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0 > review-output/install.txt 2>&1
+          npx playwright install --with-deps chromium firefox webkit >> review-output/install.txt 2>&1
+      - name: Test the committed candidate and capture each named view
+        run: |
+          failed=0
+          for browser in chromium firefox webkit; do
+            code=0
+            BROWSER="$browser" GITHUB_SHA="$(git rev-parse HEAD)" node tests/multivariable-browser.mjs > "review-output/$browser.log" 2>&1 || code=$?
+            grep '^MULTI_SUMMARY ' "review-output/$browser.log" || true
+            if [ "$code" -ne 0 ]; then tail -n 40 "review-output/$browser.log"; failed=1; fi
+          done
+          test "$failed" = 0
+          git diff --exit-code HEAD -- src scripts tests index.html .github docs
+      - name: Save the unchanged tested source on the candidate branch only
+        run: |
+          test "$(git ls-remote origin refs/heads/review/multivariable-completion | cut -f1)" = "$GITHUB_SHA"
+          git push origin HEAD:refs/heads/review/multivariable-completion
+          git rev-parse HEAD | tee review-output/published-candidate.txt
+      - name: Compact evidence and recoverable source
+        if: always()
+        run: |
+          mkdir -p review-output
+          git archive --format=zip HEAD -o review-output/candidate-source.zip
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          p=Path('review-output');r={'candidate':(p/'candidate-sha.txt').read_text().strip() if (p/'candidate-sha.txt').exists() else None,'browsers':{}}
+          for browser in ['chromium','firefox','webkit']:
+              f=p/'multivariable'/(browser+'.json')
+              if f.exists():
+                  d=json.loads(f.read_text());r['browsers'][browser]={k:d[k] for k in ['sourceCommit','passed','failed','errors']}
+          if (p/'node.txt').exists():r['node']=[s for s in (p/'node.txt').read_text().splitlines() if s.startswith(('# tests ','# pass ','# fail ','# skipped ','# cancelled '))]
+          (p/'summary.json').write_text(json.dumps(r,ensure_ascii=False,indent=2));print(json.dumps(r,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: multivariable-candidate
+          path: review-output/
+          retention-days: 7
