@@ -1,0 +1,96 @@
+# Bounded authoring transaction. Tests remain read-only and run on a local
+# source commit. Only the fully tested commit is then fast-forwarded to main.
+name: Complete staged foundation review
+on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/complete-foundation-review-once.py
+      - .github/workflows/complete-foundation-review-once.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: complete-staged-foundation-main
+  cancel-in-progress: false
+jobs:
+  integrate-and-check:
+    if: github.repository == 'Lye-0/visual-cs-lab' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Restore only the already inspected sources
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p review-output
+          python3 scripts/complete-foundation-review-once.py
+          for f in src/experiences-foundation-review*.js src/experiences-foundations.js src/experiences-systems.js src/experiences-objects.js tests/foundation-review*.mjs; do node --check "$f"; done
+          npm run build
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- src/experiences-foundation-review.js src/experiences-foundation-review-widgets.js src/experiences-foundation-review.css src/experiences-foundations.js src/experiences-systems.js src/experiences-objects.js scripts/modules.mjs tests/foundation-review.test.mjs tests/foundation-review-browser.mjs tests/authored-result-values-browser.mjs index.html
+          git commit -m 'fix: 基礎8単元の説明と直接操作を検証して接続'
+          git rev-parse HEAD > review-output/candidate-sha.txt
+          git show --stat --oneline HEAD > review-output/changed-files.txt
+      - name: All Node tests and the publishing entry
+        run: |
+          npm run check > review-output/all-node-tests.txt 2>&1 || { tail -n 120 review-output/all-node-tests.txt; exit 1; }
+          grep -E '^# (tests|pass|fail|skipped|cancelled)' review-output/all-node-tests.txt
+          node --test tests/foundation-review.test.mjs > review-output/foundation-models.txt 2>&1 || { cat review-output/foundation-models.txt; exit 1; }
+          tail -n 12 review-output/foundation-models.txt
+      - name: Install the three browser engines
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0 > review-output/npm-install.txt 2>&1
+          npx playwright install --with-deps chromium firefox webkit > review-output/browser-install.txt 2>&1 || { tail -n 60 review-output/browser-install.txt; exit 1; }
+      - name: Exercise the eight changed lessons and retained calculation chapters
+        run: |
+          failed=0
+          for browser in chromium firefox webkit; do
+            BROWSER="$browser" SOURCE_COMMIT="$(git rev-parse HEAD)" node tests/foundation-review-browser.mjs > "review-output/foundation-$browser.log" 2>&1 || failed=1
+            BROWSER="$browser" node tests/authored-result-values-browser.mjs > "review-output/values-$browser.log" 2>&1 || failed=1
+            tail -n 45 "review-output/foundation-$browser.log"
+            tail -n 30 "review-output/values-$browser.log"
+          done
+          test "$failed" = 0
+      - name: Verify no test altered the local source commit
+        run: git diff --exit-code HEAD -- src scripts tests index.html package.json .github docs
+      - name: Fast-forward only after all checks passed and main still matches
+        run: |
+          test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$GITHUB_SHA"
+          git push origin HEAD:refs/heads/main
+          git rev-parse HEAD | tee review-output/published-sha.txt
+          printf 'Foundation repair tested and published: %s\n' "$(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+      - name: Save a compact result plus the candidate source for recovery
+        if: always()
+        run: |
+          mkdir -p review-output
+          git archive --format=zip HEAD -o review-output/candidate-source.zip
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          p=Path('review-output')
+          result={'triggerCommit':os.environ['GITHUB_SHA'],'runId':os.environ['GITHUB_RUN_ID'],'candidate':(p/'candidate-sha.txt').read_text().strip() if (p/'candidate-sha.txt').exists() else None,'published':(p/'published-sha.txt').read_text().strip() if (p/'published-sha.txt').exists() else None,'browsers':{},'scope':'Eight foundation fixes and retained calculated-values checks; not a full pedagogical or visual sign-off.'}
+          for engine in ['chromium','firefox','webkit']:
+              result['browsers'][engine]={}
+              for label,file in [('foundation','foundation-review-'+engine+'.json'),('values','authored-values-'+engine+'.json')]:
+                  path=p/file
+                  if path.exists():
+                      report=json.loads(path.read_text())
+                      result['browsers'][engine][label]={key:report.get(key) for key in ['passed','failed','errors']}
+                      result['browsers'][engine][label]['failedCases']=[case for case in report.get('cases',[]) if not case.get('passed')]
+          for name in ['all-node-tests.txt','foundation-models.txt']:
+              if (p/name).exists():result[name]=[line for line in (p/name).read_text().splitlines() if line.startswith(('# tests ','# pass ','# fail ','# skipped ','# cancelled '))]
+          (p/'summary.json').write_text(json.dumps(result,ensure_ascii=False,indent=2))
+          print(json.dumps(result,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: staged-foundation-review
+          path: review-output/
+          retention-days: 7
