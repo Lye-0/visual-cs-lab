@@ -83,7 +83,7 @@ export async function generateDelivery(){
  const fullLabs=JSON.parse(JSON.stringify(L.labs)),definitions=JSON.parse(JSON.stringify([...L.experiences.lessons]));
  const globals=Object.fromEntries(['version','areas','topics','courses','readingCourses','readingRelations','routes','sources','glossary','legacyLabIds'].map(k=>[k,JSON.parse(JSON.stringify(L[k]))]));
  globals.curriculum={baselineIds:L.curriculum.baselineIds};
- const fields=['id','title','unit','summary','question','keywords','track','area','course','topic','level','minutes','prereq','engine','variant','gapId','presentation'];
+ const fields=['id','title','unit','summary','question','keywords','track','area','course','topic','level','minutes','prereq','engine','variant','gapId','presentation','sources'];
  globals.labs=fullLabs.map(l=>Object.fromEntries(fields.filter(k=>k in l).map(k=>[k,l[k]])));
  // During generation no actual document is mounted. Record widget ownership
  // by observing registrations, including registrations made in small loops.

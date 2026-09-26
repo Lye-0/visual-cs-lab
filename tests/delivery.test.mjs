@@ -26,3 +26,13 @@ test('Git and basic binary do not request unrelated curriculum engines or widget
  assert.ok(!git.some(n=>/curriculum-ai|media|network/.test(n)));
  assert.ok(!delivery.manifest.lessons['c01-bits'].modules.some(n=>/git-review|ai-widgets|network-widgets/.test(n)));
 });
+
+test('cold discovery has the same reference counts as fully loaded lessons',async()=>{
+ const {fixtureLabs}=await import('./lesson-fixtures.mjs');
+ const context=vm.createContext({});
+ vm.runInContext(await readFile(new URL('src/core.js',root),'utf8'),context);
+ vm.runInContext(delivery.files.get('src/generated/catalog.js'),context);
+ const labs=JSON.parse(JSON.stringify(context.CSL.labs));
+ for(const lab of labs)assert.deepEqual(lab.sources,fixtureLabs.find(full=>full.id===lab.id).sources,lab.id);
+ for(const id of Object.keys(context.CSL.sources))assert.equal(labs.filter(l=>l.sources.includes(id)).length,fixtureLabs.filter(l=>l.sources.includes(id)).length,id);
+});
