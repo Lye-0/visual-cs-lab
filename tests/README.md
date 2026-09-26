@@ -11,6 +11,7 @@
 | 数値入力・増減・上下限・タップ | `node tests/number-input-browser.mjs` |
 | 参考資料・操作ガイドの初回表示と移動 | `node tests/reference-pages-browser.mjs` |
 | 入力ラベルの非操作領域と操作本体 | `node tests/control-labels-browser.mjs` |
+| 自動反映・入力復帰・計算順序・SQLプレビュー | `node tests/live-input-browser.mjs` |
 | Git専用操作 | `node tests/git-review-workspaces-browser.mjs` |
 | DB専用操作 | `node tests/database-review-workspaces-browser.mjs` |
 | その他の分野 | `*workspaces*browser.mjs`、`math-*.mjs`など対象を選ぶ |

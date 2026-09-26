@@ -70,7 +70,7 @@ X.modelActivity=(root,activity,current)=>{
  const scope=X.scope(root,current),lab=A.lab(activity.model||current.lab.id),kind=activity.kind;
  let params=X.modelParams(lab.id,activity.patch),token=0,result=null,index=0,limit=6,selected=null;
  const fields=activity.keys.length>0;
- const controls=`<form class="ex-inputs" data-ex-form${fields?'':' hidden'}>${X.fields(lab,activity.keys,params,scope.id)}<div class="ex-actions"><button type="submit" class="ex-button ex-primary">${h(activity.submit||({editor:'このコードを実行する',ledger:'途中計算をこの入力で確かめる',timeline:'この処理を調べる',inspect:'変更を反映する'}[kind]))}</button>${X.html.button('例の初期値に戻す','data-ex-reset')}</div></form>`;
+ const controls=`<form class="ex-inputs" data-ex-form${fields?'':' hidden'}>${X.fields(lab,activity.keys,params,scope.id)}<div class="ex-actions"><button type="submit" class="ex-button ex-primary">再計算する</button>${X.html.button('例の初期値に戻す','data-ex-reset')}</div></form>`;
  const choices=activity.examples?.length?`<div class="ex-example-choices" aria-label="試す具体例">${activity.examples.map((p,i)=>X.html.button(p.label,`data-ex-example="${i}"`)).join('')}</div><p class="ex-example-reason"></p>`:'';
  // Inspection starts with the object, code starts with code, and a worked
  // derivation starts with its premises. Input panels do not dictate the page.
@@ -96,19 +96,19 @@ X.modelActivity=(root,activity,current)=>{
   });
   output.insertAdjacentHTML('beforeend',X.valuesMarkup(X.finalValues(result,kind,resolvedIndex(),limit),'result'));
  }
- async function run(){
+ async function run(userInput=false){
   const own=++token;result=null;selected=null;output.replaceChildren();status.textContent='この入力から計算しています…';status.className='';root.setAttribute('aria-busy','true');
-  try{const r=await L.run(lab,params);if(!scope.alive()||token!==own)return;result=r;index=0;limit=6;paint();status.textContent='表示は、確定した入力に対応しています。';current.completed.add(scope.id);}
-  catch(e){if(scope.alive()&&token===own){scope.error(e);current.errors.push({activity:activity.title,message:e.message});}}
+  try{const r=await L.run(lab,params);if(!scope.alive()||token!==own)return;result=r;index=0;limit=6;paint();status.textContent='現在の入力を反映しています。';current.completed.add(scope.id);}
+  catch(e){if(scope.alive()&&token===own){scope.error(e);if(!userInput)current.errors.push({activity:activity.title,message:e.message});}}
   finally{if(scope.alive()&&token===own)root.setAttribute('aria-busy','false');}
  }
  if(kind==='ledger')X.bindEvidence(output,()=>result?.frames||[],scope);
- scope.on(form,'submit',e=>{e.preventDefault();try{params=X.readFields(form,lab,params);run();}catch(error){token++;result=null;output.replaceChildren();scope.error(error);}});
- scope.on(form,'input',()=>{token++;result=null;output.innerHTML='<p class="ex-caption">入力を編集中です。実行ボタンで確定すると、新しい結果を表示します。</p>';status.className='';status.textContent='古い入力の結果は表示していません。';root.setAttribute('aria-busy','false');});
+ scope.on(form,'submit',e=>{e.preventDefault();live.cancel();try{params=X.readFields(form,lab,params);run(true);}catch(error){token++;result=null;output.replaceChildren();scope.error(error);}});
+ const live=X.liveInput(form,scope,{accept:()=>true,invalidate:()=>{token++;result=null;output.innerHTML='<p class="ex-caption">入力に合わせて更新しています…</p>';status.className='';status.textContent='';root.setAttribute('aria-busy','false');},apply:()=>{params=X.readFields(form,lab,params);return run(true);}});
  scope.on(root,'click',e=>{
   const b=e.target.closest('button');if(!b)return;
-  if(b.hasAttribute('data-ex-reset')){params=X.modelParams(lab.id,activity.patch);setFields();const reason=root.querySelector('.ex-example-reason');if(reason)reason.textContent='';run();return;}
-  if(b.hasAttribute('data-ex-example')){const example=activity.examples[Number(b.dataset.exExample)];params={...X.modelParams(lab.id,activity.patch),...example.patch};setFields();root.querySelector('.ex-example-reason').textContent=example.reason;run();return;}
+  if(b.hasAttribute('data-ex-reset')){live.cancel();params=X.modelParams(lab.id,activity.patch);setFields();const reason=root.querySelector('.ex-example-reason');if(reason)reason.textContent='';run();return;}
+  if(b.hasAttribute('data-ex-example')){live.cancel();const example=activity.examples[Number(b.dataset.exExample)];params={...X.modelParams(lab.id,activity.patch),...example.patch};setFields();root.querySelector('.ex-example-reason').textContent=example.reason;run();return;}
   if(!result)return;
   const focus=()=>{const target=b.hasAttribute('data-ex-event')?`[data-ex-event="${index}"]`:b.hasAttribute('data-ex-more')?'[data-ex-more]':b.hasAttribute('data-ex-next')?'[data-ex-next]':'[data-ex-previous]';const node=output.querySelector(target);if(node&&!node.disabled)node.focus({preventScroll:true});else {output.tabIndex=-1;output.focus({preventScroll:true});}};
   if(b.hasAttribute('data-ex-more')){

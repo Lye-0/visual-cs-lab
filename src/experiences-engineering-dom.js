@@ -57,6 +57,7 @@ for(const [name,definition]of Object.entries(specimens))X.registerWidget(name,(r
   }
   parameters=next;selected=0;paint();
  }
+ X.liveForm(root,scope,'[data-native-config]');
  scope.on(root,'submit',event=>{if(!event.target.matches('[data-native-config]'))return;event.preventDefault();try{apply();}catch(error){root.querySelector('[data-native-status]').textContent=error.message;}});
  scope.on(root,'click',event=>{
   const reset=event.target.closest('[data-native-action="reset"]');if(reset){parameters={...defaults};selected=0;paint();return;}

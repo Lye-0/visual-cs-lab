@@ -66,6 +66,7 @@ S.mount=(root,current,config)=>{
   try{const action=config.action(code,fields(),state);if(action)void apply(action);}catch(error){fail(error);}
  });
  scope.on(root,'submit',event=>{event.preventDefault();});
+ X.liveWorkspace(root,scope,{attribute:'data-sec-action',fieldAttribute:'data-sec-field',action:config.action,state:()=>state,apply,error:fail,busy:()=>busy});
  scope.cleanup(()=>{generation++;busy=false;});paint(false);
  return {scope,state:()=>state,apply};
 };

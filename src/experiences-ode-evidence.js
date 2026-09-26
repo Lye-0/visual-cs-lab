@@ -35,7 +35,7 @@ X.registerWidget('ode',(root,a,current)=>{
   const status=root.querySelector('[data-ex-status]');status.className='';status.textContent=d?'選んだ一歩の出発点・計算・到着点を同時に表示しています。':'初期条件を選びました。一歩進めると近似計算が始まります。';
   root.querySelector('[data-ode-step]').disabled=s.rows.at(-1).t+s.step>4+1e-9;root.querySelector('[data-ode-back]').disabled=s.rows.length===1;root.dataset.odeState=JSON.stringify(s);current.completed.add(scope.id);
  }
- scope.on(root.querySelector('form'),'submit',event=>{event.preventDefault();try{if(!event.target.reportValidity())return;const f=event.target.elements;state=E.odeStart(Number(f.initial.value),Number(f.k.value),Number(f.h.value));paint();}catch(error){scope.error(error);}});
+ X.liveForm(root,scope);scope.on(root.querySelector('form'),'submit',event=>{event.preventDefault();try{if(!event.target.reportValidity())return;const f=event.target.elements;state=E.odeStart(Number(f.initial.value),Number(f.k.value),Number(f.h.value));paint();}catch(error){scope.error(error);}});
  scope.on(root,'click',event=>{try{const select=event.target.closest('[data-ode-select]');if(select){state=E.ode(state,{kind:'select',index:Number(select.dataset.odeSelect)});paint();root.querySelector('[data-ode-select="'+state.selected+'"]')?.focus({preventScroll:true});}else if(event.target.closest('[data-ode-step]')){state=E.ode(state,{kind:'step'});paint();}else if(event.target.closest('[data-ode-back]')){state=E.ode(state,{kind:'back'});paint();}}catch(error){scope.error(error);}});paint();
 });
 })();

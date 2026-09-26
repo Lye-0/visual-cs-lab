@@ -20,6 +20,10 @@ HTML・JavaScript・CSSを分離した静的サイトです。全314単元の検
 
 `boot.js` の共通処理で、ラベル文字と行の余白から入力欄へのクリック転送を止めます。数値・チェックボックス・ラジオ・文字列・複数行・範囲・プルダウンに共通です。名前と入力欄の意味上の関連付け、直接入力、キーボード操作は維持します。入力欄・ボタン本体と、隠れたチェックボックスを操作する可視の `.toggle-switch` は操作できます。動的に生成する教材にも同じ規則を適用します。回帰確認は `tests/control-labels-browser.mjs`。
 
+## 入力条件の自動反映
+
+通常教材・専用画面・旧詳細画面は、入力変更に合わせて再計算します。`live-input.js` が入力休止の待機、取消し、操作順、フォーカスを扱います。明示した条件更新だけを接続し、送信・追加などの実験内の行為とは区別します。SQLは確定済みの表への自動プレビューです。[契約と検証](technical/LIVE_INPUT.md)を参照してください。
+
 ## 正本と生成物
 
 教材・モデルの正本はsrc直下の既存モジュールです。scripts/modules.mjsで完全な評価順を、scripts/delivery.mjsでブラウザーの配信単位を管理します。index.htmlとsrc/generated/はnpm run buildで生成し、直接編集しません。docs/EXPERIMENTS.mdとexperiments.jsonはnpm run inventoryで生成します。

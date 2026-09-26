@@ -21,7 +21,7 @@ X.registerWidget('utf8',(root,a,c)=>{
   const code=p.codePointAt(0),bs=[...new TextEncoder().encode(p)],prefixes=bs.length===1?[1]:[bs.length+1,...bs.slice(1).map(()=>2)];
   root.querySelector('[data-utf-details]').innerHTML=`<h4>「${h(p)}」の番号をバイトへ分ける</h4>${X.html.formula('U+'+code.toString(16).toUpperCase()+' = '+code+' = '+code.toString(2)+'₂')}<div class="ex-byte-strip">${bs.map((b,i)=>{const str=b.toString(2).padStart(8,'0'),cut=prefixes[i];return `<code><span class="ex-prefix-bits">${str.slice(0,cut)}</span>${str.slice(cut)}</code>`;}).join('')}</div><p>色付きの先頭部分はUTF-8の形式を示します。残る部分が文字の番号のビットです。この文字は、全体のbyte位置${offsets[selected]}から${offsets[selected]+bs.length-1}に入ります。</p>`;c.completed.add(s.id);
  }
- s.on(root.querySelector('form'),'submit',e=>{e.preventDefault();text=e.target.elements.text.value;selected=0;paint();});s.on(root,'click',e=>{const b=e.target.closest('[data-utf-select]');if(b){selected=Number(b.dataset.utfSelect);paint();root.querySelector(`[data-utf-select="${selected}"]`)?.focus();}});paint();
+ X.liveForm(root,s);s.on(root.querySelector('form'),'submit',e=>{e.preventDefault();text=e.target.elements.text.value;selected=0;paint();});s.on(root,'click',e=>{const b=e.target.closest('[data-utf-select]');if(b){selected=Number(b.dataset.utfSelect);paint();root.querySelector(`[data-utf-select="${selected}"]`)?.focus();}});paint();
 });
 X.registerWidget('float',(root,a,c)=>{
  const s=X.scope(root,c);root.innerHTML='<form class="ex-inputs"><label>保存したい値<input name="value" type="number" step="any" value="0.1" min="-1e30" max="1e30" required></label><button type="submit" class="ex-button">近くの保存可能値を調べる</button></form><div data-float-result></div><p data-ex-status role="status"></p>';
@@ -30,7 +30,7 @@ X.registerWidget('float',(root,a,c)=>{
   const f=n=>Number(n).toPrecision(17),range=upper-lower,pct=(x-lower)/range*100;
   root.querySelector('[data-float-result]').innerHTML=`<h4>この近くでは、保存できる値は飛び飛びです</h4><div class="ex-number-line"><span style="left:0%" title="${f(lower)}">●</span><span style="left:${(stored-lower)/range*100}%" title="${f(stored)}">●</span><span style="left:100%" title="${f(upper)}">●</span><i style="left:${Math.max(0,Math.min(100,pct))}%" title="入力値">▼</i></div>${T(['値','数値'],[['直前のbinary32',f(lower)],['保存されたbinary32',f(stored)],['直後のbinary32',f(upper)],['入力値',f(x)],['保存後−入力',f(stored-x)]])}<div class="ex-binary32"><span>${bits.slice(0,1)}</span><span>${bits.slice(1,9)}</span><span>${bits.slice(9)}</span></div><p>左から符号1bit、指数8bit、仮数部23bit。今回の入力自体はJavaScriptのbinary64なので、十進文字列の厳密な有理数との誤差は別です。ここではbinary64からbinary32への丸めを観察しています。</p>`;c.completed.add(s.id);
  }
- s.on(root.querySelector('form'),'submit',e=>{e.preventDefault();if(e.target.reportValidity())draw(Number(e.target.elements.value.value));});draw(.1);
+ X.liveForm(root,s);s.on(root.querySelector('form'),'submit',e=>{e.preventDefault();if(e.target.reportValidity())draw(Number(e.target.elements.value.value));});draw(.1);
 });
 X.registerWidget('entropy',(root,a,c)=>{
  const s=X.scope(root,c);let weights=[4,2,1,1],active=0;

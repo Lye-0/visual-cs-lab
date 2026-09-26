@@ -18,9 +18,9 @@ function action(name,el){
   case 'next':return A.step(1);
   case 'last':return A.seek((c?.result?.frames.length||1)-1);
   case 'apply':return A.runCurrent();
-  case 'reset':if(c){c.params=L.clone(c.lab.defaults);c.answer=null;c.graded=false;c.selected=null;c.connectFrom=null;c.example='initial';A.syncControls();return A.runCurrent();}return;
+  case 'reset':if(c){c.params=L.clone(c.lab.defaults);c.invalidInputs={};c.answer=null;c.graded=false;c.selected=null;c.connectFrom=null;c.example='initial';A.syncControls();return A.runCurrent();}return;
   case 'baseline':return A.baseline();
-  case 'restore-baseline':if(c?.baseline){c.params=L.clone(c.baseline.params);A.syncControls();return A.runCurrent();}return;
+  case 'restore-baseline':if(c?.baseline){c.params=L.clone(c.baseline.params);c.invalidInputs={};A.syncControls();return A.runCurrent();}return;
   case 'delete-baseline':if(c){c.baseline=null;A.renderDetails();A.toast('今回の比較をクリアしました。');}return;
   case 'example':return A.example(el.dataset.example);
   case 'show-compare':A.stop?.();A.setTab('compare');return A.focusDetails();
@@ -58,10 +58,10 @@ document.addEventListener('click',e=>{
 });
 function numericInput(el,commit=false){
  if(!A.current)return;
- if(el.value.trim()===''||!Number.isFinite(Number(el.value))){
-  const c=A.current;A.stop?.();clearTimeout(A.parameterTimer);c.token++;c.pending=false;c.dirty=true;c.error=null;A.markPending();A.renderDetails();
-  A.inputStatus('数値を入力し、Enterまたは入力欄の外を押して確定してください。');
-  if(commit){el.value=A.current.params[el.dataset.number];A.runCurrent();A.toast('数値を入力できなかったため、直前の値に戻しました。',true);}
+ if(el.value.trim()===''||!Number.isFinite(Number(el.value))||!el.checkValidity()){
+  const c=A.current;(c.invalidInputs||={})[el.dataset.number]='数値の範囲と刻み幅を確認してください。';A.stop?.();clearTimeout(A.parameterTimer);c.token++;c.result=null;c.pending=false;c.dirty=true;c.error=null;A.markPending();A.renderDetails();
+  A.inputStatus('有効な数値を入力すると、自動で反映します。');
+
   return;
  }
  A.parameter(el.dataset.number,Number(el.value),{immediate:commit});
@@ -83,6 +83,7 @@ document.addEventListener('click',e=>{
  e.preventDefault();
 },true);
 document.addEventListener('input',e=>{
+ if(e.isComposing){clearTimeout(A.parameterTimer);return;}
  const el=e.target;
  if(el.id==='global-search'){A.updateSearch(el.value);return;}
  if(el.id==='home-query'){A.homeSearch(el.value);return;}

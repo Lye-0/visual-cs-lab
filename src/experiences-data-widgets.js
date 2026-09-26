@@ -48,8 +48,8 @@ X.registerWidget('regression',(root,a,c)=>{
   root.querySelector('[data-ex-status]').textContent=`確定した直線の勾配は傾き方向${F(ga,3)}、切片方向${F(gb,3)}。一歩ではそれぞれの0.1倍を引きます。実行${steps}回。`;
   c.completed.add(s.id);return [ga,gb];
  }
- s.on(form,'input',()=>{root.querySelector('[data-reg-step]').disabled=true;root.querySelector('[data-ex-status]').textContent='数値を編集中です。「この直線にする」で確定してください。図はまだ変更前の直線です。';});
- s.on(form,'submit',e=>{e.preventDefault();if(!form.reportValidity())return;slope=+form.elements.slope.value;intercept=+form.elements.intercept.value;steps=0;root.querySelector('[data-reg-step]').disabled=false;paint();});
+ s.on(form,'input',()=>{root.querySelector('[data-reg-step]').disabled=true;root.querySelector('[data-ex-status]').textContent='入力に合わせて直線を更新しています…';});
+ X.liveForm(root,s);s.on(form,'submit',e=>{e.preventDefault();if(!form.reportValidity())return;slope=+form.elements.slope.value;intercept=+form.elements.intercept.value;steps=0;root.querySelector('[data-reg-step]').disabled=false;paint();});
  s.on(root,'click',e=>{
   const advance=e.target.closest('[data-reg-step]'),reset=e.target.closest('[data-reg-reset]');
   // A submit click must not overwrite the learner's typed values before submit.

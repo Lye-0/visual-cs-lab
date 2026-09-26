@@ -60,15 +60,13 @@ try{
    await page.locator('[data-r-param="weights"]').fill('1,1,1,1');await ready(page,'c01-entropy');
    assert.equal((await current(page)).metrics['エントロピー (bit/記号)'],2);
   });
-  await check(`${label}: コードは明示的な反映まで実行せず、説明切替でも送信しない`,async()=>{
+  await check(`${label}: コードは自動反映され、説明を切り替えても編集を失わない`,async()=>{
    await open(page,'c09-cpu');await options(page);
    const field=page.locator('textarea[data-r-param]').first(),key=await field.getAttribute('data-r-param');
-   const draft=(await field.inputValue())+'\n';await field.fill(draft);await sleep(400);
-   assert.equal((await current(page)).codeDirty,true);assert.equal((await current(page)).hasResult,false);
-   await page.locator('[data-r-phase="1"]').click();await sleep(100);
-   assert.equal((await current(page)).hasResult,false);
-   await page.locator('[data-r-action="apply"]').click();await ready(page,'c09-cpu');
-   assert.equal((await current(page)).codeDirty,false);assert.equal((await current(page)).params[key].trim(),draft.trim());
+   const draft=(await field.inputValue())+'\n';await field.fill(draft);
+   await page.locator('[data-r-phase="1"]').click();await ready(page,'c09-cpu');
+   assert.equal((await current(page)).codeDirty,false);assert.equal((await current(page)).hasResult,true);
+   assert.equal((await current(page)).params[key].trim(),draft.trim());
   });
   await check(`${label}: 行列を開いたままビットの対応を選び、段階を進められる`,async()=>{
    await open(page,'c01-linear-code');

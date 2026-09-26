@@ -46,6 +46,7 @@ N.workbench=(root,current,config)=>{
  }
  scope.on(root,'click',e=>{const button=e.target.closest('[data-net-action]');if(button&&root.contains(button))activate(button);});
  scope.on(root,'submit',e=>{e.preventDefault();activate(e.target.querySelector('[data-net-action]'));});
+ X.liveWorkspace(root,scope,{attribute:'data-net-action',fieldAttribute:'data-net-field',action:config.action,state:()=>state,apply:action=>apply(action,{fresh:!!action.fresh}),error:e=>{status.classList.add('ex-error');status.textContent=e.message;}});
  const api={scope,board,state:()=>state,apply,paint};paint(false);return api;
 };
 X.registerWidget('bridge-lan',(root,a,c)=>N.workbench(root,c,{

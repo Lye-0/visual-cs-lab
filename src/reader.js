@@ -37,12 +37,12 @@ function controlHTML(ctrl,p){
   else if(ctrl.type==='code')input=label+`<textarea id="${id}" data-r-param="${h(ctrl.key)}" rows="8" spellcheck="false" aria-describedby="${help}">${h(value)}</textarea>`;
   else input=label+`<input id="${id}" type="text" value="${h(value)}" data-r-param="${h(ctrl.key)}" autocomplete="off" spellcheck="false" aria-describedby="${help}">`;
  }
- const hint=ctrl.help||(ctrl.type==='range'?`${ctrl.min}〜${ctrl.max}、${ctrl.step}ずつ変更できます。`:ctrl.type==='code'?'編集後、「入力を反映」を押すと、最初の状態から計算します。':ctrl.type==='toggle'?'この条件だけを切り替えて確かめられます。':'変更すると、この単元の条件として計算し直します。');
+ const hint=ctrl.help||(ctrl.type==='range'?`${ctrl.min}〜${ctrl.max}、${ctrl.step}ずつ変更できます。`:ctrl.type==='code'?'編集に合わせて、最初の状態から自動で計算し直します。':ctrl.type==='toggle'?'この条件だけを切り替えて確かめられます。':'変更すると、この単元の条件として計算し直します。');
  return `<div class="reader-field" data-r-field="${h(ctrl.key)}">${input}<p class="reader-field-help" id="${help}">${h(hint)}</p></div>`;
 }
 function renderControls(c){
  const primary=c.lab.controls.filter(x=>c.lab.reading.focus.includes(x.key)),other=c.lab.controls.filter(x=>!c.lab.reading.focus.includes(x.key));
- $('reader-controls').innerHTML=`<h3>この例の条件</h3><p class="reader-controls-caption">まず1つだけ変更して、図の変化を見てみましょう。</p>${primary.map(ctrl=>controlHTML(ctrl,c.params)).join('')}${other.length?`<details class="reader-more-controls"${c.phase===2?' open':''}><summary>ほかの条件も変える（${other.length}項目）</summary>${other.map(ctrl=>controlHTML(ctrl,c.params)).join('')}</details>`:''}<div class="button-row">${rbutton('apply','入力を反映','primary')}${rbutton('reset','初期例に戻す','ghost')}</div><p class="reader-live-status" id="reader-input-status" role="status" aria-live="polite"></p>${rbutton('diagram','図と今の段階を見る ↓','ghost')}`;
+ $('reader-controls').innerHTML=`<h3>この例の条件</h3><p class="reader-controls-caption">まず1つだけ変更して、図の変化を見てみましょう。</p>${primary.map(ctrl=>controlHTML(ctrl,c.params)).join('')}${other.length?`<details class="reader-more-controls"${c.phase===2?' open':''}><summary>ほかの条件も変える（${other.length}項目）</summary>${other.map(ctrl=>controlHTML(ctrl,c.params)).join('')}</details>`:''}<div class="button-row">${rbutton('apply','再計算','primary')}${rbutton('reset','初期例に戻す','ghost')}</div><p class="reader-live-status" id="reader-input-status" role="status" aria-live="polite"></p>${rbutton('diagram','図と今の段階を見る ↓','ghost')}`;
 }
 function renderGuidance(c){
  const d=c.lab.reading;
@@ -82,7 +82,7 @@ function renderComparison(c){
 function paint(c){
  if(!isCurrent(c)||!$('reader-diagram'))return;
  const valid=ready(c),count=valid?c.result.frames.length:0,frame=valid?c.result.frames[c.index]:null;
- const status=c.error?`入力を確認してください：${c.error}`:c.pending?'計算しています。古い結果は表示しません。':c.dirty?'入力が未反映です。「入力を反映」で計算します。':'条件を反映しました。図と理由を一緒に確認できます。';
+ const status=c.error?`入力を確認してください：${c.error}`:c.pending?'計算しています。古い結果は表示しません。':c.dirty?'入力に合わせて更新しています…':'条件を反映しました。図と理由を一緒に確認できます。';
  if($('reader-input-status'))$('reader-input-status').textContent=status;
  for(const ctrl of c.lab.controls){
   const bad=Boolean(c.invalidInputs[ctrl.key]);
@@ -104,7 +104,7 @@ function paint(c){
  $('reader-next-label').textContent=c.lab.reading.nextLabel;
  const caption=$('reader-condition-summary');if(caption)caption.textContent=valid?conditionSummary(c.lab,c.params):'入力の計算が完了していません。';
  if(!valid){
-  replaceDiagram(c,$('reader-diagram'),`<div class="reader-result-placeholder ${c.error?'reader-error':''}"><h3>${c.error?'入力の意味を確認しましょう':c.pending?'条件から計算しています':'入力を反映すると図が変わります'}</h3><p>${h(c.error||'計算途中に前の条件の図を残さないようにしています。')}</p></div>`);
+  replaceDiagram(c,$('reader-diagram'),`<div class="reader-result-placeholder ${c.error?'reader-error':''}"><h3>${c.error?'入力の意味を確認しましょう':c.pending?'条件から計算しています':'入力に合わせて図を更新しています'}</h3><p>${h(c.error||'計算途中に前の条件の図を残さないようにしています。')}</p></div>`);
   $('reader-event').innerHTML='';$('reader-table').innerHTML='';replaceDiagram(c,$('reader-companion'),'');$('reader-result-details').innerHTML='';renderComparison(c);return;
  }
  let diagram=L.visualize(frame.visual,{focus:c.noteFocus});
@@ -146,9 +146,9 @@ function change(c,key,raw,{isCode=false}={}){
  c.noteFocus=null;c.error=Object.values(c.invalidInputs).join(' ');
  if(isCode)c.codeDirty=true;
  paint(c);
- // Changing another field must not dismiss an error or implicitly submit code.
- if(c.error||c.codeDirty)return;
- A.parameterTimer=setTimeout(()=>compute(c),ctrl.type==='text'?320:50);
+ // Incomplete values stay editable; only the latest valid input is computed.
+ if(c.error)return;
+ A.parameterTimer=setTimeout(()=>compute(c),isCode?450:ctrl.type==='text'?250:50);
 }
 async function variant(c){
  if(!isCurrent(c))return;clearTimeout(A.parameterTimer);const own=++c.token;c.player.pause();c.pending=true;c.error=null;c.dirty=false;c.result=null;c.renderedResult=null;paint(c);
@@ -207,6 +207,7 @@ document.addEventListener('click',e=>{
  }
 },true);
 function fieldEvent(e){
+ if(e.isComposing){clearTimeout(A.parameterTimer);return;}
  const c=A.current;if(!c?.reader)return;const el=e.target;
  if(el.id==='reader-scrubber'){if(e.type==='input')A.seek(Number(el.value));return;}
  if(el.id==='reader-speed'){if(e.type==='change')c.player.setSpeed(Number(el.value));return;}

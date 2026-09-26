@@ -10,6 +10,7 @@
 | 単元ごとの章と表現 | `experiences-foundations.js`などの分野別定義、`experiences-*-lessons.js` |
 | 直接操作の状態・計算 | `experiences-*-models.js`、`*-state.js`、`*-review.js` |
 | 直接操作の描画 | `experiences-*-widgets.js`、geometry、objects、communication、math-workbooks |
+| 入力条件の自動反映 | `live-input.js`（明示した条件更新と、計算フォームを接続） |
 | 共通ライフサイクル | `experiences-core.js`、`experiences-view.js`、`experiences-workspace.js` |
 | 検索・画面・既存詳細実験 | `app.js`、`pages.js`、`curriculum-navigation.js`、`reader.js`、`workbench.js`、`boot.js` |
 | 教材の数値入力・増減ボタン | `number-input.js`、`number-input.css` |
