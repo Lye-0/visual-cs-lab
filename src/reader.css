@@ -104,3 +104,5 @@
 .reader-privacy{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding:17px 0}
 .reader-advanced-banner{margin-bottom:20px;padding:16px;border:1px solid var(--line2);border-radius:8px;background:#192b29}
 .reader-advanced-banner p,.reader-node-feedback{font-size:13px;color:var(--muted);margin-top:8px}
+
+.reader-live-status{min-height:3.8em}

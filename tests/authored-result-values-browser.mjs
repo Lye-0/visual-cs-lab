@@ -37,7 +37,7 @@ try{
    await root.locator('[data-ex-previous]').click();assert.equal(await root.locator('[data-ex-values="result"]').count(),0);
   });
   await check(width+': editing an input removes its old values, reset restores actual defaults',async()=>{
-   await open(page,'c03-derivative');const root=page.locator('.ex-kind-ledger');await root.locator('[name=x]').fill('');assert.equal(await root.locator('[data-ex-values]').count(),0);await root.locator('[data-ex-reset]').click();await ready(page,'c03-derivative');assert.ok(await root.locator('[data-ex-values="frame"]').count()>0);
+   await open(page,'c03-derivative');const root=page.locator('.ex-kind-ledger');await root.locator('[name=x]').fill('');assert.ok(await root.locator('[data-ex-values]').count()>0);assert.equal(await root.locator('[data-ex-result]').evaluate(e=>e.inert),true);await root.locator('[data-ex-reset]').click();await ready(page,'c03-derivative');assert.ok(await root.locator('[data-ex-values="frame"]').count()>0);
   });
   await check(width+': inspect values are tied to the currently computed input',async()=>{
    await open(page,'c12-quorum','calculation');const root=page.locator('.ex-kind-inspect');assert.ok(await root.locator('[data-ex-values="result"]').count()>0);

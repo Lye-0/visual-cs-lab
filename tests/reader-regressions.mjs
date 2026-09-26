@@ -56,7 +56,7 @@ try{
    await open(page,'c01-entropy');await page.locator('[data-r-param="weights"]').fill('0,0,0,0');
    await page.waitForFunction(()=>!!CSL.app.current.error);
    assert.equal((await current(page)).hasResult,false);
-   assert.ok((await page.locator('#reader-diagram').textContent()).includes('少なくとも1個'));
+   assert.ok((await page.locator('#reader-input-status').textContent()).includes('少なくとも1個'));
    await page.locator('[data-r-param="weights"]').fill('1,1,1,1');await ready(page,'c01-entropy');
    assert.equal((await current(page)).metrics['エントロピー (bit/記号)'],2);
   });

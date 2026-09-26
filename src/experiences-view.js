@@ -5,7 +5,7 @@
 const L=CSL,X=L.experiences,A=L.app,h=L.h;
 if(typeof document==='undefined')return;
 X.html={p:t=>'<p>'+h(t)+'</p>',button:(t,attrs='')=>`<button type="button" class="ex-button" ${attrs}>${h(t)}</button>`,table:(headers,rows)=>L.table({headers,rows},'値と対象の対応'),value:X.format,formula:t=>`<div class="ex-equation" role="math">${h(t)}</div>`};
-let sequence=0;
+let sequence=0;const derivations=new WeakMap();
 X.scope=(root,current)=>{
  const abort=new AbortController(),cleanups=[];
  const scope={root,current,id:'ex-'+(++sequence),alive:()=>!abort.signal.aborted&&root.isConnected&&A.current===current,
@@ -35,6 +35,7 @@ X.bindEvidence=(root,frames,scope)=>{
 X.mountDerivation=(details,frames,scope)=>{
  let shown=0;const records=details.querySelector('[data-ex-records]'),more=details.querySelector('[data-ex-records-more]');
  const append=()=>{const end=Math.min(shown+6,frames.length);records.insertAdjacentHTML('beforeend',frames.slice(shown,end).map((f,i)=>X.recordMarkup(f,shown+i)).join(''));shown=end;more.hidden=shown>=frames.length;more.textContent='前の計算を残して続きへ（残り'+(frames.length-shown)+'件）';};
+ derivations.set(details,()=>{if(!shown)append();});
  scope.on(details,'toggle',()=>{if(details.open&&!shown)append();});
  scope.on(more,'click',()=>{append();if(more.hidden){records.lastElementChild.tabIndex=-1;records.lastElementChild.focus({preventScroll:true});}});
  X.bindEvidence(details,()=>frames,scope);
@@ -64,7 +65,7 @@ X.readFields=(form,lab,base)=>{
 };
 function preserveDetails(output,render){
  const open=[...output.querySelectorAll('details')].map((el,i)=>el.open?i:-1).filter(i=>i>=0);render();
- const after=output.querySelectorAll('details');for(const i of open)if(after[i])after[i].open=true;
+ const after=output.querySelectorAll('details');for(const i of open)if(after[i]){after[i].open=true;derivations.get(after[i])?.();}
 }
 X.modelActivity=(root,activity,current)=>{
  const scope=X.scope(root,current),lab=A.lab(activity.model||current.lab.id),kind=activity.kind;
@@ -74,8 +75,8 @@ X.modelActivity=(root,activity,current)=>{
  const choices=activity.examples?.length?`<div class="ex-example-choices" aria-label="試す具体例">${activity.examples.map((p,i)=>X.html.button(p.label,`data-ex-example="${i}"`)).join('')}</div><p class="ex-example-reason"></p>`:'';
  // Inspection starts with the object, code starts with code, and a worked
  // derivation starts with its premises. Input panels do not dictate the page.
- const workspace='<div data-ex-result></div>';
- root.innerHTML=`${activity.hint?'<p class="ex-operation-hint">'+h(activity.hint)+'</p>':''}${choices}${kind==='inspect'?workspace+controls:controls+workspace}<p data-ex-status role="status" aria-live="polite"></p>`;
+ const workspace='<div data-ex-result></div>',notice='<p data-ex-status role="status" aria-live="polite"></p>';
+ root.innerHTML=`${activity.hint?'<p class="ex-operation-hint">'+h(activity.hint)+'</p>':''}${choices}${kind==='inspect'?workspace+controls+notice:controls+notice+workspace}`;
  const form=root.querySelector('form'),output=root.querySelector('[data-ex-result]'),status=root.querySelector('[data-ex-status]');
  const setFields=()=>{const buttons=form.querySelector('.ex-actions');form.innerHTML=X.fields(lab,activity.keys,params,scope.id);form.append(buttons);};
  const resolvedIndex=()=>['timeline','editor'].includes(kind)?index:typeof activity.frame==='number'?Math.max(0,Math.min(activity.frame,result.frames.length-1)):activity.frame==='first'?0:result.frames.length-1;
@@ -96,15 +97,20 @@ X.modelActivity=(root,activity,current)=>{
   });
   output.insertAdjacentHTML('beforeend',X.valuesMarkup(X.finalValues(result,kind,resolvedIndex(),limit),'result'));
  }
+ function pending(){
+  result=null;output.inert=true;output.dataset.updateState='pending';status.className='';
+  status.textContent=output.childElementCount?'更新中です。表示は直前の結果です。':'計算しています…';
+ }
+ function failed(error){output.dataset.updateState='invalid';root.setAttribute('aria-busy','false');scope.error(new Error(error.message+(output.childElementCount?' 表示は直前の結果です。':'')));}
  async function run(userInput=false){
-  const own=++token;result=null;selected=null;output.replaceChildren();status.textContent='この入力から計算しています…';status.className='';root.setAttribute('aria-busy','true');
-  try{const r=await L.run(lab,params);if(!scope.alive()||token!==own)return;result=r;index=0;limit=6;paint();status.textContent='現在の入力を反映しています。';current.completed.add(scope.id);}
-  catch(e){if(scope.alive()&&token===own){scope.error(e);if(!userInput)current.errors.push({activity:activity.title,message:e.message});}}
+  const own=++token;selected=null;pending();root.setAttribute('aria-busy','true');
+  try{const r=await L.run(lab,params);if(!scope.alive()||token!==own)return;result=r;index=0;limit=Math.max(6,limit);paint();output.inert=false;output.dataset.updateState='ready';status.textContent='現在の入力を反映しています。';current.completed.add(scope.id);}
+  catch(e){if(scope.alive()&&token===own){failed(e);if(!userInput)current.errors.push({activity:activity.title,message:e.message});}}
   finally{if(scope.alive()&&token===own)root.setAttribute('aria-busy','false');}
  }
  if(kind==='ledger')X.bindEvidence(output,()=>result?.frames||[],scope);
- scope.on(form,'submit',e=>{e.preventDefault();live.cancel();try{params=X.readFields(form,lab,params);run(true);}catch(error){token++;result=null;output.replaceChildren();scope.error(error);}});
- const live=X.liveInput(form,scope,{accept:()=>true,invalidate:()=>{token++;result=null;output.innerHTML='<p class="ex-caption">入力に合わせて更新しています…</p>';status.className='';status.textContent='';root.setAttribute('aria-busy','false');},apply:()=>{params=X.readFields(form,lab,params);return run(true);}});
+ scope.on(form,'submit',e=>{e.preventDefault();live.cancel();try{params=X.readFields(form,lab,params);run(true);}catch(error){token++;pending();failed(error);}});
+ const live=X.liveInput(form,scope,{accept:()=>true,invalidate:()=>{token++;pending();root.setAttribute('aria-busy','false');},apply:()=>{params=X.readFields(form,lab,params);return run(true);},error:failed});
  scope.on(root,'click',e=>{
   const b=e.target.closest('button');if(!b)return;
   if(b.hasAttribute('data-ex-reset')){live.cancel();params=X.modelParams(lab.id,activity.patch);setFields();const reason=root.querySelector('.ex-example-reason');if(reason)reason.textContent='';run();return;}

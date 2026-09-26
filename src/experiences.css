@@ -133,3 +133,5 @@
 .experience .ex-calculated-values dd{margin:4px 0 0;color:#e1eceb;font-variant-numeric:tabular-nums;line-height:1.6;overflow-wrap:anywhere}
 .experience [data-ex-values=result]{border-inline-start:3px solid #7fcab7;padding-inline-start:12px}
 @media(forced-colors:active){.experience .ex-calculated-values{border-color:CanvasText}.experience .ex-calculated-values :is(dt,dd){color:CanvasText}}
+
+.experience [data-ex-status]{min-height:3.6em;line-height:1.8}

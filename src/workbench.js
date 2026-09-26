@@ -205,7 +205,7 @@ A.selectCompareStep=(side,index)=>{
 };
 A.renderDetails=()=>{
  const c=A.current;if(!c)return;const lab=c.lab,el=document.getElementById('detail-content');if(!el)return;
- let body='';const ready=stateReady(c);
+ let body='';const ready=stateReady(c);el.inert=!ready;if(!ready&&el.dataset.renderedTab===c.tab&&el.childElementCount)return;el.dataset.renderedTab=c.tab;
  if(c.tab==='understand'){
   if(c.mode==='challenge'){
    const q=lab.challenge;

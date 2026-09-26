@@ -82,13 +82,19 @@ function renderComparison(c){
 function paint(c){
  if(!isCurrent(c)||!$('reader-diagram'))return;
  const valid=ready(c),count=valid?c.result.frames.length:0,frame=valid?c.result.frames[c.index]:null;
- const status=c.error?`入力を確認してください：${c.error}`:c.pending?'計算しています。古い結果は表示しません。':c.dirty?'入力に合わせて更新しています…':'条件を反映しました。図と理由を一緒に確認できます。';
+ const status=c.error?`入力を確認してください：${c.error}${c.displayedResult?' 表示は直前の結果です。':''}`:c.pending?'更新中です。表示は直前の結果です。':c.dirty?'更新待ちです。表示は直前の結果です。':'条件を反映しました。図と理由を一緒に確認できます。';
  if($('reader-input-status'))$('reader-input-status').textContent=status;
  for(const ctrl of c.lab.controls){
   const bad=Boolean(c.invalidInputs[ctrl.key]);
   for(const suffix of ['', '-number'])$('reader-input-'+ctrl.key+suffix)?.setAttribute('aria-invalid',String(bad));
  }
  $('reader-diagram').setAttribute('aria-busy',String(c.pending));
+ for(const id of ['reader-diagram','reader-companion','reader-table','reader-result-details','reader-comparison'])if($(id))$(id).inert=!valid;
+ if(!valid&&c.displayedResult){
+  document.querySelectorAll('#reader-play,#reader-scrubber,[data-r-action="first"],[data-r-action="back"],[data-r-action="next"],[data-r-action="last"],[data-r-action="baseline"]').forEach(el=>el.disabled=true);
+  return;
+ }
+
  const canPlay=valid&&count>1;
  $('reader-play').disabled=!canPlay;
  $('reader-play').innerHTML=icon(c.playing?'pause':'play',17)+(c.playing?'一時停止':c.index===count-1&&count>1?'最初から再生':'再生');
@@ -104,9 +110,10 @@ function paint(c){
  $('reader-next-label').textContent=c.lab.reading.nextLabel;
  const caption=$('reader-condition-summary');if(caption)caption.textContent=valid?conditionSummary(c.lab,c.params):'入力の計算が完了していません。';
  if(!valid){
-  replaceDiagram(c,$('reader-diagram'),`<div class="reader-result-placeholder ${c.error?'reader-error':''}"><h3>${c.error?'入力の意味を確認しましょう':c.pending?'条件から計算しています':'入力に合わせて図を更新しています'}</h3><p>${h(c.error||'計算途中に前の条件の図を残さないようにしています。')}</p></div>`);
+  replaceDiagram(c,$('reader-diagram'),`<div class="reader-result-placeholder ${c.error?'reader-error':''}"><h3>${c.error?'入力の意味を確認しましょう':c.pending?'条件から計算しています':'入力に合わせて図を更新しています'}</h3><p>${h(c.error||'計算が終わると、図と理由を表示します。')}</p></div>`);
   $('reader-event').innerHTML='';$('reader-table').innerHTML='';replaceDiagram(c,$('reader-companion'),'');$('reader-result-details').innerHTML='';renderComparison(c);return;
  }
+ c.displayedResult=true;
  let diagram=L.visualize(frame.visual,{focus:c.noteFocus});
  diagram=diagram.replace(/data-node=/g,'data-r-node=').replace(/data-bit=/g,'data-r-bit=').replace(/data-edge=/g,'data-r-edge=');
  replaceDiagram(c,$('reader-diagram'),diagram);
@@ -116,13 +123,13 @@ function paint(c){
  if(c.renderedResult!==c.result){resultParts(c);c.renderedResult=c.result;renderComparison(c);}
 }
 function invalidate(c){
- clearTimeout(A.parameterTimer);c.token++;c.player.pause();c.pending=false;c.dirty=true;c.error='';c.result=null;c.renderedResult=null;
+ clearTimeout(A.parameterTimer);c.token++;c.pending=false;c.dirty=true;c.error='';c.result=null;c.renderedResult=null;c.player.pause();
 }
 async function compute(c){
  if(!isCurrent(c))return;
  clearTimeout(A.parameterTimer);
  if(Object.keys(c.invalidInputs).length){c.error=Object.values(c.invalidInputs).join(' ');paint(c);return;}
- const own=++c.token;c.player.pause();c.pending=true;c.dirty=false;c.error=null;c.result=null;c.renderedResult=null;paint(c);
+ const own=++c.token;c.pending=true;c.dirty=false;c.error=null;c.result=null;c.renderedResult=null;c.player.pause();paint(c);
  try{
   const validated=L.validateParams(c.lab,c.params),result=await L.run(c.lab,validated);
   if(!isCurrent(c)||own!==c.token)return;

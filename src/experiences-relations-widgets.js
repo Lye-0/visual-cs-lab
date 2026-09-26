@@ -37,17 +37,17 @@ X.registerWidget('sql-desk',(root,a,current)=>{
  const form=root.querySelector('form'),area=form.elements.sql,tables=root.querySelector('[data-sql-tables]'),results=root.querySelector('[data-sql-results]'),status=root.querySelector('[data-ex-status]');
  function paintTables(){tables.innerHTML='<div class="ex-os-two">'+Object.entries(data).map(([name,rows])=>{const headers=[...new Set(rows.flatMap(Object.keys))];return '<section class="ex-os-box"><h4>'+h(name)+'</h4>'+T(headers,rows.map(r=>headers.map(key=>r[key]??'NULL')))+'</section>';}).join('')+'</div>';root.dataset.sqlData=JSON.stringify(data);root.querySelector('[data-sql-action="undo"]').disabled=!history.length;}
  function preview(){
-  results.replaceChildren();status.className='';
-  if(!area.value.trim()){status.textContent='SQLを入力してください。';return;}
+  results.inert=true;status.className='';
+  if(!area.value.trim()){last=null;dirty=true;status.textContent='SQLを入力してください。表示は直前のプレビューです。';return;}
   try{
    const r=K.sql.run(area.value,X.clone(data));last=r;dirty=false;
    results.innerHTML=r.outputs.map((out,i)=>`<section data-sql-result="${i}"><h4>文${i+1}の結果</h4>${T(out.headers,out.rows.map(row=>row.map(v=>v===null?'NULL':v)))}</section>`).join('')+'<details><summary>どの段階で行・グループの数が変わったか</summary>'+T(['段階','件数','対象'],r.trace)+'</details>';
-   status.textContent='現在の表を使った自動プレビューです。表への書込みは「表への変更を確定する」で確定します。';current.completed.add(scope.id);
+   results.inert=false;status.textContent='自動プレビューです。表への変更は未確定です。';current.completed.add(scope.id);
   }catch(e){last=null;dirty=true;status.textContent=e.message+' 表への変更は反映していません。';status.className='ex-os-notice';}
  }
- scope.on(form,'submit',e=>{e.preventDefault();live.cancel();if(!form.checkValidity())return;preview();if(!last||dirty)return;history.push(X.clone(data));if(history.length>32)history.shift();data=X.clone(last.data);paintTables();status.textContent='表への変更を確定しました。次の編集はこの表からプレビューします。';});
- const live=X.liveInput(form,scope,{accept:el=>el===area,invalidate:()=>{dirty=true;last=null;results.innerHTML='<p>入力に合わせてプレビューを更新しています…</p>';status.textContent='確定済みの表は変更していません。';status.className='';},apply:preview});
- scope.on(root,'click',e=>{const button=e.target.closest('button');if(!button)return;if(button.hasAttribute('data-sql-example')){const ex=examples[Number(button.dataset.sqlExample)];area.value=ex[1];root.querySelector('[data-sql-reason]').textContent=ex[2];results.replaceChildren();dirty=true;last=null;live.cancel();preview();area.focus({preventScroll:true});}const action=button.dataset.sqlAction;if(action==='reset'||action==='undo'&&history.length){live.cancel();data=action==='reset'?X.clone(initial):history.pop();if(action==='reset')history=[];last=null;dirty=true;paintTables();results.replaceChildren();preview();}});
+ scope.on(form,'submit',e=>{e.preventDefault();live.cancel();if(!form.checkValidity())return;preview();if(!last||dirty)return;history.push(X.clone(data));if(history.length>32)history.shift();data=X.clone(last.data);paintTables();status.textContent='表への変更を確定しました。';});
+ const live=X.liveInput(form,scope,{accept:el=>el===area,invalidate:()=>{dirty=true;last=null;results.inert=true;status.textContent='更新中です。直前のプレビューを表示しています。';status.className='';},apply:preview});
+ scope.on(root,'click',e=>{const button=e.target.closest('button');if(!button)return;if(button.hasAttribute('data-sql-example')){const ex=examples[Number(button.dataset.sqlExample)];area.value=ex[1];root.querySelector('[data-sql-reason]').textContent=ex[2];dirty=true;last=null;live.cancel();preview();area.focus({preventScroll:true});}const action=button.dataset.sqlAction;if(action==='reset'||action==='undo'&&history.length){live.cancel();data=action==='reset'?X.clone(initial):history.pop();if(action==='reset')history=[];last=null;dirty=true;paintTables();preview();}});
  paintTables();preview();
 });
 })();
