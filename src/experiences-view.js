@@ -20,6 +20,26 @@ X.draw=(root,frame,focus=null)=>{
  if(!frame)throw Error('この例の状態がありません。');
  root.innerHTML=`<div class="reader-diagram ex-model-diagram">${L.visualize(frame.visual,{focus})}</div><div class="ex-frame-copy"><h4>${h(frame.title)}</h4><p>${h(frame.explain)}</p>${frame.table?L.table(frame.table):''}${X.valuesMarkup(frame.stats)}</div>`;
 };
+// Worked records retain the actual diagram/table as well as its explanation.
+// Each record owns its selection; selecting an earlier row never draws the final frame.
+X.recordMarkup=(frame,index)=>`<section class="ex-ledger-line" data-ex-record="${index}"><span class="ex-line-number">${index+1}</span><div><h4>${h(frame.title)}</h4><p>${h(frame.explain)}</p><div class="reader-diagram ex-model-diagram" data-ex-evidence="${index}">${L.visualize(frame.visual,{})}</div>${frame.table?L.table(frame.table):''}${X.valuesMarkup(frame.stats)}</div></section>`;
+X.bindEvidence=(root,frames,scope)=>{
+ scope.on(root,'click',e=>{
+  const pick=e.target.closest('[data-r-focus]'),box=pick?.closest('[data-ex-evidence]');if(!box||box.closest('.ex-derivation')&&root!==box.closest('.ex-derivation'))return;
+  const frame=frames()[Number(box.dataset.exEvidence)];if(!frame)return;
+  const focus=pick.getAttribute('data-r-focus');box.innerHTML=L.visualize(frame.visual,{focus});
+  box.querySelector(`[data-r-focus="${CSS.escape(focus)}"]`)?.focus({preventScroll:true});
+ });
+ scope.on(root,'keydown',e=>{if(['Enter',' '].includes(e.key)&&e.target.matches('svg [data-r-focus]')&&e.target.closest('[data-ex-evidence]')){e.preventDefault();e.stopImmediatePropagation();if(!e.repeat)e.target.dispatchEvent(new MouseEvent('click',{bubbles:true}));}});
+};
+X.mountDerivation=(details,frames,scope)=>{
+ let shown=0;const records=details.querySelector('[data-ex-records]'),more=details.querySelector('[data-ex-records-more]');
+ const append=()=>{const end=Math.min(shown+6,frames.length);records.insertAdjacentHTML('beforeend',frames.slice(shown,end).map((f,i)=>X.recordMarkup(f,shown+i)).join(''));shown=end;more.hidden=shown>=frames.length;more.textContent='前の計算を残して続きへ（残り'+(frames.length-shown)+'件）';};
+ scope.on(details,'toggle',()=>{if(details.open&&!shown)append();});
+ scope.on(more,'click',()=>{append();if(more.hidden){records.lastElementChild.tabIndex=-1;records.lastElementChild.focus({preventScroll:true});}});
+ X.bindEvidence(details,()=>frames,scope);
+};
+X.derivationMarkup=label=>`<details class="ex-derivation"><summary>${h(label)}</summary><div class="ex-ledger" data-ex-records></div><button type="button" class="ex-button" data-ex-records-more hidden></button></details>`;
 X.fields=(lab,keys,p,uid)=>keys.map(spec=>{
  const key=typeof spec==='string'?spec:spec.key,ctrl=lab.controls.find(c=>c.key===key);if(!ctrl)throw Error('入力が存在しません: '+lab.id+'/'+key);
  const label=typeof spec==='string'?ctrl.label:spec.label||ctrl.label,id=uid+'-'+key,v=p[key];let input;
@@ -63,14 +83,15 @@ X.modelActivity=(root,activity,current)=>{
   if(!scope.alive()||!result)return;const frames=result.frames;
   preserveDetails(output,()=>{
    if(kind==='ledger'){
-    output.innerHTML=`<div class="ex-ledger">${frames.slice(0,limit).map((f,i)=>`<section class="ex-ledger-line" data-ex-record="${i}"><span class="ex-line-number">${i+1}</span><div><h4>${h(f.title)}</h4><p>${h(f.explain)}</p>${f.table?L.table(f.table):''}${X.valuesMarkup(f.stats)}<details><summary>この式・判断に対応する図</summary><div class="reader-diagram ex-model-diagram">${L.visualize(f.visual,{})}</div></details></div></section>`).join('')}</div>${limit<frames.length?X.html.button('前の計算を残して続きへ（残り'+(frames.length-limit)+'件）','data-ex-more'):''}<p class="ex-conclusion">${h(result.conclusion)}</p>`;
+    output.innerHTML=`<div class="ex-ledger">${frames.slice(0,limit).map(X.recordMarkup).join('')}</div>${limit<frames.length?X.html.button('前の計算を残して続きへ（残り'+(frames.length-limit)+'件）','data-ex-more'):''}<p class="ex-conclusion">${h(result.conclusion)}</p>`;
    }else if(kind==='timeline'||kind==='editor'){
     index=Math.min(index,frames.length-1);
     output.innerHTML=`<div class="ex-trace-layout"><ol class="ex-event-list" aria-label="状態の記録">${frames.map((f,i)=>`<li><button type="button" data-ex-event="${i}"${i===index?' aria-current="step"':''}><span>${i+1}</span>${h(f.title)}</button></li>`).join('')}</ol><div class="ex-selected-state"><div data-ex-frame></div><div class="ex-actions">${X.html.button('一つ前の状態','data-ex-previous'+(index===0?' disabled':''))}${X.html.button(activity.advance||'次の処理を確かめる','data-ex-next'+(index===frames.length-1?' disabled':''))}</div></div>`;
     X.draw(output.querySelector('[data-ex-frame]'),frames[index],selected);
    }else{
-    output.innerHTML='<div data-ex-frame></div>'+(activity.showDerivation?`<details class="ex-derivation"><summary>この値に至る式・判断</summary>${frames.map(f=>'<h4>'+h(f.title)+'</h4><p>'+h(f.explain)+'</p>').join('')}</details>`:'');
+    output.innerHTML='<div data-ex-frame></div>'+(activity.showDerivation?X.derivationMarkup('この値に至る式・判断'):'');
     X.draw(output.querySelector('[data-ex-frame]'),frames[resolvedIndex()],selected);
+    if(activity.showDerivation)X.mountDerivation(output.querySelector('.ex-derivation'),frames,scope);
    }
   });
   output.insertAdjacentHTML('beforeend',X.valuesMarkup(X.finalValues(result,kind,resolvedIndex(),limit),'result'));
@@ -81,6 +102,7 @@ X.modelActivity=(root,activity,current)=>{
   catch(e){if(scope.alive()&&token===own){scope.error(e);current.errors.push({activity:activity.title,message:e.message});}}
   finally{if(scope.alive()&&token===own)root.setAttribute('aria-busy','false');}
  }
+ if(kind==='ledger')X.bindEvidence(output,()=>result?.frames||[],scope);
  scope.on(form,'submit',e=>{e.preventDefault();try{params=X.readFields(form,lab,params);run();}catch(error){token++;result=null;output.replaceChildren();scope.error(error);}});
  scope.on(form,'input',()=>{token++;result=null;output.innerHTML='<p class="ex-caption">入力を編集中です。実行ボタンで確定すると、新しい結果を表示します。</p>';status.className='';status.textContent='古い入力の結果は表示していません。';root.setAttribute('aria-busy','false');});
  scope.on(root,'click',e=>{
@@ -89,13 +111,19 @@ X.modelActivity=(root,activity,current)=>{
   if(b.hasAttribute('data-ex-example')){const example=activity.examples[Number(b.dataset.exExample)];params={...X.modelParams(lab.id,activity.patch),...example.patch};setFields();root.querySelector('.ex-example-reason').textContent=example.reason;run();return;}
   if(!result)return;
   const focus=()=>{const target=b.hasAttribute('data-ex-event')?`[data-ex-event="${index}"]`:b.hasAttribute('data-ex-more')?'[data-ex-more]':b.hasAttribute('data-ex-next')?'[data-ex-next]':'[data-ex-previous]';const node=output.querySelector(target);if(node&&!node.disabled)node.focus({preventScroll:true});else {output.tabIndex=-1;output.focus({preventScroll:true});}};
-  if(b.hasAttribute('data-ex-more')){limit+=6;paint();focus();}
+  if(b.hasAttribute('data-ex-more')){
+   const from=limit;limit+=6;
+   output.querySelector('.ex-ledger').insertAdjacentHTML('beforeend',result.frames.slice(from,limit).map((f,i)=>X.recordMarkup(f,from+i)).join(''));
+   if(limit>=result.frames.length){b.remove();output.insertAdjacentHTML('beforeend',X.valuesMarkup(result.metrics,'result'));}
+   else b.textContent='前の計算を残して続きへ（残り'+(result.frames.length-limit)+'件）';
+   focus();
+  }
   if(b.hasAttribute('data-ex-event')){index=Number(b.dataset.exEvent);selected=null;paint();focus();}
   if(b.hasAttribute('data-ex-next')){index=Math.min(index+1,result.frames.length-1);selected=null;paint();focus();}
   if(b.hasAttribute('data-ex-previous')){index=Math.max(0,index-1);selected=null;paint();focus();}
  });
  scope.on(root,'click',e=>{
-  const node=e.target.closest('[data-r-focus]');if(!node||!result)return;
+  const node=e.target.closest('[data-r-focus]');if(!node||!result||node.closest('[data-ex-evidence]'))return;
   const target=output.querySelector('[data-ex-frame]');if(!target)return;
   selected=node.getAttribute('data-r-focus');X.draw(target,result.frames[resolvedIndex()],selected);
   target.querySelector(`[data-r-focus="${CSS.escape(selected)}"]`)?.focus({preventScroll:true});
@@ -107,7 +135,7 @@ for(const name of ['inspect','ledger','timeline','editor'])X.registerWidget(name
 X.registerWidget('compare',(root,a,c)=>{
  const scope=X.scope(root,c),lab=A.lab(a.model||c.lab.id);
  root.innerHTML=`<p class="ex-operation-hint">${h(a.hint||'どちらの結果も残して、変えた条件と理由を比べます。')}</p><div class="ex-side-by-side">${a.examples.map((p,i)=>`<section><h4>${h(p.label)}</h4><p>${h(p.reason)}</p><div data-ex-comparison="${i}" aria-busy="true"></div></section>`).join('')}</div>`;
- a.examples.forEach(async(p,i)=>{const box=root.querySelector(`[data-ex-comparison="${i}"]`);try{const result=await L.run(lab,X.modelParams(lab.id,{...a.patch,...p.patch}));if(!scope.alive())return;X.draw(box,result.frames.at(-1));box.insertAdjacentHTML('beforeend',X.valuesMarkup(result.metrics,'result')+`<details><summary>この結果に至る判断</summary>${result.frames.map(f=>'<h5>'+h(f.title)+'</h5><p>'+h(f.explain)+'</p>').join('')}</details>`);c.completed.add(scope.id+'-'+i);}catch(e){if(scope.alive()){box.classList.add('ex-error');box.textContent=e.message;c.errors.push({activity:a.title,message:e.message});}}finally{if(scope.alive())box.setAttribute('aria-busy','false');}});
+ a.examples.forEach(async(p,i)=>{const box=root.querySelector(`[data-ex-comparison="${i}"]`);try{const result=await L.run(lab,X.modelParams(lab.id,{...a.patch,...p.patch}));if(!scope.alive())return;X.draw(box,result.frames.at(-1));box.insertAdjacentHTML('beforeend',X.valuesMarkup(result.metrics,'result')+X.derivationMarkup('この結果に至る式・判断'));X.mountDerivation(box.querySelector('.ex-derivation'),result.frames,scope);X.bindEvidence(box,()=>[result.frames.at(-1)],scope);box.querySelector('.ex-model-diagram').dataset.exEvidence='0';c.completed.add(scope.id+'-'+i);}catch(e){if(scope.alive()){box.classList.add('ex-error');box.textContent=e.message;c.errors.push({activity:a.title,message:e.message});}}finally{if(scope.alive())box.setAttribute('aria-busy','false');}});
 });
 X.registerWidget('cases',(root,a,c)=>{
  const scope=X.scope(root,c);let selected=0;
@@ -123,7 +151,7 @@ A.views.lab=(parts,params)=>{
  current.player={dispose(){for(const s of current.scopes)s.dispose();current.scopes=[];},pause(){}};
  A.setTitle(lab.unit);A.setNav('domain-'+path[0].id,lab.unit);
  const sources=lab.sources.map(id=>L.sources[id]).filter(Boolean),chapterIndex=def.chapters.indexOf(chapter),chapterLink=ch=>'#/lab/'+id+'?chapter='+ch.id;
- document.getElementById('main').innerHTML=`<article class="experience" data-ex-lesson="${h(id)}"><header class="ex-title"><nav class="library-breadcrumb" aria-label="単元の分類"><a href="#/catalog">単元一覧</a><span>/</span><a href="#/catalog?domain=${path[0].id}">${h(path[0].name)}</a><span>/</span><a href="#/catalog?domain=${path[0].id}&category=${path[1].id}">${h(path[1].name)}</a></nav><h1>${h(lab.unit)}</h1><p class="ex-lead">${h(def.lead)}</p></header>${def.chapters.length>1?`<nav class="ex-chapters" aria-label="この単元で学ぶこと">${def.chapters.map(ch=>`<a href="${chapterLink(ch)}"${chapter.id===ch.id?' aria-current="page"':''}><strong>${h(ch.title)}</strong><span>${h(ch.question)}</span></a>`).join('')}</nav>`:''}<section class="ex-chapter" data-ex-chapter="${chapter.id}"><header><h2>${h(chapter.title)}</h2><p class="ex-question">${h(chapter.question)}</p></header>${chapter.paragraphs.map(X.html.p).join('')}${chapter.formula?X.html.formula(chapter.formula):''}<div class="ex-activities">${chapter.activities.map((a,i)=>`<section class="ex-activity ex-kind-${h(a.kind)}" data-ex-activity="${i}" data-ex-kind="${h(a.kind)}"><h3>${h(a.title)}</h3><div class="ex-activity-body"></div></section>`).join('')}</div>${chapter.after.map(p=>'<aside class="ex-why">'+X.html.p(p)+'</aside>').join('')}</section>${def.chapters.length>1?`<nav class="ex-chapter-next" aria-label="章の移動">${chapterIndex?'<a href="'+chapterLink(def.chapters[chapterIndex-1])+'">← '+h(def.chapters[chapterIndex-1].title)+'</a>':'<span></span>'}${chapterIndex+1<def.chapters.length?'<a href="'+chapterLink(def.chapters[chapterIndex+1])+'">'+h(def.chapters[chapterIndex+1].title)+' →</a>':''}</nav>`:''}<details class="ex-model-scope"><summary>この小例の範囲・用語・参考資料</summary><h3>実験の範囲</h3><p>${h(lab.scope)}</p><p>${h(lab.limits)}</p>${def.scope?'<p>'+h(def.scope)+'</p>':''}<dl>${(lab.reading?.terms||[]).map(t=>'<dt>'+h(t.term)+'</dt><dd>'+h(t.definition)+'</dd>').join('')}</dl><ul>${sources.map(s=>'<li><a href="'+h(s.url)+'" target="_blank" rel="noopener noreferrer">'+h(s.name)+'</a></li>').join('')}</ul></details><div class="ex-secondary"><a href="#/lab/${id}?view=classic">詳細実験で、他の条件も試す →</a><a href="#/catalog?domain=${path[0].id}&category=${path[1].id}">同じテーマの単元へ →</a></div></article>${A.footer()}`;
+ document.getElementById('main').innerHTML=`<article class="experience" data-ex-lesson="${h(id)}"><header class="ex-title"><nav class="library-breadcrumb" aria-label="単元の分類"><a href="#/catalog">単元一覧</a><span>/</span><a href="#/catalog?domain=${path[0].id}">${h(path[0].name)}</a><span>/</span><a href="#/catalog?domain=${path[0].id}&category=${path[1].id}">${h(path[1].name)}</a></nav><h1>${h(lab.unit)}</h1><p class="ex-lead">${h(def.lead)}</p></header>${def.chapters.length>1?`<nav class="ex-chapters" aria-label="この単元で学ぶこと">${def.chapters.map(ch=>`<a href="${chapterLink(ch)}"${chapter.id===ch.id?' aria-current="page"':''}><strong>${h(ch.title)}</strong><span>${h(ch.question)}</span></a>`).join('')}</nav>`:''}<section class="ex-chapter" data-ex-chapter="${chapter.id}"><header><h2>${h(chapter.title)}</h2><p class="ex-question">${h(chapter.question)}</p></header>${chapter.paragraphs.map(X.html.p).join('')}${chapter.formula?X.html.formula(chapter.formula):''}<div class="ex-activities">${chapter.activities.map((a,i)=>`<section class="ex-activity ex-kind-${h(a.kind)}" data-ex-activity="${i}" data-ex-kind="${h(a.kind)}"><h3>${h(a.title)}</h3><div class="ex-activity-body"></div></section>`).join('')}</div>${chapter.after.map(p=>'<aside class="ex-why">'+X.html.p(p)+'</aside>').join('')}</section>${def.chapters.length>1?`<nav class="ex-chapter-next" aria-label="章の移動">${chapterIndex?'<a href="'+chapterLink(def.chapters[chapterIndex-1])+'">← '+h(def.chapters[chapterIndex-1].title)+'</a>':'<span></span>'}${chapterIndex+1<def.chapters.length?'<a href="'+chapterLink(def.chapters[chapterIndex+1])+'">'+h(def.chapters[chapterIndex+1].title)+' →</a>':''}</nav>`:''}<details class="ex-model-scope"><summary>この小例の範囲・用語・参考資料</summary><h3>実験の範囲</h3><p>${h(lab.scope)}</p><p>${h(lab.limits)}</p>${def.scope?'<p>'+h(def.scope)+'</p>':''}<dl>${(lab.reading?.terms||[]).map(t=>'<dt>'+h(t.term)+'</dt><dd>'+h(t.definition)+'</dd>').join('')}</dl><ul>${sources.map(s=>'<li>'+(s.url?'<a href="'+h(s.url)+'" target="_blank" rel="noopener noreferrer">'+h(s.name)+'</a>':h(s.name))+(s.detail?'<p>'+h(s.detail)+'</p>':'')+'</li>').join('')}</ul></details><div class="ex-secondary"><a href="#/lab/${id}?view=classic">詳細実験で、他の条件も試す →</a><a href="#/catalog?domain=${path[0].id}&category=${path[1].id}">同じテーマの単元へ →</a></div></article>${A.footer()}`;
  for(const [i,a]of chapter.activities.entries()){
   const host=document.querySelector(`[data-ex-activity="${i}"] .ex-activity-body`),mount=X.widgets.get(a.kind);
   try{if(!mount)throw Error('表示部品がありません: '+a.kind+' / '+id);mount(host,a,current);}catch(e){host.classList.add('ex-error');host.textContent=e.message;current.errors.push({activity:a.title,message:e.message});console.error(e);}

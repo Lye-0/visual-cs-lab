@@ -3,7 +3,7 @@ import {readdir,mkdir,open,writeFile} from 'node:fs/promises';
 import {spawn} from 'node:child_process';
 import {once} from 'node:events';
 const names=(await readdir(new URL('./',import.meta.url))).filter(n=>/workspaces.*browser\.mjs$/.test(n));
-names.push('math-evidence-browser.mjs','math-correspondence-browser.mjs','foundation-review-browser.mjs','workspace-view-state-browser.mjs','authored-result-values-browser.mjs');
+names.push('math-evidence-browser.mjs','math-correspondence-browser.mjs','foundation-review-browser.mjs','workspace-view-state-browser.mjs','authored-result-values-browser.mjs','teaching-evidence-browser.mjs');
 await mkdir('review-output/workspaces',{recursive:true});
 const rows=[];
 for(const name of names){

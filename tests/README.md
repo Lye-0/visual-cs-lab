@@ -6,6 +6,7 @@
 | 全314単元の初回読み込み・画面移動中の完了・失敗後再試行 | `npm run test:loading` |
 | 分離配信・公開パス・代表教材と既存詳細画面 | `npm run test:static` |
 | 全章・1440/390/320px | `node tests/full-learning-audit.mjs` |
+| 途中式・図表の選択・再計算・章の対象 | `node tests/teaching-evidence-browser.mjs` |
 | Git専用操作 | `node tests/git-review-workspaces-browser.mjs` |
 | DB専用操作 | `node tests/database-review-workspaces-browser.mjs` |
 | その他の分野 | `*workspaces*browser.mjs`、`math-*.mjs`など対象を選ぶ |

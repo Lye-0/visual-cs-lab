@@ -20,6 +20,8 @@
 
 ## 検証・履歴を読む
 
+- [ノートの設計指針による教材レビュー](verification/TEACHING_REVIEW.md)：全314単元の確認範囲、図・式・説明の修正、操作検証。
+
 - [検証記録の読み方](verification/README.md)：記録に書かれたコミット・範囲を確認する。
 - [読み込み変更の検証](verification/ON_DEMAND_REVIEW.md)：今回の実行結果と測定条件。
 - `verification/*REVIEW.md`、`*REPORT.md`：特定の改修グループの記録。
