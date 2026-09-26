@@ -10,6 +10,7 @@
 | 独自プルダウンの選択・取消し・同期 | `node tests/custom-select-browser.mjs`（全章の置換確認は `ALL_SELECTS=1`） |
 | 数値入力・増減・上下限・タップ | `node tests/number-input-browser.mjs` |
 | 参考資料・操作ガイドの初回表示と移動 | `node tests/reference-pages-browser.mjs` |
+| 入力ラベルの非操作領域と操作本体 | `node tests/control-labels-browser.mjs` |
 | Git専用操作 | `node tests/git-review-workspaces-browser.mjs` |
 | DB専用操作 | `node tests/database-review-workspaces-browser.mjs` |
 | その他の分野 | `*workspaces*browser.mjs`、`math-*.mjs`など対象を選ぶ |

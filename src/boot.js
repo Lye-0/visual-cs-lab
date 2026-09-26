@@ -73,6 +73,15 @@ function fieldInput(el){
  if(ctrl.type==='select')value=ctrl.options.find(x=>String(x.value)===el.value)?.value??ctrl.value;
  A.parameter(el.dataset.param,value,{immediate:['toggle','select','range'].includes(ctrl.type),code:ctrl.type==='code'});
 }
+// A label names its control but does not extend the clickable area to the
+// heading or surrounding row. Preserve actual controls and the visible switch
+// track, whose hidden checkbox intentionally receives native label activation.
+document.addEventListener('click',e=>{
+ const label=e.target.closest('label'),control=label?.control;
+ if(!control||e.target.closest('button,a,input,select,textarea,[role="button"],[role="switch"],[contenteditable="true"]'))return;
+ if(control.type==='checkbox'&&e.target.closest('.toggle-switch'))return;
+ e.preventDefault();
+},true);
 document.addEventListener('input',e=>{
  const el=e.target;
  if(el.id==='global-search'){A.updateSearch(el.value);return;}

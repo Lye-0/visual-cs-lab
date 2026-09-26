@@ -118,9 +118,6 @@ function start(){
  document.addEventListener('input',schedule);document.addEventListener('change',schedule);document.addEventListener('reset',()=>setTimeout(refresh,0));
  document.addEventListener('pointerdown',e=>{if(opened&&!opened.button.contains(e.target)&&!opened.popup.contains(e.target))close();},true);
  document.addEventListener('focusin',e=>{if(opened&&e.target!==opened.button&&!opened.popup.contains(e.target))close();});
- // Labels provide the accessible name, not a second activation area. Cancel
- // native label forwarding too, including labels that wrap the whole field.
- document.addEventListener('click',e=>{const label=e.target.closest('label'),select=label?.control;if(select?.tagName!=='SELECT'||!controls.has(select)||e.target.closest('button,a,input,textarea'))return;e.preventDefault();},true);
  window.addEventListener('hashchange',close);window.addEventListener('resize',place);window.addEventListener('scroll',e=>{if(opened&&!opened.popup.contains(e.target))place();},true);
  window.visualViewport?.addEventListener('resize',place);window.visualViewport?.addEventListener('scroll',place);
 }
