@@ -23,8 +23,8 @@ function action(name,el){
   case 'restore-baseline':if(c?.baseline){c.params=L.clone(c.baseline.params);A.syncControls();return A.runCurrent();}return;
   case 'delete-baseline':if(c){c.baseline=null;A.renderDetails();A.toast('今回の比較をクリアしました。');}return;
   case 'example':return A.example(el.dataset.example);
-  case 'show-compare':A.stop();A.setTab('compare');return A.focusDetails();
-  case 'model-tab':A.stop();A.setTab('model');return A.focusDetails();
+  case 'show-compare':A.stop?.();A.setTab('compare');return A.focusDetails();
+  case 'model-tab':A.stop?.();A.setTab('model');return A.focusDetails();
   case 'conditions-focus':document.querySelector('.controls-panel')?.scrollIntoView({behavior:A.settings.reduceMotion?'instant':'smooth',block:'start'});return;
   case 'guide-focus':A.setMode('guided');document.getElementById('starter-guide')?.scrollIntoView({behavior:A.settings.reduceMotion?'instant':'smooth'});return;
   case 'grade':return A.grade();
@@ -59,7 +59,7 @@ document.addEventListener('click',e=>{
 function numericInput(el,commit=false){
  if(!A.current)return;
  if(el.value.trim()===''||!Number.isFinite(Number(el.value))){
-  const c=A.current;A.stop();clearTimeout(A.parameterTimer);c.token++;c.pending=false;c.dirty=true;c.error=null;A.markPending();A.renderDetails();
+  const c=A.current;A.stop?.();clearTimeout(A.parameterTimer);c.token++;c.pending=false;c.dirty=true;c.error=null;A.markPending();A.renderDetails();
   A.inputStatus('数値を入力し、Enterまたは入力欄の外を押して確定してください。');
   if(commit){el.value=A.current.params[el.dataset.number];A.runCurrent();A.toast('数値を入力できなかったため、直前の値に戻しました。',true);}
   return;
@@ -124,7 +124,7 @@ let drag=null;
 document.addEventListener('pointerdown',e=>{
  // Ignore only the synthetic click belonging to the previous drag, not a new gesture.
  suppressNodeClick=false;
- if(e.target.id==='scrubber'){A.stop();return;}
+ if(e.target.id==='scrubber'){A.stop?.();return;}
  const node=e.target.closest?.('[data-node]');if(!node||A.current?.lab.engine!=='builder'||e.button!==0)return;
  guard(()=>{
   const svg=node.ownerSVGElement,top=L.parseTopology(A.current.params.topology),nd=top.nodes.find(n=>n.id===node.dataset.node);if(!nd)return;
@@ -151,8 +151,8 @@ document.addEventListener('pointerup',e=>{
 });
 document.addEventListener('pointercancel',()=>{if(drag){drag=null;A.renderFrame();}});
 window.addEventListener('hashchange',()=>{drag=null;A.navigate();});
-document.addEventListener('visibilitychange',()=>{if(document.hidden)A.stop();});
-window.addEventListener('pagehide',()=>A.stop());
+document.addEventListener('visibilitychange',()=>{if(document.hidden)A.stop?.();});
+window.addEventListener('pagehide',()=>A.stop?.());
 function start(){A.shell();A.navigate();A.ready=true;}
 // Defer scripts run while readyState is interactive. Wait for all ordered files.
 if(document.readyState==='complete')start();else document.addEventListener('DOMContentLoaded',start,{once:true});

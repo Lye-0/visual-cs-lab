@@ -4,7 +4,8 @@ import {readFile,stat,mkdtemp,mkdir,writeFile,rm} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
-import {browserModules,styles} from '../scripts/modules.mjs';
+import {styles} from '../scripts/modules.mjs';
+import {shellModules as browserModules,shellStyles,generateDelivery} from '../scripts/delivery.mjs';
 import {renderIndex,publishedAssets,contentSecurityPolicy,indexMatches} from '../scripts/site-entry.mjs';
 const root=new URL('../',import.meta.url),read=p=>readFile(new URL(p,root),'utf8');
 const html=await read('index.html');
@@ -15,7 +16,7 @@ test('published entry is small and contains no embedded application script or st
  assert.equal(tags.length,browserModules.length);
  assert.deepEqual(tags.map(m=>m[1].match(/src="([^"]+)"/)[1]),browserModules.map(n=>`./src/${n}.js`));
  for(const [,attrs,body]of tags){assert.match(attrs,/\bdefer\b/);assert.doesNotMatch(attrs,/\basync\b|\btype=/);assert.equal(body.trim(),'');}
- assert.deepEqual([...html.matchAll(/<link rel="stylesheet" href="([^"]+)">/g)].map(m=>m[1]),styles.map(n=>`./src/${n}.css`));
+ assert.deepEqual([...html.matchAll(/<link rel="stylesheet" href="([^"]+)">/g)].map(m=>m[1]),shellStyles.map(n=>`./src/${n}.css`));
 });
 test('relative assets stay inside both a domain root and a GitHub project subpath',async()=>{
  for(const base of ['https://example.test/','https://example.test/visual-cs-lab/'])for(const file of publishedAssets){
@@ -49,9 +50,10 @@ test('CLI checks a CRLF checkout without rewriting it and rejects stale markup',
  const temp=await mkdtemp(path.join(tmpdir(),'visual-cs-entry-'));
  try{
   await mkdir(path.join(temp,'scripts'),{recursive:true});
-  for(const name of ['build.mjs','site-entry.mjs','modules.mjs'])await writeFile(path.join(temp,'scripts',name),await read('scripts/'+name));
+  for(const name of ['build.mjs','site-entry.mjs','modules.mjs','delivery.mjs'])await writeFile(path.join(temp,'scripts',name),await read('scripts/'+name));
   // The entry builder reads assets for existence; their contents are not bundled.
-  for(const asset of publishedAssets){const file=path.join(temp,asset);await mkdir(path.dirname(file),{recursive:true});await writeFile(file,'');}
+  for(const asset of publishedAssets){const file=path.join(temp,asset);await mkdir(path.dirname(file),{recursive:true});await writeFile(file,await read(asset));}
+  for(const [asset,content]of (await generateDelivery()).files){const target=path.join(temp,asset);await mkdir(path.dirname(target),{recursive:true});await writeFile(target,content);}
   const file=path.join(temp,'index.html'),windows=renderIndex().replace(/\n/g,'\r\n');
   await writeFile(file,windows);
   const invoke=()=>execFileSync(process.execPath,[path.join(temp,'scripts/build.mjs'),'--check'],{cwd:temp,stdio:'pipe'});

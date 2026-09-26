@@ -1,3 +1,4 @@
+import {fixtureDefinitions,fixtureInventory} from './lesson-fixtures.mjs';
 // Committed, separated assets over HTTP. No generated replacement lessons.
 import assert from 'node:assert/strict';
 import {spawn} from 'node:child_process';
@@ -24,8 +25,8 @@ try{
   const context=await browser.newContext({viewport:{width,height:960},hasTouch:width<500,reducedMotion:'reduce'}),page=await context.newPage();page.setDefaultTimeout(10000);
   await context.addInitScript(()=>{window.__csp=[];document.addEventListener('securitypolicyviolation',e=>window.__csp.push(e.effectiveDirective));});
   const httpErrors=[];page.on('pageerror',e=>report.errors.push({width,message:e.message}));page.on('response',r=>{if(r.status()>=400)httpErrors.push(r.url());});
-  await open(page,'gap-122');const defs=await page.evaluate(ids=>ids.map(id=>({id,chapters:CSL.experiences.find(id).chapters.map(c=>({id:c.id,kinds:c.activities.map(a=>a.kind)}))})),ids);
-  if(width===1440){report.chapters=defs.reduce((n,d)=>n+d.chapters.length,0);report.inventory=await page.evaluate(()=>CSL.experiences.inventory());}
+  await open(page,'gap-122');const defs=fixtureDefinitions(ids);
+  if(width===1440){report.chapters=defs.reduce((n,d)=>n+d.chapters.length,0);report.inventory=fixtureInventory;}
   for(const d of defs)for(const ch of d.chapters)await check(width+'/'+d.id+'/'+ch.id+' render and labels',async()=>{
    await open(page,d.id,ch.id);assert.equal(await page.locator('[data-ex-kind]').count(),ch.kinds.length);
    assert.equal(await page.locator('.experience input[type="number"]:invalid').count(),0);

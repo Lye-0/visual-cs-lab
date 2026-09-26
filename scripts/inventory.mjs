@@ -8,7 +8,7 @@ const checkOnly=process.argv.includes('--check');
 const emit=async(file,content)=>{
  if(checkOnly){
   const current=await readFile(file,'utf8');
-  if(current!==content)throw Error(path.relative(root,file)+' is stale; run npm run inventory and commit the generated documents. No file was changed.');
+  if(current.replace(/\r\n/g,'\n')!==content.replace(/\r\n/g,'\n'))throw Error(path.relative(root,file)+' is stale; run npm run inventory and commit the generated documents. No file was changed.');
  }else await writeFile(file,content);
 };
 if(!checkOnly)await mkdir(path.join(root,'docs'),{recursive:true});

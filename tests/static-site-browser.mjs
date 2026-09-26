@@ -8,7 +8,7 @@ import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {chromium,firefox,webkit} from 'playwright';
-import {browserModules,styles} from '../scripts/modules.mjs';
+import {shellModules as browserModules,shellStyles as styles} from '../scripts/delivery.mjs';
 const root=path.resolve(fileURLToPath(new URL('../',import.meta.url)));
 const name=process.env.BROWSER||'chromium',engine={chromium,firefox,webkit}[name];
 if(!engine)throw Error('BROWSER must be chromium, firefox or webkit');
@@ -44,7 +44,7 @@ try{
   const statuses=[];page.on('response',r=>{if(r.status()>=400)statuses.push({url:r.url(),status:r.status()});});
   page.on('pageerror',e=>report.errors.push({scenario,message:e.message}));
   const url=origin+prefix;
-  await check(scenario+': cold load reads all external scripts/styles in manifest order',async()=>{
+  await check(scenario+': cold load reads only discovery scripts/styles in manifest order',async()=>{
    await page.goto(url);await page.waitForFunction(()=>globalThis.CSL?.app?.ready&&document.querySelector('#home-query'));
    // page.goto() already waits for the load event. `networkidle` is not a
    // correctness signal here and can remain unsettled in Firefox even after

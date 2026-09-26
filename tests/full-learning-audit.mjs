@@ -1,3 +1,4 @@
+import {fixtureUnits,fixtureInventory} from './lesson-fixtures.mjs';
 // Full-scope verification of committed sources. Structural success is not a
 // claim that all teaching requirements or all input combinations were tested.
 import assert from 'node:assert/strict';
@@ -59,8 +60,8 @@ try{
   let location=null;page.on('pageerror',e=>report.runtime.push({width,location,message:e.message}));
   page.on('response',r=>{if(r.status()>=400)report.runtime.push({width,location,http:r.status(),url:r.url()});});
   await page.goto(base);await page.waitForFunction(()=>CSL?.app?.ready);
-  const units=await page.evaluate(()=>CSL.labs.map(l=>{const d=CSL.experiences.find(l.id);return {id:l.id,title:l.unit,lead:d?.lead,chapters:d?.chapters||[],scope:l.scope||l.limits||null};}));
-  assert.equal(units.length,314);assert.equal(await page.evaluate(()=>CSL.experiences.inventory().units),314);
+  const units=fixtureUnits;
+  assert.equal(units.length,314);assert.equal(fixtureInventory.units,314);
   if(!report.units.length)report.units=units;
   for(const unit of units)for(const chapter of unit.chapters){
    const row={id:unit.id,chapter:chapter.id,width,passed:false};location=unit.id+'/'+chapter.id;

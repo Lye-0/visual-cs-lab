@@ -2,7 +2,7 @@
  * memory. Public test keys/coefficients must never protect real information. */
 (() => {
 'use strict';
-const L=CSL,X=L.experiences,C=L.curriculum.cryptoTools,S=X.securityDesk={};
+const L=CSL,X=L.experiences,C=L.curriculum.cryptoTools,S=(X.securityDesk ||= {});
 S.clone=X.clone;
 S.int=(v,min,max,name='値')=>{if(!Number.isInteger(v)||v<min||v>max)throw Error(name+'は'+min+'〜'+max+'の整数です。');return v;};
 S.choose=(v,choices,name='候補')=>{if(!choices.includes(v))throw Error(name+'から選び直してください。');return v;};

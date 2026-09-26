@@ -5,3 +5,8 @@ review-output/
 Thumbs.db
 *.log
 __pycache__/
+
+# Private reference material and local review artifacts
+*.pdf
+/private-notes/
+/work/

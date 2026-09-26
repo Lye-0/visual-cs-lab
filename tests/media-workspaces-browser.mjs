@@ -1,3 +1,4 @@
+import {fixtureDefinitions,fixtureInventory} from './lesson-fixtures.mjs';
 // Exercise the committed HTML/JS/CSS, not a generated test-only page.
 import assert from 'node:assert/strict';
 import {spawn} from 'node:child_process';
@@ -26,8 +27,8 @@ try{
   const context=await browser.newContext({viewport:{width,height:960},hasTouch:width<500,reducedMotion:'reduce'}),page=await context.newPage();page.setDefaultTimeout(10000);
   await context.addInitScript(()=>{window.__csp=[];document.addEventListener('securitypolicyviolation',e=>window.__csp.push(e.effectiveDirective));});
   const httpErrors=[];page.on('pageerror',e=>report.errors.push({width,message:e.message}));page.on('response',r=>{if(r.status()>=400)httpErrors.push(r.url());});
-  await open(page,'gap-133');const defs=await page.evaluate(ids=>ids.map(id=>({id,chapters:CSL.experiences.find(id).chapters.map(c=>({id:c.id,kinds:c.activities.map(a=>a.kind)}))})),ids);
-  if(width===1440){report.chapters=defs.reduce((n,d)=>n+d.chapters.length,0);report.inventory=await page.evaluate(()=>CSL.experiences.inventory());}
+  await open(page,'gap-133');const defs=fixtureDefinitions(ids);
+  if(width===1440){report.chapters=defs.reduce((n,d)=>n+d.chapters.length,0);report.inventory=fixtureInventory;}
   for(const d of defs)for(const ch of d.chapters)await check(width+'/'+d.id+'/'+ch.id+' render, labels and overflow',async()=>{
    await open(page,d.id,ch.id);assert.equal(await page.locator('[data-ex-kind]').count(),ch.kinds.length);
    assert.equal(await page.locator('.experience input[type="number"]:invalid').count(),0);
@@ -105,7 +106,7 @@ try{
    await click(page,'run:A@0');await click(page,'run:A@0');await click(page,'run:B@0');assert.equal((await state(page)).time,3);
   });
   await check(width+': all original units remain alongside the authored media batch',async()=>{
-   assert.equal(await page.evaluate(ids=>ids.every(id=>!!CSL.experiences.find(id)),ids),true);
+   assert.equal(fixtureDefinitions(ids).length,ids.length);
    // Do not require a future lesson to remain absent. Full-314 coverage is checked independently.
    assert.equal(await page.evaluate(()=>CSL.labs.length),314);
   });

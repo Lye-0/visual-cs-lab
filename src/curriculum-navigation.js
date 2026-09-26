@@ -113,7 +113,9 @@ A.shell=()=>{
 };
 const originalLab=A.views.lab;
 A.views.lab=(parts,params)=>{
- originalLab(parts,params);const lab=A.current?.lab;if(!lab?.taxonomy)return;
+ if(!originalLab){A.views.notfound();return;}originalLab(parts,params);A.decorateLesson(parts);
+};
+A.decorateLesson=parts=>{const lab=A.current?.lab;if(!lab?.taxonomy)return;
  const [d,c]=T.path(lab),title=document.querySelector('.reader-title');
  if(title){title.insertAdjacentHTML('afterbegin',headingPath(lab));const pill=title.querySelector('.reader-title-top .pill');if(pill){pill.textContent=c.name;pill.className='pill library-tag';}const back=title.querySelector('.reader-title-links a[href="#/catalog"]');if(back){back.insertAdjacentHTML('afterend',`<a href="${link({domain:d.id,category:c.id})}">← このテーマの単元一覧</a>`);}}
  A.setNav('domain-'+d.id,lab.unit);

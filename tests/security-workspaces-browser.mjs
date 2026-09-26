@@ -1,3 +1,4 @@
+import {fixtureDefinitions,fixtureInventory} from './lesson-fixtures.mjs';
 // Only committed files over HTTP. Cryptographic cancellation uses a controlled
 // completion gate around the actual HMAC, never a replacement signature/result.
 import assert from 'node:assert/strict';
@@ -30,7 +31,7 @@ try{
   const context=await browser.newContext({viewport:{width,height:960},hasTouch:width<500,reducedMotion:'reduce'}),page=await context.newPage();page.setDefaultTimeout(10000);
   await context.addInitScript(()=>{window.__csp=[];document.addEventListener('securitypolicyviolation',e=>window.__csp.push(e.effectiveDirective));});
   const httpErrors=[];page.on('pageerror',e=>report.errors.push({width,message:e.message}));page.on('response',r=>{if(r.status()>=400)httpErrors.push(r.url());});
-  await open(page,'gap-109');const defs=await page.evaluate(ids=>ids.map(id=>({id,chapters:CSL.experiences.find(id).chapters.map(c=>({id:c.id,kinds:c.activities.map(a=>a.kind)}))})),ids);
+  await open(page,'gap-109');const defs=fixtureDefinitions(ids);
   if(width===1440)report.chapters=defs.reduce((n,d)=>n+d.chapters.length,0);
   for(const d of defs)for(const ch of d.chapters)await check(width+'/'+d.id+'/'+ch.id+' render and labels',async()=>{
    await open(page,d.id,ch.id);assert.equal(await page.locator('[data-ex-kind]').count(),ch.kinds.length);

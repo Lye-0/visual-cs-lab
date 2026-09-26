@@ -1,3 +1,4 @@
+import {fixtureDefinitions,fixtureInventory} from './lesson-fixtures.mjs';
 // This suite uses the real committed site. It never rebuilds or patches it.
 import assert from 'node:assert/strict';
 import {spawn} from 'node:child_process';
@@ -28,7 +29,7 @@ try{
   const ctx=await browser.newContext({viewport:{width,height:960},hasTouch:width<500,reducedMotion:'reduce'}),page=await ctx.newPage(),requests=[];page.setDefaultTimeout(9000);
   page.on('pageerror',e=>report.errors.push({width,message:e.message}));page.on('response',r=>{if(r.status()>=400)requests.push(r.url());});
   await ctx.addInitScript(()=>{window.__csp=[];document.addEventListener('securitypolicyviolation',e=>__csp.push(e.effectiveDirective));});
-  await open(page,'c03-matrix','meaning');const units=await page.evaluate(ids=>ids.map(id=>({id,chapters:CSL.experiences.find(id).chapters.map(c=>({id:c.id,count:c.activities.length}))})),report.scope);
+  await open(page,'c03-matrix','meaning');const units=fixtureDefinitions(report.scope);
   for(const unit of units)for(const chapter of unit.chapters)await check(width+'/'+unit.id+'/'+chapter.id+' real page, labels, bounds',async()=>{
    await open(page,unit.id,chapter.id);assert.equal(await page.locator('[data-ex-activity]').count(),chapter.count);assert.equal(await page.locator('.experience input[type=number]:invalid').count(),0);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2),false);
    assert.deepEqual(await page.locator('.experience label[for]').evaluateAll(labels=>labels.filter(l=>!document.getElementById(l.htmlFor)).map(l=>l.htmlFor)),[]);assert.deepEqual(await page.evaluate(()=>__csp),[]);

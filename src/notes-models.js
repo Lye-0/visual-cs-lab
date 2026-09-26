@@ -6,8 +6,7 @@
 'use strict';
 const L=CSL, {frame:F,result:out,clone,register:R}=L;
 const {range:N,select:S,toggle:B,text:T}=L.ctrl;
-L.version='3.0.0';
-L.legacyLabIds=L.labs.map(l=>l.id);
+if(!L.onDemand){L.version='3.0.0';L.legacyLabIds=L.labs.map(l=>l.id);}
 L.lessonDrafts={};
 L.defineLessons=rows=>{for(const [id,why,idea,example,pitfall,notes='',focus=''] of rows){if(L.lessonDrafts[id])throw Error('解説が重複しています: '+id);L.lessonDrafts[id]={why,idea,example,pitfall,notes,focus};}};
 L.sources.notesInfo={name:'提供された授業ノート「情報理論」',type:'提供資料',detail:'表紙を含むPDFのページ番号を各解説に記載。説明の順序、用語、図と式の結び付けを参考にしています。PDFそのものや講義スライドの複製は配布していません。入力例と可視化はこのサイト独自の教材です。'};

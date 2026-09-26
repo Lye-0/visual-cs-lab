@@ -4,11 +4,11 @@
 
 `index.html`は入口のマークアップとCSS／JavaScriptへの相対参照だけを持ちます。`src/*.js`と`src/*.css`をそのまま編集・テスト・公開するため、同じコードを巨大なHTMLや別の配布フォルダへ二重に保持しません。faviconは`assets/favicon.svg`です。
 
-JSの依存順・CSSのカスケード順は`scripts/modules.mjs`に保ち、`scripts/site-entry.mjs`から小さな入口を生成します。classic scriptへ`defer`を指定し、bootは全てのdeferスクリプトの評価が終わるDOMContentLoadedを待ちます。非同期ダウンロードの完了順を実行順として使いません。
+正本のJS評価順・CSSの順序は`scripts/modules.mjs`に、配信する依存関係は`scripts/delivery.mjs`に保ち、`scripts/site-entry.mjs`から小さな入口を生成します。classic scriptへ`defer`を指定し、bootは全てのdeferスクリプトの評価が終わるDOMContentLoadedを待ちます。非同期ダウンロードの完了順を実行順として使いません。
 
 URLはすべて`./src/...`などの相対パスです。`https://example.test/`と`https://example.test/visual-cs-lab/`の両方で動作します。単元URLは`#/lab/...`を維持し、PagesにSPAのrewriteや404ページを要求しません。
 
-分離だけで教材の総転送量が減ったり、遅延読み込みになったりするわけではありません。現在の全教材を順序どおり読み込みます。分類と一覧画面の構成は [LIBRARY_TAXONOMY.md](LIBRARY_TAXONOMY.md) を参照してください。
+分離に加え、現在は[単元ごとの遅延読み込み](technical/ON_DEMAND_LOADING.md)を行います。初期画面は検索・分類用の9本のJSと5本のCSSを読み込み、単元を選んだ後に必要な依存ファイルと本文を読み込みます。分類と一覧画面の構成は [LIBRARY_TAXONOMY.md](LIBRARY_TAXONOMY.md) を参照してください。
 
 ## セキュリティポリシー
 
@@ -16,7 +16,7 @@ JavaScriptは`script-src 'self'`で同じ公開元からのみ読み込みます
 
 ## GitHub Pages
 
-**Settings → Pages → Source: Deploy from a branch → main → /(root)** を選びます。`.nojekyll`をrootへ置き、Jekyllによる変換を必要としない静的ファイルとして公開します。公開時にnpmの実行は不要です。
+**Settings → Pages → Source: Deploy from a branch → main → /(root)** を選びます。`.nojekyll`をrootへ置き、Jekyllによる変換を必要としない静的ファイルとして公開します。公開時にnpmの実行は不要です。開発時に`npm run build`で`index.html`と`src/generated/`を更新し、正本と生成物を一緒にコミットします。
 
 リポジトリにある独自Actionsは検証用です。Pagesデプロイ用Actionsは追加していません。テストの失敗はブランチ公開自体を自動で止めないため、公開前にChecksを確認してください。Pagesの設定は管理画面の設定であり、`.nojekyll`だけでは公開元を変更しません。
 
@@ -36,7 +36,7 @@ JavaScriptは`script-src 'self'`で同じ公開元からのみ読み込みます
 
 `tests/static-site.test.mjs`では外部参照・順序・全アセットの存在・相対パス・CSP・CSS宣言順・入口の再生成一致を検査します。
 
-`tests/static-site-browser.mjs`では実HTTP文書をルートと`/visual-cs-lab/`から開き、マニフェストにある全JS/CSS（分類整理後は57本のJSと10本のCSS）を読み込むこと、全314教材の登録、主要単元の直接アクセス・初期化・比較・巻戻し、ネットワークSVGの配色、DOMと取り消し操作、ぼかしとスクロールのフォールバックを検査します。最後のdeferスクリプトを意図的に遅らせる試験も含みます。
+`tests/static-site-browser.mjs`では実HTTP文書をルートと`/visual-cs-lab/`から開き、マニフェストにある初期JS/CSSだけを読み込み、単元選択後に必要な追加ファイルが読み込まれること、全314教材の登録、主要単元の直接アクセス・初期化・比較・巻戻し、ネットワークSVGの配色、DOMと取り消し操作、ぼかしとスクロールのフォールバックを検査します。最後のdeferスクリプトを意図的に遅らせる試験も含みます。
 
 静的互換性ActionsではChromium・Firefox・WebKitを使用します。全314単元の網羅的な既存試験はChromiumで継続します。各エンジンの主要画面の試験と、各エンジンで全教材の全操作を保証することは別です。WebKitはSafari実機の試験ではありません。実行したSHAと結果は該当ActionsのArtifactsに残します。
 

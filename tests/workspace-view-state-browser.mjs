@@ -1,3 +1,4 @@
+import {fixtureDefinitions,fixtureInventory} from './lesson-fixtures.mjs';
 // Browser-backed review of live view state, not a screenshot/teaching approval.
 // Tests never modify source files, inject styling, or replace application logic.
 import assert from 'node:assert/strict';
@@ -37,7 +38,7 @@ try{
   page.on('pageerror',e=>report.runtime.push({width,message:e.message}));
   page.on('response',r=>{if(r.status()>=400)report.runtime.push({width,status:r.status(),url:r.url()});});
   await open(page,'c01-bits');
-  const definitions=await page.evaluate(ids=>ids.map(id=>({id,chapters:CSL.experiences.find(id).chapters.map(ch=>({id:ch.id,count:ch.activities.length}))})),units);
+  const definitions=fixtureDefinitions(units);
   for(const unit of definitions)for(const chapter of unit.chapters)await check(`${width}/entry/${unit.id}/${chapter.id}`,async()=>{
    await open(page,unit.id,chapter.id);
    assert.deepEqual(await page.evaluate(()=>CSL.app.current.errors),[]);

@@ -1,3 +1,4 @@
+import {fixtureLabs} from './lesson-fixtures.mjs';
 import {classicUrl,readyAuthored} from './legacy-routes.mjs';
 // Actual HTTP documents only: do not use page.setContent or mocked Web Crypto.
 import assert from 'node:assert/strict';
@@ -41,7 +42,7 @@ try {
   page.on('pageerror', e => report.errors.push({viewport:label, url:page.url(), message:e.message}));
   await page.goto(base);
   await page.waitForFunction(() => !!globalThis.CSL?.app && document.querySelector('#home-query'));
-  const labs = await page.evaluate(() => CSL.labs.map(l => ({id:l.id,unit:l.unit,controls:l.controls,patch:l.exploration.patch})));
+  const labs = fixtureLabs.map(l => ({id:l.id,unit:l.unit,controls:l.controls,patch:l.exploration.patch}));
   report.units = labs.length;
   await page.screenshot({path:`${output}/screenshots/home-${label}.png`,fullPage:true});
   await check(`${label}: 検索からエントロピーを直接開く`, async () => {

@@ -1,3 +1,4 @@
+import {fixtureDefinitions,fixtureInventory} from './lesson-fixtures.mjs';
 // Test actual committed multi-file documents over HTTP; no repair/build here.
 import assert from 'node:assert/strict';
 import {spawn} from 'node:child_process';
@@ -34,14 +35,15 @@ try{
   const page=await context.newPage();page.setDefaultTimeout(8000);const responses=[];
   page.on('pageerror',e=>report.errors.push({size,message:e.message}));page.on('response',r=>{if(r.status()>=400)responses.push({url:r.url(),status:r.status()});});
   await open(page,'gap-095');
-  const defs=await page.evaluate(ids=>ids.map(id=>({id,chapters:CSL.experiences.find(id)?.chapters.map(ch=>({id:ch.id,kinds:ch.activities.map(a=>a.kind)}))})),ids);
+  const defs=fixtureDefinitions(ids);
   if(size==='desktop')report.chapters=defs.reduce((n,d)=>n+(d.chapters?.length||0),0);
   await check(size+': fourteen units have individually registered activities',async()=>{
    assert.equal(defs.length,14);assert.ok(defs.every(d=>d.chapters?.length));
-   assert.deepEqual(await page.evaluate(defs=>defs.flatMap(d=>d.chapters.flatMap(ch=>ch.kinds.filter(k=>!CSL.experiences.widgets.has(k)))),defs),[]);
+   // Other lessons' widgets are intentionally absent until their route opens.
   });
   for(const d of defs)for(const ch of d.chapters||[])await check(size+'/'+d.id+'/'+ch.id+': chapter renders with valid inputs, labels and layout',async()=>{
    await open(page,d.id,ch.id);assert.equal(await page.locator('[data-ex-kind]').count(),ch.kinds.length);
+   assert.deepEqual(await page.evaluate(kinds=>kinds.filter(k=>!CSL.experiences.widgets.has(k)),ch.kinds),[]);
    assert.equal(await page.locator('.experience input[type="number"]:invalid').count(),0);
    const labels=await page.locator('.experience label[for]').evaluateAll(ls=>ls.filter(l=>!document.getElementById(l.htmlFor)).map(l=>l.htmlFor));assert.deepEqual(labels,[]);
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2),false);

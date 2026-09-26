@@ -1,3 +1,4 @@
+import {fixtureDefinitions,fixtureInventory} from './lesson-fixtures.mjs';
 // Read-only browser verification of the committed static files.
 // This slice verifies GAP-074..094, not completion of the remaining 61 units.
 import assert from 'node:assert/strict';
@@ -34,13 +35,14 @@ try{
   const page=await context.newPage();page.setDefaultTimeout(12000);page.on('pageerror',e=>report.errors.push({size,message:e.message}));
   const failures=[];page.on('response',r=>{if(r.status()>=400)failures.push({url:r.url(),status:r.status()});});
   await open(page,'gap-074');
-  const definitions=await page.evaluate(ids=>ids.map(id=>({id,chapters:CSL.experiences.find(id)?.chapters.map(c=>({id:c.id,kinds:c.activities.map(a=>a.kind)}))})),ids);
+  const definitions=fixtureDefinitions(ids);
   await check(size+': 21 units exist and every configured widget is available',async()=>{
    assert.equal(definitions.length,21);assert.ok(definitions.every(d=>d.chapters?.length));
-   const missing=await page.evaluate(defs=>defs.flatMap(d=>d.chapters.flatMap(c=>c.kinds.filter(k=>!CSL.experiences.widgets.has(k)))) ,definitions);assert.deepEqual(missing,[]);
+   // Registration is checked on each loaded chapter below, not before demand.
   });
   for(const d of definitions)for(const c of d.chapters||[])await check(size+'/'+d.id+'/'+c.id+': full authored chapter loads, labels work and layout fits',async()=>{
    await open(page,d.id,c.id);assert.equal(await page.locator('[data-ex-kind]').count(),c.kinds.length);
+   assert.deepEqual(await page.evaluate(kinds=>kinds.filter(k=>!CSL.experiences.widgets.has(k)),c.kinds),[]);
    assert.ok((await page.locator('.ex-chapter').textContent()).length>100);
    const invalid=await page.locator('.experience input[type="number"]').evaluateAll(els=>els.filter(e=>!e.checkValidity()).map(e=>e.name+':'+e.value));assert.deepEqual(invalid,[]);
    const unlabeled=await page.locator('.experience input,.experience select,.experience textarea').evaluateAll(els=>els.filter(e=>!e.labels?.length&&!e.getAttribute('aria-label')&&!e.getAttribute('aria-labelledby')).map(e=>e.outerHTML.slice(0,100)));assert.deepEqual(unlabeled,[]);

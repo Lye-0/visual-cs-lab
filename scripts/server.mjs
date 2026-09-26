@@ -20,6 +20,9 @@ const server=http.createServer(async(req,res)=>{
  try{
   const url=new URL(req.url,'http://localhost');
   let name=decodeURIComponent(url.pathname);
+  if(name.split('/').some(part=>part.startsWith('.')||['private-notes','work','node_modules','review-output','test-results'].includes(part))||/\.pdf$/i.test(name)){
+   res.writeHead(403);res.end('Forbidden');return;
+  }
   if(name==='/')name='/index.html';
   const file=path.resolve(root,'.'+name);
   if(file!==root&&!file.startsWith(root+path.sep)){

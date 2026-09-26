@@ -11,7 +11,11 @@
     "test:browser": "node tests/reader-browser.mjs && node tests/reader-regressions.mjs",
     "test:static": "node tests/static-site-browser.mjs",
     "inventory": "node scripts/inventory.mjs",
-    "check": "node scripts/build.mjs --check && npm test && npm run inventory -- --check"
+    "check": "node scripts/build.mjs --check && npm test && npm run inventory -- --check",
+    "test:loading": "node tests/on-demand-browser.mjs",
+    "test:workspaces": "node tests/run-workspaces.mjs"
   },
-  "engines": {"node": ">=20"}
+  "engines": {
+    "node": ">=20"
+  }
 }

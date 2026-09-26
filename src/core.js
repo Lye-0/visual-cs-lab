@@ -27,7 +27,7 @@ const ctrl={
  code:(key,label,value,help='')=>({key,label,type:'code',value,help})
 };
 function register(name,fn){L.engines[name]=fn;}
-function add(def){const lab={level:1,minutes:8,track:'core',scope:'教材用の簡略モデル',limits:'表示対象に絞った教材です。実機のすべての挙動や性能を保証するものではありません。',prereq:[],sources:[],controls:[],...def};lab.defaults=Object.fromEntries(lab.controls.map(c=>[c.key,c.value]));lab.defaults={...lab.defaults,...def.defaults};L.labs.push(lab);return lab;}
+function add(def){if(L.onDemand){const known=L.labs.find(l=>l.id===def.id);if(known)return known;}const lab={level:1,minutes:8,track:'core',scope:'教材用の簡略モデル',limits:'表示対象に絞った教材です。実機のすべての挙動や性能を保証するものではありません。',prereq:[],sources:[],controls:[],...def};lab.defaults=Object.fromEntries(lab.controls.map(c=>[c.key,c.value]));lab.defaults={...lab.defaults,...def.defaults};L.labs.push(lab);return lab;}
 function validateParams(lab,p){const out={...lab.defaults};for(const c of lab.controls){let v=p[c.key]??lab.defaults[c.key];if(c.type==='range'){v=clamp(num(v,c.value),c.min,c.max);v=clamp(Number((c.min+Math.round((v-c.min)/c.step)*c.step).toFixed(10)),c.min,c.max);}if(c.type==='toggle')v=v===true||v==='true';if(c.type==='select')v=c.options.find(o=>String(o.value)===String(v))?.value??c.value;if(['text','code'].includes(c.type))v=String(v).slice(0,c.type==='code'?8000:1200);out[c.key]=v;}return out;}
 async function run(lab,p){const fn=L.engines[lab.engine];if(!fn)throw Error(`未登録の実験モデル: ${lab.engine}`);let r=await fn(validateParams(lab,p),lab);if(!r?.frames?.length)throw Error('実験に表示できる状態がありません。');return r;}
 Object.assign(L,{clone,clamp,num,round,rng,frame,result,steps,parseNumbers,ipInt,intIp,maskOf,bits,gcd,modPow,invMod,shortest,ctrl,register,add,validateParams,run});

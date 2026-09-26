@@ -1,3 +1,4 @@
+import {fixtureDefinitions,fixtureInventory} from './lesson-fixtures.mjs';
 // Run the committed separated site over HTTP. No source generation or repair.
 import assert from 'node:assert/strict';
 import {spawn} from 'node:child_process';
@@ -26,8 +27,8 @@ try{
   const context=await browser.newContext({viewport:{width,height:960},hasTouch:width<500,reducedMotion:'reduce'}),page=await context.newPage();page.setDefaultTimeout(10000);
   await context.addInitScript(()=>{window.__csp=[];document.addEventListener('securitypolicyviolation',e=>window.__csp.push(e.effectiveDirective));});
   const requests=[];page.on('response',r=>{if(r.status()>=400)requests.push(r.url());});page.on('pageerror',e=>report.errors.push({width,message:e.message}));
-  await open(page,'gap-144');const defs=await page.evaluate(ids=>ids.map(id=>({id,chapters:CSL.experiences.find(id).chapters.map(c=>({id:c.id,kinds:c.activities.map(a=>a.kind)}))})),ids);
-  if(width===1440){report.chapters=defs.reduce((n,d)=>n+d.chapters.length,0);report.inventory=await page.evaluate(()=>{const {units,chapters,activities}=CSL.experiences.inventory();return {units,chapters,activities};});}
+  await open(page,'gap-144');const defs=fixtureDefinitions(ids);
+  if(width===1440){report.chapters=defs.reduce((n,d)=>n+d.chapters.length,0);report.inventory=fixtureInventory;}
   for(const def of defs)for(const ch of def.chapters)await check(width+'/'+def.id+'/'+ch.id+' render, labels, controls and page bounds',async()=>{
    await open(page,def.id,ch.id);assert.equal(await page.locator('[data-ex-kind]').count(),ch.kinds.length);
    assert.equal(await page.locator('.experience input[type=number]:invalid').count(),0);
@@ -121,7 +122,7 @@ try{
    await page.locator('[data-cv-action="delete"]').click();await page.goto(base+'#/catalog');await page.waitForSelector('#catalog-query');await open(page,'gap-148');await page.waitForTimeout(950);assert.equal(await page.locator('[data-cv-items] li').count(),3);
   });
   await check(width+': all314 are authored, policies and page boundaries remain intact',async()=>{
-   assert.equal(await page.evaluate(()=>CSL.experiences.lessons.size),314);assert.equal(await page.evaluate(()=>CSL.labs.length),314);assert.deepEqual(await page.evaluate(()=>CSL.experiences.modes().filter(k=>!CSL.experiences.widgets.has(k))),[]);assert.deepEqual(requests,[]);assert.deepEqual(await page.evaluate(()=>window.__csp),[]);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2),false);
+   assert.equal(fixtureInventory.units,314);assert.equal(await page.evaluate(()=>CSL.labs.length),314);assert.deepEqual(await page.evaluate(()=>CSL.experiences.modes().filter(k=>!CSL.experiences.widgets.has(k))),[]);assert.deepEqual(requests,[]);assert.deepEqual(await page.evaluate(()=>window.__csp),[]);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2),false);
   });
   await mkdir('review-output/engineering-screenshots',{recursive:true});
   for(const [id,ch]of [['gap-144','requirements'],['gap-146','write-test'],['gap-150','operate'],['gap-153','claims'],['gap-154','layout'],['gap-155','request']]){await open(page,id,ch);await page.screenshot({path:`review-output/engineering-screenshots/${name}-${width}-${id}.png`,fullPage:true});}

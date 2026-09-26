@@ -7,7 +7,7 @@
 - `Curriculum integration and verification` はPRのhead SHAを固定して検証します。
 - `Lesson review` はPRイベントではGitHubのマージ予定コミットを検証します。
 - どちらも `contents: read` です。検証のためにソースを修復したり、ブランチへコミット・pushしたりしません。
-- HTMLと単元一覧はチェックイン済みソースから作業ディレクトリにビルドします。これはソースを変更する移行処理とは別です。
+- 現在の`npm run check`は、HTML・単元別配信データ・一覧が正本と一致するかを読み取りだけで確認します。生成は検証前に開発者が行い、生成済みのファイルをコミットします。
 - 古い失敗を現在の状態として見せていた `curriculum-status.json` は削除しました。履歴上の失敗はGit履歴・当時のActionsに残っています。
 
 `CURRICULUM_REPORT.md` / `curriculum.json` は `b16714e` での拡張時の検証記録です。PR #2のレビュー対応後の結果は、PR Checksと `docs/PR2_REVIEW.md` を確認してください。

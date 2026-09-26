@@ -1,0 +1,2 @@
+# Generated delivery data has an authored source in src/ and scripts/delivery.mjs.
+src/generated/** linguist-generated=true
