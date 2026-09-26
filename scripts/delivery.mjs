@@ -8,7 +8,7 @@ import {browserModules,modelModules,styles} from './modules.mjs';
 
 export const shellModules=['core','generated/catalog','taxonomy','visuals','app','pages','curriculum-navigation','runtime-loader','custom-select','boot'];
 export const shellStyles=['style','reader-library','reader-responsive','library','custom-select','scrollbars'];
-export const lessonShell=['curriculum-kit','curriculum-tools','curriculum-runtime','player','workbench','reader','experiences-core','experiences-results','experiences-view','experiences-workspace','notes-visuals','curriculum-visuals','curriculum-rich-visuals','curriculum-demo-visuals'];
+export const lessonShell=['number-input','curriculum-kit','curriculum-tools','curriculum-runtime','player','workbench','reader','experiences-core','experiences-results','experiences-view','experiences-workspace','notes-visuals','curriculum-visuals','curriculum-rich-visuals','curriculum-demo-visuals'];
 
 // Explicit dependency edges express shared state and widget hosts, never a
 // compulsory teaching format. Expand these when a source gains a dependency.

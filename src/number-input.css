@@ -1,0 +1,13 @@
+/* Number fields keep typing, validation and keyboard stepping. */
+input[type=number]{-webkit-appearance:textfield;-moz-appearance:textfield;appearance:textfield}
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;appearance:none;margin:0}
+.csl-number{display:grid;grid-template-columns:minmax(0,1fr) 36px 36px;align-items:stretch;width:100%;min-width:0;max-width:100%;border:1px solid #486070;border-radius:9px;background:#0d1720;box-sizing:border-box;overflow:visible}
+.csl-number:focus-within{outline:2px solid #b0e4d2;outline-offset:3px}
+.csl-number>input[type=number]{width:100%!important;min-width:0!important;min-height:44px!important;margin:0!important;padding:9px 10px!important;border:0!important;border-radius:8px 0 0 8px!important;box-shadow:none!important;outline:none!important;background:transparent!important;color:#e4edf3;font:inherit;font-size:15px;box-sizing:border-box}
+button.csl-number-step{display:grid;place-items:center;min-width:0;width:100%;min-height:44px;margin:0;padding:0;border:0;border-inline-start:1px solid #364e5a;border-radius:0;background:#182c34;color:#b4dfd4;font:500 20px/1 system-ui,sans-serif;cursor:pointer;box-sizing:border-box}
+button.csl-number-step:last-child{border-radius:0 8px 8px 0}
+button.csl-number-step:hover:not(:disabled){background:#2c4d50;color:#e1fff4}button.csl-number-step:active:not(:disabled){background:#3b625f}
+button.csl-number-step:focus-visible{outline:2px solid #b0e4d2;outline-offset:-3px}button.csl-number-step:disabled{opacity:.4;cursor:not-allowed}
+.range-number .csl-number{width:156px}.reader-range-pair{grid-template-columns:minmax(0,1fr) 156px}.csl-number[hidden]{display:none}
+@media(max-width:700px){.csl-number{grid-template-columns:minmax(0,1fr) 44px 44px}.csl-number>input[type=number]{font-size:16px}.reader-range-pair{grid-template-columns:minmax(0,1fr)}.range-number .csl-number{width:164px}}
+@media(forced-colors:active){.csl-number,button.csl-number-step{background:Canvas;color:CanvasText;border-color:ButtonText}.csl-number>input[type=number]{color:CanvasText}.csl-number:focus-within{outline-color:Highlight}}

@@ -1,12 +1,12 @@
 /* Retain readable diagrams on narrow screens; scroll the figure, not the page. */
-@media(min-width:1450px){.reader-layout{grid-template-columns:minmax(310px,.8fr) minmax(0,1.5fr)}.reader-guidance{padding-right:8px}}
-@media(max-width:1150px){.reader-layout{grid-template-columns:minmax(250px,.8fr) minmax(0,1.1fr);gap:19px}.reader-figure figcaption{display:block}.reader-live-dot{display:block;margin-top:9px}.reader-play-buttons .btn{font-size:12px}.reader-area-links{grid-template-columns:repeat(2,minmax(0,1fr))}.reader-unit-card h3{font-size:17px}}
-@media(max-width:900px){.reader-layout{grid-template-columns:minmax(0,1fr)}.reader-explanation{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:20px}.reader-explanation>*{min-width:0}.reader-terms{grid-column:1/-1;margin:0;padding-top:0}.reader-guidance{padding-bottom:0}.reader-controls{margin:0}.reader-phases button{font-size:12px}.reader-course-card{padding:22px}.reader-unit-card{padding:19px}.reader .study-svg{min-width:520px}}
+@media(min-width:1450px){.reader .reader-layout{grid-template-columns:minmax(310px,.8fr) minmax(0,1.5fr)}.reader-guidance{padding-right:8px}}
+@media(max-width:1150px){.reader .reader-layout{grid-template-columns:minmax(250px,.8fr) minmax(0,1.1fr);gap:19px}.reader-figure figcaption{display:block}.reader-live-dot{display:block;margin-top:9px}.reader-play-buttons .btn{font-size:12px}.reader-area-links{grid-template-columns:repeat(2,minmax(0,1fr))}.reader-unit-card h3{font-size:17px}}
+@media(max-width:900px){.reader .reader-layout{grid-template-columns:minmax(0,1fr)}.reader .reader-explanation{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:20px}.reader-explanation>*{min-width:0}.reader-terms{grid-column:1/-1;margin:0;padding-top:0}.reader-guidance{padding-bottom:0}.reader-controls{margin:0}.reader-phases button{font-size:12px}.reader-course-card{padding:22px}.reader-unit-card{padding:19px}.reader .study-svg{min-width:520px}}
 @media(max-width:620px){
 .main{padding:23px 16px 36px}.reader,.reader-library,.reader-course-page{font-size:15px}
 .reader-title{padding-bottom:20px}.reader-title h1{font-size:25px}.reader-title>p{font-size:15px}.reader-title-links{font-size:12px;display:grid;gap:7px}
 .reader-phases{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;padding:5px;margin-bottom:21px}.reader-phases button{font-size:13px;justify-content:flex-start;padding:10px;min-height:48px}
-.reader-explanation{display:flex;flex-direction:column;gap:20px}.reader-guidance h2{font-size:22px}.reader-idea{margin:19px 0}.reader-controls{padding:18px}
+.reader .reader-explanation{display:flex;flex-direction:column;gap:20px}.reader-guidance h2{font-size:22px}.reader-idea{margin:19px 0}.reader-controls{padding:18px}
 .reader-demonstration{min-width:0}.reader-figure figcaption{padding:18px}.reader-figure figcaption h2{font-size:18px}.reader-diagram{padding:17px 12px;min-height:180px}.reader-diagram>svg,.reader .study-svg{min-width:540px}
 .reader-player{padding:10px 13px 14px}.reader-play-buttons .btn{font-size:12px;padding:8px 10px;min-height:44px}.reader-play-buttons [data-r-action=first],.reader-play-buttons [data-r-action=last]{flex:0 1 49px}
 .reader-play-buttons [data-r-action=next]{min-width:110px}.reader-event{padding:19px}.reader-event h3{font-size:19px}.reader-event>p:not(.reader-overline){font-size:15px}
