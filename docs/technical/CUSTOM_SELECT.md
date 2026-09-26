@@ -12,7 +12,7 @@ DOMの追加・置換・候補変更はMutationObserverで同期する。観測�
 
 ## 操作と配置
 
-- クリック、ラベル、Enter／Space、矢印キーで開く。
+- プルダウン本体のクリック、Enter／Space、矢印キーで開く。ラベルの文字や行の余白では開かず、フォーカスも移さない。ラベルと値の意味上の対応は維持する。
 - 上下矢印、Home／End、先頭文字で候補を移動し、Enter／Spaceかクリックで確定する。無効な候補は選ばない。
 - Escape、Tab、外側のクリックで閉じる。移動中の候補は確定するまで値を変えない。
 - フォーカスはcomboboxに置き、`aria-expanded`、`aria-controls`、`aria-activedescendant`、候補の `aria-selected` を同期する。
