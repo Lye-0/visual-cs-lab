@@ -14,6 +14,7 @@
 
 - [現在の設計](ARCHITECTURE.md)：ソース、生成物、読み込みの役割。
 - [必要な教材だけを読み込む仕組み](technical/ON_DEMAND_LOADING.md)：依存関係、生成、失敗・画面移動時の処理。
+- [共通プルダウン](technical/CUSTOM_SELECT.md)：独自UIとフォームの値、キーボード、動的な教材の同期。
 - [静的サイトの公開](STATIC_SITE.md)：GitHub Pagesと互換性。
 - [分類](LIBRARY_TAXONOMY.md)、[スクロールバー](SCROLLBARS.md)。
 - [ソースの案内](../src/README.md)、[検証の案内](../tests/README.md)。

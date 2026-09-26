@@ -117,7 +117,7 @@ jobs:
           BROWSER: ${{ matrix.browser }}
         run: |
           failed=0
-          for file in tests/*workspaces*browser.mjs tests/math-evidence-browser.mjs tests/math-correspondence-browser.mjs tests/foundation-review-browser.mjs tests/workspace-view-state-browser.mjs tests/authored-result-values-browser.mjs tests/teaching-evidence-browser.mjs tests/static-site-browser.mjs tests/library-browser.mjs; do
+          for file in tests/*workspaces*browser.mjs tests/math-evidence-browser.mjs tests/math-correspondence-browser.mjs tests/foundation-review-browser.mjs tests/workspace-view-state-browser.mjs tests/authored-result-values-browser.mjs tests/teaching-evidence-browser.mjs tests/custom-select-browser.mjs tests/static-site-browser.mjs tests/library-browser.mjs; do
             name=$(basename "$file" .mjs)
             code=0
             node "$file" > "review-output/$name.log" 2>&1 || code=$?

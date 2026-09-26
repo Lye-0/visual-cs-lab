@@ -12,6 +12,7 @@
 | 直接操作の描画 | `experiences-*-widgets.js`、geometry、objects、communication、math-workbooks |
 | 共通ライフサイクル | `experiences-core.js`、`experiences-view.js`、`experiences-workspace.js` |
 | 検索・画面・既存詳細実験 | `app.js`、`pages.js`、`curriculum-navigation.js`、`reader.js`、`workbench.js`、`boot.js` |
+| 全画面のプルダウン | `custom-select.js`、`custom-select.css` |
 | 読み込み | `runtime-loader.js`、`generated/`（生成物） |
 
 読み込み順は`scripts/modules.mjs`、初期配信と遅延依存関係は`scripts/delivery.mjs`で管理する。ファイルを追加しただけでは教材に接続されない。生成・表示・操作検証まで確認する。

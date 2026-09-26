@@ -1,0 +1,48 @@
+import assert from 'node:assert/strict';
+import {spawn} from 'node:child_process';
+import {mkdir,writeFile} from 'node:fs/promises';
+import {chromium,firefox,webkit} from 'playwright';
+import {fixtureUnits} from './lesson-fixtures.mjs';
+const engine=process.env.BROWSER||'chromium',out='review-output/custom-select',checks=[],errors=[];
+const server=spawn(process.execPath,['scripts/server.mjs'],{env:{...process.env,PORT:'0'},stdio:['ignore','pipe','pipe']});let browser;
+try{
+ const base=await new Promise((resolve,reject)=>{let s='';const timer=setTimeout(()=>reject(Error('server timeout')),10000);server.stdout.on('data',d=>{s+=d;const m=s.match(/http:\/\/127\.0\.0\.1:\d+/);if(m){clearTimeout(timer);resolve(m[0]+'/');}});server.on('error',reject);});
+ browser=await {chromium,firefox,webkit}[engine].launch({headless:true});await mkdir(out,{recursive:true});
+ for(const width of [1440,390,320]){
+  const page=await browser.newPage({viewport:{width,height:800},reducedMotion:'reduce'});page.on('pageerror',e=>errors.push(e.message));
+  const visit=async(id,chapter)=>{await page.goto(base+'#/lab/'+id+(chapter?'?chapter='+chapter:''));await page.waitForFunction(({id,chapter})=>{const c=CSL.app.current;return c?.experience&&c.lab.id===id&&(!chapter||c.chapter===chapter)&&c.completed.size>0&&!document.querySelector('.experience [aria-busy=true]');},{id,chapter});await page.waitForFunction(()=>[...document.querySelectorAll('select')].every(s=>s.classList.contains('csl-select-native')&&s.nextElementSibling?.matches('.csl-select')));};
+  await visit('n13-http');const native=page.locator('select[name=version]');
+  const select=(await native.count())?native:page.locator('.ex-kind-inspect select').first(),button=select.locator('xpath=following-sibling::button[1]');
+  const before=await select.inputValue();await button.click();assert.equal(await button.getAttribute('aria-expanded'),'true');assert.equal(await page.locator('[role=listbox]').count(),1);
+  const choice=page.locator('[role=option][aria-disabled=false]').last(),label=await choice.innerText();await choice.click();assert.equal(await button.getAttribute('aria-expanded'),'false');assert.ok((await button.innerText()).includes(label.replace('✓','').trim()));assert.notEqual(await select.inputValue(),before);checks.push(width+': real HTTP selection updates its model field');
+  await button.click();const value=await select.inputValue();await page.keyboard.press('Home');await page.keyboard.press('Escape');assert.equal(await select.inputValue(),value);assert.equal(await page.locator('[role=listbox]').count(),0);assert.equal(await button.evaluate(b=>b===document.activeElement),true);checks.push(width+': Escape cancels pending keyboard selection');
+  await button.click();await page.keyboard.press('Home');await page.keyboard.press('Enter');assert.equal(await select.evaluate(s=>s.selectedIndex),0);await button.click();await page.keyboard.press('Tab');assert.equal(await page.locator('[role=listbox]').count(),0);checks.push(width+': arrow navigation, commit and Tab');
+  await button.click();await page.screenshot({path:`${out}/http-${width}-${engine}.png`});const menuBox=await page.locator('[role=listbox]').boundingBox();assert.ok(menuBox.x>=0&&menuBox.x+menuBox.width<=width+1);assert.ok(menuBox.y>=0&&menuBox.y+menuBox.height<=801);await page.keyboard.press('Escape');checks.push(width+': popup fits viewport');
+  await page.goto(base+'#/catalog');await page.locator('#filter-level + .csl-select').click();await page.getByRole('option').last().click();await page.waitForURL(/level=3/);assert.equal(await page.locator('#filter-level').inputValue(),'3');checks.push(width+': discovery filter retains route behavior');
+  await visit('c16-git','objects');const live=page.locator('select').first(),liveId=await live.getAttribute('id');await live.locator('xpath=following-sibling::button[1]').click();await page.getByRole('option').last().click();await page.waitForFunction(id=>document.getElementById(id)?.nextElementSibling===document.activeElement,liveId);checks.push(width+': workspace field retains keyboard focus');
+  // Exercise the adapter's browser contracts independently of any one model.
+  await page.evaluate(()=>{CSL.selectUI.close();document.getElementById('main').innerHTML='<form id="select-fixture"><label for="pick">選択の検証</label><select id="pick" name="pick"><option value="a">Alpha</option><option disabled value="b">Beta</option><optgroup label="候補"><option value="c">Gamma</option><option value="d">Delta</option></optgroup></select><button type="reset">元へ戻す</button><button type="button" id="outside">外側</button></form>';window.selectEvents=[];for(const type of ['input','change'])document.getElementById('pick').addEventListener(type,e=>window.selectEvents.push(e.type));});
+  const picker=page.locator('#pick + .csl-select');await picker.waitFor();await page.getByText('選択の検証',{exact:true}).click();await page.keyboard.press('ArrowDown');assert.match(await picker.getAttribute('aria-activedescendant'),/-2$/);await page.keyboard.press('Enter');assert.equal(await page.locator('#pick').inputValue(),'c');assert.deepEqual(await page.evaluate(()=>window.selectEvents),['input','change']);checks.push(width+': label, disabled options, groups and exactly one event pair');
+  await picker.focus();await page.keyboard.press('d');await page.keyboard.press('Enter');assert.equal(await page.locator('#pick').inputValue(),'d');await page.getByRole('button',{name:'元へ戻す'}).click();await page.waitForFunction(()=>document.querySelector('#pick + button').textContent==='Alpha');assert.equal(await page.locator('#pick').inputValue(),'a');checks.push(width+': type-ahead and form reset');
+  await picker.click();await page.mouse.click(4,4);assert.equal(await page.locator('[role=listbox]').count(),0);await page.evaluate(()=>document.getElementById('pick').disabled=true);await page.waitForFunction(()=>document.querySelector('#pick + button').disabled);checks.push(width+': outside click and disabled state');
+  await page.evaluate(()=>{const s=document.getElementById('pick');s.disabled=false;for(let i=0;i<80;i++)s.add(new Option('長い選択肢 '+i+'：条件と結果を確認する','v'+i));});await picker.click();await page.keyboard.press('End');const activeId=await picker.getAttribute('aria-activedescendant');assert.ok(await page.locator('#'+activeId).isVisible());await page.keyboard.press('Enter');assert.equal(await page.locator('#pick').inputValue(),'v79');checks.push(width+': long list and end key');
+  await page.locator('#pick').selectOption('c');await page.waitForFunction(()=>document.querySelector('#pick + button').textContent==='Gamma');checks.push(width+': existing form API synchronizes the visible value');
+  await page.evaluate(()=>document.getElementById('pick').addEventListener('change',e=>e.target.replaceWith(e.target.cloneNode(true)),{once:true}));await picker.click();await page.keyboard.press('Home');await page.keyboard.press('Enter');await page.waitForFunction(()=>document.querySelector('#pick + button')===document.activeElement);assert.equal(await page.locator('#select-fixture .csl-select').count(),1);checks.push(width+': replacement field recovers focus without an orphan control');
+  await picker.click();await page.evaluate(()=>document.getElementById('pick').add(new Option('新しい候補','new')));await page.waitForFunction(()=>!document.querySelector('.csl-select-menu'));checks.push(width+': changing options dismisses stale candidates');
+  await page.evaluate(()=>{const s=document.getElementById('pick');s.innerHTML='<option value="">選択してください</option><option value="valid">有効な候補</option>';s.required=true;});assert.equal(await page.evaluate(()=>document.getElementById('select-fixture').reportValidity()),false);await page.waitForFunction(()=>document.querySelector('#pick + button').getAttribute('aria-invalid')==='true');assert.equal(await picker.getAttribute('aria-required'),'true');await page.getByRole('option',{name:'有効な候補'}).click();assert.equal(await page.locator('#pick').evaluate(s=>s.checkValidity()),true);assert.equal(await picker.getAttribute('aria-invalid'),null);checks.push(width+': required validation focuses the custom control and clears after selection');
+  await picker.click();await page.goto(base+'#/catalog');await page.locator('#filter-level').waitFor();assert.equal(await page.locator('.csl-select-menu').count(),0);checks.push(width+': navigation disposes popup');
+  await page.close();
+ }
+ if(process.env.ALL_SELECTS==='1'){
+  const page=await browser.newPage({viewport:{width:390,height:900}});page.on('pageerror',e=>errors.push(e.message));let fields=0,chapters=0;
+  await page.goto(base);
+  for(const unit of fixtureUnits)for(const ch of unit.chapters){
+   await page.evaluate(hash=>{location.hash=hash;},'/lab/'+unit.id+'?chapter='+ch.id);
+   await page.waitForFunction(({id,ch})=>{const c=CSL.app.current;return c?.experience&&c.lab.id===id&&c.chapter===ch&&c.completed.size>0&&!document.querySelector('.experience [aria-busy=true]');},{id:unit.id,ch:ch.id});
+   await page.waitForFunction(()=>[...document.querySelectorAll('select')].every(s=>s.classList.contains('csl-select-native')&&s.nextElementSibling?.matches('button[role=combobox]')));
+   fields+=await page.locator('select').count();chapters++;
+  }
+  checks.push(`all ${chapters} chapters: ${fields} select fields enhanced`);await page.close();
+ }
+ assert.deepEqual(errors,[]);console.log(JSON.stringify({engine,passed:checks.length,checks,errors}));
+}finally{await browser?.close();server.kill();await mkdir(out,{recursive:true});await writeFile(`${out}/${engine}.json`,JSON.stringify({engine,checks,errors},null,2));}
