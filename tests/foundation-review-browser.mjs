@@ -78,7 +78,8 @@ try{
   });
   await check(width+': empty capacity and edited item conditions update the real DP table',async()=>{
    await open(page,'c06-dp');await field(page,'capacity').fill('0');await click(page,'capacity');assert.equal((await state(page)).col,0);assert.equal(await page.locator('.ex-fr-dp tbody tr').first().locator('button').count(),1);
-   await click(page,'reset');await page.locator('.ex-fr-details').last().locator('summary').click();await field(page,'value-3').fill('12');await click(page,'item:3');assert.equal((await state(page)).items[3].value,12);
+   await click(page,'reset');await page.locator('.ex-fr-details').last().locator('summary').click();await field(page,'value-3').fill('12');
+   await page.waitForFunction(()=>JSON.parse(document.querySelector('[data-sec-state]').dataset.secState).items[3].value===12);
    assert.equal(await page.evaluate(()=>CSL.experiences.foundationReview.knapsackView(JSON.parse(document.querySelector('[data-sec-state]').dataset.secState)).optimum),15);
    await click(page,'undo');assert.equal((await state(page)).items[3].value,8);
   });
