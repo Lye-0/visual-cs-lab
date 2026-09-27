@@ -1,10 +1,10 @@
 # 現在の構成
 
-HTML・JavaScript・CSSを分離した静的サイトです。全314単元の検索情報だけを最初に読み、教材本文・計算モデル・操作部品は単元選択後に読み込みます。
+HTML・JavaScript・CSSを分離した静的サイトです。全315単元の検索情報だけを最初に読み、教材本文・計算モデル・操作部品は単元選択後に読み込みます。
 
 - 教材の設計基準：[ノートから学ぶ教材設計](pedagogy/TEACHING_GUIDE.md)。
 - 配信と依存関係：[必要な教材だけを読む](technical/ON_DEMAND_LOADING.md)。
-- 公開：[GitHub Pagesと静的サイト](STATIC_SITE.md)。
+- 公開：GitHub Pagesでコミット済みの静的ファイルを配信します。
 - ソースの役割：[src/README.md](../src/README.md)。
 - 検証：[tests/README.md](../tests/README.md)。
 
@@ -26,12 +26,12 @@ HTML・JavaScript・CSSを分離した静的サイトです。全314単元の検
 
 ## 正本と生成物
 
-教材・モデルの正本はsrc直下の既存モジュールです。scripts/modules.mjsで完全な評価順を、scripts/delivery.mjsでブラウザーの配信単位を管理します。index.htmlとsrc/generated/はnpm run buildで生成し、直接編集しません。docs/EXPERIMENTS.mdとexperiments.jsonはnpm run inventoryで生成します。
+教材・モデルの正本はsrc直下の既存モジュールです。scripts/modules.mjsで完全な評価順を、scripts/delivery.mjsでブラウザーの配信単位を管理します。index.htmlとsrc/generated/はnpm run buildで生成し、直接編集しません。READMEの単元一覧とdata/experiments.jsonはnpm run inventoryで生成します。
 
 ## 既存の画面とURL
 
 #/lab/<id>、?chapter=<id>、?view=classic・experimentを保持します。旧詳細画面も必要になった時点で読み込みます。分類と検索は全単元を対象にし、未ロードの教材も見つけられます。
 
-## 履歴
+## モデルの範囲
 
-旧単一HTML構成、当時の144単元、旧ブラウザー試験については[旧v2設計](history/ARCHITECTURE-v2.md)を参照してください。現在の構成や検証件数として扱いません。
+各単元の`scope`と`limits`に再現する範囲と省略を記し、教材の画面から読めるようにします。教材用モデルの実行結果を、全規格や実機の挙動の保証とは扱いません。ブラウザー上の入力・比較は単元の画面を離れると破棄します。授業ノートのPDFは公開ファイルに含めません。

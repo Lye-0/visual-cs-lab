@@ -72,5 +72,5 @@ test('committed module checker is read-only and patch plans cannot run again',as
   const text=await readFile('.github/workflows/'+file,'utf8');assert.match(text,/contents: read/);
   assert.doesNotMatch(text,/contents: write|git push|git commit|pull_request_target/);
  }
- const files=await readdir('docs/verification');assert.ok(!files.includes('curriculum-status.json'));
+ await assert.rejects(readFile('docs/verification/curriculum-status.json'),{code:'ENOENT'});
 });

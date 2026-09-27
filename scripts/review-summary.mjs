@@ -8,7 +8,7 @@ const nodeLog=await readFile('review-output/node-tests.txt','utf8');
 const total=name=>{const m=nodeLog.match(new RegExp('^# '+name+' (\\d+)\\r?$','m'));assert.ok(m,`Missing TAP total: ${name}`);return Number(m[1]);};
 const node={tests:total('tests'),passed:total('pass'),failed:total('fail'),skipped:total('skipped'),cancelled:total('cancelled')};
 assert.ok(node.tests>0);assert.equal(node.failed+node.skipped+node.cancelled,0);assert.equal(node.tests,node.passed);
-const inventory=await readJSON('docs/experiments.json');
+const inventory=await readJSON('data/experiments.json');
 const reports=[];
 for(const file of ['reader-browser.json','reader-regressions.json']){
  const r=await readJSON('review-output/'+file);
@@ -19,7 +19,7 @@ for(const file of ['reader-browser.json','reader-regressions.json']){
 const all=await readJSON('review-output/reader-browser.json');
 assert.equal(all.units,inventory.total);assert.equal(inventory.legacyTotal,144);assert.equal(inventory.areas.length,20);
 const generatedFiles={};
-for(const file of ['index.html','docs/EXPERIMENTS.md','docs/experiments.json'])generatedFiles[file]=createHash('sha256').update(await readFile(file)).digest('hex');
+for(const file of ['index.html','README.md','data/experiments.json'])generatedFiles[file]=createHash('sha256').update(await readFile(file)).digest('hex');
 const runURL=process.env.GITHUB_RUN_ID?`https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`:null;
 const report={version:inventory.version,sourceCommit,runURL,generatedAt:new Date().toISOString(),units:inventory.total,originalUnits:inventory.legacyTotal,areas:inventory.areas.length,counts:inventory.counts,node,browser:reports,generatedFiles,limitations:['Chromiumのみ。モバイルは画面幅とタッチのエミュレーションで、実機ではありません。','自動テストは動作と特定の数値例の検証です。初心者による理解度や全教材の正しさを保証しません。','撮影した画面はレビュー資料です。スクリーンショットの目視確認を自動テストの合格に含めません。','提供PDFの全行の再照合、全規格の再現、Safari・Firefoxでの検証はこの試験に含みません。']};
 const browserTotal=reports.reduce((sum,r)=>sum+r.passed,0);

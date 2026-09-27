@@ -1,0 +1,1671 @@
+{
+  "version": "3.0.0",
+  "total": 315,
+  "legacyTotal": 144,
+  "engineCount": 274,
+  "counts": {
+    "core": 208,
+    "network": 49,
+    "security": 50,
+    "missions": 8
+  },
+  "areas": [
+    {
+      "id": "C01",
+      "name": "情報の表現"
+    },
+    {
+      "id": "C02",
+      "name": "論理と計算理論"
+    },
+    {
+      "id": "C03",
+      "name": "数学・確率・統計"
+    },
+    {
+      "id": "C04",
+      "name": "プログラムの実行"
+    },
+    {
+      "id": "C05",
+      "name": "データ構造"
+    },
+    {
+      "id": "C06",
+      "name": "アルゴリズム"
+    },
+    {
+      "id": "C07",
+      "name": "言語処理系"
+    },
+    {
+      "id": "C08",
+      "name": "論理回路"
+    },
+    {
+      "id": "C09",
+      "name": "CPU"
+    },
+    {
+      "id": "C10",
+      "name": "メモリ"
+    },
+    {
+      "id": "C11",
+      "name": "OSとファイル"
+    },
+    {
+      "id": "C12",
+      "name": "並行・分散処理"
+    },
+    {
+      "id": "C13",
+      "name": "ネットワークとWeb"
+    },
+    {
+      "id": "C14",
+      "name": "データベース"
+    },
+    {
+      "id": "C15",
+      "name": "セキュリティ"
+    },
+    {
+      "id": "C16",
+      "name": "Gitとソフトウェア開発"
+    },
+    {
+      "id": "C17",
+      "name": "AI・機械学習"
+    },
+    {
+      "id": "C18",
+      "name": "画像・音・CG"
+    },
+    {
+      "id": "C19",
+      "name": "組み込み・制御"
+    },
+    {
+      "id": "C20",
+      "name": "人とシステム・倫理"
+    }
+  ],
+  "labs": [
+    {
+      "id": "c01-bits",
+      "unit": "2進数と符号付き整数",
+      "area": "C01"
+    },
+    {
+      "id": "c01-float",
+      "unit": "浮動小数点と丸め誤差",
+      "area": "C01"
+    },
+    {
+      "id": "c01-utf8",
+      "unit": "文字コードとUTF-8",
+      "area": "C01"
+    },
+    {
+      "id": "c01-huffman",
+      "unit": "ハフマン符号と圧縮",
+      "area": "C01"
+    },
+    {
+      "id": "c01-hamming",
+      "unit": "ハミング符号と誤り訂正",
+      "area": "C01"
+    },
+    {
+      "id": "c02-set",
+      "unit": "集合の和・積・差",
+      "area": "C02"
+    },
+    {
+      "id": "c02-dfa",
+      "unit": "有限オートマトンと状態遷移",
+      "area": "C02"
+    },
+    {
+      "id": "c03-matrix",
+      "unit": "行列と線形変換",
+      "area": "C03"
+    },
+    {
+      "id": "c03-derivative",
+      "unit": "微分と差分近似",
+      "area": "C03"
+    },
+    {
+      "id": "c03-integral",
+      "unit": "数値積分と台形則",
+      "area": "C03"
+    },
+    {
+      "id": "c03-probability",
+      "unit": "確率と繰り返し試行",
+      "area": "C03"
+    },
+    {
+      "id": "c03-bayes",
+      "unit": "条件付き確率とベイズの定理",
+      "area": "C03"
+    },
+    {
+      "id": "c04-trace",
+      "unit": "変数・繰り返し・条件分岐",
+      "area": "C04"
+    },
+    {
+      "id": "c04-recursion",
+      "unit": "再帰とコールスタック",
+      "area": "C04"
+    },
+    {
+      "id": "c04-eventloop",
+      "unit": "JavaScriptのイベントループ",
+      "area": "C04"
+    },
+    {
+      "id": "c05-stack",
+      "unit": "スタックとLIFO",
+      "area": "C05"
+    },
+    {
+      "id": "c05-queue",
+      "unit": "キューとFIFO",
+      "area": "C05"
+    },
+    {
+      "id": "c05-bst",
+      "unit": "二分探索木と挿入順",
+      "area": "C05"
+    },
+    {
+      "id": "c05-heap",
+      "unit": "最小ヒープ",
+      "area": "C05"
+    },
+    {
+      "id": "c05-hash",
+      "unit": "ハッシュ表と衝突",
+      "area": "C05"
+    },
+    {
+      "id": "c06-sort",
+      "unit": "ソートと処理回数",
+      "area": "C06"
+    },
+    {
+      "id": "c06-search",
+      "unit": "線形探索と二分探索",
+      "area": "C06"
+    },
+    {
+      "id": "c06-graph",
+      "unit": "幅優先探索と深さ優先探索",
+      "area": "C06"
+    },
+    {
+      "id": "c06-dp",
+      "unit": "動的計画法・ナップサック",
+      "area": "C06"
+    },
+    {
+      "id": "c07-compiler",
+      "unit": "字句解析と構文木",
+      "area": "C07"
+    },
+    {
+      "id": "c08-gate",
+      "unit": "論理ゲートと真理値表",
+      "area": "C08"
+    },
+    {
+      "id": "c08-adder",
+      "unit": "全加算器と繰り上がり",
+      "area": "C08"
+    },
+    {
+      "id": "c09-cpu",
+      "unit": "CPUの命令実行とレジスタ",
+      "area": "C09"
+    },
+    {
+      "id": "c09-pipeline",
+      "unit": "命令パイプライン",
+      "area": "C09"
+    },
+    {
+      "id": "c09-cache",
+      "unit": "キャッシュ・インデックス・タグ",
+      "area": "C09"
+    },
+    {
+      "id": "c10-pointer",
+      "unit": "ポインタ・アドレス・参照先",
+      "area": "C10"
+    },
+    {
+      "id": "c10-pages",
+      "unit": "仮想メモリとページ置換",
+      "area": "C10"
+    },
+    {
+      "id": "c10-allocation",
+      "unit": "動的メモリ確保と断片化",
+      "area": "C10"
+    },
+    {
+      "id": "c11-scheduler",
+      "unit": "CPUスケジューリング",
+      "area": "C11"
+    },
+    {
+      "id": "c11-files",
+      "unit": "ファイル・inode・ブロック",
+      "area": "C11"
+    },
+    {
+      "id": "c12-race",
+      "unit": "競合状態と排他制御",
+      "area": "C12"
+    },
+    {
+      "id": "c12-deadlock",
+      "unit": "デッドロックとロック順序",
+      "area": "C12"
+    },
+    {
+      "id": "c12-quorum",
+      "unit": "複製とクォーラム",
+      "area": "C12"
+    },
+    {
+      "id": "c14-index",
+      "unit": "データベースの索引",
+      "area": "C14"
+    },
+    {
+      "id": "c14-join",
+      "unit": "SQLのINNER JOIN・LEFT JOIN",
+      "area": "C14"
+    },
+    {
+      "id": "c14-bplus",
+      "unit": "B+木の挿入と分割",
+      "area": "C14"
+    },
+    {
+      "id": "c14-transaction",
+      "unit": "トランザクションと更新消失",
+      "area": "C14"
+    },
+    {
+      "id": "c16-git",
+      "unit": "Git：編集・ステージ・コミット",
+      "area": "C16"
+    },
+    {
+      "id": "c16-reset",
+      "unit": "Git：soft・mixed・hard reset",
+      "area": "C16"
+    },
+    {
+      "id": "c16-branches",
+      "unit": "Git：ブランチとマージ",
+      "area": "C16"
+    },
+    {
+      "id": "c16-rebase",
+      "unit": "Git：rebase",
+      "area": "C16"
+    },
+    {
+      "id": "c16-remote",
+      "unit": "Git：fetch・pull・push",
+      "area": "C16"
+    },
+    {
+      "id": "c16-undo",
+      "unit": "Git：revertとamend",
+      "area": "C16"
+    },
+    {
+      "id": "c17-regression",
+      "unit": "線形回帰と勾配降下法",
+      "area": "C17"
+    },
+    {
+      "id": "c17-kmeans",
+      "unit": "k-meansクラスタリング",
+      "area": "C17"
+    },
+    {
+      "id": "c18-sampling",
+      "unit": "標本化とエイリアシング",
+      "area": "C18"
+    },
+    {
+      "id": "c18-fourier",
+      "unit": "離散フーリエ変換",
+      "area": "C18"
+    },
+    {
+      "id": "c18-filter",
+      "unit": "移動平均フィルタ",
+      "area": "C18"
+    },
+    {
+      "id": "c18-projection",
+      "unit": "3D座標と透視投影",
+      "area": "C18"
+    },
+    {
+      "id": "c19-pid",
+      "unit": "フィードバックとPID制御",
+      "area": "C19"
+    },
+    {
+      "id": "c20-contrast",
+      "unit": "色のコントラストと読みやすさ",
+      "area": "C20"
+    },
+    {
+      "id": "c20-privacy",
+      "unit": "データ収集とプライバシー",
+      "area": "C20"
+    },
+    {
+      "id": "n01-packet",
+      "unit": "通信の階層とカプセル化",
+      "area": "C13"
+    },
+    {
+      "id": "n02-signal",
+      "unit": "伝送時間・伝搬時間・通信誤り",
+      "area": "C13"
+    },
+    {
+      "id": "n02-crc",
+      "unit": "CRCと誤り検出",
+      "area": "C13"
+    },
+    {
+      "id": "n03-switch",
+      "unit": "EthernetとMACアドレス学習",
+      "area": "C13"
+    },
+    {
+      "id": "n04-subnet",
+      "unit": "IPv4とサブネット",
+      "area": "C13"
+    },
+    {
+      "id": "n05-arp",
+      "unit": "ARPと次の宛先",
+      "area": "C13"
+    },
+    {
+      "id": "n05-dhcp",
+      "unit": "DHCPのアドレス割り当て",
+      "area": "C13"
+    },
+    {
+      "id": "n06-ipv6",
+      "unit": "IPv6の表記とプレフィックス",
+      "area": "C13"
+    },
+    {
+      "id": "n07-vlan",
+      "unit": "VLANとネットワーク分割",
+      "area": "C13"
+    },
+    {
+      "id": "n07-stp",
+      "unit": "STPと冗長リンク",
+      "area": "C13"
+    },
+    {
+      "id": "n08-routing",
+      "unit": "経路選択とリンクコスト",
+      "area": "C13"
+    },
+    {
+      "id": "n08-prefix",
+      "unit": "ルーティングの最長一致",
+      "area": "C13"
+    },
+    {
+      "id": "n08-bgp",
+      "unit": "BGPと経路選択ポリシー",
+      "area": "C13"
+    },
+    {
+      "id": "n09-dns",
+      "unit": "DNSとキャッシュの有効期限",
+      "area": "C13"
+    },
+    {
+      "id": "n10-transport",
+      "unit": "TCP・UDPとポート番号",
+      "area": "C13"
+    },
+    {
+      "id": "n11-tcp",
+      "unit": "TCPの再送とウィンドウ",
+      "area": "C13"
+    },
+    {
+      "id": "n11-congestion",
+      "unit": "TCPの輻輳制御",
+      "area": "C13"
+    },
+    {
+      "id": "n12-nat",
+      "unit": "NATとポート変換",
+      "area": "C13"
+    },
+    {
+      "id": "n13-http",
+      "unit": "HTTP/1.1・HTTP/2・HTTP/3",
+      "area": "C13"
+    },
+    {
+      "id": "n13-cache",
+      "unit": "HTTPキャッシュと再検証",
+      "area": "C13"
+    },
+    {
+      "id": "n14-lb",
+      "unit": "負荷分散と正常性確認",
+      "area": "C13"
+    },
+    {
+      "id": "n15-mail",
+      "unit": "メールの配送と再試行",
+      "area": "C13"
+    },
+    {
+      "id": "n15-ssh",
+      "unit": "SSHとホスト鍵",
+      "area": "C13"
+    },
+    {
+      "id": "n15-websocket",
+      "unit": "WebSocketの双方向通信",
+      "area": "C13"
+    },
+    {
+      "id": "n15-ntp",
+      "unit": "NTPと時計のずれ",
+      "area": "C13"
+    },
+    {
+      "id": "n16-queue",
+      "unit": "待ち行列・処理能力・損失",
+      "area": "C13"
+    },
+    {
+      "id": "n17-wifi",
+      "unit": "無線通信と競合",
+      "area": "C13"
+    },
+    {
+      "id": "n18-diagnose",
+      "unit": "ネットワーク障害の切り分け",
+      "area": "C13"
+    },
+    {
+      "id": "n19-mqtt",
+      "unit": "MQTTのQoSと再送",
+      "area": "C13"
+    },
+    {
+      "id": "n20-tunnel",
+      "unit": "トンネル・追加ヘッダー・MTU",
+      "area": "C13"
+    },
+    {
+      "id": "s01-threat",
+      "unit": "機密性・完全性・可用性",
+      "area": "C15"
+    },
+    {
+      "id": "s02-mod",
+      "unit": "剰余演算と逆元",
+      "area": "C15"
+    },
+    {
+      "id": "s02-euclid",
+      "unit": "最大公約数とユークリッドの互除法",
+      "area": "C15"
+    },
+    {
+      "id": "s03-aes",
+      "unit": "AES-GCMと改ざん検出",
+      "area": "C15"
+    },
+    {
+      "id": "s04-hash",
+      "unit": "SHA-256と入力の変化",
+      "area": "C15"
+    },
+    {
+      "id": "s04-hmac",
+      "unit": "HMACとメッセージ認証",
+      "area": "C15"
+    },
+    {
+      "id": "s04-signature",
+      "unit": "電子署名と公開鍵検証",
+      "area": "C15"
+    },
+    {
+      "id": "s05-dh",
+      "unit": "Diffie–Hellman鍵共有",
+      "area": "C15"
+    },
+    {
+      "id": "s05-rsa",
+      "unit": "RSAの暗号化と復号",
+      "area": "C15"
+    },
+    {
+      "id": "s06-tls",
+      "unit": "TLS・証明書・相手の認証",
+      "area": "C15"
+    },
+    {
+      "id": "s07-password",
+      "unit": "パスワードの保存とsalt",
+      "area": "C15"
+    },
+    {
+      "id": "s07-mfa",
+      "unit": "多要素認証とパスキー",
+      "area": "C15"
+    },
+    {
+      "id": "s08-access",
+      "unit": "認証・認可・最小権限",
+      "area": "C15"
+    },
+    {
+      "id": "s09-session",
+      "unit": "セッション・トークン・失効",
+      "area": "C15"
+    },
+    {
+      "id": "s09-oauth",
+      "unit": "OAuthのリダイレクトとPKCE",
+      "area": "C15"
+    },
+    {
+      "id": "s10-cors",
+      "unit": "同一オリジンポリシーとCORS",
+      "area": "C15"
+    },
+    {
+      "id": "s11-sql",
+      "unit": "SQLインジェクションと対策",
+      "area": "C15"
+    },
+    {
+      "id": "s11-xss",
+      "unit": "XSSと出力時の扱い",
+      "area": "C15"
+    },
+    {
+      "id": "s11-csrf",
+      "unit": "CSRFと送信の意図",
+      "area": "C15"
+    },
+    {
+      "id": "s11-ssrf",
+      "unit": "SSRFとアクセス先の制限",
+      "area": "C15"
+    },
+    {
+      "id": "s11-path",
+      "unit": "パストラバーサルとルート確認",
+      "area": "C15"
+    },
+    {
+      "id": "s12-firewall",
+      "unit": "ファイアウォールの規則順序",
+      "area": "C15"
+    },
+    {
+      "id": "s13-permission",
+      "unit": "Linuxのファイル権限",
+      "area": "C15"
+    },
+    {
+      "id": "s14-buffer",
+      "unit": "メモリ境界と生存期間",
+      "area": "C15"
+    },
+    {
+      "id": "s15-pipeline",
+      "unit": "セキュア開発と検査工程",
+      "area": "C15"
+    },
+    {
+      "id": "s16-cloud",
+      "unit": "クラウドの公開範囲と権限",
+      "area": "C15"
+    },
+    {
+      "id": "s17-detection",
+      "unit": "異常検知・誤検知・見逃し",
+      "area": "C15"
+    },
+    {
+      "id": "s18-incident",
+      "unit": "ログの時系列とインシデント調査",
+      "area": "C15"
+    },
+    {
+      "id": "s19-backup",
+      "unit": "バックアップ・RPO・復旧時間",
+      "area": "C15"
+    },
+    {
+      "id": "s20-update",
+      "unit": "IoTの更新検証とロールバック",
+      "area": "C15"
+    },
+    {
+      "id": "s21-anonymity",
+      "unit": "匿名化と再識別",
+      "area": "C15"
+    },
+    {
+      "id": "s22-human",
+      "unit": "不審な要求と独立した確認",
+      "area": "C15"
+    },
+    {
+      "id": "s23-sharing",
+      "unit": "秘密分散と復元しきい値",
+      "area": "C15"
+    },
+    {
+      "id": "s23-zk",
+      "unit": "ゼロ知識証明の直観",
+      "area": "C15"
+    },
+    {
+      "id": "s23-migration",
+      "unit": "暗号移行とデータ量",
+      "area": "C15"
+    },
+    {
+      "id": "s24-ai",
+      "unit": "AIの信頼境界とツール権限",
+      "area": "C15"
+    },
+    {
+      "id": "x01-build",
+      "unit": "総合演習：ネットワーク構築",
+      "area": "C13"
+    },
+    {
+      "id": "x02-publish",
+      "unit": "総合演習：Webサービスの公開",
+      "area": "C15"
+    },
+    {
+      "id": "x03-diagnose",
+      "unit": "総合演習：通信障害の診断",
+      "area": "C13"
+    },
+    {
+      "id": "x04-organization",
+      "unit": "総合演習：組織のネットワーク分割",
+      "area": "C15"
+    },
+    {
+      "id": "x05-patch",
+      "unit": "総合演習：修正と検証",
+      "area": "C16"
+    },
+    {
+      "id": "x06-response",
+      "unit": "総合演習：調査・封じ込め・復旧",
+      "area": "C15"
+    },
+    {
+      "id": "x07-iot",
+      "unit": "総合演習：IoTの運用と回復",
+      "area": "C19"
+    },
+    {
+      "id": "x08-research",
+      "unit": "総合演習：実験条件と再現性",
+      "area": "C03"
+    },
+    {
+      "id": "c07-gc",
+      "unit": "ガベージコレクション",
+      "area": "C07"
+    },
+    {
+      "id": "c09-branch",
+      "unit": "分岐予測と飽和カウンタ",
+      "area": "C09"
+    },
+    {
+      "id": "c10-translation",
+      "unit": "アドレス変換とTLB",
+      "area": "C10"
+    },
+    {
+      "id": "c12-semaphore",
+      "unit": "セマフォと生産者・消費者",
+      "area": "C12"
+    },
+    {
+      "id": "c02-turing",
+      "unit": "チューリングマシン",
+      "area": "C02"
+    },
+    {
+      "id": "c17-knn",
+      "unit": "k近傍法による分類",
+      "area": "C17"
+    },
+    {
+      "id": "c18-image",
+      "unit": "画像フィルタと畳み込み",
+      "area": "C18"
+    },
+    {
+      "id": "c16-testing",
+      "unit": "境界値テスト",
+      "area": "C16"
+    },
+    {
+      "id": "n04-vlsm",
+      "unit": "VLSMとアドレス割り当て",
+      "area": "C13"
+    },
+    {
+      "id": "n06-slaac",
+      "unit": "IPv6の自動設定・SLAAC・DAD",
+      "area": "C13"
+    },
+    {
+      "id": "n08-linkstate",
+      "unit": "リンク状態と経路情報の伝播",
+      "area": "C13"
+    },
+    {
+      "id": "n16-qos",
+      "unit": "QoSと優先キュー",
+      "area": "C13"
+    },
+    {
+      "id": "s07-ratelimit",
+      "unit": "認証の試行制限",
+      "area": "C15"
+    },
+    {
+      "id": "c01-information",
+      "unit": "自己情報量",
+      "area": "C01"
+    },
+    {
+      "id": "c01-entropy",
+      "unit": "平均情報量・エントロピー",
+      "area": "C01"
+    },
+    {
+      "id": "c01-joint",
+      "unit": "結合・条件付きエントロピーと相互情報量",
+      "area": "C01"
+    },
+    {
+      "id": "c01-markov",
+      "unit": "マルコフ情報源・定常確率",
+      "area": "C01"
+    },
+    {
+      "id": "c01-channel",
+      "unit": "2元対称通信路・伝送情報量・通信路容量",
+      "area": "C01"
+    },
+    {
+      "id": "c01-prefix",
+      "unit": "一意的復号・瞬時復号・符号木",
+      "area": "C01"
+    },
+    {
+      "id": "c01-kraft",
+      "unit": "クラフトの不等式",
+      "area": "C01"
+    },
+    {
+      "id": "c01-shannon-fano",
+      "unit": "シャノン・ファノの符号化",
+      "area": "C01"
+    },
+    {
+      "id": "c01-distance",
+      "unit": "ハミング距離",
+      "area": "C01"
+    },
+    {
+      "id": "c01-linear-code",
+      "unit": "生成行列・検査行列・シンドローム",
+      "area": "C01"
+    },
+    {
+      "id": "c02-nfa",
+      "unit": "NFAからDFAへ・集合状態",
+      "area": "C02"
+    },
+    {
+      "id": "c08-nand",
+      "unit": "NANDだけで論理ゲートを作る",
+      "area": "C08"
+    },
+    {
+      "id": "c08-register",
+      "unit": "DFF・Mux・レジスタ",
+      "area": "C08"
+    },
+    {
+      "id": "c10-address-spaces",
+      "unit": "アプリごとの仮想アドレス空間",
+      "area": "C10"
+    },
+    {
+      "id": "n01-forwarding",
+      "unit": "IPとMAC・1区間ずつの配送",
+      "area": "C13"
+    },
+    {
+      "id": "gap-001",
+      "unit": "ベクトル空間・基底・直交への分解",
+      "area": "C03"
+    },
+    {
+      "id": "gap-002",
+      "unit": "連立一次方程式・掃き出し法・逆行列",
+      "area": "C03"
+    },
+    {
+      "id": "gap-003",
+      "unit": "固有値・固有ベクトル・対角化",
+      "area": "C03"
+    },
+    {
+      "id": "gap-004",
+      "unit": "極限・連続・微分法・テイラー近似",
+      "area": "C03"
+    },
+    {
+      "id": "gap-005",
+      "unit": "積分・累積量・置換と部分積分",
+      "area": "C03"
+    },
+    {
+      "id": "gap-006",
+      "unit": "偏微分・勾配・ヤコビ行列・重積分",
+      "area": "C03"
+    },
+    {
+      "id": "gap-007",
+      "unit": "複素数・オイラーの公式・振幅と位相",
+      "area": "C03"
+    },
+    {
+      "id": "gap-008",
+      "unit": "微分方程式・オイラー法・ルンゲクッタ法",
+      "area": "C03"
+    },
+    {
+      "id": "gap-009",
+      "unit": "数値解析・求根・補間・丸め誤差",
+      "area": "C03"
+    },
+    {
+      "id": "gap-010",
+      "unit": "最適化・勾配・制約・局所解",
+      "area": "C03"
+    },
+    {
+      "id": "gap-011",
+      "unit": "平均・分散・共分散・相関",
+      "area": "C03"
+    },
+    {
+      "id": "gap-012",
+      "unit": "確率変数・二項分布・ポアソン分布・正規分布",
+      "area": "C03"
+    },
+    {
+      "id": "gap-013",
+      "unit": "同時分布・独立性・全確率・ベイズ更新",
+      "area": "C03"
+    },
+    {
+      "id": "gap-014",
+      "unit": "大数の法則・中心極限定理・標本平均",
+      "area": "C03"
+    },
+    {
+      "id": "gap-015",
+      "unit": "尤度・最尤推定・信頼区間",
+      "area": "C03"
+    },
+    {
+      "id": "gap-016",
+      "unit": "仮説検定・p値・t検定・カイ二乗検定",
+      "area": "C03"
+    },
+    {
+      "id": "gap-017",
+      "unit": "重回帰・主成分分析・SVD・因子分析",
+      "area": "C03"
+    },
+    {
+      "id": "gap-018",
+      "unit": "命題論理・述語論理・含意と量化子",
+      "area": "C02"
+    },
+    {
+      "id": "gap-019",
+      "unit": "証明・数学的帰納法・ループ不変条件",
+      "area": "C02"
+    },
+    {
+      "id": "gap-020",
+      "unit": "関係・同値類・順序・写像",
+      "area": "C02"
+    },
+    {
+      "id": "gap-021",
+      "unit": "組合せ・包除原理・鳩の巣原理・漸化式",
+      "area": "C02"
+    },
+    {
+      "id": "gap-022",
+      "unit": "グラフの表現・連結性・木と閉路",
+      "area": "C02"
+    },
+    {
+      "id": "gap-023",
+      "unit": "計算量・漸化式・償却解析",
+      "area": "C02"
+    },
+    {
+      "id": "gap-024",
+      "unit": "正規表現・ε-NFA・DFA・最小化",
+      "area": "C02"
+    },
+    {
+      "id": "gap-025",
+      "unit": "文脈自由文法・導出・スタック・曖昧性",
+      "area": "C02"
+    },
+    {
+      "id": "gap-026",
+      "unit": "チューリングマシン・停止・決定不能性",
+      "area": "C02"
+    },
+    {
+      "id": "gap-027",
+      "unit": "P・NP・証明書・帰着の考え方",
+      "area": "C02"
+    },
+    {
+      "id": "gap-028",
+      "unit": "情報源符号化の限界・平均符号長・ブロック化",
+      "area": "C01"
+    },
+    {
+      "id": "gap-029",
+      "unit": "一般の通信路・入力分布・容量と符号化率",
+      "area": "C01"
+    },
+    {
+      "id": "gap-030",
+      "unit": "Sardinas–Patterson法と一意的復号可能性",
+      "area": "C01"
+    },
+    {
+      "id": "gap-031",
+      "unit": "最小距離・誤り検出・SECDEDと訂正の限界",
+      "area": "C01"
+    },
+    {
+      "id": "gap-032",
+      "unit": "巡回符号・BCH・Reed–Solomon・畳込み符号",
+      "area": "C01"
+    },
+    {
+      "id": "gap-033",
+      "unit": "LZ78の辞書圧縮・算術符号化と復号",
+      "area": "C01"
+    },
+    {
+      "id": "gap-034",
+      "unit": "ビット演算・固定小数点・桁あふれ・エンディアン",
+      "area": "C01"
+    },
+    {
+      "id": "gap-035",
+      "unit": "自分で書くプログラム・配列・文字列・関数",
+      "area": "C04"
+    },
+    {
+      "id": "gap-036",
+      "unit": "値渡し・参照の共有・コピー・スコープ",
+      "area": "C04"
+    },
+    {
+      "id": "gap-037",
+      "unit": "クラス・インスタンス・コンストラクタ・カプセル化",
+      "area": "C04"
+    },
+    {
+      "id": "gap-038",
+      "unit": "継承・動的ディスパッチ・インターフェース・合成",
+      "area": "C04"
+    },
+    {
+      "id": "gap-039",
+      "unit": "型検査・型変換・ジェネリクス・null",
+      "area": "C04"
+    },
+    {
+      "id": "gap-040",
+      "unit": "高階関数・クロージャ・不変データ・遅延評価",
+      "area": "C04"
+    },
+    {
+      "id": "gap-041",
+      "unit": "例外・伝播・早期return・資源の後始末",
+      "area": "C04"
+    },
+    {
+      "id": "gap-042",
+      "unit": "モジュール・公開範囲・依存・文字とバイトの入出力",
+      "area": "C04"
+    },
+    {
+      "id": "gap-043",
+      "unit": "配列・連結リスト・動的配列の挿入と削除",
+      "area": "C05"
+    },
+    {
+      "id": "gap-044",
+      "unit": "探索木の走査・削除・AVLと赤黒木の回転",
+      "area": "C05"
+    },
+    {
+      "id": "gap-045",
+      "unit": "ヒープ構築・最小値の取出し・優先度の更新",
+      "area": "C05"
+    },
+    {
+      "id": "gap-046",
+      "unit": "ハッシュ表・探索法・削除印・負荷率・再配置",
+      "area": "C05"
+    },
+    {
+      "id": "gap-047",
+      "unit": "最小全域木・Prim・Kruskal・Union-Find",
+      "area": "C06"
+    },
+    {
+      "id": "gap-048",
+      "unit": "最短経路・負の辺・Bellman–Ford・Floyd–Warshall",
+      "area": "C06"
+    },
+    {
+      "id": "gap-049",
+      "unit": "依存順序・強連結成分・最大流・マッチング",
+      "area": "C06"
+    },
+    {
+      "id": "gap-050",
+      "unit": "貪欲法・動的計画法・復元・バックトラック・安定性",
+      "area": "C06"
+    },
+    {
+      "id": "gap-051",
+      "unit": "KMP文字列探索・接頭辞表・トライ木",
+      "area": "C06"
+    },
+    {
+      "id": "gap-052",
+      "unit": "LL・SLR構文解析と文法の曖昧さ",
+      "area": "C07"
+    },
+    {
+      "id": "gap-053",
+      "unit": "記号表・名前解決・静的型検査",
+      "area": "C07"
+    },
+    {
+      "id": "gap-054",
+      "unit": "三番地コード・データフロー・最適化",
+      "area": "C07"
+    },
+    {
+      "id": "gap-055",
+      "unit": "レジスタ割当・退避・呼出しフレーム",
+      "area": "C07"
+    },
+    {
+      "id": "gap-056",
+      "unit": "アセンブル・リンク・再配置・ロード",
+      "area": "C07"
+    },
+    {
+      "id": "gap-057",
+      "unit": "インタプリタ・VM・JITの仕事の分担",
+      "area": "C07"
+    },
+    {
+      "id": "gap-058",
+      "unit": "参照カウント・コピーGC・世代別GC",
+      "area": "C07"
+    },
+    {
+      "id": "gap-059",
+      "unit": "電圧・電流・抵抗とキルヒホッフの法則",
+      "area": "C08"
+    },
+    {
+      "id": "gap-060",
+      "unit": "RC・RL・RLCの過渡応答と交流",
+      "area": "C08"
+    },
+    {
+      "id": "gap-061",
+      "unit": "ダイオード・トランジスタ・CMOS",
+      "area": "C08"
+    },
+    {
+      "id": "gap-062",
+      "unit": "真理値表・カルノー図・論理式の簡単化",
+      "area": "C08"
+    },
+    {
+      "id": "gap-063",
+      "unit": "半加算器から多ビットALU・Mux・デコーダへ",
+      "area": "C08"
+    },
+    {
+      "id": "gap-064",
+      "unit": "ラッチ・DFF・カウンタ・状態機械",
+      "area": "C08"
+    },
+    {
+      "id": "gap-065",
+      "unit": "ゲート遅延・ハザード・小さなHDL",
+      "area": "C08"
+    },
+    {
+      "id": "gap-066",
+      "unit": "命令形式・即値・直接・間接アドレス",
+      "area": "C09"
+    },
+    {
+      "id": "gap-067",
+      "unit": "CPUデータパスと制御信号",
+      "area": "C09"
+    },
+    {
+      "id": "gap-068",
+      "unit": "割込み・例外・MMIO・DMA",
+      "area": "C09"
+    },
+    {
+      "id": "gap-069",
+      "unit": "パイプラインの依存・待機・転送・分岐破棄",
+      "area": "C09"
+    },
+    {
+      "id": "gap-070",
+      "unit": "連想キャッシュ・LRU・書込み方針",
+      "area": "C09"
+    },
+    {
+      "id": "gap-071",
+      "unit": "MSI・アトミック操作・メモリ順序",
+      "area": "C09"
+    },
+    {
+      "id": "gap-072",
+      "unit": "多段ページ表・ページフォールト・Copy-on-Write",
+      "area": "C09"
+    },
+    {
+      "id": "gap-073",
+      "unit": "CPI・Amdahlの法則・性能のボトルネック",
+      "area": "C09"
+    },
+    {
+      "id": "gap-074",
+      "unit": "プロセス・スレッド・システムコール",
+      "area": "C11"
+    },
+    {
+      "id": "gap-075",
+      "unit": "到着時刻・I/O・優先度を含むCPUスケジューリング",
+      "area": "C11"
+    },
+    {
+      "id": "gap-076",
+      "unit": "パイプ・ファイル記述子・共有メモリ・シグナル",
+      "area": "C11"
+    },
+    {
+      "id": "gap-077",
+      "unit": "mutex・条件変数・waitと再確認",
+      "area": "C11"
+    },
+    {
+      "id": "gap-078",
+      "unit": "複数資源のデッドロック検出と銀行家の算法",
+      "area": "C11"
+    },
+    {
+      "id": "gap-079",
+      "unit": "パス・リンク・openとunlink・ジャーナル",
+      "area": "C11"
+    },
+    {
+      "id": "gap-080",
+      "unit": "仮想マシン・コンテナ・名前空間・資源制限",
+      "area": "C11"
+    },
+    {
+      "id": "gap-081",
+      "unit": "仕事の分割・スレッドプール・並列集約・SIMD",
+      "area": "C11"
+    },
+    {
+      "id": "gap-082",
+      "unit": "Lamport時計・ベクトル時計・因果関係",
+      "area": "C12"
+    },
+    {
+      "id": "gap-083",
+      "unit": "クォーラム・線形化可能性・結果整合性",
+      "area": "C12"
+    },
+    {
+      "id": "gap-084",
+      "unit": "Raftの選挙・ログ複製・確定・故障回復",
+      "area": "C12"
+    },
+    {
+      "id": "gap-085",
+      "unit": "RPC・タイムアウト・再試行・冪等性",
+      "area": "C12"
+    },
+    {
+      "id": "gap-086",
+      "unit": "2相コミット・in-doubt・Sagaの補償",
+      "area": "C12"
+    },
+    {
+      "id": "gap-087",
+      "unit": "シャーディング・コンシステントハッシュ・複製配置",
+      "area": "C12"
+    },
+    {
+      "id": "gap-088",
+      "unit": "ER図・関係モデル・主キーと外部キー",
+      "area": "C14"
+    },
+    {
+      "id": "gap-089",
+      "unit": "関数従属性・候補キー・3NF・BCNF分解",
+      "area": "C14"
+    },
+    {
+      "id": "gap-090",
+      "unit": "SQLを実行する・集約・結合・副問合せ・NULL",
+      "area": "C14"
+    },
+    {
+      "id": "gap-091",
+      "unit": "複合索引・JOINの実行計画・B+木の削除",
+      "area": "C14"
+    },
+    {
+      "id": "gap-092",
+      "unit": "分離レベル・MVCC・更新異常・直列化",
+      "area": "C14"
+    },
+    {
+      "id": "gap-093",
+      "unit": "WAL・チェックポイント・REDO・UNDO",
+      "area": "C14"
+    },
+    {
+      "id": "gap-094",
+      "unit": "キー・値・文書・グラフのデータモデル",
+      "area": "C14"
+    },
+    {
+      "id": "gap-095",
+      "unit": "Ethernetフレーム・VLAN・MAC表の期限・STP",
+      "area": "C13"
+    },
+    {
+      "id": "gap-096",
+      "unit": "ARP・NDP・DHCP・SLAACの状態と有効期間",
+      "area": "C13"
+    },
+    {
+      "id": "gap-097",
+      "unit": "IPヘッダー・TTL・ICMP・断片化・経路MTU",
+      "area": "C13"
+    },
+    {
+      "id": "gap-098",
+      "unit": "DNSの委任・権威・CNAME・否定応答のキャッシュ",
+      "area": "C13"
+    },
+    {
+      "id": "gap-099",
+      "unit": "TCPのbyte番号・SACK・再送タイマー・接続終了",
+      "area": "C13"
+    },
+    {
+      "id": "gap-100",
+      "unit": "受信window・輻輳window・送信量の制約",
+      "area": "C13"
+    },
+    {
+      "id": "gap-101",
+      "unit": "RIP・リンク状態・BGPの情報伝播と経路選択",
+      "area": "C13"
+    },
+    {
+      "id": "gap-102",
+      "unit": "Littleの法則・M/M/1・トークンバケット",
+      "area": "C13"
+    },
+    {
+      "id": "gap-103",
+      "unit": "CSMA/CA・バックオフ・隠れ端末・RTS/CTS",
+      "area": "C13"
+    },
+    {
+      "id": "gap-104",
+      "unit": "BPSK・QPSK・QAM・OFDMとSNR",
+      "area": "C13"
+    },
+    {
+      "id": "gap-105",
+      "unit": "HTTPの意味・多重化・HTTP/3の接続準備",
+      "area": "C13"
+    },
+    {
+      "id": "gap-106",
+      "unit": "PCAPのbyte列を読む・TCPを観測して診断する",
+      "area": "C13"
+    },
+    {
+      "id": "gap-107",
+      "unit": "ESP・SA・認証付き暗号・リプレイwindow",
+      "area": "C13"
+    },
+    {
+      "id": "gap-108",
+      "unit": "IP・ARP・DNS・Firewallを連動させてネットワークを構築",
+      "area": "C13"
+    },
+    {
+      "id": "gap-109",
+      "unit": "データフローから脅威と対策を組み立てる",
+      "area": "C15"
+    },
+    {
+      "id": "gap-110",
+      "unit": "群・有限体・Eulerの定理・楕円曲線",
+      "area": "C15"
+    },
+    {
+      "id": "gap-111",
+      "unit": "AESの内部・暗号利用モード・完全秘匿の前提",
+      "area": "C15"
+    },
+    {
+      "id": "gap-112",
+      "unit": "衝突・原像・RSAの構造・OAEPの符号化",
+      "area": "C15"
+    },
+    {
+      "id": "gap-113",
+      "unit": "証明書チェーン・失効・ECDH・鍵導出",
+      "area": "C15"
+    },
+    {
+      "id": "gap-114",
+      "unit": "JWT検証・PKCE・refresh rotation・パスキー",
+      "area": "C15"
+    },
+    {
+      "id": "gap-115",
+      "unit": "DAC・MAC・RBAC・ABACと職務分離",
+      "area": "C15"
+    },
+    {
+      "id": "gap-116",
+      "unit": "入力境界と認可をコードで修正し、回帰テストする",
+      "area": "C15"
+    },
+    {
+      "id": "gap-117",
+      "unit": "状態付きFirewall・検知・RPKIの経路起点確認",
+      "area": "C15"
+    },
+    {
+      "id": "gap-118",
+      "unit": "範囲外アクセス・生存期間・canary・NX・ASLR",
+      "area": "C15"
+    },
+    {
+      "id": "gap-119",
+      "unit": "安全な開発の実検査・fuzzing・依存部品・生成物",
+      "area": "C15"
+    },
+    {
+      "id": "gap-120",
+      "unit": "証拠の保全・時系列・復元データを検証する",
+      "area": "C15"
+    },
+    {
+      "id": "gap-121",
+      "unit": "しきい値秘密分散・Schnorr証明・LWEの小さな計算",
+      "area": "C15"
+    },
+    {
+      "id": "gap-122",
+      "unit": "欠損値・外れ値・尺度・カテゴリの前処理",
+      "area": "C17"
+    },
+    {
+      "id": "gap-123",
+      "unit": "ロジスティック回帰・決定木・Random Forest・SVM",
+      "area": "C17"
+    },
+    {
+      "id": "gap-124",
+      "unit": "過学習・正則化・交差検証・データ漏れ",
+      "area": "C17"
+    },
+    {
+      "id": "gap-125",
+      "unit": "ニューラルネットワークの順伝播・損失・逆伝播",
+      "area": "C17"
+    },
+    {
+      "id": "gap-126",
+      "unit": "A*・ゲーム探索・制約充足・知識からの計画",
+      "area": "C17"
+    },
+    {
+      "id": "gap-127",
+      "unit": "強化学習・価値・探索と活用・Q学習",
+      "area": "C17"
+    },
+    {
+      "id": "gap-128",
+      "unit": "日本語の単語分割・形態素解析・最小コスト経路",
+      "area": "C17"
+    },
+    {
+      "id": "gap-129",
+      "unit": "TF-IDF・n-gram・共起ベクトル・文書類似度",
+      "area": "C17"
+    },
+    {
+      "id": "gap-130",
+      "unit": "構文木・係り受け・HMMと系列の推定",
+      "area": "C17"
+    },
+    {
+      "id": "gap-131",
+      "unit": "Self-Attention・位置情報・Multi-Head・Transformer",
+      "area": "C17"
+    },
+    {
+      "id": "gap-132",
+      "unit": "文書分類・検索・生成文を評価する",
+      "area": "C17"
+    },
+    {
+      "id": "gap-133",
+      "unit": "フーリエ級数・DFT・FFT・逆変換と窓",
+      "area": "C18"
+    },
+    {
+      "id": "gap-134",
+      "unit": "インパルス応答・FIR／IIR・周波数応答と極",
+      "area": "C18"
+    },
+    {
+      "id": "gap-135",
+      "unit": "標本化・量子化・ディザ・信号の再構成",
+      "area": "C18"
+    },
+    {
+      "id": "gap-136",
+      "unit": "RGB・ヒストグラム・二値化・形態学的処理",
+      "area": "C18"
+    },
+    {
+      "id": "gap-137",
+      "unit": "3D描画：座標変換・クリッピング・画素・深度",
+      "area": "C18"
+    },
+    {
+      "id": "gap-138",
+      "unit": "法線・照明・材質・テクスチャとアンチエイリアス",
+      "area": "C18"
+    },
+    {
+      "id": "gap-139",
+      "unit": "ベジェ曲線・姿勢の補間・画像と音と動画の圧縮",
+      "area": "C18"
+    },
+    {
+      "id": "gap-140",
+      "unit": "GPIO・タイマー・PWM・UART・I²C・SPI",
+      "area": "C19"
+    },
+    {
+      "id": "gap-141",
+      "unit": "センサー・ADC・校正・省電力・CoAP",
+      "area": "C19"
+    },
+    {
+      "id": "gap-142",
+      "unit": "伝達関数・状態空間・安定性・遅れ・積分飽和",
+      "area": "C19"
+    },
+    {
+      "id": "gap-143",
+      "unit": "締切・RM／EDF・優先度逆転と優先度継承",
+      "area": "C19"
+    },
+    {
+      "id": "gap-144",
+      "unit": "要求・責務・依存関係・非機能条件を結び付ける",
+      "area": "C20"
+    },
+    {
+      "id": "gap-145",
+      "unit": "設計パターン・クラス図・リファクタリングの振舞い",
+      "area": "C20"
+    },
+    {
+      "id": "gap-146",
+      "unit": "同値分割・境界値・実行網羅・性質の検査とデバッグ",
+      "area": "C20"
+    },
+    {
+      "id": "gap-147",
+      "unit": "共同開発：行の競合・変更の影響・CIの検証対象",
+      "area": "C20"
+    },
+    {
+      "id": "gap-148",
+      "unit": "操作の手掛かり・フィードバック・取消しと認知負荷",
+      "area": "C20"
+    },
+    {
+      "id": "gap-149",
+      "unit": "ユーザビリティ評価：対応・順序効果・比較実験",
+      "area": "C20"
+    },
+    {
+      "id": "gap-150",
+      "unit": "アクセシビリティ：名前・意味・フォーカス・操作",
+      "area": "C20"
+    },
+    {
+      "id": "gap-151",
+      "unit": "公平性・説明責任・ライセンスと情報倫理",
+      "area": "C20"
+    },
+    {
+      "id": "gap-152",
+      "unit": "測定データ・条件統制・置換検定・再現性",
+      "area": "C20"
+    },
+    {
+      "id": "gap-153",
+      "unit": "研究の問い・根拠・引用・方法と結果と考察",
+      "area": "C20"
+    },
+    {
+      "id": "gap-154",
+      "unit": "DOM・CSS・レイアウト・イベント・フォームの内部",
+      "area": "C13"
+    },
+    {
+      "id": "gap-155",
+      "unit": "サーバー側のルーティング・API・検証・認可・DB",
+      "area": "C13"
+    },
+    {
+      "id": "c03-epsilon-delta",
+      "unit": "ε–δで理解する極限と連続性",
+      "area": "C03"
+    }
+  ]
+}

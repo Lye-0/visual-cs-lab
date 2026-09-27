@@ -4,7 +4,7 @@ import {mkdir,readFile,writeFile,access} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {modelModules} from './modules.mjs';
 for(const name of modelModules)await import('../src/'+name+'.js');
-const manual=JSON.parse(await readFile(new URL('../docs/review/MATH_EVIDENCE_REVIEW.json',import.meta.url),'utf8'));
+const manual=JSON.parse(await readFile(new URL('../tests/fixtures/MATH_EVIDENCE_REVIEW.json',import.meta.url),'utf8'));
 const X=CSL.experiences,records=new Map();
 for(const item of manual.reviews){
  if(records.has(item.id)||!X.find(item.id))throw Error('Unknown/repeated review ID: '+item.id);
