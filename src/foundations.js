@@ -227,8 +227,8 @@ R('signalmedia',(p,lab)=>{
  return out([F('連続波から点を取り出す','等間隔の点だけを記録します。標本化周波数が不足すると別の周波数に見えるエイリアシングが起き得ます。',{type:'plot',series:[{name:'連続波',points},{name:'標本を結ぶ線',points:sampled}],xLabel:'秒',yLabel:'振幅'})],{'標本化':`${n} Hz`,'信号':`${f} Hz`,'条件':n>2*f?'理想再構成の基本条件を満たす':'ナイキスト条件を満たさない'});
 });
 R('projection',(p)=>{
- const a=p.angle*Math.PI/180,z=p.distance,verts=[[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]].map(([x,y,zz])=>{let X=x*Math.cos(a)+zz*Math.sin(a),Z=-x*Math.sin(a)+zz*Math.cos(a)+z;return {x:X/Z*3,y:y/Z*3};});
- return out([F('3Dの頂点を回転する','Y軸を中心に回転し、視点からの奥行きで座標を割って透視投影します。',{type:'wireframe',points:verts,edges:[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]]},{'回転角':p.angle+'°','距離':z})],{'頂点数':8,'辺数':12,'投影':'透視投影'});
+ const yaw=p.angle*Math.PI/180,pitch=p.pitch*Math.PI/180,z=p.distance,verts=[[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]].map(([x,y,zz])=>{const X=x*Math.cos(yaw)+zz*Math.sin(yaw),Z=-x*Math.sin(yaw)+zz*Math.cos(yaw),Y=y*Math.cos(pitch)-Z*Math.sin(pitch),depth=y*Math.sin(pitch)+Z*Math.cos(pitch)+z;return {x:X/depth*3,y:Y/depth*3};});
+ return out([F('3Dの頂点を回転する','Y軸とX軸で立体を回転し、視点からの奥行きで座標を割って透視投影します。',{type:'wireframe',points:verts,edges:[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]]},{'Y回転角':p.angle+'°','X回転角':p.pitch+'°','距離':z})],{'頂点数':8,'辺数':12,'投影':'透視投影'});
 });
 R('control',(p)=>{
  let value=0,velocity=0,integral=0,prev=0,frames=[],points=[],targets=[],dt=.05;

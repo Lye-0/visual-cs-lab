@@ -18,6 +18,7 @@
 - [必要な教材だけを読み込む仕組み](technical/ON_DEMAND_LOADING.md)：依存関係、生成、失敗・画面移動時の処理。
 - [入力条件の自動反映](technical/LIVE_INPUT.md)：入力中の更新、取消し、実験内操作との区別、SQLプレビュー。
 - [共通の数値入力](technical/NUMBER_INPUT.md)：増減ボタン・刻み幅・上下限・直接入力。
+- [立方体の投影図の操作](technical/PROJECTION_ORBIT.md)：回転・拡大縮小と適用範囲。
 - [共通プルダウン](technical/CUSTOM_SELECT.md)：独自UIとフォームの値、キーボード、動的な教材の同期。
 - [静的サイトの公開](STATIC_SITE.md)：GitHub Pagesと互換性。
 - [分類](LIBRARY_TAXONOMY.md)、[スクロールバー](SCROLLBARS.md)。

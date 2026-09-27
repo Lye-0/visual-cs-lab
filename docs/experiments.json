@@ -7038,6 +7038,17 @@
           "help": ""
         },
         {
+          "key": "pitch",
+          "label": "X軸の回転角",
+          "type": "range",
+          "value": 0,
+          "min": -75,
+          "max": 75,
+          "step": 1,
+          "unit": "°",
+          "help": ""
+        },
+        {
           "key": "distance",
           "label": "視点からの距離",
           "type": "range",
@@ -7065,6 +7076,7 @@
       "course": "コンピュータグラフィックス",
       "defaults": {
         "angle": 30,
+        "pitch": 0,
         "distance": 5
       },
       "challenge": {

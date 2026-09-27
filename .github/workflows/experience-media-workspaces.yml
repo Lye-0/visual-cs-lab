@@ -37,7 +37,9 @@ jobs:
       - name: Exercise real controls on the committed site
         env:
           BROWSER: ${{ matrix.browser }}
-        run: node tests/media-workspaces-browser.mjs
+        run: |
+          node tests/media-workspaces-browser.mjs
+          node tests/projection-orbit-browser.mjs
       - name: Tests must not rewrite the site
         if: ${{ !cancelled() }}
         run: git diff --exit-code HEAD -- src scripts tests index.html package.json .github
