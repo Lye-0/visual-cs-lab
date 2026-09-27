@@ -79,7 +79,7 @@ jobs:
           result['candidates']=[{'id':r['id'],'chapter':r['chapter'],'width':r['width'],'candidates':r.get('observed',{}).get('candidates',[])} for r in report['chapters'] if r.get('observed',{}).get('candidates')]
           (root/'chapter-summary.json').write_text(json.dumps(result,ensure_ascii=False,indent=2))
           print(json.dumps(result,ensure_ascii=False,indent=2))
-          assert report['summary']['units']==314
+          assert report['summary']['units']==315
           assert report['summary']['visited']==report['summary']['uniqueChapters']*3
           assert not result['failures'] and not result['runtime'] and not result['candidates']
           PY

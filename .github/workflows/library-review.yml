@@ -52,7 +52,7 @@ jobs:
         env:
           BROWSER: ${{ matrix.browser }}
         run: node tests/static-site-browser.mjs
-      - name: Preserve all 314 lesson interactions and prior regressions
+      - name: Preserve all 315 lesson interactions and prior regressions
         if: matrix.browser == 'chromium'
         run: |
           node tests/reader-browser.mjs

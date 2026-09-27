@@ -43,7 +43,7 @@ X.registerWidget('trapezoid-select',(root,a,c)=>{
 X.registerWidget('knapsack-cells',(root,a,c)=>S.mount(root,c,{
  start:V.knapsackStart,reduce:V.knapsack,
  instruction:'まず表の「Dまで・容量7」を選びます。「Dを入れない」と「Dを1個入れる」の二つが、どの小さな問題の答えを使うか比べてください。青緑の枠と橙の枠が参照元です。',
- action:(code,f)=>{const [kind,x,y]=code.split(':');return kind==='select'?{kind,row:Number(x),col:Number(y)}:kind==='capacity'?{kind,value:f.get('capacity'),fresh:true}:{kind:'item',index:Number(x),weight:f.get('weight-'+x),value:f.get('value-'+x)};},
+ action:(code,f,s)=>{const [kind,x,y]=code.split(':');if(kind==='select')return {kind,row:Number(x),col:Number(y)};if(kind==='capacity')return {kind,value:f.get('capacity'),fresh:true};const index=Number(x),weight=f.get('weight-'+x),value=f.get('value-'+x);return s.items[index]?.weight===weight&&s.items[index]?.value===value?null:{kind:'item',index,weight,value};},
  render:(s,{field})=>{
   const v=V.knapsackView(s),match=(ref,i,j)=>ref&&ref.row===i&&ref.col===j;
   const matrix=`<div class="ex-fr-table-scroll" data-sec-view="dp-table" role="region" aria-label="品物と容量の動的計画表。横にスクロールできます" tabindex="0"><table class="ex-fr-dp"><caption>行：使ってよい品物 ／ 列：容量の上限</caption><thead><tr><th scope="col">品物の範囲</th>${Array.from({length:s.capacity+1},(_,i)=>'<th scope="col">'+i+'</th>').join('')}</tr></thead><tbody>${v.dp.map((row,i)=>`<tr><th scope="row">${i?s.items[i-1].name+'まで':'品物なし'}</th>${row.map((value,j)=>`<td class="${match(v.skip,i,j)?'ex-fr-skip':''} ${match(v.take,i,j)?'ex-fr-take':''}">${b(String(value),'select:'+i+':'+j,`aria-label="${i?s.items[i-1].name+'まで':'品物なし'}・容量${j}の最大価値${value}" aria-pressed="${i===s.row&&j===s.col}"`)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
