@@ -469,4 +469,3 @@ npm run check       # 生成物・Nodeテスト・単元一覧を検証
 - [入力変更の自動反映](docs/technical/LIVE_INPUT.md)
 - [ソースの案内](src/README.md)・[検証の案内](tests/README.md)
 
-授業ノートの原本PDFは公開リポジトリに含めていません。ローカル資料はリポジトリ外、または無視対象の `private-notes/` に置きます。
