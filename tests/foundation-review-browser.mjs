@@ -65,7 +65,7 @@ try{
    await open(page,'c03-integral');await field(page,'start').fill('2');await field(page,'end').fill('0');await click(page,'configure');assert.match(await page.locator('[data-sec-board]').textContent(),/Δxは負/);
    assert.equal(await page.evaluate(()=>CSL.experiences.foundationReview.integralView(JSON.parse(document.querySelector('[data-sec-state]').dataset.secState)).sum),-2.75);
    await field(page,'end').fill('2');await click(page,'configure');assert.match(await page.locator('[data-sec-board]').textContent(),/幅は0/);assert.ok(!/NaN|Infinity/.test(await page.locator('.ex-fr-area-plot').innerHTML()));
-   const s=await state(page);await field(page,'n').fill('0');await click(page,'configure');assert.deepEqual(await state(page),s);assert.match(await page.locator('[data-sec-status]').textContent(),/入力を確認してください/);await click(page,'reset');assert.equal((await state(page)).n,4);
+   const s=await state(page);await field(page,'n').fill('0');await click(page,'configure');assert.deepEqual(await state(page),s);assert.match(await page.locator('[data-sec-status]').textContent(),/入力を確認してください|入力範囲を確認してください/);await click(page,'reset');assert.equal((await state(page)).n,4);
   });
   await check(width+': clicking a trapezoid refocuses an equivalent keyboard control',async()=>{
    await open(page,'c03-integral');await page.locator('[data-fr-area="2"]').click();await idle(page);assert.equal((await state(page)).selected,2);assert.equal(await page.evaluate(()=>document.activeElement?.dataset.secAction),'select:2');

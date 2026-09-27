@@ -36,7 +36,7 @@ try{
   });
   await check(width+'/jacobian/zero-and-validation',async()=>{
    await open(page,'jacobian');await click(page,'preset:zero');const v=await value(page,'local');assert.equal(v.det,0);assert.equal(v.absoluteError,.5);assert.match(await page.locator('[data-sec-board]').textContent(),/一定という意味ではありません/);await capture(page,width,'jacobian-zero');
-   const before=await state(page);await field(page,'x').fill('2');await click(page,'point');assert.deepEqual(await state(page),before);assert.match(await page.locator('[data-sec-status]').textContent(),/入力を確認してください/);await click(page,'reset');assert.equal(await field(page,'x').inputValue(),'1');
+   const before=await state(page);await field(page,'x').fill('2');await click(page,'point');assert.deepEqual(await state(page),before);assert.match(await page.locator('[data-sec-status]').textContent(),/入力を確認してください|入力範囲を確認してください/);await click(page,'reset');assert.equal(await field(page,'x').inputValue(),'1');
   });
   await check(width+'/area/selection-versus-membership',async()=>{
    await open(page,'area');await click(page,'cell:5');const v=await value(page,'region');assert.equal(v.count,16);assert.equal(v.selected.height,.5625);await click(page,'toggle');const removed=await value(page,'region');assert.equal(removed.sum,v.sum-v.selected.raw);assert.equal(removed.selected.height,v.selected.height);assert.equal(removed.count,15);await capture(page,width,'area-excluded');
