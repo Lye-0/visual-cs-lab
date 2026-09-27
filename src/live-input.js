@@ -20,7 +20,7 @@ X.liveActions={
  'jwt-check-desk':['edit','context'],'policy-request':['set']
 };
 X.liveInput=(root,scope,{accept,apply,invalidate=()=>{},error=e=>scope.error(e)})=>{
- let timer=null,revision=0,running=false,waiting=null,composing=false;
+ let timer=null,revision=0,running=false,waiting=null,composing=false;const inputValues=new WeakMap();
  const snapshot=()=>{let el=document.activeElement;const step=el?.matches('.csl-number-step')?[...el.parentElement.querySelectorAll('button')].indexOf(el):-1;if(step>=0)el=el.parentElement.querySelector('input');if(el?.matches('.csl-select'))el=el.previousElementSibling;if(!el||!root.contains(el))return null;const selector=el.id?'#'+CSS.escape(el.id):el.name?'[name="'+CSS.escape(el.name)+'"]':null;return selector?{selector,step,original:document.activeElement,start:el.selectionStart,end:el.selectionEnd,top:el.scrollTop}:null;};
  async function flush(){
   clearTimeout(timer);timer=null;if(!scope.alive()||composing||running||!waiting)return;
@@ -32,6 +32,10 @@ X.liveInput=(root,scope,{accept,apply,invalidate=()=>{},error=e=>scope.error(e)}
  function changed(event){
   const el=event.target;if(!el.matches('input,select,textarea'))return;
   const target=accept(el);if(!target)return;
+  // A later change/blur confirms the same input; do not add another undo entry.
+  const value=el.type==='checkbox'?el.checked:el.value;
+  if(event.type==='change'&&inputValues.has(el)&&inputValues.get(el)===value){inputValues.delete(el);return;}
+  if(event.type==='input')inputValues.set(el,value);
   revision++;clearTimeout(timer);waiting={el,target,revision};invalidate();
   if(composing||event.isComposing)return;
   timer=setTimeout(flush,el.tagName==='TEXTAREA'?450:el.type==='checkbox'||el.type==='range'||el.tagName==='SELECT'?0:200);

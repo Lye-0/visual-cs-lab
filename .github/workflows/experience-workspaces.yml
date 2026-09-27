@@ -40,7 +40,7 @@ jobs:
       - name: Ensure verification did not mutate shipped sources
         if: ${{ !cancelled() }}
         run: git diff --exit-code HEAD -- src scripts tests index.html package.json .github
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v7.0.1
         if: always()
         with:
           name: direct-workspaces-${{ matrix.browser }}

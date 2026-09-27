@@ -53,7 +53,7 @@ jobs:
           fi
       - name: Ensure the published files did not need any build-time repair
         run: git diff --exit-code HEAD -- index.html src assets .nojekyll scripts tests package.json .github
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v7.0.1
         if: always()
         with:
           name: static-site-${{ matrix.browser }}-${{ github.event_name }}-${{ github.run_attempt }}

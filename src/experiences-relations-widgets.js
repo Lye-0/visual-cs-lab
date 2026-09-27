@@ -43,7 +43,7 @@ X.registerWidget('sql-desk',(root,a,current)=>{
    const r=K.sql.run(area.value,X.clone(data));last=r;dirty=false;
    results.innerHTML=r.outputs.map((out,i)=>`<section data-sql-result="${i}"><h4>文${i+1}の結果</h4>${T(out.headers,out.rows.map(row=>row.map(v=>v===null?'NULL':v)))}</section>`).join('')+'<details><summary>どの段階で行・グループの数が変わったか</summary>'+T(['段階','件数','対象'],r.trace)+'</details>';
    results.inert=false;status.textContent='自動プレビューです。表への変更は未確定です。';current.completed.add(scope.id);
-  }catch(e){last=null;dirty=true;status.textContent=e.message+' 表への変更は反映していません。';status.className='ex-os-notice';}
+  }catch(e){last=null;dirty=true;status.textContent=e.message+' 表への変更は反映していません。表示は直前のプレビューです。';status.className='ex-os-notice';}
  }
  scope.on(form,'submit',e=>{e.preventDefault();live.cancel();if(!form.checkValidity())return;preview();if(!last||dirty)return;history.push(X.clone(data));if(history.length>32)history.shift();data=X.clone(last.data);paintTables();status.textContent='表への変更を確定しました。';});
  const live=X.liveInput(form,scope,{accept:el=>el===area,invalidate:()=>{dirty=true;last=null;results.inert=true;status.textContent='更新中です。直前のプレビューを表示しています。';status.className='';},apply:preview});

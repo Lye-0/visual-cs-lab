@@ -33,7 +33,7 @@ jobs:
           npm run check > review-output/all-node-tests.txt 2>&1 || { tail -n 100 review-output/all-node-tests.txt; exit 1; }
           grep -E '^# (tests|pass|fail|skipped|cancelled)' review-output/all-node-tests.txt
           git diff --exit-code HEAD -- src scripts tests index.html package.json .github docs
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v7.0.1
         if: always()
         with:
           name: staged-models
@@ -86,7 +86,7 @@ jobs:
       - name: Verification did not rewrite sources
         if: ${{ !cancelled() }}
         run: git diff --exit-code HEAD -- src scripts tests index.html package.json .github docs
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v7.0.1
         if: always()
         with:
           name: staged-chapters-${{ matrix.browser }}
@@ -136,7 +136,7 @@ jobs:
       - name: Verification did not rewrite sources
         if: ${{ !cancelled() }}
         run: git diff --exit-code HEAD -- src scripts tests index.html package.json .github docs
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v7.0.1
         if: always()
         with:
           name: staged-operations-${{ matrix.browser }}
@@ -171,7 +171,7 @@ jobs:
       - name: Verification did not rewrite sources
         if: ${{ !cancelled() }}
         run: git diff --exit-code HEAD -- src scripts tests index.html package.json .github docs
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v7.0.1
         if: always()
         with:
           name: staged-retained
@@ -223,7 +223,7 @@ jobs:
               assert sum(s['script']=='tests/workspace-view-state-browser.mjs' for s in scripts)==1
           assert all(ch['sourceCommit']==result['sourceCommit'] for ch in result['chapters'].values())
           PY
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v7.0.1
         if: always()
         with:
           name: staged-summary

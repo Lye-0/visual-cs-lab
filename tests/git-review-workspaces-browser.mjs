@@ -17,7 +17,7 @@ const click=async(page,code)=>{await page.locator('[data-sec-action="'+code+'"]'
 const repoHead=s=>s.repo.detached||s.repo.refs[s.repo.head];
 async function open(page,id,chapter='objects'){
  await page.goto(base+'?git-review='+ ++serial+'#/lab/'+id+'?chapter='+chapter);
- await page.waitForFunction(({id,chapter})=>{const c=CSL?.app?.current,ch=CSL.experiences.find(id)?.chapters.find(ch=>ch.id===chapter);return c?.experience&&c.lab.id===id&&c.chapter===chapter&&c.completed.size>=ch.activities.length&&!document.querySelector('.experience [aria-busy="true"]');},{id,chapter},{timeout:20000});
+ await page.waitForFunction(({id,chapter})=>{const c=globalThis.CSL?.app?.current,ch=globalThis.CSL?.experiences?.find(id)?.chapters.find(ch=>ch.id===chapter);return c?.experience&&c.lab.id===id&&c.chapter===chapter&&ch&&c.completed.size>=ch.activities.length&&!document.querySelector('.experience [aria-busy="true"]');},{id,chapter},{timeout:20000});
  assert.deepEqual(await page.evaluate(()=>CSL.app.current.errors),[]);
 }
 async function check(id,fn){try{await fn();report.cases.push({id,passed:true});}catch(error){report.cases.push({id,passed:false,error:String(error.stack||error)});console.error('GIT_REVIEW_FAIL '+id+' '+error.message);}}

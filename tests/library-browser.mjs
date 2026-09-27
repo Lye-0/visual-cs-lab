@@ -57,7 +57,7 @@ try{
    await page.locator('#filter-level').selectOption('3');
    await page.waitForFunction(()=>CSL.app.params.get('level')==='3');assert.ok(page.url().includes('q=GAP-037'));
    await page.locator('[data-filter="all"]').first().click();await page.waitForFunction(()=>CSL.app.params.size===0);
-   assert.ok((await page.locator('#catalog-count').textContent()).startsWith('314 '));await layout(page);
+   assert.ok((await page.locator('#catalog-count').textContent()).startsWith('315 '));await layout(page);
   });
   await check(label+': theme disclosure is operable and returns to the right parent',async()=>{
    await visit(page,base,'#/catalog?domain=math');
@@ -95,14 +95,14 @@ try{
     const themes=await page.evaluate(()=>CSL.taxonomy.categories.map(c=>({id:c.id,domain:c.domain,ids:CSL.taxonomy.select({category:c.id}).map(l=>l.id)})));
     for(const c of themes){await visit(page,base,`#/catalog?domain=${c.domain}&category=${c.id}`);const actual=await page.locator('#catalog-results .library-unit').evaluateAll(els=>els.map(el=>el.dataset.labId));assert.deepEqual(actual.slice().sort(),c.ids.slice(0,24).sort(),c.id);}
    });
-   await check('all 314 units remain reachable through page navigation without omission or duplication',async()=>{
+   await check('all 315 units remain reachable through page navigation without omission or duplication',async()=>{
     await visit(page,base,'#/catalog');const all=[];
     for(let n=1;n<=14;n++){
      all.push(...await page.locator('#catalog-results .library-unit').evaluateAll(els=>els.map(el=>el.dataset.labId)));
      const next=page.locator('#catalog-results [data-library-page]').last();if(n===14){assert.equal(await next.isDisabled(),true);break;}
      await next.click();await page.waitForFunction(n=>CSL.app.params.get('page')===String(n),n+1);
     }
-    const expected=await page.evaluate(()=>CSL.labs.map(l=>l.id));assert.equal(all.length,314);assert.deepEqual([...new Set(all)].sort(),expected.sort());
+    const expected=await page.evaluate(()=>CSL.labs.map(l=>l.id));assert.equal(all.length,315);assert.deepEqual([...new Set(all)].sort(),expected.sort());
     await page.goBack();await page.waitForFunction(()=>CSL.app.params.get('page')==='13');
    });
    await check('old area/track/topic URLs retain their original selection and category counts',async()=>{
@@ -116,7 +116,7 @@ try{
    await check('invalid filters and excessive page numbers recover without hiding the catalogue',async()=>{
     await visit(page,base,'#/catalog?domain=unknown&category=invalid&page=999999');
     assert.equal(await page.evaluate(()=>CSL.app.params.has('domain')||CSL.app.params.has('category')),false);
-    assert.equal(await page.locator('#catalog-results .library-unit').count(),2);
+    assert.equal(await page.locator('#catalog-results .library-unit').count(),3);
    });
   }
   await mkdir('review-output/library-screenshots',{recursive:true});

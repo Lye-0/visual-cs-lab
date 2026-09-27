@@ -51,7 +51,9 @@ try{
   });
   await check(`${width}/details-remain-open-after-item-edit`,async()=>{
    await open(page,'c06-dp','meaning');await itemDetails(page).locator('summary').click();
-   await field(page,'value-3').fill('12');await action(page,'item:3');
+   await field(page,'value-3').fill('12');
+   // WebKit pointer clicks need not focus buttons; test keyboard focus explicitly.
+   await page.locator('[data-sec-action="item:3"]').focus();await page.keyboard.press('Enter');await idle(page);
    assert.equal((await state(page)).items[3].value,12);
    assert.equal(await detailState(page),true,'editing an item closed its own section');
    assert.equal(await page.evaluate(()=>document.activeElement?.dataset.secAction),'item:3');
@@ -69,12 +71,12 @@ try{
    await action(page,'reset');assert.equal(await detailState(page),false);
    return {undoValue:8,undoOpen:true,resetOpen:false};
   });
-  await check(`${width}/unsubmitted-input-survives-cell-selection`,async()=>{
+  await check(`${width}/live-input-survives-cell-selection`,async()=>{
    await open(page,'c06-dp','meaning');await itemDetails(page).locator('summary').click();await field(page,'value-3').fill('10');
-   await action(page,'select:3:2');assert.equal((await state(page)).items[3].value,8);
+   await action(page,'select:3:2');assert.equal((await state(page)).items[3].value,10);
    assert.equal(await field(page,'value-3').inputValue(),'10');assert.equal(await detailState(page),true);
    await action(page,'item:3');assert.equal((await state(page)).items[3].value,10);
-   return {beforeApply:8,draft:10,afterApply:10};
+   return {afterSelection:10,input:10,afterApply:10};
   });
   if(width<500)await check(`${width}/dp-horizontal-reading-position-survives-redraw`,async()=>{
    await open(page,'c06-dp','meaning');await field(page,'capacity').fill('12');await action(page,'capacity');

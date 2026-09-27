@@ -107,8 +107,8 @@ try{
   });
   await check(width+': all original units remain alongside the authored media batch',async()=>{
    assert.equal(fixtureDefinitions(ids).length,ids.length);
-   // Do not require a future lesson to remain absent. Full-314 coverage is checked independently.
-   assert.equal(await page.evaluate(()=>CSL.labs.length),314);
+   // Do not require a future lesson to remain absent. Full-315 coverage is checked independently.
+   assert.equal(await page.evaluate(()=>CSL.labs.length),315);
   });
   await check(width+': route disposal, storage and request policies remain intact',async()=>{
    await open(page,'gap-139','curve');await click(page,'select:2');await page.goto(base+'#/catalog');await page.waitForSelector('#catalog-query');

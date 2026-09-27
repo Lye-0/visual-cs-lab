@@ -28,8 +28,8 @@ try{
   await page.goto(base);await page.waitForFunction(()=>globalThis.CSL?.app?.ready);
   const units=fixtureUnits.map(u=>({...u,chapters:u.chapters.map(c=>({id:c.id,kinds:c.activities.map(a=>a.kind)}))}));
   report.inventory=fixtureInventory;
-  await check(size+': all 314 units are authored and all activity renderers exist',async()=>{
-   assert.equal(units.length,314);assert.equal(report.inventory.units,314);
+  await check(size+': all 315 units are authored and all activity renderers exist',async()=>{
+   assert.equal(units.length,315);assert.equal(report.inventory.units,315);
    assert.ok(units.every(u=>u.chapters.length>0)); // Each actual renderer is verified after its lazy route loads below.
   });
   for(const unit of units){
@@ -89,7 +89,7 @@ try{
   });
   await check(size+': error, source edits and navigation cannot leak stale computations',async()=>{
    await open(page,'c01-markov');const form=page.locator('.ex-kind-ledger form');await form.locator('[name=a]').fill('');await form.locator('[name=a]').press('Tab');
-   assert.match(await page.locator('.ex-kind-ledger [data-ex-result]').textContent(),/編集中/);await page.locator('.ex-kind-ledger [data-ex-reset]').click();await ready(page,'c01-markov');assert.equal(await page.locator('.ex-kind-ledger [name=a]').inputValue(),'30');
+   await page.waitForSelector('.ex-kind-ledger [data-ex-result][data-update-state=invalid]');assert.equal(await page.locator('.ex-kind-ledger [data-ex-result]').evaluate(el=>el.inert&&el.childElementCount>0),true);assert.match(await page.locator('.ex-kind-ledger [data-ex-status]').textContent(),/直前の結果/);await page.locator('.ex-kind-ledger [data-ex-reset]').click();await ready(page,'c01-markov');assert.equal(await page.locator('.ex-kind-ledger [name=a]').inputValue(),'30');
    await open(page,'s03-aes');await page.goto(base+'#/lab/c05-stack');await ready(page,'c05-stack');await page.waitForTimeout(150);assert.equal(await page.locator('[data-ex-lesson]').getAttribute('data-ex-lesson'),'c05-stack');
   });
   await check(size+': new object lesson exists and aliases share the same instance',async()=>{

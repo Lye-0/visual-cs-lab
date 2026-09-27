@@ -53,7 +53,7 @@ jobs:
       - name: Tests must not edit the source
         if: ${{ !cancelled() }}
         run: git diff --exit-code HEAD -- src scripts tests index.html assets .nojekyll package.json .github docs
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v7.0.1
         if: always()
         with:
           name: authored-release-${{ matrix.browser }}
@@ -97,7 +97,7 @@ jobs:
       - name: Read-only postcondition
         if: ${{ !cancelled() }}
         run: git diff --exit-code HEAD -- src scripts tests index.html assets .nojekyll package.json .github docs
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v7.0.1
         if: always()
         with:
           name: authored-release-retained

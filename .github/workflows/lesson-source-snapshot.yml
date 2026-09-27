@@ -23,7 +23,7 @@ jobs:
           git ls-tree -r HEAD > review-output/tracked-files.txt
           git archive --format=zip --prefix=visual-cs-lab/ HEAD > review-output/source.zip
           git diff --exit-code HEAD
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v7.0.1
         with:
           name: lesson-source-snapshot
           path: review-output/

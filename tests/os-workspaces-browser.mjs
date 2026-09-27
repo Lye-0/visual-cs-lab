@@ -101,10 +101,18 @@ try{
    await open(page,'gap-089');await page.locator('[data-normal-action="rename"]').click();assert.equal(await page.locator('[data-normal-conflict]').count(),1);await page.locator('[data-normal-action="split"]').click();assert.match(await page.locator('.ex-kind-normalization-rows [data-ex-status]').textContent(),/矛盾/);
    await page.locator('[data-normal-rename] [name="all"]').check();await page.locator('[data-normal-action="rename"]').click();await page.locator('[data-normal-action="split"]').click();await page.locator('[data-normal-rename] [name="studentName"]').fill('Another');await page.locator('[data-normal-action="rename"]').click();const names=await page.locator('[data-normal-joined] tbody tr').allTextContents();assert.equal(names.filter(s=>s.includes('Another')).length,2);await shot(page,'normalization',size);
   });
-  await check(size+': SQL edits compute actual results, dirty output hides and failed batches keep the table',async()=>{
-   await open(page,'gap-090');const area=page.locator('[data-sql-form] textarea');await area.fill('SELECT name FROM students WHERE score IS NULL;');assert.equal(await page.locator('[data-sql-result]').count(),0);await page.locator('[data-sql-action="run"]').click();assert.match(await page.locator('[data-sql-result]').textContent(),/Ren/);
-   const before=await page.locator('[data-sql-data]').getAttribute('data-sql-data');await area.fill('UPDATE students SET score = 100 WHERE id = 1; SELECT missing FROM students;');await page.locator('[data-sql-action="run"]').click();assert.equal(await page.locator('[data-sql-data]').getAttribute('data-sql-data'),before);assert.equal(await page.locator('[data-sql-result]').count(),0);
-   await area.fill('UPDATE students SET score = 100 WHERE id = 1; SELECT score FROM students WHERE id = 1;');await page.locator('[data-sql-action="run"]').click();assert.match(await page.locator('[data-sql-result="1"]').textContent(),/100/);await page.locator('[data-sql-action="undo"]').click();assert.equal(await page.locator('[data-sql-data]').getAttribute('data-sql-data'),before);await shot(page,'sql-desk',size);
+  await check(size+': SQL live preview retains stale output and failed batches keep committed data',async()=>{
+   await open(page,'gap-090');const area=page.locator('[data-sql-form] textarea'),results=page.locator('[data-sql-results]'),status=page.locator('.ex-kind-sql-desk [data-ex-status]');
+   const initial=await results.innerHTML(),before=await page.locator('[data-sql-data]').getAttribute('data-sql-data');
+   await area.fill('SELECT name FROM students WHERE score IS NULL;');
+   assert.equal(await results.innerHTML(),initial);assert.equal(await results.evaluate(el=>el.inert),true);
+   await page.waitForFunction(()=>!document.querySelector('[data-sql-results]').inert);
+   assert.match(await results.textContent(),/Ren/);assert.equal(await page.locator('[data-sql-data]').getAttribute('data-sql-data'),before);
+   const valid=await results.innerHTML();await area.fill('UPDATE students SET score = 100 WHERE id = 1; SELECT missing FROM students;');await page.locator('[data-sql-action="run"]').click();
+   assert.equal(await page.locator('[data-sql-data]').getAttribute('data-sql-data'),before);assert.equal(await results.innerHTML(),valid);assert.equal(await results.evaluate(el=>el.inert),true);assert.match(await status.textContent(),/表への変更は反映していません/);
+   await area.fill('UPDATE students SET score = 100 WHERE id = 1; SELECT score FROM students WHERE id = 1;');
+   await page.waitForFunction(()=>!document.querySelector('[data-sql-results]').inert);assert.match(await page.locator('[data-sql-result="1"]').textContent(),/100/);assert.equal(await page.locator('[data-sql-data]').getAttribute('data-sql-data'),before);
+   await page.locator('[data-sql-action="run"]').click();assert.notEqual(await page.locator('[data-sql-data]').getAttribute('data-sql-data'),before);await page.locator('[data-sql-action="undo"]').click();assert.equal(await page.locator('[data-sql-data]').getAttribute('data-sql-data'),before);await shot(page,'sql-desk',size);
   });
   await check(size+': MVCC renders both transactions and preserves read snapshots across another commit',async()=>{
    for(const mode of ['rc','rr']){

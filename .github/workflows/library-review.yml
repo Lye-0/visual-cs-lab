@@ -62,7 +62,7 @@ jobs:
           node tests/curriculum-browser.mjs
       - name: Ensure tests did not rewrite application or checks
         run: git diff --exit-code HEAD -- src scripts tests index.html assets package.json .github .nojekyll
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v7.0.1
         if: always()
         with:
           name: library-${{ matrix.browser }}-${{ github.run_attempt }}

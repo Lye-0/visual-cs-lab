@@ -45,7 +45,7 @@ jobs:
         run: |
           test "$(git rev-parse HEAD)" = "$(cat review-output/tested-merge.txt)"
           git diff --exit-code HEAD -- src scripts tests package.json .github index.html assets docs
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v7.0.1
         if: always()
         with:
           name: visual-cs-lab-review-${{ github.event_name }}-${{ github.run_attempt }}

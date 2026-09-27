@@ -13,7 +13,7 @@ const field=(page,key)=>page.locator('[data-sec-field="'+key+'"]');
 const idle=page=>page.waitForFunction(()=>!document.querySelector('.experience [aria-busy="true"]'));
 const click=async(page,code)=>{await page.locator('[data-sec-action="'+code+'"]').first().click();await idle(page);};
 const value=(page,kind)=>page.evaluate(kind=>CSL.experiences.multivariable[kind+'View'](JSON.parse(document.querySelector('[data-sec-state]').dataset.secState)),kind);
-async function open(page,chapter){await page.goto(base+'?case='+ ++serial+'#/lab/gap-006?chapter='+chapter);await page.waitForFunction(ch=>{const c=CSL?.app?.current,d=CSL.experiences.find('gap-006').chapters.find(x=>x.id===ch);return c?.experience&&c.lab.id==='gap-006'&&c.chapter===ch&&c.completed.size>=d.activities.length&&!document.querySelector('.experience [aria-busy="true"]');},chapter,{timeout:18000});}
+async function open(page,chapter){await page.goto(base+'?case='+ ++serial+'#/lab/gap-006?chapter='+chapter);await page.waitForFunction(ch=>{const c=globalThis.CSL?.app?.current,d=globalThis.CSL?.experiences?.find('gap-006')?.chapters.find(x=>x.id===ch);return c?.experience&&c.lab.id==='gap-006'&&c.chapter===ch&&d&&c.completed.size>=d.activities.length&&!document.querySelector('.experience [aria-busy="true"]');},chapter,{timeout:18000});}
 async function check(id,fn){try{await fn();report.cases.push({id,passed:true});}catch(error){report.cases.push({id,passed:false,error:String(error.stack||error)});console.error('MULTI_FAIL '+id+' '+error.message);}}
 async function capture(page,width,slug){const file=`${out}/${name}-${width}-${slug}.png`;await page.locator('.experience').screenshot({path:file});report.screenshots.push(file);}
 try{
@@ -36,7 +36,7 @@ try{
   });
   await check(width+'/jacobian/zero-and-validation',async()=>{
    await open(page,'jacobian');await click(page,'preset:zero');const v=await value(page,'local');assert.equal(v.det,0);assert.equal(v.absoluteError,.5);assert.match(await page.locator('[data-sec-board]').textContent(),/一定という意味ではありません/);await capture(page,width,'jacobian-zero');
-   const before=await state(page);await field(page,'x').fill('2');await click(page,'point');assert.deepEqual(await state(page),before);assert.match(await page.locator('[data-sec-status]').textContent(),/入力範囲/);await click(page,'reset');assert.equal(await field(page,'x').inputValue(),'1');
+   const before=await state(page);await field(page,'x').fill('2');await click(page,'point');assert.deepEqual(await state(page),before);assert.match(await page.locator('[data-sec-status]').textContent(),/入力を確認してください/);await click(page,'reset');assert.equal(await field(page,'x').inputValue(),'1');
   });
   await check(width+'/area/selection-versus-membership',async()=>{
    await open(page,'area');await click(page,'cell:5');const v=await value(page,'region');assert.equal(v.count,16);assert.equal(v.selected.height,.5625);await click(page,'toggle');const removed=await value(page,'region');assert.equal(removed.sum,v.sum-v.selected.raw);assert.equal(removed.selected.height,v.selected.height);assert.equal(removed.count,15);await capture(page,width,'area-excluded');
@@ -57,7 +57,7 @@ try{
   });
   await check(width+'/area/empty-and-draft',async()=>{
    await open(page,'area');await click(page,'preset:empty');const v=await value(page,'region');assert.equal(v.area,0);assert.equal(v.sum,0);assert.ok(v.selected.height>0);await click(page,'toggle');assert.equal((await value(page,'region')).count,1);
-   await page.locator('[data-sec-view=domain-coefficients] summary').click();await field(page,'a').fill('2');await click(page,'cell:3');assert.equal(await field(page,'a').inputValue(),'2');assert.equal((await state(page)).coefficients[0],1);
+   await page.locator('[data-sec-view=domain-coefficients] summary').click();await field(page,'a').fill('2');await click(page,'cell:3');assert.equal(await field(page,'a').inputValue(),'2');assert.equal((await state(page)).coefficients[0],2);
   });
   await check(width+'/navigation/no-persistent-progress',async()=>{
    await open(page,'area');await click(page,'preset:empty');await page.goto(base+'#/catalog');await page.waitForSelector('#catalog-query');await open(page,'area');assert.equal((await value(page,'region')).count,16);assert.equal((await state(page)).edit,false);assert.deepEqual(await page.evaluate(()=>__multiCsp),[]);

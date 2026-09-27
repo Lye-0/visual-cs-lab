@@ -43,7 +43,7 @@ jobs:
       - name: Tests must not rewrite the source under review
         if: ${{ !cancelled() }}
         run: git diff --exit-code HEAD -- src scripts tests index.html assets package.json .github
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v7.0.1
         if: always()
         with:
           name: network-workspaces-${{ matrix.browser }}

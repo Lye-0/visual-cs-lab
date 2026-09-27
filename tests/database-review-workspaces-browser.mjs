@@ -15,7 +15,7 @@ const idle=page=>page.waitForFunction(()=>!document.querySelector('.experience [
 async function click(page,code){await page.locator('[data-sec-action="'+code+'"]').first().click();await idle(page);}
 async function open(page,id,chapter='objects'){
  await page.goto(base+'?db-case='+ ++serial+'#/lab/'+id+'?chapter='+chapter);
- await page.waitForFunction(({id,chapter})=>{const c=CSL?.app?.current,ch=CSL.experiences.find(id)?.chapters.find(ch=>ch.id===chapter);return c?.experience&&c.lab.id===id&&c.chapter===chapter&&ch&&c.completed.size>=ch.activities.length&&!document.querySelector('.experience [aria-busy="true"]');},{id,chapter},{timeout:18000});
+ await page.waitForFunction(({id,chapter})=>{const c=globalThis.CSL?.app?.current,ch=globalThis.CSL?.experiences?.find(id)?.chapters.find(ch=>ch.id===chapter);return c?.experience&&c.lab.id===id&&c.chapter===chapter&&ch&&c.completed.size>=ch.activities.length&&!document.querySelector('.experience [aria-busy="true"]');},{id,chapter},{timeout:18000});
  assert.deepEqual(await page.evaluate(()=>CSL.app.current.errors),[]);
 }
 async function check(id,fn){try{await fn();report.cases.push({id,passed:true});}catch(e){report.cases.push({id,passed:false,error:String(e.stack||e)});console.error('DB_FAIL '+id+' '+e.message);}}
@@ -53,10 +53,14 @@ try{
    await open(page,'c14-join');await click(page,'preset:nulls');assert.equal(await page.locator('[data-db-origin=stored-null]').count(),1);assert.equal(await page.locator('[data-db-origin=unmatched-padding]').count(),2);
    assert.match(await page.locator('[data-sec-board]').textContent(),/"NULL"（文字列）/);await click(page,'left:6');assert.equal(await page.locator('[data-db-right][data-active=true]').count(),0);assert.match(await page.locator('[data-sec-board]').textContent(),/一致する右行はありません/);await capture(page,width,'join-nulls');
   });
-  await check(`${width}/join/edit-preserves-disclosure-draft-and-undo`,async()=>{
-   await open(page,'c14-join');const details=page.locator('[data-sec-view=join-editor]');await details.locator('summary').click();await field(page,'uid').fill('2');await field(page,'title').fill('<b>safe</b>');await click(page,'left:1');assert.equal(await field(page,'title').inputValue(),'<b>safe</b>');assert.equal((await state(page)).right[0].uid,1);
-   await click(page,'edit');assert.equal((await state(page)).right[0].uid,2);assert.equal(await details.evaluate(el=>el.open),true);assert.equal(await page.locator('[data-db-origin] b').count(),0);assert.match(await page.locator('[data-db-origin]').allTextContents().then(a=>a.join(' ')),/<b>safe<\/b>/);
-   const before=await state(page);await field(page,'uid').fill('1e1');await click(page,'edit');assert.deepEqual(await state(page),before);await click(page,'undo');assert.equal((await state(page)).right[0].uid,1);
+  await check(`${width}/join/live-edit-preserves-disclosure-and-undo`,async()=>{
+   await open(page,'c14-join');const details=page.locator('[data-sec-view=join-editor]');await details.locator('summary').click();
+   await field(page,'uid').fill('2');await page.waitForFunction(()=>JSON.parse(document.querySelector('[data-sec-state]').dataset.secState).right[0].uid===2);
+   await click(page,'undo');assert.equal((await state(page)).right[0].uid,1);
+   await field(page,'uid').fill('2');await field(page,'title').fill('<b>safe</b>');await click(page,'left:1');
+   assert.equal(await field(page,'title').inputValue(),'<b>safe</b>');assert.equal((await state(page)).right[0].uid,2);assert.equal((await state(page)).right[0].title,'<b>safe</b>');
+   assert.equal(await details.evaluate(el=>el.open),true);assert.equal(await page.locator('[data-db-origin] b').count(),0);assert.match(await page.locator('[data-db-origin]').allTextContents().then(a=>a.join(' ')),/<b>safe<\/b>/);
+   const before=await state(page);await field(page,'uid').fill('1e1');await click(page,'edit');assert.deepEqual(await state(page),before);
   });
   await check(`${width}/transaction/no-future-read-or-premature-commit`,async()=>{
    await open(page,'c14-transaction');await click(page,'step:A');let s=await state(page);assert.equal(s.actors.B.read,null);await click(page,'step:A');assert.equal((await state(page)).committed,100);await click(page,'step:A');s=await state(page);assert.equal(s.committed,100);assert.equal(s.actors.A.pending,120);assert.equal(s.owner,'A');await capture(page,width,'transaction-pending');

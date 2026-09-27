@@ -55,7 +55,7 @@ try{
   await check(width+': authored boundary test fails, then code edit really fixes the same test',async()=>{
    await open(page,'gap-146');await click(page,'add');await click(page,'run');assert.equal((await state(page)).results.at(-1).actual,9);assert.equal((await state(page)).results.at(-1).pass,false);
    await click(page,'select:2');await click(page,'step:1');assert.equal((await state(page)).step,1);assert.ok(await page.locator('.eg-code .running').count());
-   const code=(await state(page)).program.replace('return 9;','return 10;');await field(page,'program').fill(code);await click(page,'code');assert.equal((await state(page)).results,null);await click(page,'run');assert.equal((await state(page)).results.at(-1).actual,10);assert.equal((await state(page)).results.at(-1).pass,true);
+   const code=(await state(page)).program.replace('return 9;','return 10;');await field(page,'program').fill(code);await page.waitForFunction(code=>{const s=JSON.parse(document.querySelector('[data-sec-state]').dataset.secState);return s.program===code&&s.results?.at(-1)?.actual===10;},code);assert.equal((await state(page)).results.at(-1).actual,10);assert.equal((await state(page)).results.at(-1).pass,true);
   });
   await check(width+': merging one conflicting line retains independent changes',async()=>{
    await open(page,'gap-147');await click(page,'resolve:left');assert.equal((await state(page)).resolution,'color = green');assert.match(await page.locator('[data-sec-board] pre').textContent(),/size = 20/);
@@ -121,8 +121,8 @@ try{
    await open(page,'gap-148');await page.locator('[data-cv-action="delete"]').click();await page.locator('.eg-native-config summary').click();await page.locator('[data-native-action="reset"]').click();await idle(page);await page.waitForTimeout(950);assert.equal(await page.locator('[data-cv-items] li').count(),3);
    await page.locator('[data-cv-action="delete"]').click();await page.goto(base+'#/catalog');await page.waitForSelector('#catalog-query');await open(page,'gap-148');await page.waitForTimeout(950);assert.equal(await page.locator('[data-cv-items] li').count(),3);
   });
-  await check(width+': all314 are authored, policies and page boundaries remain intact',async()=>{
-   assert.equal(fixtureInventory.units,314);assert.equal(await page.evaluate(()=>CSL.labs.length),314);assert.deepEqual(await page.evaluate(()=>CSL.experiences.modes().filter(k=>!CSL.experiences.widgets.has(k))),[]);assert.deepEqual(requests,[]);assert.deepEqual(await page.evaluate(()=>window.__csp),[]);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2),false);
+  await check(width+': all315 are authored, policies and page boundaries remain intact',async()=>{
+   assert.equal(fixtureInventory.units,315);assert.equal(await page.evaluate(()=>CSL.labs.length),315);assert.deepEqual(await page.evaluate(()=>CSL.experiences.modes().filter(k=>!CSL.experiences.widgets.has(k))),[]);assert.deepEqual(requests,[]);assert.deepEqual(await page.evaluate(()=>window.__csp),[]);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2),false);
   });
   await mkdir('review-output/engineering-screenshots',{recursive:true});
   for(const [id,ch]of [['gap-144','requirements'],['gap-146','write-test'],['gap-150','operate'],['gap-153','claims'],['gap-154','layout'],['gap-155','request']]){await open(page,id,ch);await page.screenshot({path:`review-output/engineering-screenshots/${name}-${width}-${id}.png`,fullPage:true});}
