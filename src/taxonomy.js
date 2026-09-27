@@ -87,7 +87,7 @@ const overrides={
  'c01-information':'math-information','c01-entropy':'math-information','c01-joint':'math-information','c01-markov':'math-information','c01-channel':'math-information',
  'c01-huffman':'math-compression','c01-shannon-fano':'math-compression',
  'c01-hamming':'math-coding','c01-prefix':'math-coding','c01-kraft':'math-coding','c01-distance':'math-coding','c01-linear-code':'math-coding',
- 'c02-set':'math-discrete','c03-matrix':'math-linear','c03-derivative':'math-calculus','c03-integral':'math-numerical',
+ 'c02-set':'math-discrete','c03-matrix':'math-linear','c03-epsilon-delta':'math-calculus','c03-derivative':'math-calculus','c03-integral':'math-numerical',
  'c09-cache':'sys-memory','n02-crc':'math-coding','s04-signature':'sec-public',
  'c18-image':'media-images','c18-projection':'media-graphics','c20-privacy':'practice-ethics','c20-contrast':'media-accessibility'
 };
@@ -97,8 +97,8 @@ const securityMap=['sec-risk','sec-crypto','sec-crypto','sec-crypto','sec-public
 const baseline=new Set(L.curriculum.baselineIds);
 function primary(lab){
  if(lab.gapId)return gapMap.get(Number(lab.id.slice(4)));
- if(!baseline.has(lab.id))throw Error('新しい単元の分類を定義してください: '+lab.id);
  if(overrides[lab.id])return overrides[lab.id];
+ if(!baseline.has(lab.id))throw Error('新しい単元の分類を定義してください: '+lab.id);
  if(lab.track==='missions')return 'practice-missions';
  if(lab.track==='network')return networkMap[Number(lab.topic?.slice(1))-1];
  if(lab.track==='security')return securityMap[Number(lab.topic?.slice(1))-1];

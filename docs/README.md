@@ -4,9 +4,11 @@
 
 ## 教材を設計・改善する
 
+- [ε–δ教材](pedagogy/EPSILON_DELTA.md)：学習順序、厳密判定、描画と証明の区別。
+
 - [ノートから学ぶ教材設計](pedagogy/TEACHING_GUIDE.md)：単元ごとに表現を選ぶ理由、図・式・文章・操作の対応、レビューの基準。
 - [単元と再現範囲](CURRICULUM.md)：GAP-001〜155の範囲と省略。
-- [全単元一覧](EXPERIMENTS.md)：生成された314単元の一覧。元データを修正し、`npm run inventory`で更新する。
+- [全単元一覧](EXPERIMENTS.md)：生成された315単元の一覧。元データを修正し、`npm run inventory`で更新する。
 - [モデルの範囲](MODEL_SCOPE.md)：実計算と教材用モデルの違い。
 - `EXPERIENCE_*.md`：分野ごとに実装した操作・制約・残課題。作成時点の記録として読む。
 

@@ -13,7 +13,7 @@ test('every authored numeric or selected preset survives the actual model normal
    for(const key of Object.keys(patch))if(typeof input[key]==='number'&&typeof actual[key]==='number'?Math.abs(input[key]-actual[key])>1e-8:JSON.stringify(input[key])!==JSON.stringify(actual[key]))drift.push({id,chapter:ch.id,example:e.label,key,declared:input[key],actual:actual[key]});
   }
  }
- assert.equal(X.lessons.size,314);assert.ok(examples>500);assert.deepEqual(drift,[]);
+ assert.equal(X.lessons.size,315);assert.ok(examples>500);assert.deepEqual(drift,[]);
 });
 test('one, ten and two hundred really perform the declared number of trials',async()=>{
  const lab=L.labs.find(l=>l.id==='c03-probability');

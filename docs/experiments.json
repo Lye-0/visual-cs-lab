@@ -1,10 +1,10 @@
 {
   "version": "3.0.0",
-  "total": 314,
+  "total": 315,
   "legacyTotal": 144,
-  "engineCount": 273,
+  "engineCount": 274,
   "counts": {
-    "core": 207,
+    "core": 208,
     "network": 49,
     "security": 50,
     "missions": 8
@@ -782,7 +782,8 @@
         "gap-005",
         "gap-006",
         "gap-007",
-        "gap-008"
+        "gap-008",
+        "c03-epsilon-delta"
       ]
     },
     {
@@ -797,7 +798,8 @@
         "gap-005",
         "gap-006",
         "gap-007",
-        "gap-008"
+        "gap-008",
+        "c03-epsilon-delta"
       ]
     },
     {
@@ -1848,6 +1850,11 @@
       "name": "Apache Software Foundation — Apache License 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0",
       "detail": "ライセンス原文。具体的な配布条件は原文と対象物を確認してください。"
+    },
+    "epsilon-openstax": {
+      "name": "OpenStax Calculus Volume 1 §2.5 — The Precise Definition of a Limit",
+      "url": "https://openstax.org/books/calculus-volume-1/pages/2-5-the-precise-definition-of-a-limit",
+      "detail": "極限の定義の参照。日本語の説明・図・操作・判定モデルは本サイトの独自教材です。"
     },
     "experience-dsp": {
       "name": "Steven W. Smith — The Scientist and Engineer’s Guide to DSP",
@@ -51877,6 +51884,233 @@
       "taxonomy": {
         "domain": "software",
         "category": "dev-web",
+        "related": []
+      }
+    },
+    {
+      "level": 2,
+      "minutes": 25,
+      "track": "core",
+      "scope": "一次関数・x²・可除不連続・段差の四つの固定例。入力小数の有理数比較で範囲を判定し、反例を構成します。",
+      "limits": "操作範囲はε=0.01〜2、δ=0.0001〜2。任意の関数を自動証明するものではありません。グラフの描画と一般の証明は区別します。",
+      "prereq": [],
+      "sources": [
+        "epsilon-openstax"
+      ],
+      "controls": [
+        {
+          "key": "mode",
+          "label": "関数",
+          "type": "select",
+          "value": "linear",
+          "options": [
+            {
+              "value": "linear",
+              "label": "f(x)=2x+1"
+            },
+            {
+              "value": "square",
+              "label": "f(x)=x²"
+            },
+            {
+              "value": "hole",
+              "label": "f(x)=(x²−1)/(x−1)（x≠1）"
+            },
+            {
+              "value": "jump",
+              "label": "f(x)=0（x<0）、1（x≥0）"
+            }
+          ]
+        },
+        {
+          "key": "epsilon",
+          "label": "許す誤差 ε",
+          "type": "range",
+          "value": 0.5,
+          "min": 0.01,
+          "max": 2,
+          "step": 0.01
+        },
+        {
+          "key": "delta",
+          "label": "近づける距離 δ",
+          "type": "range",
+          "value": 0.4,
+          "min": 0.0001,
+          "max": 2,
+          "step": 0.0001
+        },
+        {
+          "key": "x",
+          "label": "調べる点 x",
+          "type": "range",
+          "value": 1.2,
+          "min": -2,
+          "max": 3,
+          "step": 0.001
+        },
+        {
+          "key": "limit",
+          "label": "段差で試す候補 L",
+          "type": "range",
+          "value": 0.5,
+          "min": -0.5,
+          "max": 1.5,
+          "step": 0.01
+        },
+        {
+          "key": "pointValue",
+          "label": "穴の位置での関数値",
+          "type": "select",
+          "value": "undefined",
+          "options": [
+            {
+              "value": "undefined",
+              "label": "未定義"
+            },
+            {
+              "value": "2",
+              "label": "2にする（連続）"
+            },
+            {
+              "value": "5",
+              "label": "5にする（不連続）"
+            }
+          ]
+        }
+      ],
+      "id": "c03-epsilon-delta",
+      "engine": "epsilon-delta",
+      "title": "ε–δで理解する極限と連続性",
+      "unit": "ε–δで理解する極限と連続性",
+      "summary": "先に出力の許容誤差εを指定し、その後で入力の距離δを選びます。同じδの範囲内の全てのxに条件を要求します。",
+      "question": "どれだけ近づければ、指定された誤差をすべての点で守れる？",
+      "area": "C03",
+      "course": "数学・数学演習・解析学",
+      "presentation": "direct",
+      "keywords": [
+        "ε–δ",
+        "ε-δ",
+        "epsilon delta",
+        "イプシロンデルタ",
+        "極限",
+        "連続性",
+        "全称",
+        "存在",
+        "反例"
+      ],
+      "guide": [
+        "f(x)=2x+1、a=1、L=3で、ε=0.5に対してδを変えます。一点が条件を満たしても、範囲全体を保証したとは限りません。",
+        "εだけを小さくしてδを保つと何が変わるかを確認します。二次関数ではδの選び方を、不等式の各行へ戻って読みます。",
+        "有限個の点の観察は証明ではありません。0<|x−a|<δは中心と端点を含まず、極限値とf(a)も別のものです。"
+      ],
+      "lesson": "先に出力の許容誤差εを指定し、その後で入力の距離δを選びます。同じδの範囲内の全てのxに条件を要求します。",
+      "reading": {
+        "why": "近づいて見えるグラフから一歩進み、指定された誤差を範囲全体で保証することを考えます。",
+        "idea": "先に出力の許容誤差εを指定し、その後で入力の距離δを選びます。同じδの範囲内の全てのxに条件を要求します。",
+        "example": "f(x)=2x+1、a=1、L=3で、ε=0.5に対してδを変えます。一点が条件を満たしても、範囲全体を保証したとは限りません。",
+        "pitfall": "有限個の点の観察は証明ではありません。0<|x−a|<δは中心と端点を含まず、極限値とf(a)も別のものです。",
+        "focus": [
+          "epsilon",
+          "delta"
+        ],
+        "nextLabel": "条件を確かめる",
+        "terms": [
+          {
+            "term": "ε（イプシロン）",
+            "definition": "出力と候補の極限値の間に許す正の誤差。"
+          },
+          {
+            "term": "δ（デルタ）",
+            "definition": "入力をaへ近づける正の距離。εに応じて選び、各xの前に固定します。"
+          },
+          {
+            "term": "極限の定義",
+            "definition": "任意の正のεについて、全ての対象xで要求を満たす正のδが存在します。"
+          },
+          {
+            "term": "連続性",
+            "definition": "その点で定義され、極限値が関数値と一致することです。"
+          }
+        ],
+        "notes": "",
+        "sections": [
+          [
+            "ε（イプシロン）",
+            "出力と候補の極限値の間に許す正の誤差。",
+            "|f(x)−L|<ε"
+          ],
+          [
+            "δ（デルタ）",
+            "入力をaへ近づける正の距離。εに応じて選び、各xの前に固定します。",
+            "0<|x−a|<δ"
+          ],
+          [
+            "極限の定義",
+            "任意の正のεについて、全ての対象xで要求を満たす正のδが存在します。",
+            "∀ε>0 ∃δ>0 ∀x∈D"
+          ],
+          [
+            "連続性",
+            "その点で定義され、極限値が関数値と一致することです。",
+            "lim f(x)=f(a)"
+          ]
+        ]
+      },
+      "exploration": {
+        "label": "δを小さくして範囲全体を収める",
+        "patch": {
+          "delta": 0.2
+        }
+      },
+      "observe": "εだけを小さくしてδを保つと何が変わるかを確認します。二次関数ではδの選び方を、不等式の各行へ戻って読みます。",
+      "challenge": {
+        "question": "δを選ぶ順番として正しいのは？",
+        "options": [
+          "εを受け取り、全ての対象xに使うδを選ぶ",
+          "各xを見てから、そのx専用のδを選ぶ",
+          "一点だけ調べてδを決めれば証明になる"
+        ],
+        "answer": 0,
+        "explanation": "δはεに応じて選びます。そのδで範囲内の全てのxを扱うことが必要です。"
+      },
+      "coverage": {
+        "status": "implemented-model",
+        "targets": [
+          {
+            "name": "ε（イプシロン）",
+            "description": "出力と候補の極限値の間に許す正の誤差。",
+            "formula": "|f(x)−L|<ε"
+          },
+          {
+            "name": "δ（デルタ）",
+            "description": "入力をaへ近づける正の距離。εに応じて選び、各xの前に固定します。",
+            "formula": "0<|x−a|<δ"
+          },
+          {
+            "name": "極限の定義",
+            "description": "任意の正のεについて、全ての対象xで要求を満たす正のδが存在します。",
+            "formula": "∀ε>0 ∃δ>0 ∀x∈D"
+          },
+          {
+            "name": "連続性",
+            "description": "その点で定義され、極限値が関数値と一致することです。",
+            "formula": "lim f(x)=f(a)"
+          }
+        ],
+        "notes": "独自の追加教材。既存GAP番号は変更しません。"
+      },
+      "defaults": {
+        "mode": "linear",
+        "epsilon": 0.5,
+        "delta": 0.4,
+        "x": 1.2,
+        "limit": 0.5,
+        "pointValue": "undefined"
+      },
+      "taxonomy": {
+        "domain": "math",
+        "category": "math-calculus",
         "related": []
       }
     }

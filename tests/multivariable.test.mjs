@@ -86,7 +86,7 @@ test('refinement stops at 16 and all state reductions are atomic',()=>{
  const refined=M.region(M.region(s,{kind:'refine'}),{kind:'refine'});assert.equal(refined.n,16);assert.throws(()=>M.region(refined,{kind:'refine'}));
 });
 test('existing routes and calculation activities survive, only two activities are new',()=>{
- const d=X.find('gap-006');assert.equal(X.lessons.size,314);assert.deepEqual(d.chapters.map(c=>c.id),['gradient','gradient-calculation','jacobian','jacobian-calculation','area','area-calculation']);
+ const d=X.find('gap-006');assert.equal(X.lessons.size,315);assert.deepEqual(d.chapters.map(c=>c.id),['gradient','gradient-calculation','jacobian','jacobian-calculation','area','area-calculation']);
  assert.equal(d.chapters.find(c=>c.id==='jacobian').activities[0].kind,'jacobian-local');assert.equal(d.chapters.find(c=>c.id==='area').activities[0].kind,'double-integral-region');
  assert.equal(d.chapters.find(c=>c.id==='jacobian-calculation').activities[0].patch.mode,'jacobian');assert.equal(d.chapters.find(c=>c.id==='area-calculation').activities[0].patch.mode,'integral');
 });

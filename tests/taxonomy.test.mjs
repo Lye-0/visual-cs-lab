@@ -5,13 +5,13 @@ const T=L.taxonomy;
 const ids=xs=>xs.map(l=>l.id);
 
 test('全314単元に8大分類と61テーマの主分類を一意に割り当てる',()=>{
- assert.equal(L.labs.length,314);assert.equal(T.domains.length,8);assert.equal(T.categories.length,61);
+ assert.equal(L.labs.length,315);assert.equal(T.domains.length,8);assert.equal(T.categories.length,61);
  assert.equal(new Set(T.domains.map(d=>d.id)).size,8);assert.equal(new Set(T.categories.map(c=>c.id)).size,61);
  assert.equal(L.areas.length,20);assert.equal(L.legacyLabIds.length,144);assert.equal(L.curriculum.baselineIds.length,159);
  for(const l of L.labs){assert.ok(T.domain(l.taxonomy.domain),l.id);assert.equal(T.category(l.taxonomy.category).domain,l.taxonomy.domain);assert.equal(T.select({category:l.taxonomy.category}).filter(x=>x.id===l.id).length,1);for(const id of l.taxonomy.related)assert.ok(T.category(id));}
  for(const c of T.categories){assert.ok(c.count>0);assert.ok(c.description.length>15);}
  for(const d of T.domains){assert.ok(d.count>0&&d.count<100,d.id);assert.ok(d.description.length>15);}
- assert.equal(T.categories.reduce((sum,c)=>sum+c.count,0),314);assert.equal(T.domains.reduce((sum,d)=>sum+d.count,0),314);
+ assert.equal(T.categories.reduce((sum,c)=>sum+c.count,0),315);assert.equal(T.domains.reduce((sum,d)=>sum+d.count,0),315);
 });
 test('符号・圧縮・ビット表現と異なる科目を区別する',()=>{
  const expected={'c01-entropy':'math-information','gap-029':'math-information','gap-030':'math-coding','gap-031':'math-coding','gap-032':'math-coding','gap-033':'math-compression','gap-034':'sys-representation','gap-037':'dev-objects','gap-043':'dev-structures','c09-cache':'sys-memory','c12-quorum':'sys-distributed','c14-transaction':'data-transactions','c18-image':'media-images','gap-059':'sys-circuits','gap-088':'data-design','gap-128':'data-language','gap-148':'media-hci','gap-150':'media-accessibility','gap-153':'practice-research','gap-154':'dev-web'};
@@ -53,9 +53,9 @@ test('検索に連動した件数は主分類だけ数え、同一IDの複製は
 });
 test('24件ずつの全ページをたどっても欠落・重複がなく異常なページ値を丸める',()=>{
  const labs=T.select(),all=[];for(let n=1;n<=Math.ceil(labs.length/24);n++){const p=T.page(labs,n);assert.ok(p.items.length<=24);all.push(...p.items);}
- assert.deepEqual(ids(all),ids(labs));assert.equal(new Set(ids(all)).size,314);
+ assert.deepEqual(ids(all),ids(labs));assert.equal(new Set(ids(all)).size,315);
  assert.equal(T.page(labs,-3).number,1);assert.equal(T.page(labs,'bad').number,1);assert.equal(T.page(labs,1e12).number,14);
- assert.equal(T.page(labs,14).items.length,2);assert.deepEqual(T.page([],7),{items:[],number:1,pages:1,total:0,start:0,end:0});
+ assert.equal(T.page(labs,14).items.length,3);assert.deepEqual(T.page([],7),{items:[],number:1,pages:1,total:0,start:0,end:0});
 });
 test('旧track・area・topicのURLでも対象単元を失わない',()=>{
  for(const area of L.areas)assert.deepEqual(ids(T.select({area:area.id})),ids(L.labs.filter(l=>l.area===area.id)));

@@ -66,7 +66,7 @@ test('invalid values, nonexistent objects and unsupported file names leave state
  const s=Q.start(),old=copy(s);for(const a of [{kind:'file',value:'__proto__'},{kind:'file',value:'../../secret'},{kind:'select',id:'constructor'},{kind:'edit',value:'x'.repeat(401)},{kind:'edit',value:null},{kind:'unsupported'}])assert.throws(()=>Q.reduce(s,a));assert.deepEqual(s,old);
 });
 test('all six original routes survive, plus retained command chapters',()=>{
- assert.equal(X.lessons.size,314);for(const [id,kind]of Object.entries({'c16-git':'stage','c16-reset':'reset','c16-branches':'merge','c16-rebase':'rebase','c16-remote':'remote','c16-undo':'undo'})){const d=X.find(id);assert.deepEqual(d.chapters.map(c=>c.id),['objects','commands']);assert.equal(d.chapters[0].activities[0].kind,'git-'+kind+'-desk');assert.equal(d.chapters[1].activities[0].kind,'editor');}
+ assert.equal(X.lessons.size,315);for(const [id,kind]of Object.entries({'c16-git':'stage','c16-reset':'reset','c16-branches':'merge','c16-rebase':'rebase','c16-remote':'remote','c16-undo':'undo'})){const d=X.find(id);assert.deepEqual(d.chapters.map(c=>c.id),['objects','commands']);assert.equal(d.chapters[0].activities[0].kind,'git-'+kind+'-desk');assert.equal(d.chapters[1].activities[0].kind,'editor');}
 });
 // Independent actual-Git oracle. Only a newly created temporary directory is used.
 function actual(fn){const dir=mkdtempSync(join(tmpdir(),'vcs-git-oracle-'));

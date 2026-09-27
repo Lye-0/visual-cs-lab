@@ -8,7 +8,7 @@ test('GAP-001〜155と既存159単元を、実際の登録と実行関数で確�
  assert.ok(K?.coverage,'科目の統合データがない');
  assert.equal(K.baselineIds.length,159);
  assert.equal(K.entries.length,155);
- assert.equal(L.labs.length,314);
+ assert.equal(L.labs.length,315);
  assert.equal(L.areas.length,20);
  const ids=new Set(L.labs.map(l=>l.id));assert.equal(ids.size,L.labs.length);
  for(const id of K.baselineIds)assert.ok(ids.has(id),'既存単元 '+id);

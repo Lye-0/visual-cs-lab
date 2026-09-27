@@ -5,7 +5,7 @@ import {L,run} from './helpers.mjs';
 test('全20分野・旧144単元とノート対応15単元・N01–N20・S01–S24・総合8演習を維持',()=>{
  assert.equal(L.areas.length,20);assert.equal(L.legacyLabIds.length,144);
  assert.equal(L.curriculum.baselineIds.length,159);
- assert.equal(L.labs.length,159+L.curriculum.entries.length);
+ assert.equal(L.labs.length,159+L.curriculum.entries.length+L.additionalLabIds.length);
  assert.ok(L.curriculum.entries.length<=155);
  assert.equal(new Set(L.labs.map(l=>l.id)).size,L.labs.length);
  for(const id of L.curriculum.baselineIds)assert.ok(L.labs.some(l=>l.id===id),id);

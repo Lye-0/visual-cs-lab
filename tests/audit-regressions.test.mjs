@@ -1,4 +1,4 @@
-// Regressions discovered by the full 314-unit browser audit.
+// Regressions discovered by the full 315-unit browser audit.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
@@ -42,5 +42,5 @@ test('inventory --check compares both committed documents without writing either
  const paths=['../docs/EXPERIMENTS.md','../docs/experiments.json'].map(p=>new URL(p,import.meta.url));
  const before=await Promise.all(paths.map(p=>readFile(p,'utf8')));
  const {stdout}=await promisify(execFile)(process.execPath,['scripts/inventory.mjs','--check'],{cwd:new URL('..',import.meta.url),maxBuffer:1024*1024});
- assert.equal(JSON.parse(stdout).total,314);assert.deepEqual(await Promise.all(paths.map(p=>readFile(p,'utf8'))),before);
+ assert.equal(JSON.parse(stdout).total,315);assert.deepEqual(await Promise.all(paths.map(p=>readFile(p,'utf8'))),before);
 });

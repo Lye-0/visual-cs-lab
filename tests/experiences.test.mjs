@@ -9,7 +9,7 @@ const present=new Set(await readdir(new URL('../src/',import.meta.url)));
 for(const name of authorFiles)if(present.has('experiences-'+name+'.js'))await import('../src/experiences-'+name+'.js');
 const L=globalThis.CSL,X=L.experiences;
 test('全314単元に明示的に執筆した個別教材があり、欠落・重複がない',()=>{
- assert.equal(X.lessons.size,314);
+ assert.equal(X.lessons.size,315);
  assert.deepEqual([...X.lessons.keys()].sort(),L.labs.map(l=>l.id).sort());
  for(const [id,def]of X.lessons){assert.ok(def.lead.length>=15,id);assert.ok(def.chapters.length,id);for(const chapter of def.chapters){assert.ok(chapter.question.length>=8,id);assert.ok(chapter.paragraphs.join('').length>=30,id);assert.ok(chapter.activities.length,id);}}
 });
