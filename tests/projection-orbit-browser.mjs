@@ -21,12 +21,17 @@ try{
    await page.mouse.move(box.x+box.width*.5,box.y+Math.min(100,box.height/2));
    await page.mouse.down({button:'middle'});await page.mouse.move(box.x+box.width*.61,box.y+Math.min(45,box.height*.2),{steps:6});await page.mouse.up({button:'middle'});
    await page.waitForFunction(({classic,experiment})=>{const field=k=>document.querySelector(classic?'#reader-input-'+k+'-number':experiment?'#num-p-'+k:'[data-ex-form] [name='+k+']');return Number(field('angle').value)!==30&&Number(field('pitch').value)!==0&&!document.querySelector(classic?'#reader-diagram[aria-busy=true]':experiment?'#visual-panel[aria-busy=true]':'[data-ex-result][data-update-state=pending]');},{classic,experiment});
-   assert.notEqual(await svg.innerHTML(),before);assert.ok(Number(await key('pitch').inputValue())>0);
+   assert.notEqual(await svg.innerHTML(),before);assert.ok(Number(await key('angle').inputValue())<30,'右ドラッグではY回転角が減る');assert.ok(Number(await key('pitch').inputValue())>0);
    const d=Number(await key('distance').inputValue()),next=await svg.boundingBox();await page.mouse.move(next.x+next.width*.5,next.y+Math.min(100,next.height/2));await page.mouse.wheel(0,-180);
    await page.waitForFunction(({classic,experiment,d})=>Number(document.querySelector(classic?'#reader-input-distance-number':experiment?'#num-p-distance':'[data-ex-form] [name=distance]').value)<d,{classic,experiment,d});
    await page.locator('svg[data-orbit-projection]').focus();const pitch=Number(await key('pitch').inputValue());await page.keyboard.press('ArrowUp');
    await page.waitForFunction(({classic,experiment,pitch})=>Number(document.querySelector(classic?'#reader-input-pitch-number':experiment?'#num-p-pitch':'[data-ex-form] [name=pitch]').value)>pitch,{classic,experiment,pitch});
    await page.waitForFunction(()=>document.activeElement?.matches?.('svg[data-orbit-projection]'));
+   const angle=Number(await key('angle').inputValue());await page.keyboard.press('ArrowRight');
+   await page.waitForFunction(({classic,experiment,angle})=>Number(document.querySelector(classic?'#reader-input-angle-number':experiment?'#num-p-angle':'[data-ex-form] [name=angle]').value)<angle,{classic,experiment,angle});
+   await page.waitForFunction(()=>document.activeElement?.matches?.('svg[data-orbit-projection]'));
+   const rightAngle=Number(await key('angle').inputValue());await page.keyboard.press('ArrowLeft');
+   await page.waitForFunction(({classic,experiment,rightAngle})=>Number(document.querySelector(classic?'#reader-input-angle-number':experiment?'#num-p-angle':'[data-ex-form] [name=angle]').value)>rightAngle,{classic,experiment,rightAngle});
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2),false);
    if(classic){await page.locator('[data-r-action=reset]').click();await page.waitForFunction(()=>CSL.app.current.params?.pitch===0);}
    else if(experiment){await page.locator('[data-action=reset]').first().click();await page.waitForFunction(()=>CSL.app.current.params?.pitch===0);}

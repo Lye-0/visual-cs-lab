@@ -47,7 +47,7 @@ document.addEventListener('pointerdown',e=>{
 document.addEventListener('pointermove',e=>{
  if(!drag||e.pointerId!==drag.id)return;
  const dx=e.clientX-drag.x,dy=e.clientY-drag.y;drag.x=e.clientX;drag.y=e.clientY;
- drag.angle=Math.max(-180,Math.min(180,drag.angle+dx*.6));drag.pitch=Math.max(-75,Math.min(75,drag.pitch-dy*.6));
+ drag.angle=Math.max(-180,Math.min(180,drag.angle-dx*.6));drag.pitch=Math.max(-75,Math.min(75,drag.pitch-dy*.6));
  queue(drag.root,{angle:drag.angle,pitch:drag.pitch});
 },true);
 function endDrag(e){if(!drag||e.pointerId!==drag.id)return;try{drag.root.releasePointerCapture(e.pointerId);}catch{}drag=null;}
@@ -68,7 +68,7 @@ document.addEventListener('wheel',e=>{
 },{passive:false,capture:true});
 document.addEventListener('keydown',e=>{
  const svg=e.target;if(!relevant(svg)||e.altKey||e.ctrlKey||e.metaKey)return;
- const changes={ArrowLeft:['angle',-5],ArrowRight:['angle',5],ArrowUp:['pitch',5],ArrowDown:['pitch',-5],'+':['distance',-.2],'=':['distance',-.2],'-':['distance',.2]};
+ const changes={ArrowLeft:['angle',5],ArrowRight:['angle',-5],ArrowUp:['pitch',5],ArrowDown:['pitch',-5],'+':['distance',-.2],'=':['distance',-.2],'-':['distance',.2]};
  const step=changes[e.key];if(!step)return;e.preventDefault();e.stopImmediatePropagation();
  const root=host(svg),values=pending?.root===root?pending.values:read(root);if(values)queue(root,{[step[0]]:values[step[0]]+step[1]},true);
 },true);
