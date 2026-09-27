@@ -40,6 +40,7 @@ jobs:
         run: |
           node tests/media-workspaces-browser.mjs
           node tests/projection-orbit-browser.mjs
+          node tests/projection-touch-browser.mjs
       - name: Tests must not rewrite the site
         if: ${{ !cancelled() }}
         run: git diff --exit-code HEAD -- src scripts tests index.html package.json .github

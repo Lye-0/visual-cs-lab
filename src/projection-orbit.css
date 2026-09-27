@@ -1,6 +1,6 @@
 .orbit-projection-frame{min-width:0;max-width:100%}
 .orbit-projection-hint{margin:0 0 10px;color:var(--muted,#aab8c5);font-size:13px;line-height:1.7}
-.orbit-projection{display:block;max-width:100%;cursor:grab;touch-action:pan-y}
+.orbit-projection{display:block;max-width:100%;cursor:grab;touch-action:none}
 .orbit-projection:active{cursor:grabbing}
 .orbit-projection:focus-visible{outline:3px solid #9de1d4;outline-offset:2px;border-radius:6px}
 .compare-drawing .orbit-projection-hint{display:none}
