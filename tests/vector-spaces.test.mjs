@@ -38,12 +38,15 @@ test('invalid coefficient shapes and noninteger input cannot silently become a z
  for(const values of [[],[0,0,0],[0,0,0,NaN],[0,0,0,Infinity],[0,1.2,0,0]])assert.throws(()=>M.coefficients(values));
  assert.throws(()=>M.scale([0,1,0,0],NaN));
 });
-test('two searchable linear algebra lessons retain the agreed reading order and three tab destinations',async()=>{
+test('two searchable linear algebra lessons retain the reading order and two topic destinations',async()=>{
  const first=L.experiences.find('c03-vector-space'),second=L.experiences.find('c03-subspace');
  assert.equal(first.chapters.length,1);
- assert.deepEqual(second.chapters.map(c=>c.id),['criteria','lecture','derivative']);
+ assert.deepEqual(second.chapters.map(c=>c.id),['criteria','derivative']);
  assert.equal(second.navigation,'tabs');
- assert.deepEqual(second.chapters[1].activities.map(a=>a.proof),['matrix','roots']);
+ assert.deepEqual(second.chapters[1].activities.filter(a=>a.proof).map(a=>a.proof),['matrix','roots']);
+ assert.ok(second.chapters[1].activities.filter(a=>a.proof).every(a=>a.collapsed));
+ assert.equal(second.chapterAliases.lecture,'derivative');
+ assert.deepEqual(second.chapters.map(c=>c.title),['部分空間の考え方','多項式の例題']);
  for(const id of ['c03-vector-space','c03-subspace']){
   assert.equal(L.labs.find(l=>l.id===id).taxonomy.category,'math-linear');
   assert.ok(L.taxonomy.search('部分空間').some(l=>l.id===id));

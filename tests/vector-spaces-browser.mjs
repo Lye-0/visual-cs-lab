@@ -21,13 +21,20 @@ try{
  for(const width of [1440,390,320]){
   const context=await browser.newContext({viewport:{width,height:960},hasTouch:width<500,reducedMotion:'reduce'}),page=await context.newPage();
   page.on('pageerror',e=>report.errors.push(e.message));
-  await check(width+': foundation renders its complete reading, including formal axioms',async()=>{
+  await check(width+': the introductory reading stays complete while formal axioms are optional',async()=>{
    await open(page,'c03-vector-space','foundation');await noOverflow(page);
-   assert.equal(await page.locator('.vs-section').count(),8);
-   assert.match(await page.locator('.vs-reading').innerText(),/分配法則/);
+   assert.equal(await page.locator('.vs-main-reading > .vs-section').count(),3);
+   assert.match(await page.locator('.vs-main-reading').innerText(),/\(1,2\)\+\(3,4\)=\(4,6\)/);
+   assert.match(await page.locator('.vs-main-reading').innerText(),/3\(1,2\)=\(3,6\)/);
+   assert.equal(await page.locator('[data-vs-axioms]').getAttribute('open'),null);
+   assert.doesNotMatch(await page.locator('.vs-main-reading').innerText(),/分配法則/);
+   await page.locator('[data-vs-axioms] summary').click();assert.match(await page.locator('[data-vs-axioms]').innerText(),/分配法則/);
+   await page.locator('[data-vs-axioms] summary').click();
    await page.screenshot({path:'review-output/vector-spaces/foundation-'+width+'.png'});
+   await page.locator('.vs-vector-example').screenshot({path:'review-output/vector-spaces/vector-addition-'+width+'.png'});
   });
   await check(width+': coefficient changes update the same polynomial, sum and scalar multiple',async()=>{
+   await page.locator('[data-vs-polynomial-demo] summary').click();
    await page.locator('[name=a]').fill('2');await page.locator('[name=scalar]').fill('-2');
    await page.waitForFunction(()=>document.querySelector('[data-polynomial-output]')?.textContent.includes('λf=-2(2 + x)=−4 − 2x'));
    assert.match(await page.locator('[data-polynomial-output]').innerText(),/f\+g=5 \+ 2x³/);
@@ -36,33 +43,43 @@ try{
    await page.locator('[name=a]').fill('0');await page.waitForFunction(()=>!document.querySelector('[data-polynomial-output][aria-busy=true]'));
    await page.locator('[data-polynomial-example=zero]').click();assert.match(await page.locator('[data-polynomial-output]').innerText(),/f=0 ↔/);
   });
-  await check(width+': next lesson and all three tab destinations work through links',async()=>{
+  await check(width+': the plane and x axis lead to two topic tabs through keyboard links',async()=>{
    await page.locator('.vs-next-link').click();await ready(page,'c03-subspace','criteria');await noOverflow(page);
-   assert.equal(await page.locator('.ex-chapters-tabs a').count(),3);
-   assert.equal(await page.locator('.ex-chapters-tabs [aria-current=page]').innerText(),'考え方と3条件');
-   assert.match(await page.locator('.vs-containment').innerText(),/候補全体/);
+   assert.equal(await page.locator('.ex-chapters-tabs a').count(),2);
+   assert.equal(await page.locator('.ex-chapters-tabs [aria-current=page]').innerText(),'部分空間の考え方');
+   assert.match(await page.locator('.vs-plane-intro').innerText(),/W：x軸だけ/);
+   await page.getByText('補足：いくつかの集合を比べる',{exact:true}).click();
    await page.locator('[data-geometry=axes]').click();assert.match(await page.locator('[data-geometry-result]').innerText(),/和で閉じていません/);
    assert.equal(await page.locator('[data-geometry=axes]').getAttribute('aria-pressed'),'true');
    await page.screenshot({path:'review-output/vector-spaces/criteria-'+width+'.png'});
-   await page.locator('.ex-chapters-tabs a[href$="chapter=lecture"]').focus();await page.keyboard.press('Enter');await ready(page,'c03-subspace','lecture');await noOverflow(page);
-   assert.equal(await page.locator('.vs-proof-step').count(),6);
-   assert.match(await page.locator('.ex-chapter').innerText(),/入力𝐱はn成分/);
-   assert.match(await page.locator('.ex-chapter').innerText(),/もう一つの点−1も必要/);
-   await page.screenshot({path:'review-output/vector-spaces/lecture-'+width+'.png'});
-   await page.locator('.ex-chapters-tabs a[href$="chapter=derivative"]').click();await ready(page,'c03-subspace','derivative');await noOverflow(page);
-   assert.equal(await page.locator('.vs-proof-step').count(),3);
+   await page.locator('.ex-chapters-tabs a[href$="chapter=derivative"]').focus();await page.keyboard.press('Enter');await ready(page,'c03-subspace','derivative');await noOverflow(page);
+   assert.equal(await page.locator('.vs-proof-step:visible').count(),3);
+   assert.doesNotMatch(await page.locator('.ex-chapter').innerText(),/講義|チャット|セッション/);
+   assert.match(await page.locator('.vs-containment').innerText(),/3次以下の実数係数多項式全体/);
    assert.match(await page.locator('.vs-learner-quote').innerText(),/^つまり、\(i\)の最終目的としては/);
-   assert.match(await page.locator('.ex-chapter').innerText(),/bは自由/);
+   assert.match(await page.locator('.ex-chapter').innerText(),/bだけ自由/);
+   await page.screenshot({path:'review-output/vector-spaces/example-'+width+'.png'});
+   await page.locator('.vs-zero-pair').screenshot({path:'review-output/vector-spaces/zero-pair-'+width+'.png'});
   });
   await check(width+': nonzero members and a single-point false positive remain distinct',async()=>{
    const output=page.locator('[data-polynomial-output]');
    await page.locator('[data-polynomial-example=x]').click();assert.match(await output.innerText(),/はい → f∈W/);assert.match(await output.innerText(),/f自体が零多項式か\s*いいえ/);
    await page.locator('[data-polynomial-example=x2]').click();assert.match(await output.innerText(),/いいえ → f∉W/);assert.match(await output.innerText(),/x=0だけで条件式を評価すると\s*0/);
+   await page.locator('[data-vs-coefficient-editor] summary').click();
    await page.locator('[name=c]').fill('-2');await page.waitForFunction(()=>document.querySelector('[data-polynomial-output]')?.textContent.includes('xf′−f=−2x²'));
    await page.screenshot({path:'review-output/vector-spaces/membership-'+width+'.png'});
   });
+  await check(width+': the other examples stay optional and can still be read completely',async()=>{
+   assert.equal(await page.locator('[data-vs-other-proof][open]').count(),0);
+   await page.locator('[data-vs-other-proof] summary').first().click();
+   assert.match(await page.locator('[data-vs-other-proof]').first().innerText(),/入力𝐱はn成分/);
+   assert.equal(await page.locator('[data-vs-other-proof]').first().locator('.vs-proof-step:visible').count(),3);
+   await page.locator('[data-vs-other-proof] summary').last().click();
+   assert.match(await page.locator('[data-vs-other-proof]').last().innerText(),/もう一つの点−1も必要/);
+   assert.equal(await page.locator('[data-vs-other-proof]').last().locator('.vs-proof-step:visible').count(),3);await noOverflow(page);
+  });
   await check(width+': direct deep links and classic model remain available',async()=>{
-   await open(page,'c03-subspace','lecture');assert.equal(await page.locator('.vs-proof-step').count(),6);
+   await page.goto(base+'#/lab/c03-subspace?chapter=lecture');await ready(page,'c03-subspace','derivative');assert.equal(await page.locator('.vs-proof-step:visible').count(),3);
    await page.goto(base+'#/lab/c03-subspace?view=classic');await page.waitForFunction(()=>CSL.app.current?.lab?.id==='c03-subspace'&&!CSL.app.current.experience);
    assert.ok((await page.locator('#main').innerText()).includes('部分空間'));await noOverflow(page);
   });

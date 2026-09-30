@@ -5,7 +5,7 @@ import vm from 'node:vm';
 import {generateDelivery,shellModules,shellStyles} from '../scripts/delivery.mjs';
 const root=new URL('../',import.meta.url),delivery=await generateDelivery();
 test('all 317 generated payloads match their authored sources, including Windows checkouts',async()=>{
- assert.equal(delivery.units,317);assert.equal(delivery.chapters,597);
+ assert.equal(delivery.units,317);assert.equal(delivery.chapters,596);
  for(const [path,content]of delivery.files){assert.equal((await readFile(new URL(path,root),'utf8')).replace(/\r\n/g,'\n'),content,path);}
 });
 test('discovery retains every searchable unit without model code or lesson body',async()=>{

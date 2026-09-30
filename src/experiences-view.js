@@ -152,7 +152,7 @@ const previousLab=A.views.lab;
 A.views.lab=(parts,params)=>{
  const id=parts[0],def=X.find(id);
  if(!def||['classic','experiment'].includes(params?.get('view'))){previousLab(parts,params);return;}
- const lab=A.lab(id),chapter=def.chapters.find(ch=>ch.id===params?.get('chapter'))||def.chapters[0],path=L.taxonomy.path(lab);
+ const lab=A.lab(id),chapter=def.chapters.find(ch=>ch.id===(def.chapterAliases?.[params?.get('chapter')]||params?.get('chapter')))||def.chapters[0],path=L.taxonomy.path(lab);
  const current=A.current={experience:true,lab,chapter:chapter.id,scopes:[],completed:new Set(),errors:[],playing:false};
  current.player={dispose(){for(const s of current.scopes)s.dispose();current.scopes=[];},pause(){}};
  A.setTitle(lab.unit);A.setNav('domain-'+path[0].id,lab.unit);

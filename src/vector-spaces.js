@@ -31,7 +31,7 @@ for(const id of ['vector-space','subspace'])L.register(id,p=>{
 if(L.onDemand)return;
 const definitions=[
  {id:'c03-vector-space',engine:'vector-space',title:'ベクトル空間 ― 多項式もベクトル？',question:'矢印・多項式・関数を、同じ「ベクトル」として扱えるのはなぜ？',summary:'足し算・定数倍・零ベクトルを数ベクトルと多項式で対応させ、集合の記号とベクトル空間の定義を読み解きます。',minutes:18,prereq:[],terms:[['ベクトル空間','集合と、その上の加法・スカラー倍がベクトル空間の規則を満たす構造です。'],['零多項式','すべての係数が0の多項式。どの点でも値が0になります。'],['ℝ[x]₃','零多項式を含む、3次以下の実数係数多項式全体です。']]},
- {id:'c03-subspace',engine:'subspace',title:'部分空間 ― 集合の読み方から証明まで',question:'零・和・定数倍の計算は、それぞれ何を確かめている？',summary:'元の空間と所属条件を読み分け、3条件の目的、講義の2例題、xf′−f=0 の例題を理由付きの証明でつなぎます。',minutes:30,prereq:['c03-vector-space'],terms:[['部分空間','Vの部分集合が、Vと同じ加法・スカラー倍で同じ体上のベクトル空間になることです。'],['閉じている','集合内の対象に演算をしても、結果がその集合に残ることです。'],['恒等式','多項式としての等式。特定の点だけで成立する等式と区別します。']]}
+ {id:'c03-subspace',engine:'subspace',title:'部分空間 ― 集合の読み方から証明まで',question:'零・和・定数倍の計算は、それぞれ何を確かめている？',summary:'平面とx軸で部分空間の意味をつかみ、xf′−f=0 の例題で零・和・定数倍を調べる目的と計算を読み解きます。',minutes:30,prereq:['c03-vector-space'],terms:[['部分空間','Vの部分集合が、Vと同じ加法・スカラー倍で同じ体上のベクトル空間になることです。'],['閉じている','集合内の対象に演算をしても、結果がその集合に残ることです。'],['恒等式','多項式としての等式。特定の点だけで成立する等式と区別します。']]}
 ];
 for(const def of definitions){
  const sections=def.terms.map(([term,text])=>[term,text,'']);
