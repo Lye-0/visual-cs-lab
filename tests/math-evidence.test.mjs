@@ -82,8 +82,8 @@ test('one-step rollback preserves initial parameters; a zero solution is retaine
 test('large-step divergence remains in the data instead of being clipped to a friendly range',()=>{
  let s=E.odeStart(3,3,1);for(let i=0;i<4;i++)s=E.ode(s,{kind:'step'});assert.equal(s.rows[4].euler,48);assert.throws(()=>E.ode(s,{kind:'step'}));assert.ok(s.rows[4].exact<.001);
 });
-test('all 315 registrations and previous chapter links remain; new chapter is additive',()=>{
- const X=CSL.experiences;assert.equal(X.lessons.size,315);assert.equal(X.find('c03-matrix').chapters[0].id,'meaning');assert.ok(X.find('c03-matrix').chapters.some(c=>c.id==='product'));assert.equal(X.find('gap-006').chapters[0].id,'gradient');assert.equal(X.find('gap-006').chapters[0].activities[0].kind,'gradient-direction');assert.deepEqual(X.find('gap-002').chapters.map(c=>c.id),['equations','inverse','solutions']);
+test('all 317 registrations and previous chapter links remain; new chapter is additive',()=>{
+ const X=CSL.experiences;assert.equal(X.lessons.size,317);assert.equal(X.find('c03-matrix').chapters[0].id,'meaning');assert.ok(X.find('c03-matrix').chapters.some(c=>c.id==='product'));assert.equal(X.find('gap-006').chapters[0].id,'gradient');assert.equal(X.find('gap-006').chapters[0].activities[0].kind,'gradient-direction');assert.deepEqual(X.find('gap-002').chapters.map(c=>c.id),['equations','inverse','solutions']);
 });
 test('the reviewed slope caption is not allowed to return',async()=>{
  const text=await readFile(new URL('../src/experiences-ode-evidence.js',import.meta.url),'utf8');assert.match(text,/出発点での傾き/);assert.doesNotMatch(text,/その点の傾き/);

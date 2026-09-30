@@ -20,7 +20,7 @@ try{
  const page=await browser.newPage();await page.goto(base);await page.waitForFunction(()=>CSL?.app?.ready);
  const ids=await page.evaluate(()=>CSL.labs.map(l=>l.id));
  await check('home has searchable metadata but no engines or lesson bodies',async()=>{
-  assert.equal(ids.length,315);assert.equal(await page.evaluate(()=>Object.keys(CSL.engines).length),0);
+  assert.equal(ids.length,317);assert.equal(await page.evaluate(()=>Object.keys(CSL.engines).length),0);
   assert.equal(await page.evaluate(()=>CSL.experiences===undefined),true);
   assert.ok((await page.locator('.sidebar [data-nav^="domain-"]').count())===8);
   report.resources.home=await page.evaluate(()=>performance.getEntriesByType('resource').map(r=>({name:r.name,bytes:r.decodedBodySize})));
@@ -39,7 +39,7 @@ try{
    try{
     await p.goto(base+'?cold='+id+'#/lab/'+id);try{await ready(p,id);}catch(e){throw Error(e.message+'; '+errors.join('; ')+'; '+(await p.locator('#main').innerText()).slice(0,900));}
     assert.deepEqual(errors,[]);assert.deepEqual(await p.evaluate(()=>CSL.app.current.errors),[]);
-    assert.equal(await p.evaluate(()=>CSL.labs.length),315);
+    assert.equal(await p.evaluate(()=>CSL.labs.length),317);
     const requests=await p.evaluate(()=>performance.getEntriesByType('resource').map(r=>r.name));
     assert.equal(requests.filter(u=>u.includes('/generated/lessons/')).length,1);
     report.cold.push({id,scripts:requests.filter(u=>u.endsWith('.js')).length});

@@ -91,5 +91,5 @@ test('legacy transaction frames no longer contain another actor future read valu
  const lab=CSL.labs.find(l=>l.id==='c14-transaction');for(const serial of [false,true]){const r=await CSL.run(lab,{...lab.defaults,serial}),first=r.frames[0];const readB=first.visual.rows.find(row=>row.label==='Bの読取り');assert.equal(readB.values[0],'未読');assert.equal(r.metrics['最終残高'],serial?110:90);}
 });
 test('all four authored routes stay stable and original calculation views remain',()=>{
- assert.equal(X.lessons.size,315);for(const [id,kind]of Object.entries({'c14-index':'index-correspondence','c14-join':'join-provenance','c14-transaction':'transaction-order','c14-bplus':'bplus-routing'})){const d=X.find(id);assert.equal(d.chapters[0].id,'objects');assert.equal(d.chapters[0].activities[0].kind,kind);assert.equal(d.chapters.length,2);}
+ assert.equal(X.lessons.size,317);for(const [id,kind]of Object.entries({'c14-index':'index-correspondence','c14-join':'join-provenance','c14-transaction':'transaction-order','c14-bplus':'bplus-routing'})){const d=X.find(id);assert.equal(d.chapters[0].id,'objects');assert.equal(d.chapters[0].activities[0].kind,kind);assert.equal(d.chapters.length,2);}
 });

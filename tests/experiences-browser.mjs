@@ -28,8 +28,8 @@ try{
   await page.goto(base);await page.waitForFunction(()=>globalThis.CSL?.app?.ready);
   const units=fixtureUnits.map(u=>({...u,chapters:u.chapters.map(c=>({id:c.id,kinds:c.activities.map(a=>a.kind)}))}));
   report.inventory=fixtureInventory;
-  await check(size+': all 315 units are authored and all activity renderers exist',async()=>{
-   assert.equal(units.length,315);assert.equal(report.inventory.units,315);
+  await check(size+': all 317 units are authored and all activity renderers exist',async()=>{
+   assert.equal(units.length,317);assert.equal(report.inventory.units,317);
    assert.ok(units.every(u=>u.chapters.length>0)); // Each actual renderer is verified after its lazy route loads below.
   });
   for(const unit of units){

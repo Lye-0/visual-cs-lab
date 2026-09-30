@@ -48,9 +48,9 @@ try{
   report.viewports.push({name,...viewport});const context=await browser.newContext({viewport,isMobile:name==='mobile',hasTouch:name==='mobile',reducedMotion:'reduce',locale:'ja-JP'});
   await context.route('**/*',route=>{const url=new URL(route.request().url());if(url.origin===new URL(base).origin||url.protocol==='data:')return route.continue();report.errors.push({viewport:name,url:url.href,message:'予期しない外部要求'});return route.abort();});
   const page=await context.newPage();page.setDefaultTimeout(7000);page.on('pageerror',e=>report.errors.push({viewport:name,url:page.url(),message:e.message}));
-  await page.goto(base+'#/catalog');await page.waitForFunction(()=>globalThis.CSL?.labs?.length===315);
+  await page.goto(base+'#/catalog');await page.waitForFunction(()=>globalThis.CSL?.labs?.length===317);
   const labs=fixtureLabs.map(l=>({id:l.id,title:l.unit||l.title,patch:l.exploration.patch,gap:!!l.gapId}));report.units=labs.length;
-  assert.equal(labs.length,315);
+  assert.equal(labs.length,317);
   for(const lab of labs)await check(`${name}: ${lab.id} 初期例・移動・比較・説明`,async()=>{
    await visit(page,lab.id);assert.ok((await page.locator('body').textContent()).includes(lab.title));
    const initial=await page.evaluate(()=>JSON.stringify(CSL.app.current.result));await inspectDiagram(page);

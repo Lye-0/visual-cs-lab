@@ -91,7 +91,7 @@ test('invalid item edits do not change even the valid first field',()=>{
  const s=V.knapsackStart(),before=copy(s);assert.throws(()=>V.knapsack(s,{kind:'item',index:0,weight:3,value:-1}));assert.throws(()=>V.knapsack(s,{kind:'item',index:0,weight:0,value:3}));assert.throws(()=>V.knapsack(s,{kind:'select',row:5,col:0}));assert.deepEqual(s,before);
 });
 test('registered lesson routes remain stable and now select the three direct workspaces',()=>{
- const expected={'c01-hamming':'hamming-roles','c03-integral':'trapezoid-select','c06-dp':'knapsack-cells'};assert.equal(X.lessons.size,315);
+ const expected={'c01-hamming':'hamming-roles','c03-integral':'trapezoid-select','c06-dp':'knapsack-cells'};assert.equal(X.lessons.size,317);
  for(const [id,kind]of Object.entries(expected)){const chapter=X.find(id).chapters[0];assert.equal(chapter.id,'meaning');assert.equal(chapter.activities[0].kind,kind);}
 });
 test('probability exposes a real seed control while fixed comparison still shares seed42',()=>{

@@ -1,10 +1,10 @@
 {
   "version": "3.0.0",
-  "total": 315,
+  "total": 317,
   "legacyTotal": 144,
-  "engineCount": 274,
+  "engineCount": 276,
   "counts": {
-    "core": 208,
+    "core": 210,
     "network": 49,
     "security": 50,
     "missions": 8
@@ -1665,6 +1665,16 @@
     {
       "id": "c03-epsilon-delta",
       "unit": "ε–δで理解する極限と連続性",
+      "area": "C03"
+    },
+    {
+      "id": "c03-vector-space",
+      "unit": "ベクトル空間 ― 多項式もベクトル？",
+      "area": "C03"
+    },
+    {
+      "id": "c03-subspace",
+      "unit": "部分空間 ― 集合の読み方から証明まで",
       "area": "C03"
     }
   ]

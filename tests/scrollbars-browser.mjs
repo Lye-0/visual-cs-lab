@@ -43,7 +43,7 @@ try{
  await check('sidebar uses a quiet native scrollbar, not the broad system track and arrows',async()=>{
   assert.equal(await page.evaluate(()=>matchMedia('(pointer:fine)').matches),true);
   const s=await inspect(nav);assert.ok(s.scroll>s.client);assert.equal(s.overflow,'auto');assertTheme(s);
-  assert.equal(await page.evaluate(()=>CSL.labs.length),315);
+  assert.equal(await page.evaluate(()=>CSL.labs.length),317);
   await mkdir('review-output/scrollbar-screenshots',{recursive:true});
   await page.locator('.sidebar').screenshot({path:`review-output/scrollbar-screenshots/${name}-sidebar.png`});
  });

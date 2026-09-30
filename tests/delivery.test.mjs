@@ -4,15 +4,15 @@ import {readFile,stat} from 'node:fs/promises';
 import vm from 'node:vm';
 import {generateDelivery,shellModules,shellStyles} from '../scripts/delivery.mjs';
 const root=new URL('../',import.meta.url),delivery=await generateDelivery();
-test('all 315 generated payloads match their authored sources, including Windows checkouts',async()=>{
- assert.equal(delivery.units,315);assert.equal(delivery.chapters,593);
+test('all 317 generated payloads match their authored sources, including Windows checkouts',async()=>{
+ assert.equal(delivery.units,317);assert.equal(delivery.chapters,597);
  for(const [path,content]of delivery.files){assert.equal((await readFile(new URL(path,root),'utf8')).replace(/\r\n/g,'\n'),content,path);}
 });
 test('discovery retains every searchable unit without model code or lesson body',async()=>{
  const context=vm.createContext({});
  vm.runInContext(await readFile(new URL('src/core.js',root),'utf8'),context);
  vm.runInContext(delivery.files.get('src/generated/catalog.js'),context);
- assert.equal(context.CSL.labs.length,315);assert.equal(Object.keys(context.CSL.engines).length,0);
+ assert.equal(context.CSL.labs.length,317);assert.equal(Object.keys(context.CSL.engines).length,0);
  assert.ok(context.CSL.labs.every(l=>!l.controls&&!l.reading&&!l.defaults));
  assert.equal(context.CSL.experiences,undefined);
 });

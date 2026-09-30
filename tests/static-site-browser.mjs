@@ -51,7 +51,7 @@ try{
    // every required local script and stylesheet has loaded. The assertions
    // below verify the actual application resources directly instead.
    const state=await page.evaluate(()=>({scripts:[...document.scripts].map(s=>({src:s.getAttribute('src'),defer:s.defer,text:s.textContent})),css:[...document.querySelectorAll('link[rel="stylesheet"]')].map(l=>l.getAttribute('href')),loaded:[...document.styleSheets].filter(s=>s.href).length,units:CSL.labs.length,areas:CSL.areas.length,bg:getComputedStyle(document.body).backgroundColor,csp:window.__csp}));
-   assert.equal(state.units,315);assert.equal(state.areas,20);
+   assert.equal(state.units,317);assert.equal(state.areas,20);
    assert.deepEqual(state.scripts.map(s=>s.src),browserModules.map(n=>`./src/${n}.js`));
    assert.ok(state.scripts.every(s=>s.defer&&s.text.trim()===''));
    assert.deepEqual(state.css,styles.map(n=>`./src/${n}.css`));assert.equal(state.loaded,styles.length);
@@ -138,7 +138,7 @@ try{
   await page.goto(origin+'/visual-cs-lab/#/catalog');
   await page.locator('#catalog-query').waitFor({timeout:20000});
   assert.equal(await page.locator('#catalog-results .library-unit').count(),24);
-  assert.equal(await page.evaluate(()=>CSL.labs.length),315);assert.equal(await page.evaluate(()=>CSL.app.ready),true);
+  assert.equal(await page.evaluate(()=>CSL.labs.length),317);assert.equal(await page.evaluate(()=>CSL.app.ready),true);
   await context.close();
  });
 }catch(e){report.errors.push({message:String(e.stack||e)});}

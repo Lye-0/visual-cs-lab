@@ -42,7 +42,7 @@ test('inventory --check compares the README catalog and machine inventory withou
  const paths=['../README.md','../data/experiments.json'].map(p=>new URL(p,import.meta.url));
  const before=await Promise.all(paths.map(p=>readFile(p,'utf8')));
  const {stdout}=await promisify(execFile)(process.execPath,['scripts/inventory.mjs','--check'],{cwd:new URL('..',import.meta.url),maxBuffer:1024*1024});
- assert.equal(JSON.parse(stdout).total,315);assert.deepEqual(await Promise.all(paths.map(p=>readFile(p,'utf8'))),before);
+ assert.equal(JSON.parse(stdout).total,317);assert.deepEqual(await Promise.all(paths.map(p=>readFile(p,'utf8'))),before);
  const inventory=JSON.parse(before[1]),section=before[0].split('<!-- UNIT_CATALOG_START -->')[1]?.split('<!-- UNIT_CATALOG_END -->')[0]||'';
  const links=[...section.matchAll(/https:\/\/lye-0\.github\.io\/visual-cs-lab\/#\/lab\/([a-z0-9-]+)/g)].map(match=>match[1]);
  assert.equal(links.length,inventory.total);assert.equal(new Set(links).size,inventory.total);

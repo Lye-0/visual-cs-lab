@@ -7,7 +7,7 @@ const L=CSL,X=L.experiences,E=X.engineeringDesk,near=(a,b)=>assert.ok(Math.abs(a
 const atomic=(fn,s,a)=>{const before=structuredClone(s);assert.throws(()=>fn(s,a));assert.deepEqual(s,before);};
 const ids=Array.from({length:12},(_,i)=>'gap-'+(144+i));
 test('最後の12単元を28章へ接続し、元の314単元を全て保持する',()=>{
- assert.equal(L.labs.length,315);assert.equal(X.lessons.size,315);assert.deepEqual([...X.lessons.keys()].sort(),L.labs.map(l=>l.id).sort());
+ assert.equal(L.labs.length,317);assert.equal(X.lessons.size,317);assert.deepEqual([...X.lessons.keys()].sort(),L.labs.map(l=>l.id).sort());
  const defs=ids.map(id=>X.find(id));assert.ok(defs.every(Boolean));assert.equal(defs.reduce((n,d)=>n+d.chapters.length,0),28);
  const kinds=defs.flatMap(d=>d.chapters.flatMap(c=>c.activities.map(a=>a.kind)));
  for(const kind of ['requirements-desk','observer-mailboxes','order-state-desk','test-author-desk','merge-choice-desk','revision-gate','study-order','stakeholder-options','resampling-objects','claim-evidence','request-pipeline','feedback-specimen','target-specimen','accessibility-specimen','layout-specimen','event-specimen','form-specimen'])assert.equal(kinds.filter(x=>x===kind).length,1,kind);

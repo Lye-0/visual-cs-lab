@@ -13,6 +13,7 @@ export const lessonShell=['number-input','curriculum-kit','curriculum-tools','cu
 // Explicit dependency edges express shared state and widget hosts, never a
 // compulsory teaching format. Expand these when a source gains a dependency.
 export const dependencies={
+ 'experiences-vector-spaces-widgets':['vector-spaces'],
  'experiences-epsilon-delta-widgets':['epsilon-delta'],
  'extensions':['network','foundations','security','git','missions'],
  'missions':['network'],

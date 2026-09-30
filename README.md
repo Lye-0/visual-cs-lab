@@ -10,7 +10,7 @@ https://lye-0.github.io/visual-cs-lab/
 
 <!-- UNIT_CATALOG_START -->
 
-315単元を20分野に分けて掲載します。分野名を開くと単元へ移動できます。
+317単元を20分野に分けて掲載します。分野名を開くと単元へ移動できます。
 
 <details>
 <summary>C01 情報の表現（22単元）</summary>
@@ -61,7 +61,7 @@ https://lye-0.github.io/visual-cs-lab/
 </details>
 
 <details>
-<summary>C03 数学・確率・統計（24単元）</summary>
+<summary>C03 数学・確率・統計（26単元）</summary>
 
 - [c03-matrix — 行列と線形変換](https://lye-0.github.io/visual-cs-lab/#/lab/c03-matrix)
 - [c03-derivative — 微分と差分近似](https://lye-0.github.io/visual-cs-lab/#/lab/c03-derivative)
@@ -87,6 +87,8 @@ https://lye-0.github.io/visual-cs-lab/
 - [gap-016 — 仮説検定・p値・t検定・カイ二乗検定](https://lye-0.github.io/visual-cs-lab/#/lab/gap-016)
 - [gap-017 — 重回帰・主成分分析・SVD・因子分析](https://lye-0.github.io/visual-cs-lab/#/lab/gap-017)
 - [c03-epsilon-delta — ε–δで理解する極限と連続性](https://lye-0.github.io/visual-cs-lab/#/lab/c03-epsilon-delta)
+- [c03-vector-space — ベクトル空間 ― 多項式もベクトル？](https://lye-0.github.io/visual-cs-lab/#/lab/c03-vector-space)
+- [c03-subspace — 部分空間 ― 集合の読み方から証明まで](https://lye-0.github.io/visual-cs-lab/#/lab/c03-subspace)
 
 </details>
 

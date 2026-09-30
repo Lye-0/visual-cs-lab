@@ -61,7 +61,7 @@ try{
   page.on('response',r=>{if(r.status()>=400)report.runtime.push({width,location,http:r.status(),url:r.url()});});
   await page.goto(base);await page.waitForFunction(()=>CSL?.app?.ready);
   const units=fixtureUnits;
-  assert.equal(units.length,315);assert.equal(fixtureInventory.units,315);
+  assert.equal(units.length,317);assert.equal(fixtureInventory.units,317);
   if(!report.units.length)report.units=units;
   for(const unit of units)for(const chapter of unit.chapters){
    const row={id:unit.id,chapter:chapter.id,width,passed:false};location=unit.id+'/'+chapter.id;

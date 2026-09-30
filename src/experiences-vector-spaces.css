@@ -1,0 +1,37 @@
+/* Reading has its own hierarchy; proof steps are never hidden by a player. */
+.vs-reading{max-width:940px;margin:auto}
+.vs-section{margin:0 0 36px;padding:0 0 26px;border-bottom:1px solid var(--ex-line)}
+.vs-section:last-child{border-bottom:0;margin-bottom:0}
+.vs-section h4,.vs-proof-step h4{font-size:20px;line-height:1.55;color:var(--ex-ink);margin:0 0 16px}
+.vs-section p,.vs-proof-step p{line-height:1.95}
+.vs-note{border-left:3px solid var(--ex-gold);padding:16px 20px;background:#25271f;border-radius:0 9px 9px 0;margin:22px 0}
+.vs-note p{margin:0;color:#e5dfc9}
+.vs-demo{background:var(--ex-paper);border:1px solid var(--ex-line);border-radius:12px;padding:22px;margin-top:24px}
+.vs-coefficients{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:18px 0}
+.vs-coefficients>div{border-top:2px solid var(--ex-accent);padding:12px;background:#14232d}
+.vs-coefficients small,.vs-coefficients strong{display:block}.vs-coefficients small{font-size:13px;color:var(--ex-muted)}.vs-coefficients strong{font-size:24px}
+.vs-set-expression{display:flex;align-items:center;flex-wrap:wrap;gap:12px;padding:22px 0;font-size:clamp(18px,2.1vw,23px);line-height:1.6}
+.vs-set-expression>span{min-width:0}.vs-set-expression small{display:block;font:13px/1.8 system-ui;color:var(--ex-muted)}
+.vs-ambient{border-bottom:3px solid var(--ex-blue)}.vs-condition{border-bottom:3px solid var(--ex-gold)}
+.vs-containment{border:2px solid var(--ex-blue);border-radius:14px;padding:22px;margin:24px 0;background:#142331}
+.vs-containment>div{border:2px solid var(--ex-accent);border-radius:12px;padding:20px;margin:20px 0 16px;background:#152b2c}
+.vs-containment p{margin:8px 0 0;font-size:15px}
+.vs-checklist{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:0;margin:20px 0;list-style:none}
+.vs-checklist li{padding:16px;border-left:3px solid var(--ex-accent);background:var(--ex-raised);border-radius:0 8px 8px 0}
+.vs-checklist strong,.vs-checklist span{display:block}.vs-checklist span{font-size:14px;margin-top:8px}
+.vs-two{display:grid;grid-template-columns:minmax(240px,.8fr) minmax(0,1.2fr);gap:24px;align-items:start}
+.vs-plane{display:block;width:100%;max-width:350px;background:#111d28;border:1px solid var(--ex-line);border-radius:10px}
+.vs-plane text{fill:var(--ex-ink);font:12px system-ui}.vs-axis{stroke:#516473;stroke-width:1}.vs-set{stroke:var(--ex-accent);stroke-width:4;fill:none}.vs-origin{fill:var(--ex-ink)}.vs-point{fill:var(--ex-gold);stroke:#111d28;stroke-width:2}.vs-point-2{fill:var(--ex-blue)}
+.vs-vector-example{margin:22px 0;max-width:520px}.vs-vector-example svg{display:block;width:100%;background:var(--ex-paper);border:1px solid var(--ex-line);border-radius:10px}.vs-vector-example text{fill:var(--ex-ink);font:13px system-ui}.vs-vector-example figcaption{color:var(--ex-muted);font-size:14px;line-height:1.8;margin-top:12px}
+.vs-flow{display:flex;flex-wrap:wrap;gap:10px 22px;padding-left:24px}.vs-flow li{padding:4px 8px}
+.vs-proof-step{padding:24px;border:1px solid var(--ex-line);border-radius:12px;margin:24px 0;background:var(--ex-paper)}
+.vs-proof-step dl{margin:0}.vs-proof-step dt{font-size:14px;font-weight:700;color:var(--ex-blue);margin-top:20px}.vs-proof-step dt:first-child{margin-top:0}.vs-proof-step dd{margin:8px 0 0}.vs-proof-step dd p{margin:0 0 10px}
+.vs-proof-line{margin:12px 0 22px}.vs-proof-line .ex-equation{margin:8px 0}.vs-proof-line p{font-size:15px;color:var(--ex-muted)}
+.vs-membership{border-left:3px solid var(--ex-accent);padding-left:14px}
+.vs-learner-quote{margin:20px 0;padding:18px 22px;border-left:3px solid var(--ex-accent);background:#17292c}.vs-learner-quote p{font-size:15px}.vs-learner-quote p:last-child{margin-bottom:0}
+.vs-next-link{display:block;border-top:1px solid var(--ex-line);padding:20px 0;margin-top:28px;color:var(--ex-accent);font-weight:650}
+.experience .ex-chapters-tabs{display:flex;gap:0;border-bottom:1px solid var(--ex-line)}
+.experience .ex-chapters-tabs a{flex:1;border:0;border-radius:0;padding:16px 12px;text-align:center;border-bottom:3px solid transparent;background:transparent}
+.experience .ex-chapters-tabs a[aria-current=page]{border-bottom-color:var(--ex-accent);background:#172c2e}
+.experience .ex-chapters-tabs a span{display:none}.experience .ex-chapters-tabs a strong{font-size:15px}
+@media(max-width:650px){.vs-two{grid-template-columns:1fr}.vs-plane{margin:auto}.vs-checklist{grid-template-columns:1fr}.vs-proof-step,.vs-demo{padding:18px}.vs-coefficients{grid-template-columns:repeat(2,minmax(0,1fr))}.vs-set-expression{gap:8px}.experience .ex-chapters-tabs a{padding:12px 6px}.experience .ex-chapters-tabs a strong{font-size:13px}.vs-containment{padding:16px}}

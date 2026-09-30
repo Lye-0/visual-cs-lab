@@ -87,7 +87,7 @@ const overrides={
  'c01-information':'math-information','c01-entropy':'math-information','c01-joint':'math-information','c01-markov':'math-information','c01-channel':'math-information',
  'c01-huffman':'math-compression','c01-shannon-fano':'math-compression',
  'c01-hamming':'math-coding','c01-prefix':'math-coding','c01-kraft':'math-coding','c01-distance':'math-coding','c01-linear-code':'math-coding',
- 'c02-set':'math-discrete','c03-matrix':'math-linear','c03-epsilon-delta':'math-calculus','c03-derivative':'math-calculus','c03-integral':'math-numerical',
+ 'c02-set':'math-discrete','c03-matrix':'math-linear','c03-vector-space':'math-linear','c03-subspace':'math-linear','c03-epsilon-delta':'math-calculus','c03-derivative':'math-calculus','c03-integral':'math-numerical',
  'c09-cache':'sys-memory','n02-crc':'math-coding','s04-signature':'sec-public',
  'c18-image':'media-images','c18-projection':'media-graphics','c20-privacy':'practice-ethics','c20-contrast':'media-accessibility'
 };
