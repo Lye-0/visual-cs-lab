@@ -1,4 +1,5 @@
 import {classicUrl,readyAuthored} from './legacy-routes.mjs';
+import {fixtureLabs} from './lesson-fixtures.mjs';
 // Actual committed site, with mouse/keyboard controls and measured layouts.
 import assert from 'node:assert/strict';
 import http from 'node:http';
@@ -9,6 +10,11 @@ import {fileURLToPath} from 'node:url';
 import {chromium,firefox,webkit} from 'playwright';
 const root=path.resolve(fileURLToPath(new URL('../',import.meta.url)));
 const engine=process.env.BROWSER||'chromium';
+const pageSize=24,catalogueIds=fixtureLabs.map(l=>l.id),pageCount=Math.ceil(catalogueIds.length/pageSize);
+// The unqueried catalogue groups lessons by taxonomy category, preserving
+// authoring order within each category. Derive expected IDs outside the UI.
+const orderedCatalogueIds=globalThis.CSL.taxonomy.categories.flatMap(category=>fixtureLabs.filter(l=>l.taxonomy.category===category.id).map(l=>l.id));
+assert.deepEqual(orderedCatalogueIds.slice().sort(),catalogueIds.slice().sort());
 const report={sourceCommit:process.env.GITHUB_SHA||'local',engine,cases:[],errors:[]};
 const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml'};
 const server=http.createServer(async(req,res)=>{try{let name=decodeURIComponent(new URL(req.url,'http://localhost').pathname);if(name.startsWith('/visual-cs-lab/'))name=name.slice('/visual-cs-lab'.length);if(name==='/')name='/index.html';const file=path.resolve(root,'.'+name);if(!file.startsWith(root+path.sep)){res.writeHead(403).end();return;}const body=await readFile(file);res.writeHead(200,{'Content-Type':mime[path.extname(file)]||'application/octet-stream','Cache-Control':'no-store'}).end(body);}catch{res.writeHead(404).end();}});
@@ -57,7 +63,7 @@ try{
    await page.locator('#filter-level').selectOption('3');
    await page.waitForFunction(()=>CSL.app.params.get('level')==='3');assert.ok(page.url().includes('q=GAP-037'));
    await page.locator('[data-filter="all"]').first().click();await page.waitForFunction(()=>CSL.app.params.size===0);
-   assert.ok((await page.locator('#catalog-count').textContent()).startsWith('317 '));await layout(page);
+   assert.ok((await page.locator('#catalog-count').textContent()).startsWith(catalogueIds.length+' '));await layout(page);
   });
   await check(label+': theme disclosure is operable and returns to the right parent',async()=>{
    await visit(page,base,'#/catalog?domain=math');
@@ -95,15 +101,15 @@ try{
     const themes=await page.evaluate(()=>CSL.taxonomy.categories.map(c=>({id:c.id,domain:c.domain,ids:CSL.taxonomy.select({category:c.id}).map(l=>l.id)})));
     for(const c of themes){await visit(page,base,`#/catalog?domain=${c.domain}&category=${c.id}`);const actual=await page.locator('#catalog-results .library-unit').evaluateAll(els=>els.map(el=>el.dataset.labId));assert.deepEqual(actual.slice().sort(),c.ids.slice(0,24).sort(),c.id);}
    });
-   await check('all 317 units remain reachable through page navigation without omission or duplication',async()=>{
+   await check('all catalogue units remain reachable through page navigation without omission or duplication',async()=>{
     await visit(page,base,'#/catalog');const all=[];
-    for(let n=1;n<=14;n++){
+    for(let n=1;n<=pageCount;n++){
      all.push(...await page.locator('#catalog-results .library-unit').evaluateAll(els=>els.map(el=>el.dataset.labId)));
-     const next=page.locator('#catalog-results [data-library-page]').last();if(n===14){assert.equal(await next.isDisabled(),true);break;}
+     const next=page.locator('#catalog-results [data-library-page]').last();if(n===pageCount){assert.equal(await next.isDisabled(),true);break;}
      await next.click();await page.waitForFunction(n=>CSL.app.params.get('page')===String(n),n+1);
     }
-    const expected=await page.evaluate(()=>CSL.labs.map(l=>l.id));assert.equal(all.length,317);assert.deepEqual([...new Set(all)].sort(),expected.sort());
-    await page.goBack();await page.waitForFunction(()=>CSL.app.params.get('page')==='13');
+    assert.equal(all.length,catalogueIds.length);assert.deepEqual(all.slice().sort(),catalogueIds.slice().sort());
+    await page.goBack();await page.waitForFunction(n=>CSL.app.params.get('page')===String(n),pageCount-1);
    });
    await check('old area/track/topic URLs retain their original selection and category counts',async()=>{
     for(const query of ['area=C01','track=network&topic=N07','track=core','track=missions']){
@@ -116,7 +122,9 @@ try{
    await check('invalid filters and excessive page numbers recover without hiding the catalogue',async()=>{
     await visit(page,base,'#/catalog?domain=unknown&category=invalid&page=999999');
     assert.equal(await page.evaluate(()=>CSL.app.params.has('domain')||CSL.app.params.has('category')),false);
-    assert.equal(await page.locator('#catalog-results .library-unit').count(),3);
+    const actual=await page.locator('#catalog-results .library-unit').evaluateAll(els=>els.map(el=>el.dataset.labId));
+    assert.deepEqual(actual,orderedCatalogueIds.slice((pageCount-1)*pageSize));
+    assert.equal(await page.locator('#catalog-results [data-library-page]').last().isDisabled(),true);
    });
   }
   await mkdir('review-output/library-screenshots',{recursive:true});
