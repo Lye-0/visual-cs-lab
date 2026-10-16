@@ -10,6 +10,135 @@ X.clone=clone;
 X.chapter=(id,title,question,paragraphs,activities=[],after=[])=>({id,title,question,paragraphs:Array.isArray(paragraphs)?paragraphs:[paragraphs],activities,after:Array.isArray(after)?after:[after]});
 X.activity=(kind,title,keys=[],patch={},options={})=>({kind,title,keys,patch,...options});
 X.example=(label,patch,reason)=>({label,patch,reason});
+// Authored primary views: each chapter chooses the objects its question names.
+// Negative indices follow the final trace when the number of steps changes.
+X.primaryViews={
+ "n06-ipv6/communication": [
+  0,
+  1
+ ],
+ "gap-022/representations": [
+  0,
+  -1
+ ],
+ "gap-066/encoding": [
+  0,
+  1
+ ],
+ "gap-066/operand": [
+  1,
+  0
+ ],
+ "gap-134/frequency": [
+  2
+ ],
+ "gap-142/model": [
+  0,
+  1
+ ],
+ "gap-142/delay": [
+  1,
+  2
+ ],
+ "gap-136/coordinates": [
+  0,
+  1
+ ],
+ "gap-136/color": [
+  0,
+  1
+ ],
+ "gap-124/regularize": [
+  0,
+  1
+ ],
+ "gap-124/answer-leak": [
+  0,
+  1
+ ],
+ "gap-012/normal": [
+  0,
+  -1
+ ],
+ "gap-012/binomial": [
+  0,
+  -1
+ ],
+ "gap-014/averages": [
+  -2,
+  -1
+ ],
+ "gap-014/size": [
+  -2,
+  -1
+ ],
+ "gap-060/rc": [
+  0
+ ],
+ "gap-060/rl": [
+  0
+ ],
+ "gap-060/rlc": [
+  0
+ ],
+ "gap-024/subset": [
+  -2,
+  -1
+ ],
+ "gap-044/balance": [
+  -2,
+  -1
+ ],
+ "s13-permission/reason": [
+  0,
+  1
+ ],
+ "s18-incident/reason": [
+  0
+ ],
+ "gap-113/trust": [
+  0,
+  1
+ ],
+ "gap-115/labels": [
+  0,
+  1,
+  2
+ ],
+ "gap-117/state": [
+  0
+ ],
+ "gap-131/mask": [
+  1,
+  3
+ ],
+ "gap-138/sampling": [
+  1
+ ],
+ "gap-147/build": [
+  0,
+  -1
+ ],
+ "gap-149/participants": [
+  0,
+  -1
+ ],
+ "gap-049/components": [
+  0,
+  1
+ ],
+ "gap-062/group": [
+  1,
+  2
+ ],
+ "c20-contrast/explore": [
+  0
+ ]
+};
+X.frameIndices=(activity,frames)=>{
+ const choices=activity.frames??[activity.frame==='first'?0:typeof activity.frame==='number'?activity.frame:-1];
+ return [...new Set(choices.map(n=>n<0?frames.length+n:n))].filter(i=>i>=0&&i<frames.length);
+};
 X.define=(id,lead,chapters,options={})=>{
  const lab=L.labs.find(l=>l.id===id);
  if(!lab||X.lessons.has(id))throw Error('Unknown or repeated experience: '+id);
@@ -19,6 +148,7 @@ X.define=(id,lead,chapters,options={})=>{
   if(!/^[a-z0-9-]+$/.test(c.id)||ids.has(c.id)||!c.title||!c.question||!c.paragraphs.length)throw Error('Invalid chapter: '+id);
   ids.add(c.id);
   for(const a of c.activities){
+   if(['inspect','compare'].includes(a.kind)&&X.primaryViews[id+'/'+c.id]&&!a.frames)a.frames=X.primaryViews[id+'/'+c.id].slice();
    if(!a.kind||!a.title||!Array.isArray(a.keys))throw Error('Invalid activity: '+id);
    const target=L.labs.find(l=>l.id===(a.model||id));
    if(!target)throw Error('Unknown activity model: '+id);

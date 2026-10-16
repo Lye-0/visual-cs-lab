@@ -42,7 +42,7 @@ M.filter=(input,a)=>{
 M.samplingStart=()=>({rate:8,bits:3,sample:1,log:[]});
 M.samplingView=s=>{
  const levels=2**s.bits,step=2/(levels-1),samples=range(s.rate,i=>{
-  const time=i/s.rate,one=Math.cos(tau*time),seven=Math.cos(tau*7*time),code=Math.max(0,Math.min(levels-1,Math.round((one+1)/step)));
+  const time=i/s.rate,one=Math.cos(tau*time),seven=Math.cos(tau*7*time),code=Math.max(0,Math.min(levels-1,Math.floor((one+1)/step+.5+1e-12)));
   return {i,time,one,seven,code,saved:code*step-1};
  });
  return {levels,step,samples,same:samples.every(p=>Math.abs(p.one-p.seven)<1e-10)};

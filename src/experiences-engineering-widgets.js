@@ -40,14 +40,14 @@ X.registerWidget('test-author-desk',(root,a,c)=>E.mount(root,c,{
  render:(s,{field})=>{
   const v=E.testView(s),trace=v.frame;
   return `<div class="eg-two">${box('実装と別に、ケースを作る',`<form class="eg-form">${field('input','試す入力',10,{min:-50,max:50})}${field('expected','あなたが考えた期待値',10,{min:-50,max:50})}${b('ケースを追加','add')}</form>`+table(['入力','自分の期待値'],s.cases.map(r=>[r.x,r.expected]))+b('現在の版で全ケースを実行','run'))}${box('限られた教材言語を編集する',`<form class="eg-form">${field('program','プログラム',s.program,{type:'textarea',maxLength:2400})}${b('コードを適用して結果を無効化','code')}</form>`+p('現在の版 '+s.revision+'。fn、if、return、input、printを解釈する小言語です。ブラウザのJavaScriptを実行していません。'))}</div>`+
-   (s.results?box('期待値・仕様・実装を混ぜずに比較',raw(['ケース','自分の期待','独立した仕様','実装の最後の出力','自分の期待に一致','仕様に一致'],s.results.map((r,i)=>[b('入力 '+r.x,'select:'+i,`aria-pressed="${s.selected===i}"`),h(r.expected),h(r.spec),h(r.error||(r.actual??'出力なし')),r.pass?'一致':'不一致',r.correct?'一致':'不一致'])))+p(s.results.some(r=>!r.oracle)?'期待値そのものが仕様と異なるケースがあります。緑のテストだけでは十分ではありません。':'今回の期待値は、この仕様から計算した値と一致しています。'):p('ケースかコードを変えたため、まだ現在の結果はありません。'))+
+   (s.results?box('期待値・仕様・実装を混ぜずに比較',raw(['ケース','自分の期待','独立した仕様','実装の最後の出力','自分の期待に一致','仕様に一致'],s.results.map((r,i)=>[b('入力 '+r.x,'select:'+i,`aria-pressed="${s.selected===i}"`),h(r.expected),h(r.spec),h(r.error||(r.actual??'出力なし')),r.pass?'一致':'不一致',r.correct?'一致':'不一致'])))+p(s.results.some(r=>!r.oracle)?'期待値そのものが仕様と異なるケースがあります。緑のテストだけでは十分ではありません。':'今回の期待値は、この仕様から計算した値と一致しています。'):p(s.log.length?'ケースかコードを変更しました。現在の入力でテストを実行してください。':'まだテストを実行していません。入力と期待値を確認して、テストを実行してください。'))+
    (trace?box('選んだ失敗例を、実際に実行した順で読む',`<div class="ex-actions">${b('前の文へ','step:-1')}${b('次の文へ','step:1')}</div><p>${h(trace.title)}（${s.step+1}/${v.trace.frames.length}）</p><pre class="eg-code">${s.program.split('\n').map((line,i)=>`<span${i===trace.visual?.line?' class="running"':''}><em>${i+1}</em>${h(line)}</span>`).join('')}</pre>`+p(trace.explain)+table(['現在の変数','値'],Object.entries(trace.visual?.values||{}))+p('その時点の出力：'+(trace.visual?.output||[]).join(', '))):'')+
    p('有限の入力での観察です。全行を訪問しても、全入力の正しさを証明したことにはなりません。実装から期待値をコピーせず、仕様を読みます。');
  }
 }));
 X.registerWidget('merge-choice-desk',(root,a,c)=>E.mount(root,c,{
  start:E.mergeStart,reduce:E.merge,
- instruction:'共通の元と左右を比較し、競合した色の行だけを選んでください。右だけが変更したsize=20は、色の判断とは独立して残します。',
+ instruction:'共通の元と左右を比較し、競合した色の行だけを選んでください。初期の競合印は隣り合うcolorとsizeを一つの範囲として囲みます。この中で両側の判断が必要なのはcolorです。右だけが変更したsize=20は、色の判断とは独立して残します。',
  action:(code,fields)=>{const [kind,value]=code.split(':');return kind==='example'?{kind,value}:{kind:'resolve',side:value,value:value==='custom'?fields.get('color'):''};},
  render:(s,{field})=>{const v=E.mergeView(s);return `<div class="ex-actions">${b('同じ行が競合する例','example:conflict')}${b('別の行だけを変えた例','example:independent')}</div>`+box('同じ元から、何を変えたか',table(['行','共通の元','左','右'],s.base.map((x,i)=>[i+1,x,s.left[i],s.right[i]])))+(v.conflicts.length?box('色の行を判断する',`<div class="ex-actions">${b('左のgreenを使う','resolve:left')}${b('右のredを使う','resolve:right')}</div><form class="eg-form">${field('color','別の色へ統合する','purple',{type:'text'})}${b('自分の案を使う','resolve:custom')}</form>`):p('別々の行の変更なので、行単位では自動で統合できます。'))+box('統合案を残して読む','<pre>'+h(v.result.join('\n'))+'</pre>')+p('この例は3行の設定です。行の競合がなくなっても、組み合わせた動作が利用者の仕様に合うかは別に検証します。実Gitを書き換えてはいません。');}
 }));

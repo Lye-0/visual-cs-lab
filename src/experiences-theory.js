@@ -4,7 +4,7 @@
 'use strict';
 const X=CSL.experiences,C=X.chapter,A=X.activity,P=X.example;
 const define=(n,lead,chapters)=>X.define('gap-'+String(n).padStart(3,'0'),lead,chapters);
-const m=(id,title,question,body,kind,keys,patch={},options={},after=[])=>C(id,title,question,body,[A(kind,title+'を確かめる',keys,patch,options)],after);
+const m=(id,title,question,body,kind,keys,patch={},options={},after=[])=>C(id,title,question,body,[A(kind,title,keys,patch,options)],after);
 define(18,'文の意味、真偽の組合せ、対象を数える条件を分けて考えます。',[
  C('implication','約束が破れた例はどれか','「雨なら傘を持つ」が偽になるのは、どんな場合でしょうか。',['含意は二つの出来事が原因と結果だという主張ではありません。「前半が成り立つのに、後半が成り立たない」場合を除く条件です。','雨ではない場合の行動まで約束した文ではないため、傘を持っても持たなくても、この約束の反例にはなりません。'],[A('cases','四つの状況から文の意味を読む',[],{},{cases:[{title:'雨・傘なし',scene:'雨が降っています。しかし傘を持っていません。',reason:'前半が真で後半が偽。この組だけが含意の反例です。'},{title:'雨・傘あり',scene:'雨が降り、傘を持っています。',reason:'約束の前半も後半も満たしています。'},{title:'晴れ・傘あり',scene:'雨ではありませんが、傘を持っています。',reason:'前半を満たさない状況について、この約束は条件を課していません。'},{title:'晴れ・傘なし',scene:'雨ではなく、傘も持っていません。',reason:'前半が偽なので、これも約束の反例ではありません。'}]})]),
  m('equivalence','同じ条件を別の式で書く','二つの式は、どの入力でも同じ真偽になるでしょうか。','同値を調べるには、同じ入力の行を横に比べます。一つでも違う行があれば反例です。この有限の命題の真理値表では全ての割当を列挙できます。','inspect',['formula','compare'],{mode:'equivalence'},{showDerivation:true,examples:[P('含意を書き換える',{formula:'a -> b',compare:'!a || b'},'偽になる行を比べます。'),P('逆は同値か',{formula:'a -> b',compare:'b -> a'},'前半と後半を入れ替えると条件も変わります。')]}),

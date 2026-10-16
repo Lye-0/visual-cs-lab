@@ -112,7 +112,10 @@ unit('c02-nfa','C02','NFAからDFAへ・集合状態','複数の経路を、1つ
 R('nand-construction',p=>{
  const a=+p.a,b=+p.b,nand=(x,y)=>1-(x&y),na=nand(a,a),nb=nand(b,b),ab=nand(a,b),value=p.gate==='NOT'?na:p.gate==='AND'?nand(ab,ab):p.gate==='OR'?nand(na,nb):nand(nand(a,ab),nand(b,ab));
  const equations={NOT:`A NAND A = ${na}`,AND:`(A NAND B) NAND (A NAND B) = ${value}`,OR:`(A NAND A) NAND (B NAND B) = ${value}`,XOR:`t = A NAND B = ${ab}; (A NAND t) NAND (B NAND t) = ${value}`};
- return out([F('NANDはANDの結果を反転する','0と1の入力を、NANDだけで組み合わせます。同じ線を両方の入力へ入れるとNOTになります。',{type:'gate',gate:'NAND',a,b,output:ab}),F(`${p.gate}の式をNANDだけで作る`,'式の括弧の内側から計算します。入力を切り替えて、目的の真理値表と一致するか確かめてください。',calc(equations[p.gate],[term('a','A',a,'元の入力'),term('b','B',b,p.gate==='NOT'?'NOTでは使いません':'元の入力'),term('t','A NAND B',ab,'中間の値'),term('y','出力',value,`${p.gate}の結果`)]))],{'出力':value,'目的のゲート':p.gate});
+ const inputs=[term('a','A',a,'元の入力'),term('b','B',b,p.gate==='NOT'?'NOTでは使いません':'元の入力')];
+ const terms=p.gate==='OR'?[...inputs,term('na','A NAND A',na,'NOT A'),term('nb','B NAND B',nb,'NOT B'),term('y','出力',value,'ORの結果')]:p.gate==='NOT'?[term('a','A',a,'元の入力'),term('na','A NAND A',na,'NOT A'),term('y','出力',value,'NOTの結果')]:p.gate==='AND'?[...inputs,term('t','A NAND B',ab,'ANDの前の否定'),term('y','出力',value,'ANDの結果')]:[...inputs,term('t','A NAND B',ab,'XORの中間'),term('y','出力',value,'XORの結果')];
+ const first=p.gate==='OR'?F('ORは各入力のNOTから作る','ORの途中は、各入力を自分自身とNANDした値です。二つの入力を互いにNANDした値は使いません。',calc(`A NAND A = ${na}、B NAND B = ${nb}`,[term('na','A NAND A',na,'NOT A'),term('nb','B NAND B',nb,'NOT B')])):p.gate==='NOT'?F('NOTは同じ入力を両方へ入れる','A NAND AがNOT Aです。もう一方の入力Bは使いません。',calc(`A NAND A = ${na}`,[term('a','A',a,'元の入力'),term('na','A NAND A',na,'NOT A')])):F('NANDはANDの結果を反転する','0と1の入力を、NANDだけで組み合わせます。同じ線を両方の入力へ入れるとNOTになります。',{type:'gate',gate:'NAND',a,b,output:ab});
+ return out([first,F(`${p.gate}の式をNANDだけで作る`,'式の括弧の内側から計算します。入力を切り替えて、目的の真理値表と一致するか確かめてください。',calc(equations[p.gate],terms))],{'出力':value,'目的のゲート':p.gate});
 });
 unit('c08-nand','C08','NANDだけで論理ゲートを作る','同じ種類の部品だけで、NOT・AND・OR・XORを作れる？','二重否定と中間の値を使い、NANDの式を内側から計算します。','nand-construction',[S('gate','作りたいゲート','OR',['NOT','AND','OR','XOR']),B('a','入力A',true),B('b','入力B',false)],{gate:'XOR',b:true},'計算機科学入門 p.8','論理値の計算のみ。伝搬遅延や物理回路のハザードは再現しません。',{variantLabel:'XORで両方の入力を1にする',prereq:['c08-gate']});
 R('load-register',p=>{

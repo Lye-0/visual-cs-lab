@@ -4,23 +4,24 @@
 'use strict';
 const L=CSL,X=L.experiences,h=L.h,F=X.format,B=X.html.button;
 const svg=(body,label)=>`<svg class="ex-plane" viewBox="0 0 600 440" role="group" aria-label="${h(label)}"><defs><marker id="ex-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="context-stroke"/></marker></defs>${body}</svg>`;
-const P=([x,y])=>[300+48*x,220-48*y];
+const P=([x,y],scale=48)=>[300+scale*x,220-scale*y];
+X.models.vectorScale=points=>Math.min(48,180/Math.max(1,...points.flat().map(Math.abs)));
 const pt=p=>P(p).join(',');
-function axes(){let a='';for(let i=-5;i<=5;i++){const [x]=P([i,0]),[,y]=P([0,i]);a+=`<path class="ex-grid-line" d="M${x} 12V428M12 ${y}H588"/>`;if(i&&Math.abs(i)<5)a+=`<text class="ex-tick" x="${x+4}" y="236">${i}</text>`;}return a+'<path class="ex-axis" d="M12 220H588M300 12V428"/><text class="ex-tick" x="577" y="211">x</text><text class="ex-tick" x="310" y="21">y</text>';}
-function arrow(p,cls,label,handle){const [x,y]=P(p);return `<g class="${cls}"><path class="ex-vector" d="M300 220L${x} ${y}"/><text class="ex-vector-label" x="${Math.max(14,Math.min(548,x+10))}" y="${Math.max(24,y-9)}">${h(label)}</text>${handle?`<circle cx="${x}" cy="${y}" r="9" tabindex="0" role="button" data-ex-handle="${handle}" aria-label="${h(label)}の先端。ドラッグまたは矢印キーで動かします"/>`:''}</g>`;}
+function axes(scale=48){let a='';const step=scale<24?Math.ceil(48/scale):1;for(let i=-5*step;i<=5*step;i+=step){const [x]=P([i,0],scale),[,y]=P([0,i],scale);a+=`<path class="ex-grid-line" d="M${x} 12V428M12 ${y}H588"/>`;if(i&&Math.abs(i)<5*step)a+=`<text class="ex-tick" x="${x+4}" y="236">${i}</text>`;}return a+'<path class="ex-axis" d="M12 220H588M300 12V428"/><text class="ex-tick" x="577" y="211">x</text><text class="ex-tick" x="310" y="21">y</text>';}
+function arrow(p,cls,label,handle,scale=48){const [x,y]=P(p,scale);return `<g class="${cls}"><path class="ex-vector" d="M300 220L${x} ${y}"/><text class="ex-vector-label" x="${Math.max(14,Math.min(548,x+10))}" y="${Math.max(24,y-9)}">${h(label)}</text>${handle?`<circle cx="${x}" cy="${y}" r="9" tabindex="0" role="button" data-ex-handle="${handle}" aria-label="${h(label)}の先端。ドラッグまたは矢印キーで動かします"/>`:''}</g>`;}
 function gridTransform(u,v){let text='';for(let n=-4;n<=4;n++){const f=(a,b)=>[a*u[0]+b*v[0],a*u[1]+b*v[1]];text+=`<path class="ex-transformed-line" d="M${pt(f(n,-4))}L${pt(f(n,4))}M${pt(f(-4,n))}L${pt(f(4,n))}"/>`;}return text;}
 X.registerWidget('vectors',(root,a,current)=>{
- const s=X.scope(root,current),variant=a.variant||'basis';let u=[1,0],v=[1,1],w=[2,3],theta=45,history=[];
+ const s=X.scope(root,current),variant=a.variant||'basis';let u=[1,0],v=[1,1],w=[2,3],theta=45,history=[],currentScale=48;
  if(variant==='matrix'){u=[1,0];v=[.5,1];w=[1,1];}
  if(variant==='eigen'){u=[3,1];v=[1,3];w=[1,0];}
  if(variant==='complex'){u=[1,0];v=[0,1];w=[2,1];}
  const original={u:u.slice(),v:v.slice(),w:w.slice(),theta};
  root.innerHTML=`<p class="ex-operation-hint">${h(a.hint||'図の先端を動かしてください。選択して矢印キーでも動かせます。数値から変えることもできます。')}</p><div class="ex-geometry-layout"><div data-ex-plane></div><div><div data-ex-explanation></div><form class="ex-coordinate-form"><h4>同じ対象を数値で動かす</h4><div data-ex-coordinates></div><button class="ex-button" type="submit">座標を反映</button></form>${B('元の図に戻す','data-ex-origin')}${variant==='basis'?B('2本を平行にする','data-ex-parallel'):''}${variant==='eigen'?B('変換後の矢印を次の入力にする','data-ex-transform'):''}</div></div><p data-ex-status role="status"></p>`;
  const plane=root.querySelector('[data-ex-plane]'),explain=root.querySelector('[data-ex-explanation]'),fields=root.querySelector('[data-ex-coordinates]');
- const vectors=()=>variant==='eigen'||variant==='complex'?[['w',w,'入力の矢印']]:[['u',u,'1本目 u'],['v',v,'2本目 v'],['w',w,'目標 w']];
+ const vectors=()=>variant==='eigen'||variant==='complex'?[['w',w,'入力の矢印']]:[['u',u,'1本目 u'],['v',v,'2本目 v'],['w',w,variant==='matrix'?'入力 x':'目標 w']];
  const paintFields=()=>fields.innerHTML=vectors().map(([id,p,label])=>`<fieldset><legend>${h(label)}</legend>${p.map((x,i)=>`<label>${i?'y':'x'}<input type="number" name="${id}${i}" value="${x}" min="-4" max="4" step="0.25" required></label>`).join('')}</fieldset>`).join('')+(variant==='complex'?`<label>掛ける回転角（度）<input name="theta" type="number" min="-180" max="180" step="15" value="${theta}"></label>`:'');
  function paint(focus){
-  let body=axes(),copy='',calc=X.models.linear(u,v,w);
+  currentScale=variant==='eigen'?X.models.vectorScale([w,[3*w[0]+w[1],w[0]+3*w[1]]]):48;let body=axes(currentScale),copy='',calc=X.models.linear(u,v,w);
   if(variant==='basis'||variant==='matrix'){
    if(variant==='matrix')body+=gridTransform(u,v);
    body+=arrow(u,'ex-u','u','u')+arrow(v,'ex-v','v','v')+arrow(w,'ex-w',variant==='matrix'?'入力 x':'目標 w','w');
@@ -32,8 +33,8 @@ X.registerWidget('vectors',(root,a,current)=>{
    }else{const y=[w[0]*u[0]+w[1]*v[0],w[0]*u[1]+w[1]*v[1]];body+=arrow(y,'ex-output','出力 Ax');copy=`<h4>列は、基底の行き先</h4>${X.html.table(['','第1列 u','第2列 v'],[['x',u[0],v[0]],['y',u[1],v[1]]])}${X.html.formula(`Ax = ${F(w[0])}u + ${F(w[1])}v = (${y.map(x=>F(x)).join(', ')})`)}<p>入力の係数はそのまま使い、変換後の基底を組み合わせます。線をつぶす変換では異なる入力が同じ出力へ来るため、逆向きに一意に戻せません。</p>`;}
   }else if(variant==='eigen'){
    const y=[3*w[0]+w[1],w[0]+3*w[1]],length=Math.hypot(...w),det=w[0]*y[1]-w[1]*y[0],lambda=length?L.curriculum.dot(w,y)/(length*length):null;
-   body+='<path class="ex-eigen-guide" d="M108 412L492 28M108 28L492 412"/>'+arrow(w,'ex-w','v ≠ 0','w')+arrow(y,'ex-output','Av');
-   copy=`${X.html.table(['A','列1','列2'],[['行1',3,1],['行2',1,3]])}<h4>${length<1e-9?'零ベクトルは固有ベクトルにしません':Math.abs(det)<1e-8?'同じ直線上に残りました':'向きが変わりました'}</h4><p>${length<1e-9?'どんな行列でも零ベクトルは零になるため、特別な方向を表せません。':Math.abs(det)<1e-8?'Av = '+F(lambda)+'v。特別な方向では、変換は倍率だけで表せます。':'点線の方向 (1,1) または (1,−1) へ矢印を合わせてください。'}</p>${X.html.formula('Av = λv → (A−λI)v = 0')}<p>非零の解を持つにはA−λIがつぶれる必要があります。その条件がdet(A−λI)=0です。このAではλ=4,2です。</p>`;
+   body+='<path class="ex-eigen-guide" d="M108 412L492 28M108 28L492 412"/>'+arrow(w,'ex-w','v ≠ 0','w',currentScale)+arrow(y,'ex-output','Av',null,currentScale);
+   copy=`<p>入力と出力は同じ縮尺（1単位=${F(currentScale)}px）です。両方の先端が入るよう自動調整します。</p>${X.html.table(['A','列1','列2'],[['行1',3,1],['行2',1,3]])}<h4>${length<1e-9?'零ベクトルは固有ベクトルにしません':Math.abs(det)<1e-8?'同じ直線上に残りました':'向きが変わりました'}</h4><p>${length<1e-9?'どんな行列でも零ベクトルは零になるため、特別な方向を表せません。':Math.abs(det)<1e-8?'Av = '+F(lambda)+'v。特別な方向では、変換は倍率だけで表せます。':'点線の方向 (1,1) または (1,−1) へ矢印を合わせてください。'}</p>${X.html.formula('Av = λv → (A−λI)v = 0')}<p>非零の解を持つにはA−λIがつぶれる必要があります。その条件がdet(A−λI)=0です。このAではλ=4,2です。</p>`;
   }else{
    const angle=theta*Math.PI/180,y=[w[0]*Math.cos(angle)-w[1]*Math.sin(angle),w[0]*Math.sin(angle)+w[1]*Math.cos(angle)];
    body+=`<circle class="ex-eigen-guide" cx="300" cy="220" r="${48*Math.hypot(...w)}"/>`+arrow(w,'ex-w','z','w')+arrow(y,'ex-output','z × eⁱφ');
@@ -46,7 +47,7 @@ X.registerWidget('vectors',(root,a,current)=>{
  function move(id,p,focus){p=p.map(x=>Math.max(-4,Math.min(4,Math.round(x*4)/4)));if(id==='u')u=p;if(id==='v')v=p;if(id==='w')w=p;paintFields();paint(focus?id:null);root.querySelector('[data-ex-status]').textContent=id+' = ('+p.join(', ')+')';}
  let drag=null;
  s.on(plane,'pointerdown',e=>{const handle=e.target.closest('[data-ex-handle]');if(!handle)return;drag=handle.dataset.exHandle;plane.setPointerCapture(e.pointerId);e.preventDefault();});
- s.on(plane,'pointermove',e=>{if(!drag)return;const el=plane.querySelector('svg'),p=new DOMPoint(e.clientX,e.clientY).matrixTransform(el.getScreenCTM().inverse());move(drag,[(p.x-300)/48,(220-p.y)/48],false);});
+ s.on(plane,'pointermove',e=>{if(!drag)return;const el=plane.querySelector('svg'),p=new DOMPoint(e.clientX,e.clientY).matrixTransform(el.getScreenCTM().inverse());move(drag,[(p.x-300)/currentScale,(220-p.y)/currentScale],false);});
  s.on(plane,'pointerup',()=>drag=null);s.on(plane,'pointercancel',()=>drag=null);
  s.on(plane,'keydown',e=>{const el=e.target.closest('[data-ex-handle]');if(!el||!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;e.preventDefault();e.stopPropagation();const id=el.dataset.exHandle,p=(id==='u'?u:id==='v'?v:w).slice();p[e.key==='ArrowLeft'||e.key==='ArrowRight'?0:1]+=(e.key==='ArrowLeft'||e.key==='ArrowDown'?-.25:.25);move(id,p,true);});
  X.liveForm(root,s);s.on(root.querySelector('form'),'submit',e=>{e.preventDefault();const form=e.target;if(!form.reportValidity())return;for(const [id]of vectors()){const p=[Number(form.elements[id+'0'].value),Number(form.elements[id+'1'].value)];if(id==='u')u=p;if(id==='v')v=p;if(id==='w')w=p;}if(form.elements.theta)theta=Number(form.elements.theta.value);paint();});

@@ -27,7 +27,7 @@ R('hash',async(p,lab)=>{
  let hash1,hash2;if(lab.variant==='hmac'){let key=await subtle().importKey('raw',enc.encode(p.key||'demo-key'),{name:'HMAC',hash:'SHA-256'},false,['sign']);hash1=new Uint8Array(await subtle().sign('HMAC',key,bytes));hash2=new Uint8Array(await subtle().sign('HMAC',key,p.flip?changed:bytes));}else{hash1=new Uint8Array(await subtle().digest('SHA-256',bytes));hash2=new Uint8Array(await subtle().digest('SHA-256',p.flip?changed:bytes));}
  let diff=0;for(let i=0;i<hash1.length;i++)diff+=(hash1[i]^hash2[i]).toString(2).replaceAll('0','').length;
  const name=lab.variant==='hmac'?'HMAC-SHA-256':'SHA-256';
- return out([F(`${name}を計算`,lab.variant==='hmac'?'鍵付きのメッセージ認証コードを計算します。共有鍵を知る当事者が検証できます。署名とは違い、同じ共有鍵の所有者は生成もできます。':'固定長のダイジェストを計算します。ハッシュだけでは送信者の認証や秘密の保護にはなりません。',{type:'digest',original:hex(hash1),changed:hex(hash2),flip:p.flip},{'出力長':'256 bit'}),F('入力の変化と出力を比較','1ビットを変えたとき、出力のどの部分が変化するかを確認します。変化したビット数が毎回ちょうど半分になる保証はありません。',{type:'bitrow',bits:[...hash2].map(x=>x.toString(2).padStart(8,'0')).join(''),changedBits:[...hash2].flatMap((x,i)=>Array.from({length:8},(_,j)=>((x^hash1[i])>>(7-j))&1))},{'変化した出力ビット':diff})],{'方式':name,'入力長':bytes.length+' B','出力長':'256 bit','異なるビット':diff});
+ return out([F(`${name}を計算`,lab.variant==='hmac'?'鍵付きのメッセージ認証コードを計算します。共有鍵を知る当事者が検証できます。署名とは違い、同じ共有鍵の所有者は生成もできます。':'固定長のダイジェストを計算します。ハッシュだけでは送信者の認証や秘密の保護にはなりません。',{type:'digest',original:hex(hash1),changed:hex(hash2),flip:p.flip},{'出力長':'256 bit'}),F('入力の変化と出力を比較','1ビットを変えたとき、出力のどの部分が変化するかを確認します。変化したビット数が毎回ちょうど半分になる保証はありません。',{type:'bitrow',bits:[...hash2].map(x=>x.toString(2).padStart(8,'0')).join(''),changedBits:[...hash2].flatMap((x,i)=>Array.from({length:8},(_,j)=>((x^hash1[i])>>(7-j))&1?i*8+j:-1)).filter(i=>i>=0)},{'変化した出力ビット':diff})],{'方式':name,'入力長':bytes.length+' B','出力長':'256 bit','異なるビット':diff});
 });
 R('dh',(p)=>{
  const prime=23,g=5,a=p.a,b=p.b,A=modPow(g,a,prime),B=modPow(g,b,prime),sa=modPow(B,a,prime),sb=modPow(A,b,prime);
@@ -52,8 +52,11 @@ R('password',async(p)=>{
  return out([F('同じパスワードを異なるsaltで処理','PBKDF2-HMAC-SHA-256をブラウザで実計算します。saltは秘密にするためでなく、同じパスワードの結果が一律になるのを防ぐためです。',{type:'cells',rows:[{label:'ユーザーAの結果',values:[hex(bits)]},{label:'ユーザーBの結果',values:[hex(other)]}]}),F('反復回数の役割を見る','計算コストを増やしますが、この教材の小さい回数を実サービスの推奨設定として使わないでください。実験用の架空パスワードだけを使います。',{type:'bars',values:[p.iterations,1],labels:['設定した反復回数','単一処理の比較目安']})],{'反復回数':p.iterations,'salt':p.sameSalt?'同じ':'異なる','結果の一致':hex(bits)===hex(other)?'一致':'不一致'});
 });
 R('mfa',(p)=>{
- const pass=p.password,second=p.factor,phishingResistant=p.kind==='passkey',success=pass&&second,stolen=p.phishing&&p.kind==='otp';
- return out([F('認証の要素を確認','この教材ではパスワードと追加要素の両方を要求する方針です。パスキーの実運用はパスワードなしの場合もあります。',{type:'checks',items:[{label:'パスワードの確認',ok:pass},{label:'追加要素の確認',ok:second}]}),F('フィッシングとの関係を比較',phishingResistant?'パスキーはRP IDなどに結び付いた検証を行います。ここでは別サイトへ同じように応答できないという関係をモデル化します。':'OTPは追加要素ですが、中継型フィッシング等への耐性はパスキーと同じではありません。',{type:'flow',nodes:['本人','認証要素',success?'認証成功':'拒否'],active:2,failed:!success})],{'認証結果':success?'許可':'拒否','方式':p.kind,'中継シナリオ':p.phishing?(stolen?'OTP中継を想定':'別RPのため拒否を想定'):'未実施'});
+ const pass=!!p.password,second=!!p.factor,factorsOk=pass&&second,relay=!!p.phishing,passkey=p.kind==='passkey';
+ const relayRejected=relay&&passkey,success=factorsOk&&!relayRejected;
+ const outcome=!relay?(success?'認証成功':'拒否'):passkey?'別RPでは拒否':factorsOk?'中継されて許可':'要素不足で拒否';
+ const explain=passkey?(relay?'パスキーはRP IDに結び付きます。要素の確認に成功しても、偽の接続先へ渡した認証は本物のRPでは拒否します。':'パスキーは接続先との結び付きも確認します。この条件では別サイトへの中継を想定していません。'):(relay?'OTPは入力された値を中継できます。追加要素まで確認できると、偽の接続先経由でも本物の認証が通ります。':'OTPは追加要素ですが、この条件では中継を想定していません。');
+ return out([F('認証の要素を確認','この教材ではパスワードと追加要素の両方を要求する方針です。パスキーの実運用はパスワードなしの場合もあります。要素の確認と、中継した要求が通るかは別です。',{type:'checks',items:[{label:'パスワードの確認',ok:pass},{label:'追加要素の確認',ok:second}]}),F('偽の接続先へ渡した認証',explain,{type:'flow',nodes:['本人','認証要素',outcome],active:2,failed:!success})],{'認証結果':success?'許可':'拒否','方式':p.kind,'中継した要求':relay?(relayRejected||!factorsOk?'拒否':'許可'):'未実施'});
 });
 R('access',(p,lab)=>{
  if(lab.variant==='posix'){

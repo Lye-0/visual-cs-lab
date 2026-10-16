@@ -4,7 +4,7 @@
 'use strict';
 const X=CSL.experiences,C=X.chapter,A=X.activity,P=X.example;
 const d=(n,lead,chapters)=>X.define('gap-'+String(n).padStart(3,'0'),lead,chapters);
-const m=(id,title,question,body,kind,keys,patch={},options={},after=[])=>C(id,title,question,body,[A(kind,title+'を確かめる',keys,patch,options)],after);
+const m=(id,title,question,body,kind,keys,patch={},options={},after=[])=>C(id,title,question,body,[A(kind,title,keys,patch,options)],after);
 d(59,'電位の差、抵抗を流れる電流、節点での収支を対応させます。',[
  C('series-parallel','電流を分けるか、電圧を分けるか','同じ二つの抵抗でも、つなぎ方で電流は変わるでしょうか。',['電圧は二点間の電位差です。直列では同じ電流が二つを通り、並列では両端の電圧がそろいます。5V、1kΩずつの小例で、まずどこに同じ量があるかを確認します。'],[A('compare','同じ素子を直列と並列へ',[],{voltage:5,r1:1000,r2:1000},{examples:[P('直列',{layout:'series'},'電源の電圧を二つの抵抗で分けます。'),P('並列',{layout:'parallel'},'各枝が同じ電圧を受け、電流を分けます。')]})]),
  m('law','一つの閉路と節点から式を作る','節点Aへ入った電流は、どこへ出ていくでしょうか。','0を基準電位とし、未知の節点電位から各抵抗の電流を求めます。電流の仮の向きと負の計算結果の意味を区別し、節点で入出力の和が釣り合う式を読みます。','ledger',['voltage','netlist'],{layout:'custom'})
@@ -16,7 +16,7 @@ d(60,'時間とともに蓄える量と、交流で繰り返す応答を別々�
  m('ac','定常的な交流では位相も読む','同じ周波数の電圧と電流は、山になる時刻も同じでしょうか。','インピーダンスは交流に対する大きさと位相の関係を表します。投入直後の過渡応答とは異なる問いなので、周波数を変えたときの定常の対応として読みます。','ledger',['kind','R','C','L','frequency'])
 ]);
 d(61,'連続的な素子の特性から、スイッチや論理値を作る仕組みを読みます。',[
- m('diode','向きによって流れ方が違う','抵抗と違い、電圧を反転すると電流も対称でしょうか。','ダイオードのI–V特性を先に読みます。閾値を境に全く流れない／無限に流れる理想スイッチではなく、この教材の近似がどの範囲を表しているか確認します。','inspect',['input','resistance'],{device:'diode'},{showDerivation:true}),
+ m('diode','向きによって流れ方が違う','抵抗と違い、電圧を反転すると電流も対称でしょうか。','同じ大きさの電源電圧を順方向と逆方向へ加え、電流を比べます。図はダイオード両端の電圧と電流の関係です。抵抗での電圧降下と区別し、閾値で全く流れない／無限に流れる理想スイッチではないことを読み取ってください。','inspect',[{key:'input',label:'比べる電源電圧の大きさ'},'resistance'],{device:'diode'},{showDerivation:true}),
  m('bjt','小さい入力で別の電流を制御する','入力側の状態が、負荷側へどう影響するでしょうか。','制御する端子と負荷の電流の経路を別に追います。抵抗の値と素子の動作領域が結果へ効くため、単に入力0/1をそのまま複写する装置とは考えません。','inspect',['input','resistance'],{device:'bjt'},{showDerivation:true}),
  m('mos','ゲート電圧と導通条件','ゲートへ加えた電圧は、どの経路を開くでしょうか。','ゲートとソースの差をしきい値と比較します。ドレイン側へ流れる電流と、制御端子の役割を区別し、モデルの近似式が示す関係を読みます。','inspect',['input','threshold','resistance'],{device:'nmos'},{showDerivation:true}),
  m('cmos','上へ引く経路と下へ引く経路','入力を高くすると、出力はどちらの電源へつながるでしょうか。','CMOSインバータでは上下の素子が相補的に働きます。出力が反転する理由を二つの経路で説明し、中間電圧と安定した論理レベルを区別します。','inspect',['input','threshold'],{device:'cmos'},{showDerivation:true})

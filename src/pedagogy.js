@@ -1302,7 +1302,7 @@ const metadata = {
     "label": "試行制限なしと比較する"
   }
 };
-const direct = new Set(["c01-utf8", "c03-derivative", "c08-gate", "c18-sampling", "c18-filter", "c18-projection", "n15-ntp"]);
+const direct = new Set(["c01-utf8", "c03-derivative", "c08-gate", "c18-sampling", "c18-projection", "n15-ntp"]);
 for (const lab of CSL.labs) {
   const m = metadata[lab.id];
   if (!m) throw Error('学習案内がありません: ' + lab.id);

@@ -14,7 +14,7 @@ R('encoding',(p,lab)=>{
  if(lab.variant==='hamming'){
   let s=String(p.text).replace(/[^01]/g,'').padEnd(4,'0').slice(0,4),a=[0,0,0,+s[0],0,+s[1],+s[2],+s[3]];a[1]=a[3]^a[5]^a[7];a[2]=a[3]^a[6]^a[7];a[4]=a[5]^a[6]^a[7];let encoded=a.slice(1).join('');if(p.flip>0)a[p.flip]^=1;let syndrome=(a[1]^a[3]^a[5]^a[7])+2*(a[2]^a[3]^a[6]^a[7])+4*(a[4]^a[5]^a[6]^a[7]);
   let received=a.slice(1).join('');if(syndrome)a[syndrome]^=1;
-  return out([F('Hamming(7,4)を作る','4ビットに3ビットの偶数パリティを追加します。位置1、2、4が検査用です。',{type:'bitrow',bits:encoded},{'入力':s}),F('シンドロームを計算','1ビット誤りに限定すると、検査結果は誤りの位置を示します。2ビット以上は正しく訂正できるとは限りません。',{type:'bitrow',bits:received,active:p.flip-1},{'シンドローム':syndrome}),F('1ビットを訂正','位置は1始まりです。誤りがなければ変更しません。',{type:'bitrow',bits:a.slice(1).join(''),active:syndrome-1},{'復元データ':[a[3],a[5],a[6],a[7]].join('')})],{'送信列':encoded,'誤り位置':syndrome||'なし','復元':[a[3],a[5],a[6],a[7]].join('')});
+  return out([F('Hamming(7,4)を作る','4ビットに3ビットの偶数パリティを追加します。位置1、2、4が検査用です。',{type:'bitrow',indexBase:1,bits:encoded},{'入力':s}),F('シンドロームを計算','1ビット誤りに限定すると、検査結果は誤りの位置を示します。2ビット以上は正しく訂正できるとは限りません。',{type:'bitrow',indexBase:1,bits:received,active:p.flip-1},{'シンドローム':syndrome}),F('1ビットを訂正','位置は1始まりです。誤りがなければ変更しません。',{type:'bitrow',indexBase:1,bits:a.slice(1).join(''),active:syndrome-1},{'復元データ':[a[3],a[5],a[6],a[7]].join('')})],{'送信列':encoded,'誤り位置':syndrome||'なし','復元':[a[3],a[5],a[6],a[7]].join('')});
  }
  const chars=[...p.text],bytes=new TextEncoder().encode(p.text);const rows=chars.map(c=>[c,'U+'+c.codePointAt(0).toString(16).toUpperCase(),[...new TextEncoder().encode(c)].map(b=>b.toString(16).padStart(2,'0')).join(' ')]);
  return out([F('文字とバイトを区別する','UnicodeのコードポイントとUTF-8のバイト列は別のものです。絵文字の見た目1文字が複数のコードポイントになることもあります。',{type:'cells',rows:rows.map(r=>({label:r[0],values:r.slice(1)}))},{'コードポイント':chars.length,'UTF-8':`${bytes.length} B`})],{'コードポイント':chars.length,'UTF-16コード単位':p.text.length,'UTF-8バイト数':bytes.length});
@@ -154,9 +154,11 @@ R('memory',(p,lab)=>{
 });
 R('allocation',(p)=>{
  const sizes=parseNumbers(p.sizes,12).map(v=>Math.max(1,Math.floor(Math.abs(v)))),capacity=p.capacity,free=[{start:0,size:capacity}],allocated=[],frames=[];let failures=0;
- sizes.forEach((size,i)=>{let candidates=free.map((b,j)=>({...b,index:j})).filter(b=>b.size>=size);if(p.policy==='best')candidates.sort((a,b)=>a.size-b.size);let b=candidates[0];if(b){allocated.push({id:i,start:b.start,size});free[b.index].start+=size;free[b.index].size-=size;free.splice(0,free.length,...free.filter(x=>x.size>0));}else failures++;
- if(i===2&&p.release&&allocated.length){let released=allocated.shift();free.push({start:released.start,size:released.size});free.sort((a,b)=>a.start-b.start);}
- frames.push(F(`${size}セルの確保を要求`,b?'連続した空き領域から確保します。途中で先頭の領域を解放する条件も試せます。':'十分に大きな連続空間がありません。空き容量の合計だけでは確保の成功を判断できません。',{type:'allocation',capacity,blocks:clone(allocated),free:clone(free)},{'確保失敗':failures,'空き合計':free.reduce((s,b)=>s+b.size,0)}));});return out(frames,{'確保中':allocated.length,'失敗':failures,'空き':free.reduce((s,b)=>s+b.size,0)});
+ const coalesce=()=>{free.sort((a,b)=>a.start-b.start);const merged=[];for(const block of free){if(block.size<=0)continue;const prev=merged.at(-1);if(prev&&prev.start+prev.size===block.start)prev.size+=block.size;else merged.push({start:block.start,size:block.size});}free.splice(0,free.length,...merged);};
+ sizes.forEach((size,i)=>{coalesce();let candidates=free.map((b,j)=>({...b,index:j})).filter(b=>b.size>=size);if(p.policy==='best')candidates.sort((a,b)=>a.size-b.size);const chosen=candidates[0];if(chosen){allocated.push({id:i,start:chosen.start,size});free[chosen.index].start+=size;free[chosen.index].size-=size;coalesce();}else failures++;
+ if(i===2&&p.release&&allocated.length){const released=allocated.shift();free.push({start:released.start,size:released.size});coalesce();}
+ const total=free.reduce((s,b)=>s+b.size,0),hole=free.reduce((m,b)=>Math.max(m,b.size),0);
+ frames.push(F(`${size}セルの確保を要求`,chosen?`連続した空きから${size}セルを確保します。隣り合う空きは一つの領域にまとめます。`:`要求は${size}セルですが、いちばん大きな連続空きは${hole}セルです。空きの合計は${total}セルでも、離れた穴は一つとして使えません。`,{type:'allocation',capacity,blocks:clone(allocated),free:clone(free)},{'確保失敗':failures,'空き合計':total,'最大の連続空き':hole}));});return out(frames,{'確保中':allocated.length,'失敗':failures,'空き':free.reduce((s,b)=>s+b.size,0)});
 });
 R('scheduler',(p)=>{
  const bursts=parseNumbers(p.bursts,8).map(x=>Math.max(1,Math.min(20,Math.floor(Math.abs(x))))),remaining=clone(bursts),items=[],frames=[],completion=Array(bursts.length).fill(0);let time=0,ready=bursts.map((_,i)=>i);if(p.policy==='SJF')ready.sort((a,b)=>bursts[a]-bursts[b]);
@@ -220,15 +222,16 @@ R('kmeans',(p)=>{
 R('signalmedia',(p,lab)=>{
  if(lab.variant==='filter'){
  let vals=[0,0,0,1,1,1,0,0,1,0,0,0],filtered=vals.map((_,i)=>{let sum=0,n=0;for(let j=Math.max(0,i-p.radius);j<=Math.min(vals.length-1,i+p.radius);j++){sum+=vals[j];n++;}return sum/n;});
- return out([F('信号の近傍を平均する','各位置の周囲を平均し、急激な変化をならします。境界では存在する点だけを平均しています。',{type:'plot',series:[{name:'元の信号',points:vals.map((y,x)=>({x,y}))},{name:'平滑化',points:filtered.map((y,x)=>({x,y}))}],xLabel:'位置',yLabel:'値'})],{'半径':p.radius,'窓の最大サイズ':p.radius*2+1,'最大値':round(Math.max(...filtered))});
+ const frames=vals.map((_,i)=>{const lo=Math.max(0,i-p.radius),hi=Math.min(vals.length-1,i+p.radius),window=vals.slice(lo,hi+1),sum=window.reduce((a,b)=>a+b,0);return F('位置 '+i+' の窓を平均する','位置 '+lo+'〜'+hi+' の '+window.length+' 点を使います。('+window.join(' + ')+') / '+window.length+' = '+round(filtered[i],5)+'。境界では存在する点だけを数えます。',{type:'plot',series:[{name:'元の信号',points:vals.map((y,x)=>({x,y}))},{name:'平滑化',points:filtered.map((y,x)=>({x,y}))},{name:'今回の窓',points:window.map((y,j)=>({x:lo+j,y}))}],xLabel:'位置',yLabel:'値'},{'出力位置':i,'和':sum,'点数':window.length,'出力値':filtered[i]},{headers:['使う位置','入力値'],rows:window.map((v,j)=>[lo+j,v])});});
+ return out(frames,{'半径':p.radius,'窓の最大サイズ':p.radius*2+1,'最大値':round(Math.max(...filtered))});
  }
  const n=p.samples,f=p.frequency,points=Array.from({length:401},(_,i)=>({x:i/400,y:Math.sin(2*Math.PI*f*i/400)})),sampled=Array.from({length:n},(_,i)=>({x:i/n,y:Math.sin(2*Math.PI*f*i/n)}));
  if(lab.variant==='fourier'){const spectrum=Array.from({length:Math.floor(n/2)+1},(_,k)=>{let re=0,im=0;for(let i=0;i<n;i++){re+=sampled[i].y*Math.cos(2*Math.PI*k*i/n);im-=sampled[i].y*Math.sin(2*Math.PI*k*i/n);}return {x:k,y:Math.hypot(re,im)/n*2};});return out([F('時間の波形を見る','1秒の信号を等間隔に標本化します。',{type:'plot',series:[{name:'標本',points:sampled}],xLabel:'秒',yLabel:'振幅'}),F('周波数ごとの成分を計算','DFTを実際に計算します。1秒窓・窓関数なし。周波数と窓が合わない場合は漏れが生じます。',{type:'plot',series:[{name:'振幅スペクトル',points:spectrum}],xLabel:'Hz',yLabel:'振幅'})],{'サンプル数':n,'ナイキスト周波数':n/2+' Hz','入力周波数':f+' Hz'});}
  return out([F('連続波から点を取り出す','等間隔の点だけを記録します。標本化周波数が不足すると別の周波数に見えるエイリアシングが起き得ます。',{type:'plot',series:[{name:'連続波',points},{name:'標本を結ぶ線',points:sampled}],xLabel:'秒',yLabel:'振幅'})],{'標本化':`${n} Hz`,'信号':`${f} Hz`,'条件':n>2*f?'理想再構成の基本条件を満たす':'ナイキスト条件を満たさない'});
 });
 R('projection',(p)=>{
- const yaw=p.angle*Math.PI/180,pitch=p.pitch*Math.PI/180,z=p.distance,verts=[[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]].map(([x,y,zz])=>{const X=x*Math.cos(yaw)+zz*Math.sin(yaw),Z=-x*Math.sin(yaw)+zz*Math.cos(yaw),Y=y*Math.cos(pitch)-Z*Math.sin(pitch),depth=y*Math.sin(pitch)+Z*Math.cos(pitch)+z;return {x:X/depth*3,y:Y/depth*3};});
- return out([F('3Dの頂点を回転する','Y軸とX軸で立体を回転し、視点からの奥行きで座標を割って透視投影します。',{type:'wireframe',points:verts,edges:[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]]},{'Y回転角':p.angle+'°','X回転角':p.pitch+'°','距離':z})],{'頂点数':8,'辺数':12,'投影':'透視投影'});
+ const yaw=p.angle*Math.PI/180,pitch=p.pitch*Math.PI/180,z=p.distance,verts=[[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]].map(([x,y,zz])=>{const X=x*Math.cos(yaw)+zz*Math.sin(yaw),Z=-x*Math.sin(yaw)+zz*Math.cos(yaw),Y=y*Math.cos(pitch)-Z*Math.sin(pitch),depth=y*Math.sin(pitch)+Z*Math.cos(pitch)+z;return {x:X/depth*3,y:Y/depth*3,viewX:X,viewY:Y,depth,original:[x,y,zz]};});
+ return out([F('3Dの頂点を回転する','Y軸とX軸で立体を回転し、視点からの奥行きZで座標を割り、画面(x,y)=(3X/Z,3Y/Z)へ写します。3はこの図の投影倍率です。下の表の頂点番号を図と対応させ、同じX,YならZが大きいほど中心へ近づくことを確かめてください。',{type:'wireframe',points:verts,edges:[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]]},{'Y回転角':p.angle+'°','X回転角':p.pitch+'°','距離':z},{headers:['頂点番号','元の(x,y,z)','視点X','視点Y','奥行きZ','画面x=3X/Z','画面y=3Y/Z'],rows:verts.map((v,i)=>[i,v.original.join(', '),round(v.viewX,4),round(v.viewY,4),round(v.depth,4),round(v.x,4),round(v.y,4)])})],{'頂点数':8,'辺数':12,'投影':'透視投影'});
 });
 R('control',(p)=>{
  let value=0,velocity=0,integral=0,prev=0,frames=[],points=[],targets=[],dt=.05;

@@ -65,7 +65,7 @@ test('valid dynamic insertion doubles capacity and counts the real copies',async
  const remove=await dynamic({operation:'delete'});assert.equal(remove.metrics['容量'],4);assert.equal(remove.metrics['再確保コピー'],0);
 });
 test('committed module checker is read-only and patch plans cannot run again',async()=>{
- const changed=()=>execFileSync('git',['diff','HEAD','--','src','scripts','tests','package.json','.github'],{encoding:'utf8'});
+ const changed=()=>execFileSync('git',['diff','HEAD','--','src','scripts','tests','package.json','.github'],{encoding:'utf8',maxBuffer:64*1024*1024});
  const before=changed();execFileSync(process.execPath,['scripts/curriculum-finalize.mjs'],{stdio:'pipe'});assert.equal(changed(),before);
  assert.deepEqual((await readdir('scripts')).filter(n=>/^curriculum-patches.*\.json$/.test(n)),[]);
  for(const file of ['curriculum-verification.yml','lesson-review.yml']){

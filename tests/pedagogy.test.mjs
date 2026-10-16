@@ -41,7 +41,7 @@ test('旧144単元を全て保持し、追加単元と単元名に重複がな�
  assert.equal(ids.size, L.labs.length);
  for (const id of L.legacyLabIds) assert.ok(ids.has(id), `削除された単元: ${id}`);
  assert.equal(new Set(L.labs.map(l => l.unit)).size, L.labs.length);
- assert.equal(L.labs.filter(l => L.legacyLabIds.includes(l.id) && l.presentation === 'direct').length, 7);
+ assert.equal(L.labs.filter(l => L.legacyLabIds.includes(l.id) && l.presentation === 'direct').length, 6);
 });
 
 test('全単元に固有の解説と有効な操作対象を持つ', () => {

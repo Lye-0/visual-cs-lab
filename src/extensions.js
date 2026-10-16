@@ -38,7 +38,7 @@ R('translation',p=>{
  const table=[{pfn:4,write:true},{pfn:1,write:false},{pfn:6,write:true},{pfn:null,write:true}],tlb=[],frames=[];let hits=0,walks=0,faults=0,denied=0;
  for(const va of refs){const vpn=Math.floor(va/p.pageSize),offset=va%p.pageSize,entry=table[vpn],hit=p.tlb&&tlb.includes(vpn);if(hit)hits++;else walks++;let pa='—',status=hit?'TLB hit':'ページ表を参照';if(entry.pfn===null){faults++;if(p.resolve){entry.pfn=7;status='ページフォルト → frame 7を割当 → 再実行';}else status='ページフォルト（未解決）';}
   if(entry.pfn!==null){if(p.write&&!entry.write){denied++;status='書込保護違反';}else{pa=entry.pfn*p.pageSize+offset;if(p.tlb){const i=tlb.indexOf(vpn);if(i>=0)tlb.splice(i,1);tlb.push(vpn);while(tlb.length>p.entries)tlb.shift();}}}
-  frames.push(F(`仮想アドレス ${va}: ${status}`,'ページ番号を物理フレームへ変換し、オフセットはそのまま足します。TLBがヒットしてもアクセス権限の確認は省略しません。',{type:'flow',nodes:[`VA ${va}`,`VPN ${vpn} + ${offset}`,`PFN ${entry.pfn??'不在'}`,`PA ${pa}`],active:3,failed:pa==='—'},{'TLBヒット':hits,'ページ表参照':walks,'ページフォルト':faults},{headers:['VPN','PFN','書込み'],rows:table.map((x,i)=>[i,x.pfn??'不在',x.write?'許可':'不可'])}));
+  frames.push(F(`仮想アドレス ${va}: ${status}`,entry.pfn===null?'ページ表にフレームがありません。VPNとoffsetを互いに足して物理番地にはしません。':'物理番地は PFN × ページサイズ + offset です。VPNとoffsetは互いに足しません。TLBがヒットしてもアクセス権限の確認は省略しません。',{type:'flow',nodes:[`VA ${va}`,`VPN ${vpn}／offset ${offset}`,entry.pfn===null?'PFN 不在':`PFN ${entry.pfn} × ${p.pageSize} + ${offset}`,`PA ${pa}`],active:3,failed:pa==='—'},{'TLBヒット':hits,'ページ表参照':walks,'ページフォルト':faults},{headers:['VPN','PFN','書込み'],rows:table.map((x,i)=>[i,x.pfn??'不在',x.write?'許可':'不可'])}));
  }
  return out(frames,{'参照回数':refs.length,'TLBヒット':hits,'ページ表参照':walks,'ページフォルト':faults,'保護違反':denied},'4仮想ページ・固定ページサイズ・LRUの小さなTLB。ページイン時にページ表を更新する操作を1段にまとめています。');
 });

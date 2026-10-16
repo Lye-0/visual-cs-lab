@@ -55,6 +55,7 @@ try{
    await page.locator('#catalog-query').fill('GAP-037');
    await page.waitForFunction(()=>document.getElementById('catalog-count').textContent.startsWith('0 '));
    assert.equal(await page.locator('#catalog-results .library-unit').count(),0);
+   const domainPicker=page.locator('#library-filter-drawer');if(!await domainPicker.evaluate(el=>el.open))await domainPicker.locator(':scope > summary').click();
    const software=page.locator('#library-domains [data-value="software"]');await software.focus();await software.press('Enter');
    await page.waitForFunction(()=>CSL.app.params.get('domain')==='software'&&document.getElementById('catalog-count').textContent.startsWith('1 '));
    assert.equal(await page.locator('#catalog-query').inputValue(),'GAP-037');

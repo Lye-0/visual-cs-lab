@@ -18,7 +18,8 @@ X.scope=(root,current)=>{
 };
 X.draw=(root,frame,focus=null)=>{
  if(!frame)throw Error('この例の状態がありません。');
- root.innerHTML=`<div class="reader-diagram ex-model-diagram">${L.visualize(frame.visual,{focus})}</div><div class="ex-frame-copy"><h4>${h(frame.title)}</h4><p>${h(frame.explain)}</p>${frame.table?L.table(frame.table):''}${X.valuesMarkup(frame.stats)}</div>`;
+ const readable=['tree','automaton'].includes(frame.visual.type);
+ root.innerHTML=`<div class="reader-diagram ex-model-diagram"${readable?' tabindex="0" role="region" aria-label="図全体。入りきらない場合は左右にスクロールできます"':''}>${L.visualize(frame.visual,{focus})}</div>${readable?'<p class="cv-caption">図が入りきらない場合は、枠の中を左右にスクロールできます。</p>':''}<div class="ex-frame-copy"><h4>${h(frame.title)}</h4><p>${h(frame.explain)}</p>${frame.table?L.table(frame.table):''}${X.valuesMarkup(frame.stats)}</div>`;
 };
 // Worked records retain the actual diagram/table as well as its explanation.
 // Each record owns its selection; selecting an earlier row never draws the final frame.
@@ -45,7 +46,7 @@ X.fields=(lab,keys,p,uid)=>keys.map(spec=>{
  const key=typeof spec==='string'?spec:spec.key,ctrl=lab.controls.find(c=>c.key===key);if(!ctrl)throw Error('入力が存在しません: '+lab.id+'/'+key);
  const label=typeof spec==='string'?ctrl.label:spec.label||ctrl.label,id=uid+'-'+key,v=p[key];let input;
  if(ctrl.type==='toggle')input=`<input id="${id}" name="${key}" type="checkbox" ${v?'checked':''}>`;
- else if(ctrl.type==='select')input=`<select id="${id}" name="${key}">${ctrl.options.map(o=>`<option value="${h(o.value)}"${String(o.value)===String(v)?' selected':''}>${h(typeof spec==='object'&&spec.labels?.[o.value]||o.label)}</option>`).join('')}</select>`;
+ else if(ctrl.type==='select')input=`<select id="${id}" name="${key}">${ctrl.options.filter(o=>typeof spec==='string'||!spec.values||spec.values.includes(o.value)).map(o=>`<option value="${h(o.value)}"${String(o.value)===String(v)?' selected':''}>${h(typeof spec==='object'&&spec.labels?.[o.value]||o.label)}</option>`).join('')}</select>`;
  else if(ctrl.type==='range')input=`<input id="${id}" name="${key}" type="number" value="${h(v)}" min="${ctrl.min}" max="${ctrl.max}" step="${ctrl.step}" required>`;
  else if(ctrl.type==='code')input=`<textarea id="${id}" name="${key}" rows="${typeof spec==='object'&&spec.rows||6}" spellcheck="false" maxlength="8000">${h(v)}</textarea>`;
  else input=`<input id="${id}" name="${key}" type="text" value="${h(v)}" maxlength="1200" autocomplete="off" spellcheck="false">`;
@@ -90,8 +91,9 @@ X.modelActivity=(root,activity,current)=>{
     output.innerHTML=`<div class="ex-trace-layout"><ol class="ex-event-list" aria-label="状態の記録">${frames.map((f,i)=>`<li><button type="button" data-ex-event="${i}"${i===index?' aria-current="step"':''}><span>${i+1}</span>${h(f.title)}</button></li>`).join('')}</ol><div class="ex-selected-state"><div data-ex-frame></div><div class="ex-actions">${X.html.button('一つ前の状態','data-ex-previous'+(index===0?' disabled':''))}${X.html.button(activity.advance||'次の処理を確かめる','data-ex-next'+(index===frames.length-1?' disabled':''))}</div></div>`;
     X.draw(output.querySelector('[data-ex-frame]'),frames[index],selected);
    }else{
-    output.innerHTML='<div data-ex-frame></div>'+(activity.showDerivation?X.derivationMarkup('この値に至る式・判断'):'');
-    X.draw(output.querySelector('[data-ex-frame]'),frames[resolvedIndex()],selected);
+    const indices=X.frameIndices(activity,frames);
+    output.innerHTML=indices.map(i=>'<div data-ex-frame="'+i+'"></div>').join('')+(activity.showDerivation?X.derivationMarkup('この値に至る式・判断'):'');
+    for(const i of indices)X.draw(output.querySelector('[data-ex-frame="'+i+'"]'),frames[i],selected);
     if(activity.showDerivation)X.mountDerivation(output.querySelector('.ex-derivation'),frames,scope);
    }
   });
@@ -130,8 +132,8 @@ X.modelActivity=(root,activity,current)=>{
  });
  scope.on(root,'click',e=>{
   const node=e.target.closest('[data-r-focus]');if(!node||!result||node.closest('[data-ex-evidence]'))return;
-  const target=output.querySelector('[data-ex-frame]');if(!target)return;
-  selected=node.getAttribute('data-r-focus');X.draw(target,result.frames[resolvedIndex()],selected);
+  const target=node.closest('[data-ex-frame]');if(!target)return;
+  selected=node.getAttribute('data-r-focus');X.draw(target,result.frames[target.dataset.exFrame!==''?Number(target.dataset.exFrame):resolvedIndex()],selected);
   target.querySelector(`[data-r-focus="${CSS.escape(selected)}"]`)?.focus({preventScroll:true});
  });
  scope.on(root,'keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('svg [data-r-focus]')){e.preventDefault();e.stopImmediatePropagation();if(!e.repeat)e.target.dispatchEvent(new MouseEvent('click',{bubbles:true}));}});
@@ -141,7 +143,10 @@ for(const name of ['inspect','ledger','timeline','editor'])X.registerWidget(name
 X.registerWidget('compare',(root,a,c)=>{
  const scope=X.scope(root,c),lab=A.lab(a.model||c.lab.id);
  root.innerHTML=`<p class="ex-operation-hint">${h(a.hint||'どちらの結果も残して、変えた条件と理由を比べます。')}</p><div class="ex-side-by-side">${a.examples.map((p,i)=>`<section><h4>${h(p.label)}</h4><p>${h(p.reason)}</p><div data-ex-comparison="${i}" aria-busy="true"></div></section>`).join('')}</div>`;
- a.examples.forEach(async(p,i)=>{const box=root.querySelector(`[data-ex-comparison="${i}"]`);try{const result=await L.run(lab,X.modelParams(lab.id,{...a.patch,...p.patch}));if(!scope.alive())return;X.draw(box,result.frames.at(-1));box.insertAdjacentHTML('beforeend',X.valuesMarkup(result.metrics,'result')+X.derivationMarkup('この結果に至る式・判断'));X.mountDerivation(box.querySelector('.ex-derivation'),result.frames,scope);X.bindEvidence(box,()=>[result.frames.at(-1)],scope);box.querySelector('.ex-model-diagram').dataset.exEvidence='0';c.completed.add(scope.id+'-'+i);}catch(e){if(scope.alive()){box.classList.add('ex-error');box.textContent=e.message;c.errors.push({activity:a.title,message:e.message});}}finally{if(scope.alive())box.setAttribute('aria-busy','false');}});
+ a.examples.forEach(async(p,i)=>{const box=root.querySelector(`[data-ex-comparison="${i}"]`);try{const result=await L.run(lab,X.modelParams(lab.id,{...a.patch,...p.patch}));if(!scope.alive())return;const indices=X.frameIndices({...a,...(p.frames?{frames:p.frames}:{})},result.frames);
+box.innerHTML=indices.map(i=>'<div data-ex-comparison-frame="'+i+'"></div>').join('');
+for(const i of indices){const target=box.querySelector('[data-ex-comparison-frame="'+i+'"]');X.draw(target,result.frames[i]);target.querySelector('.ex-model-diagram').dataset.exEvidence=String(i);}
+box.insertAdjacentHTML('beforeend',X.valuesMarkup(result.metrics,'result')+X.derivationMarkup('この結果に至る式・判断'));X.mountDerivation(box.querySelector('.ex-derivation'),result.frames,scope);X.bindEvidence(box,()=>result.frames,scope);c.completed.add(scope.id+'-'+i);}catch(e){if(scope.alive()){box.classList.add('ex-error');box.textContent=e.message;c.errors.push({activity:a.title,message:e.message});}}finally{if(scope.alive())box.setAttribute('aria-busy','false');}});
 });
 X.registerWidget('cases',(root,a,c)=>{
  const scope=X.scope(root,c);let selected=0;
