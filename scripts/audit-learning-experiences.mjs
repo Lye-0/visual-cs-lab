@@ -18,8 +18,11 @@ const units=CSL.labs.map(lab=>{
   codeReview:review?.codeReview||'not-reviewed-in-this-pass',planReview:review?.planReview||'pending',visualReview:'pending',review,
   lead:def.lead,chapters:def.chapters.map(ch=>({id:ch.id,title:ch.title,question:ch.question,paragraphs:ch.paragraphs,after:ch.after,activities:ch.activities.map(a=>({kind:a.kind,title:a.title,fields:a.keys,model:a.model||lab.id}))}))};
 });
-if(units.length!==315||new Set(units.map(u=>u.id)).size!==315)throw Error('All 315 distinct units must stay in scope.');
+const inventory=JSON.parse(await readFile(new URL('../data/experiments.json',import.meta.url),'utf8'));
+const expectedIds=inventory.labs.map(l=>l.id),actualIds=units.map(u=>u.id);
+if(new Set(expectedIds).size!==inventory.total||expectedIds.length!==inventory.total||new Set(actualIds).size!==inventory.total||JSON.stringify(actualIds.slice().sort())!==JSON.stringify(expectedIds.slice().sort()))throw Error('All committed catalogue units must stay in scope.');
+for(const id of ['c03-epsilon-delta','c03-vector-space','c03-subspace'])if(!actualIds.includes(id))throw Error('Missing additional lesson: '+id);
 const summary={sourceCommit:process.env.GITHUB_SHA||'local',units:units.length,chapters:X.inventory().chapters,activities:X.inventory().activities,revisedInThisPass:records.size,pendingIndividualReviewThisPass:units.length-records.size,completePlanApprovals:0,completedVisualReviews:0};
 const clean=text=>String(text).replaceAll('|','／').replace(/[\r\n]/g,' '),warning='これは実装の棚卸しと確認記録です。構造の列挙、専用操作の有無、自動テストの成功は、教え方・目視・当初計画の全面的な承認ではありません。';
-const md='# 全315単元の見直し台帳\n\n対象commit：'+summary.sourceCommit+'\n\n'+warning+'\n\n| ID | 単元 | 章数 | 実際の表現 | 今回の個別見直し | 計画照合 | 目視 |\n|---|---|---:|---|---|---|---|\n'+units.map(u=>'| '+[u.id,u.title,u.chapters.length,[...new Set(u.chapters.flatMap(c=>c.activities.map(a=>a.kind)))].join('、'),u.review?'具体的な修正あり':'この回では未確認',u.review?'一部対応・残課題あり':'未確認','未完了'].map(clean).join(' | ')+' |').join('\n')+'\n';
+const md='# 全'+summary.units+'単元の見直し台帳\n\n対象commit：'+summary.sourceCommit+'\n\n'+warning+'\n\n| ID | 単元 | 章数 | 実際の表現 | 今回の個別見直し | 計画照合 | 目視 |\n|---|---|---:|---|---|---|---|\n'+units.map(u=>'| '+[u.id,u.title,u.chapters.length,[...new Set(u.chapters.flatMap(c=>c.activities.map(a=>a.kind)))].join('、'),u.review?'具体的な修正あり':'この回では未確認',u.review?'一部対応・残課題あり':'未確認','未完了'].map(clean).join(' | ')+' |').join('\n')+'\n';
 await mkdir('review-output',{recursive:true});await writeFile('review-output/learning-audit.json',JSON.stringify({summary,warning,units},null,2));await writeFile('review-output/learning-audit.md',md);console.log(JSON.stringify(summary,null,2));
