@@ -31,7 +31,7 @@ jobs:
           tail -n 12 review-output/authored-values-models.txt
       - name: Install the test browser
         run: |
-          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.64.1
           npx playwright install --with-deps ${{ matrix.browser }} > review-output/install.txt 2>&1 || { tail -n 40 review-output/install.txt; exit 1; }
       - name: Check actual values, input editing and delayed disclosure
         env:

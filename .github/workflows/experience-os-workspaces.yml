@@ -32,7 +32,7 @@ jobs:
           tail -n 14 review-output/os-models.txt
       - name: Install browser tools
         run: |
-          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.64.1
           npx playwright install --with-deps ${{ matrix.browser }} > review-output/browser-install.txt 2>&1 || { tail -n 50 review-output/browser-install.txt; exit 1; }
       - name: Exercise all 21 units and individual learning actions
         env:

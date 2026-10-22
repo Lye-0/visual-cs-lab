@@ -57,7 +57,7 @@ jobs:
       - name: Install selected browser
         run: |
           mkdir -p review-output
-          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0 > review-output/install.txt 2>&1
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.64.1 > review-output/install.txt 2>&1
           npx playwright install --with-deps ${{ matrix.browser }} >> review-output/install.txt 2>&1 || { tail -n 40 review-output/install.txt; exit 1; }
       - name: Every authored chapter at 1440, 390 and 320px
         env:
@@ -116,7 +116,7 @@ jobs:
       - name: Install selected browser
         run: |
           mkdir -p review-output
-          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0 > review-output/install.txt 2>&1
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.64.1 > review-output/install.txt 2>&1
           npx playwright install --with-deps ${{ matrix.browser }} >> review-output/install.txt 2>&1 || { tail -n 40 review-output/install.txt; exit 1; }
       - name: Dedicated operations, values, catalogue and published paths
         env:
@@ -162,7 +162,7 @@ jobs:
       - name: Install Chromium
         run: |
           mkdir -p review-output
-          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0 > review-output/install.txt 2>&1
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.64.1 > review-output/install.txt 2>&1
           npx playwright install --with-deps chromium >> review-output/install.txt 2>&1 || { tail -n 40 review-output/install.txt; exit 1; }
       - name: Retained readers and regression-specific interactions
         run: |
