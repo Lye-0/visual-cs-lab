@@ -33,7 +33,7 @@ jobs:
           grep -E '^# (tests|pass|fail)' review-output/release-node.txt
       - name: Install browser tooling
         run: |
-          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.64.1
           npx playwright install --with-deps ${{ matrix.browser }} > review-output/release-install.txt 2>&1 || { tail -n 60 review-output/release-install.txt; exit 1; }
       - name: New default pages and retained reader at root and Pages subpath
         env:
@@ -78,7 +78,7 @@ jobs:
           tail -n 15 review-output/curriculum-probe.log
       - name: Install Chromium
         run: |
-          npm install --no-save --package-lock=false --ignore-scripts playwright@1.63.0
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.64.1
           npx playwright install --with-deps chromium > review-output/install.txt 2>&1 || { tail -n 40 review-output/install.txt; exit 1; }
       - name: Every retained unit, playback and rewind
         run: node tests/reader-browser.mjs
