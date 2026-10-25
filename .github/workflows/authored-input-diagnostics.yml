@@ -16,7 +16,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v6
         with:
-          node-version: '22'
+          node-version: '24.22.1'
       - name: Compare declared examples against the actual normalizer
         run: |
           node --input-type=module <<'JS'
