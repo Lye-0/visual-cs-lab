@@ -22,7 +22,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v6
         with:
-          node-version: '22'
+          node-version: '24.22.1'
       - name: Check committed publishing entry
         run: node scripts/build.mjs --check
       - name: Check independent model expectations
