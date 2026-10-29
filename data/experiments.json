@@ -1,10 +1,10 @@
 {
   "version": "3.0.0",
-  "total": 317,
+  "total": 321,
   "legacyTotal": 144,
   "engineCount": 276,
   "counts": {
-    "core": 210,
+    "core": 214,
     "network": 49,
     "security": 50,
     "missions": 8
@@ -1676,6 +1676,26 @@
       "id": "c03-subspace",
       "unit": "部分空間 ― 集合の読み方から証明まで",
       "area": "C03"
+    },
+    {
+      "id": "c08-pn-junction",
+      "unit": "pn接合とダイオード",
+      "area": "C08"
+    },
+    {
+      "id": "c08-bipolar",
+      "unit": "バイポーラトランジスタの動作",
+      "area": "C08"
+    },
+    {
+      "id": "c08-amplifier",
+      "unit": "トランジスタの増幅回路",
+      "area": "C08"
+    },
+    {
+      "id": "c08-bias",
+      "unit": "バイアス回路と計算",
+      "area": "C08"
     }
   ]
 }

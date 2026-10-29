@@ -66,6 +66,12 @@ try{
    await page.locator('[data-filter="all"]').first().click();await page.waitForFunction(()=>CSL.app.params.size===0);
    assert.ok((await page.locator('#catalog-count').textContent()).startsWith(catalogueIds.length+' '));await layout(page);
   });
+  await check(label+': circuit lesson is found by its advertised name',async()=>{
+   await visit(page,base,'#/catalog?domain=systems&q='+encodeURIComponent('pn接合とダイオード'));
+   await catalogue(page);
+   assert.equal(await page.locator('#catalog-results a[href="#/lab/c08-pn-junction"]').count(),1);
+   assert.ok((await page.locator('#catalog-count').textContent()).startsWith('1 '));
+  });
   await check(label+': theme disclosure is operable and returns to the right parent',async()=>{
    await visit(page,base,'#/catalog?domain=math');
    const drawer=page.locator('#library-filter-drawer');if(!await drawer.evaluate(el=>el.open))await drawer.locator(':scope > summary').click();

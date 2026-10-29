@@ -10,7 +10,7 @@ https://lye-0.github.io/visual-cs-lab/
 
 <!-- UNIT_CATALOG_START -->
 
-317単元を20分野に分けて掲載します。分野名を開くと単元へ移動できます。
+321単元を20分野に分けて掲載します。分野名を開くと単元へ移動できます。
 
 <details>
 <summary>C01 情報の表現（22単元）</summary>
@@ -155,7 +155,7 @@ https://lye-0.github.io/visual-cs-lab/
 </details>
 
 <details>
-<summary>C08 論理回路（11単元）</summary>
+<summary>C08 論理回路（15単元）</summary>
 
 - [c08-gate — 論理ゲートと真理値表](https://lye-0.github.io/visual-cs-lab/#/lab/c08-gate)
 - [c08-adder — 全加算器と繰り上がり](https://lye-0.github.io/visual-cs-lab/#/lab/c08-adder)
@@ -168,6 +168,10 @@ https://lye-0.github.io/visual-cs-lab/
 - [gap-063 — 半加算器から多ビットALU・Mux・デコーダへ](https://lye-0.github.io/visual-cs-lab/#/lab/gap-063)
 - [gap-064 — ラッチ・DFF・カウンタ・状態機械](https://lye-0.github.io/visual-cs-lab/#/lab/gap-064)
 - [gap-065 — ゲート遅延・ハザード・小さなHDL](https://lye-0.github.io/visual-cs-lab/#/lab/gap-065)
+- [c08-pn-junction — pn接合とダイオード](https://lye-0.github.io/visual-cs-lab/#/lab/c08-pn-junction)
+- [c08-bipolar — バイポーラトランジスタの動作](https://lye-0.github.io/visual-cs-lab/#/lab/c08-bipolar)
+- [c08-amplifier — トランジスタの増幅回路](https://lye-0.github.io/visual-cs-lab/#/lab/c08-amplifier)
+- [c08-bias — バイアス回路と計算](https://lye-0.github.io/visual-cs-lab/#/lab/c08-bias)
 
 </details>
 
